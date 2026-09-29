@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+{# Placeholder content: final copy and layout come with the design. #}
+<section class="container">
+  <h1>{% translate "Подъёмники Temir-Gidro" %}</h1>
+  <p>{{ company.description }}</p>
+</section>
+<section class="container" aria-labelledby="lead-heading">
+  <h2 id="lead-heading">{% translate "Оставьте заявку" %}</h2>
+  {% include "includes/lead_form.html" %}
+</section>
+{% endblock %}

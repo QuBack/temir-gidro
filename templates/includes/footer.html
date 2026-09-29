@@ -1,0 +1,12 @@
+{% load i18n %}
+<footer class="site-footer">
+  <div class="container">
+    <p class="site-footer__name">{{ company.name }}</p>
+    <address>
+      <a href="tel:{{ company.phone_href }}">{{ company.phone }}</a><br>
+      <a href="mailto:{{ company.email }}">{{ company.email }}</a>
+      {% if company.address.street %}<br>{{ company.address.city }}, {{ company.address.street }}{% endif %}
+    </address>
+    <p><a href="{% url 'core:privacy' %}">{% translate "Политика конфиденциальности" %}</a></p>
+  </div>
+</footer>

@@ -1,0 +1,15 @@
+{% load i18n %}
+<a class="skip-link" href="#main">{% translate "Перейти к содержимому" %}</a>
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="site-header__logo" href="{% url 'core:home' %}">{{ company.name }}</a>
+    <nav aria-label="{% translate 'Основное меню' %}">
+      <ul class="site-nav">
+        {# TODO: menu items once the site structure is approved #}
+        <li><a href="{% url 'leads:create' %}">{% translate "Оставить заявку" %}</a></li>
+      </ul>
+    </nav>
+    <a class="site-header__phone" href="tel:{{ company.phone_href }}">{{ company.phone }}</a>
+    {% include "includes/language_switcher.html" %}
+  </div>
+</header>

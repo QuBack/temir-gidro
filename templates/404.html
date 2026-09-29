@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<section class="container">
+  <h1>{% translate "Страница не найдена" %}</h1>
+  <p>{% translate "Возможно, адрес изменился или в нём опечатка." %}</p>
+  <p><a href="{% url 'core:home' %}">{% translate "Перейти на главную" %}</a> ·
+     <a href="{% url 'leads:create' %}">{% translate "Оставить заявку" %}</a></p>
+</section>
+{% endblock %}

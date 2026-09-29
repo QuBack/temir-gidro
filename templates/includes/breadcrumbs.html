@@ -1,0 +1,8 @@
+{% load i18n %}
+<nav class="breadcrumbs container" aria-label="{% translate 'Хлебные крошки' %}">
+  <ol>
+    {% for title, url in breadcrumbs %}
+    <li>{% if forloop.last %}<span aria-current="page">{{ title }}</span>{% else %}<a href="{{ url }}">{{ title }}</a>{% endif %}</li>
+    {% endfor %}
+  </ol>
+</nav>

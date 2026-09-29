@@ -1,0 +1,8 @@
+User-agent: *
+{% if seo_indexing %}Disallow:
+# Yandex: treat URLs that differ only by tracking parameters as one page.
+Clean-param: utm_source&utm_medium&utm_campaign&utm_content&utm_term&yclid&gclid&from
+
+Sitemap: {{ sitemap_url }}
+{% else %}Disallow: /
+{% endif %}

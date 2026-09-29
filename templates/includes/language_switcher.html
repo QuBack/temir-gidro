@@ -1,0 +1,12 @@
+{% if alternates %}
+<nav class="lang-switcher" aria-label="Language">
+  <ul>
+    {% for alt in alternates %}
+    <li>
+      {% if alt.code == LANGUAGE_CODE %}<span aria-current="true">{{ alt.code|upper }}</span>
+      {% else %}<a href="{{ alt.url }}" hreflang="{{ alt.code }}" lang="{{ alt.code }}" title="{{ alt.name }}">{{ alt.code|upper }}</a>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</nav>
+{% endif %}

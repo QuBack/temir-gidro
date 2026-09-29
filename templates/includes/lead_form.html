@@ -1,0 +1,41 @@
+{% load i18n %}
+<form class="lead-form" method="post" action="{% url 'leads:create' %}" data-lead-form novalidate>
+  {% csrf_token %}
+  {{ lead_form.token }}{{ lead_form.page }}
+  <div class="lead-form__errors" data-lead-form-errors role="alert">{{ lead_form.non_field_errors }}</div>
+
+  <div class="field">
+    <label for="{{ lead_form.name.id_for_label }}">{% translate "Имя" %}</label>
+    {{ lead_form.name }}
+    {{ lead_form.name.errors }}
+  </div>
+  <div class="field">
+    <label for="{{ lead_form.phone.id_for_label }}">{% translate "Телефон" %}</label>
+    {{ lead_form.phone }}
+    {{ lead_form.phone.errors }}
+  </div>
+  <div class="field">
+    <label for="{{ lead_form.email.id_for_label }}">{% translate "Email" %} <span class="field__optional">({% translate "необязательно" %})</span></label>
+    {{ lead_form.email }}
+    {{ lead_form.email.errors }}
+  </div>
+  <div class="field">
+    <label for="{{ lead_form.message.id_for_label }}">{% translate "Что вас интересует?" %} <span class="field__optional">({% translate "необязательно" %})</span></label>
+    {{ lead_form.message }}
+    {{ lead_form.message.errors }}
+  </div>
+  <div class="field field--hp" aria-hidden="true">
+    <label for="{{ lead_form.website.id_for_label }}">Website</label>
+    {{ lead_form.website }}
+  </div>
+  <div class="field field--checkbox">
+    {{ lead_form.consent }}
+    <label for="{{ lead_form.consent.id_for_label }}">
+      {% translate "Согласен на обработку персональных данных" %}
+      (<a href="{% url 'core:privacy' %}">{% translate "политика конфиденциальности" %}</a>)
+    </label>
+    {{ lead_form.consent.errors }}
+  </div>
+  <button type="submit">{% translate "Отправить заявку" %}</button>
+  <p class="lead-form__success" data-lead-form-success hidden>{% translate "Заявка отправлена. Мы перезвоним в рабочее время." %}</p>
+</form>

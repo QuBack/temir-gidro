@@ -1,0 +1,5 @@
+django~=6.1.1
+psycopg[binary]~=3.3
+django-environ~=0.14
+whitenoise[brotli]~=6.12
+gunicorn~=26.2

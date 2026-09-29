@@ -1,0 +1,51 @@
+{% load static i18n seo %}<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ seo_title|default:company.name }}</title>
+  <meta name="description" content="{{ seo_description|default:company.description }}">
+  {% if not seo_indexing %}<meta name="robots" content="noindex, nofollow">
+  {% elif noindex %}<meta name="robots" content="noindex, follow">{% endif %}
+  {% if not noindex %}
+  <link rel="canonical" href="{{ canonical_url }}">
+  {% for alt in alternates %}
+  <link rel="alternate" hreflang="{{ alt.code }}" href="{{ alt.url }}">
+  {% endfor %}
+  {% if alternates %}<link rel="alternate" hreflang="x-default" href="{{ x_default_url }}">{% endif %}
+  {% endif %}
+
+  <meta property="og:type" content="{{ og_type|default:'website' }}">
+  <meta property="og:site_name" content="{{ company.name }}">
+  <meta property="og:title" content="{{ seo_title|default:company.name }}">
+  <meta property="og:description" content="{{ seo_description|default:company.description }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:locale" content="{{ LANGUAGE_CODE }}">
+  {% if og_image %}
+  <meta property="og:image" content="{{ og_image }}">
+  <meta name="twitter:card" content="summary_large_image">
+  {% endif %}
+
+  {% if yandex_verification %}<meta name="yandex-verification" content="{{ yandex_verification }}">{% endif %}
+  {% if google_verification %}<meta name="google-site-verification" content="{{ google_verification }}">{% endif %}
+
+  <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  {% block extra_head %}{% endblock %}
+  {% for item in jsonld %}{{ item|jsonld }}{% endfor %}
+</head>
+<body>
+  {% include "includes/header.html" %}
+  <main id="main">
+    {% if breadcrumbs %}{% include "includes/breadcrumbs.html" %}{% endif %}
+    {% block content %}{% endblock %}
+  </main>
+  {% include "includes/footer.html" %}
+
+  <script src="{% static 'js/lead-form.js' %}" defer></script>
+  {% if yandex_metrika_id and seo_indexing %}
+  <script src="{% static 'js/metrika.js' %}" data-counter-id="{{ yandex_metrika_id }}" defer></script>
+  <noscript><div><img src="https://mc.yandex.ru/watch/{{ yandex_metrika_id }}" class="visually-hidden" alt=""></div></noscript>
+  {% endif %}
+</body>
+</html>
