@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _l
 from django.views.decorators.http import require_http_methods
 from django.views.generic import TemplateView
 
+from apps.core.catalog import HERO_IMAGE
 from apps.core.company import COMPANY
 from apps.core.mixins import SeoMixin
 
@@ -66,11 +67,17 @@ def _invalid(request, form, wants_json, status):
 
 
 def _render_page(request, form, status=200):
-    context = {"lead_form": form, "seo_title": _("Оставить заявку | Temir-Gidro"), "noindex": True}
+    context = {
+        "lead_form": form,
+        "hero_image": HERO_IMAGE,
+        "seo_title": _("Оставить заявку | ТЕМИР ГИДРО"),
+        "noindex": True,
+    }
     return render(request, "leads/lead_page.html", context, status=status)
 
 
 class LeadSuccessView(SeoMixin, TemplateView):
     template_name = "leads/lead_success.html"
-    seo_title = _l("Заявка отправлена | Temir-Gidro")
+    seo_title = _l("Заявка отправлена | ТЕМИР ГИДРО")
     noindex = True
+    extra_context = {"hero_image": HERO_IMAGE}

@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load i18n static images %}
+{% block body_attrs %} class="overlay"{% endblock %}
+{% block breadcrumbs %}{% endblock %}
+{% block content %}
+
+<section class="eq-hero" aria-labelledby="eq-title">
+  {% include "includes/breadcrumbs.html" %}
+  <div class="container eq-hero__grid">
+    <div class="eq-hero__text">
+      <h1 id="eq-title">{{ item.title }}</h1>
+      <p class="eq-hero__lead">{{ item.lead }}</p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="#raschet">{% translate "Оставить заявку" %}</a>
+        <a class="hero__phone" href="tel:{{ company.phone_href }}">{{ company.phone }}</a>
+      </div>
+      <a class="eq-hero__link" href="#podbor">{% translate "Подобрать размеры на схеме" %}</a>
+    </div>
+    <figure class="sheet">
+      <div class="sheet__drawing eq-hero__drawing">
+        {% picture item.image item.title sizes="(min-width: 60rem) 30rem, 90vw" priority=True %}
+      </div>
+      <figcaption class="stamp">
+        <span class="stamp__name">{{ item.title }}</span>
+        <dl class="stamp__facts">
+          {% for value, label in item.facts %}<div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>{% endfor %}
+        </dl>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="section" id="serii" aria-labelledby="series-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="seriya-title">{{ item.models_title }}</h2>
+      <p class="section-head__lead">{{ item.models_lead }}</p>
+    </div>
+    <ul class="series">
+      {% for m in item.models %}
+      <li class="series__item{% if m.placeholder %} series__item--stub{% endif %}" id="seriya-{{ m.slug }}">
+        {% if m.image %}<div class="series__photo">{% picture m.image m.name sizes="(min-width: 48rem) 22vw, 45vw" %}</div>
+        {% else %}{% include "includes/scissor_icon.html" with icon=m.icon %}{% endif %}
+        <h3>{{ m.name }}</h3>
+        <p>{{ m.label }}</p>
+        {% if m.specs %}
+        <dl class="specs">{% for label, value in m.specs %}<div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>{% endfor %}</dl>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    <p class="series__note">{% translate "Высоту подъёма, грузоподъёмность и размер платформы подбираем под вашу задачу." %}</p>
+  </div>
+</section>
+
+{% if item.configurator %}{% include "includes/lift_config.html" %}{% endif %}
+
+<section class="section" aria-labelledby="apps-title">
+  <div class="container reasons">
+    <h2 id="apps-title">{% translate "Где применяют" %}</h2>
+    <ul class="reasons__list">
+      {% for title, text, url in item.applications %}
+      <li>
+        <h3>{% if url %}<a href="{{ url }}">{{ title }}</a>{% else %}{{ title }}{% endif %}</h3>
+        <p>{{ text }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+{% if item.gallery|length > 1 %}
+<section class="section section--grey" aria-labelledby="gallery-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="gallery-title">{% translate "Фото и рендеры" %}</h2>
+    </div>
+    <ul class="gallery">
+      {% for g in item.gallery %}
+      <li class="gallery__item{% if g.photo %} gallery__item--photo{% endif %}">
+        {% if g.photo %}{% picture g.image g.alt sizes="(min-width: 60rem) 60vw, 100vw" %}
+        {% else %}{% picture g.image g.alt sizes="(min-width: 60rem) 30vw, 90vw" %}{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
+
+<section class="section" aria-labelledby="faq-title">
+  <div class="container faq">
+    <h2 id="faq-title">{% translate "Частые вопросы" %}</h2>
+    <div class="faq__list">
+      {% for q, a in item.faq %}
+      <details class="faq__item"{% if forloop.first %} open{% endif %}>
+        <summary><h3>{{ q }}</h3></summary>
+        <p>{{ a }}</p>
+      </details>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% include "includes/lead_section.html" %}
+
+<section class="section" aria-labelledby="related-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="related-title">{% translate "Другие подъёмники" %}</h2>
+    </div>
+    <ul class="catalog__list">
+      {% for cat in related %}
+      <li>
+        <a class="catalog__row" href="{{ cat.url }}">
+          <div class="catalog__thumb">{% picture cat.image cat.title sizes="7rem" %}</div>
+          <div>
+            <h3>{{ cat.title }}</h3>
+            <p>{{ cat.text }}</p>
+          </div>
+          {% if cat.facts %}<ul class="facts">{% for f in cat.facts %}<li>{{ f }}</li>{% endfor %}</ul>{% endif %}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}<script src="{% static 'js/drawings.js' %}" defer></script>{% endblock %}

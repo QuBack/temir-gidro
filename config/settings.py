@@ -142,7 +142,7 @@ SECURE_CSP = {
     "style-src": [CSP.SELF],
     "img-src": [CSP.SELF, "data:", *_METRIKA],
     "connect-src": [CSP.SELF, *_METRIKA],
-    "frame-src": [*_METRIKA],
+    "frame-src": [*_METRIKA, "https://yandex.ru"],  # Yandex Maps widget on the contacts page
     "font-src": [CSP.SELF],
     "form-action": [CSP.SELF],
     "frame-ancestors": [CSP.NONE],

@@ -5,6 +5,7 @@ lists move to the database and the admin. URLs follow the planned structure —
 the pages behind them are not built yet.
 """
 
+from django.utils.text import format_lazy
 from django.utils.translation import gettext_lazy as _
 
 
@@ -12,8 +13,15 @@ def img(src, size, widths=(400, 800)):
     return {"src": src, "size": size, "widths": widths}
 
 
+# Full-width workshop photo in the hero — the LCP image.
 HERO_IMAGE = img("hero/gidravlicheskie-podemniki", (1920, 765), widths=(768, 1280, 1920))
-# Drop a muted 6–15 s loop into static/video/ and set the file name here.
+# Generated drawing-style backgrounds (illustrations, never passed off as photos).
+CONTACTS_BG = img("backgrounds/chertezh-nozhnichnogo-podemnika", (1672, 941), widths=(768, 1280, 1672))
+ABOUT_BG = img("backgrounds/chertezh-gidrocilindra", (1672, 941), widths=(768, 1280, 1672))
+# Configurator fallback when JS is off (with JS a live SVG scheme replaces it).
+HERO_LIFT = img("catalog/nozhnichnyj-podemnik-3x", (800, 1289))
+# Drop a muted 6–15 s loop into static/video/ and set the file name here;
+# it plays over the hero photo.
 HERO_VIDEO = None  # e.g. "video/hero.mp4"
 
 CATEGORIES = [
@@ -22,7 +30,8 @@ CATEGORIES = [
         "url": "/podemniki/nozhnichnye/",
         "text": _("Серия 1X–4X: от одной до четырёх пар ножниц. Грузовые платформы для складов, цехов и погрузки."),
         "facts": [_("до 10 т"), _("до 6 м")],
-        "image": img("catalog/nozhnichnyj-podemnik-3x", (800, 1289)),
+        # The 3X render is the configurator fallback; the catalog shows the single-pair 1X.
+        "image": img("catalog/nozhnichnyj-podemnik", (800, 486)),
         "featured": True,
     },
     {
@@ -135,7 +144,7 @@ PROJECTS = [
         "title": _("Проект подъёмника под объект"),
         "text": _("Схема элементов и узлов — согласуем до начала производства."),
         "image": img("photos/shema-podemnika-dlya-kontejnerov", (1200, 848), widths=(600, 1200)),
-        "url": "/proekty/",
+        "url": "/podemniki/dlya-musornyh-kontejnerov/",
     },
 ]
 
@@ -183,3 +192,205 @@ ARTICLES = [
         "/stati/svarnoj-ili-razbornyj-gidrocilindr/",
     ),
 ]
+
+
+def scissor_icon(pairs, pair_height=26, width=64):
+    """Side-view pictogram of a scissor lift: platform, `pairs` crossed arm
+    pairs, base frame. Taller series get taller icons."""
+    top, frame = 8, 6
+    bottom = top + pairs * pair_height
+    lines = []
+    for k in range(pairs):
+        y1, y2 = top + k * pair_height, top + (k + 1) * pair_height
+        lines += [(8, y1, width - 8, y2), (width - 8, y1, 8, y2)]
+    return {
+        "width": width,
+        "height": bottom + frame,
+        "top": top - frame,
+        "bottom": bottom,
+        "frame": frame,
+        "lines": lines,
+    }
+
+
+# Equipment line pages: /podemniki/<slug>/. Static until the catalog models exist.
+# TODO: series specs (height, load, platform) come from the client — see todo.md.
+EQUIPMENT = {
+    "nozhnichnye": {
+        "title": _("Ножничные подъёмники"),
+        "seo_title": _("Ножничные подъёмники от производителя — ТЕМИР ГИДРО"),
+        "seo_description": _(
+            "Гидравлические ножничные подъёмники серий 1X–4X: грузоподъёмность до 10 т, высота подъёма до 6 м. "
+            "Размер платформы под задачу, монтаж и гарантия."
+        ),
+        "lead": _(
+            "Грузовые платформы для складов, цехов и погрузки. Размер платформы, высоту подъёма "
+            "и грузоподъёмность подбираем под объект."
+        ),
+        "image": img("catalog/nozhnichnyj-podemnik", (800, 486)),
+        # Set in ГОСТ lettering, where "т" reads like "m": kg and mm, as on drawings.
+        "facts": [
+            (_("до 10 000 кг"), _("Грузоподъёмность")),
+            (_("до 6000 мм"), _("Высота подъёма")),
+            ("1–4", _("Пар ножниц")),
+            (_("по ТЗ"), _("Платформа")),
+        ],
+        "models_title": _("Серии 1X–4X"),
+        "models_lead": _("Серия — это число пар ножниц: чем их больше, тем выше подъём при той же длине платформы."),
+        # Each model shows an `image` or, until photos arrive, an `icon` pictogram.
+        "models": [
+            {"name": _("Серия 1X"), "slug": "1x", "label": _("Одна пара ножниц"), "icon": scissor_icon(1), "specs": []},
+            {"name": _("Серия 2X"), "slug": "2x", "label": _("Две пары ножниц"), "icon": scissor_icon(2), "specs": []},
+            {"name": _("Серия 3X"), "slug": "3x", "label": _("Три пары ножниц"), "icon": scissor_icon(3), "specs": []},
+            {
+                "name": _("Серия 4X"),
+                "slug": "4x",
+                "label": _("Четыре пары ножниц"),
+                "icon": scissor_icon(4),
+                "specs": [],
+            },
+        ],
+        "applications": [
+            (_("Склады и логистика"), _("Погрузка, перегрузочные площадки, подъём между уровнями."), None),
+            (_("Промышленность"), _("Рабочие платформы и подъём тяжёлых узлов в цехах."), None),
+            (
+                _("Покрасочные производства"),
+                _("Рабочие платформы для окрасочных камер."),
+                "/podemniki/dlya-okrasochnyh-kamer/",
+            ),
+        ],
+        "gallery": [
+            {
+                "image": img("hero/gidravlicheskie-podemniki", (1920, 765), widths=(768, 1280, 1920)),
+                "alt": _("Ножничные подъёмники ТЕМИР ГИДРО в цехе"),
+                "photo": True,
+            },
+            {"image": img("catalog/nozhnichnyj-podemnik-3x", (800, 1289)), "alt": _("Ножничный подъёмник серии 3X")},
+            {
+                "image": img("catalog/podemnik-dlya-okrasochnoj-kamery", (800, 490)),
+                "alt": _("Ножничная рабочая платформа для окрасочной камеры"),
+            },
+        ],
+        "faq": [FAQ[0], FAQ[1], FAQ[3], FAQ[4]],
+        "configurator": True,
+    },
+    "dlya-okrasochnyh-kamer": {
+        "title": _("Подъёмники для окрасочных камер"),
+        "seo_title": _("Подъёмники для окрасочных камер — ТЕМИР ГИДРО"),
+        "seo_description": _(
+            "Гидравлические рабочие платформы 1X и 2D для окрасочных камер и покраски крупногабаритных изделий. "
+            "Размер платформы под камеру, монтаж и гарантия."
+        ),
+        "lead": _(
+            "Рабочие платформы для покраски крупногабаритных изделий. Размер платформы и высоту подъёма "
+            "подбираем под вашу камеру."
+        ),
+        "image": img("catalog/podemnik-dlya-okrasochnoj-kamery", (800, 490)),
+        "facts": [
+            ("1X, 2D", _("Модели")),
+            (_("по ТЗ"), _("Платформа")),
+            (_("по ТЗ"), _("Высота подъёма")),
+            (_("24 ч"), _("Расчёт стоимости")),
+        ],
+        "models_title": _("Модели"),
+        "models_lead": _(
+            "Две модели рабочих платформ. Какая подойдёт — зависит от изделий и размеров камеры: подскажем при расчёте."
+        ),
+        # TODO: the 2D photo and both models' descriptions come with the old site's media (todo.md).
+        "models": [
+            {
+                "name": "1X",
+                "slug": "1x",
+                "label": _("Рабочая платформа"),
+                "image": img("catalog/podemnik-dlya-okrasochnoj-kamery", (800, 490)),
+                "specs": [],
+            },
+            {
+                "name": "2D",
+                "slug": "2d",
+                "label": _("Рабочая платформа"),
+                "image": img("catalog/podemnik-dlya-okrasochnoj-kamery", (800, 490)),
+                "placeholder": True,
+                "specs": [],
+            },
+        ],
+        "applications": [
+            (_("Покрасочные производства"), _("Рабочие платформы для окрасочных камер."), None),
+            (_("Промышленность"), _("Рабочие платформы и подъём тяжёлых узлов в цехах."), None),
+        ],
+        "gallery": [
+            {
+                "image": img("catalog/podemnik-dlya-okrasochnoj-kamery", (800, 490)),
+                "alt": _("Рабочая платформа для окрасочной камеры"),
+            },
+        ],
+        "faq": [FAQ[0], FAQ[1], FAQ[3], FAQ[4]],
+        "configurator": True,
+    },
+}
+
+
+def _model(name, label, url, image=None, icon=None, placeholder=False):
+    return {"name": name, "label": label, "url": url, "image": image, "icon": icon, "placeholder": placeholder}
+
+
+def _placeholders(cat, count=3):
+    """Stub cards until the old site's media and model list arrive (see todo.md)."""
+    return [
+        _model(
+            format_lazy("{} {}", _("Модель"), n),
+            _("Скоро в каталоге"),
+            cat["url"],
+            image=cat["image"],
+            placeholder=True,
+        )
+        for n in range(1, count + 1)
+    ]
+
+
+# Models shown in the header mega-menu, keyed by category URL.
+_SCISSORS = "/podemniki/nozhnichnye/"
+_MODELS = {
+    _SCISSORS: [
+        _model(
+            _("Серия 1X"),
+            _("Одна пара ножниц"),
+            _SCISSORS + "#seriya-1x",
+            image=img("catalog/nozhnichnyj-podemnik", (800, 486)),
+        ),
+        _model(_("Серия 2X"), _("Две пары ножниц"), _SCISSORS + "#seriya-2x", icon=scissor_icon(2)),
+        _model(
+            _("Серия 3X"),
+            _("Три пары ножниц"),
+            _SCISSORS + "#seriya-3x",
+            image=img("catalog/nozhnichnyj-podemnik-3x", (800, 1289)),
+        ),
+        _model(_("Серия 4X"), _("Четыре пары ножниц"), _SCISSORS + "#seriya-4x", icon=scissor_icon(4)),
+    ],
+    "/podemniki/dlya-okrasochnyh-kamer/": [
+        _model(
+            "1X",
+            _("Рабочая платформа"),
+            "/podemniki/dlya-okrasochnyh-kamer/#seriya-1x",
+            image=img("catalog/podemnik-dlya-okrasochnoj-kamery", (800, 490)),
+        ),
+        _model(
+            "2D",
+            _("Рабочая платформа"),
+            "/podemniki/dlya-okrasochnyh-kamer/#seriya-2d",
+            image=img("catalog/podemnik-dlya-okrasochnoj-kamery", (800, 490)),
+            placeholder=True,
+        ),
+    ],
+    "/podemniki/konsolnye/": [
+        _model(
+            "1L",
+            _("Подъём грузов между этажами"),
+            "/podemniki/konsolnye/",
+            image=img("catalog/konsolnyj-podemnik", (124, 293), widths=(124,)),
+        ),
+    ],
+}
+for _cat in CATEGORIES:
+    _cat["models"] = _MODELS.get(_cat["url"]) or _placeholders(_cat)
+del _cat

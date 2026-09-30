@@ -4,6 +4,8 @@ from django.conf import settings
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 
+from .catalog import EQUIPMENT
+
 
 class CanonicalSitemap(Sitemap):
     """Every URL in the sitemap uses SITE_URL, regardless of the request host.
@@ -22,10 +24,18 @@ class CanonicalSitemap(Sitemap):
 
 class StaticViewSitemap(CanonicalSitemap):
     def items(self):
-        return ["core:home", "core:privacy"]
+        return ["core:home", "core:catalog", "core:about", "core:contacts", "core:privacy"]
 
     def location(self, item):
         return reverse(item)
 
 
-sitemaps = {"static": StaticViewSitemap}
+class EquipmentSitemap(CanonicalSitemap):
+    def items(self):
+        return list(EQUIPMENT)
+
+    def location(self, item):
+        return reverse("core:equipment", args=[item])
+
+
+sitemaps = {"static": StaticViewSitemap, "equipment": EquipmentSitemap}

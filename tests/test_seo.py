@@ -120,3 +120,11 @@ def test_security_headers(client):
     assert "default-src 'self'" in response["Content-Security-Policy"]
     assert response["X-Content-Type-Options"] == "nosniff"
     assert response["X-Frame-Options"] == "DENY"
+
+
+def test_default_og_image_and_logo(client):
+    html = client.get("/").content.decode()
+    assert f'<meta property="og:image" content="{SITE}/static/img/og/temir-gidro-1200x630.jpg">' in html
+    assert 'rel="manifest"' in html
+    org = next(b for b in jsonld_blocks(html) if b["@type"] == "LocalBusiness")
+    assert org["logo"].endswith("/img/apple-touch-icon.png")

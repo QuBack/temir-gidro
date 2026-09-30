@@ -1,0 +1,3 @@
+/* Loaded only inside <noscript>. The transparent header over the first section
+   can't turn solid without JS, so it stops being sticky and scrolls away. */
+.overlay .site-header { position: relative; }
