@@ -7,30 +7,44 @@ from django.views.generic import TemplateView
 
 from apps.leads.forms import LeadForm
 
+from . import catalog
 from .mixins import BreadcrumbsMixin, SeoMixin
-from .seo import organization_schema
+from .seo import faq_schema, organization_schema
 
 
 class HomeView(SeoMixin, TemplateView):
     template_name = "core/home.html"
     # TODO: final wording after the keyword research.
-    seo_title = _("Подъёмники — продажа, монтаж и обслуживание | Temir-Gidro")
+    seo_title = _("Гидравлические подъёмники от производителя — ТЕМИР ГИДРО")
     seo_description = _(
-        "Temir-Gidro: подъёмники с доставкой, монтажом и сервисным обслуживанием. "
-        "Оставьте заявку — перезвоним и подберём оборудование."
+        "Производим ножничные, четырёхстоечные и специальные гидравлические подъёмники и гидроцилиндры "
+        "под задачу. Монтаж, гарантия, доставка по России."
     )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["lead_form"] = LeadForm.for_request(self.request)
-        context["jsonld"] = [organization_schema()]
+        context["jsonld"] = [organization_schema(), faq_schema(catalog.FAQ)]
+        context.update(
+            hero_image=catalog.HERO_IMAGE,
+            hero_video=catalog.HERO_VIDEO,
+            categories=catalog.CATEGORIES,
+            cylinders=catalog.CYLINDERS,
+            stats=catalog.STATS,
+            advantages=catalog.ADVANTAGES,
+            steps=catalog.STEPS,
+            industries=catalog.INDUSTRIES,
+            projects=catalog.PROJECTS,
+            faq=catalog.FAQ,
+            articles=catalog.ARTICLES,
+        )
         return context
 
 
 class PrivacyView(SeoMixin, BreadcrumbsMixin, TemplateView):
     template_name = "core/privacy.html"
-    seo_title = _("Политика конфиденциальности | Temir-Gidro")
-    seo_description = _("Как Temir-Gidro обрабатывает и защищает персональные данные, отправленные через сайт.")
+    seo_title = _("Политика конфиденциальности | ТЕМИР ГИДРО")
+    seo_description = _("Как ТЕМИР ГИДРО обрабатывает и защищает персональные данные, отправленные через сайт.")
 
     def get_breadcrumbs(self):
         return [(_("Политика конфиденциальности"), reverse("core:privacy"))]

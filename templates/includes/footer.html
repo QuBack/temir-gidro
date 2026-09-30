@@ -1,12 +1,40 @@
-{% load i18n %}
+{% load i18n static %}
 <footer class="site-footer">
-  <div class="container">
-    <p class="site-footer__name">{{ company.name }}</p>
-    <address>
-      <a href="tel:{{ company.phone_href }}">{{ company.phone }}</a><br>
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <a href="{% url 'core:home' %}">
+        <img src="{% static 'img/logo-temir-gidro-white.webp' %}" alt="{{ company.name }}" width="905" height="65" loading="lazy">
+      </a>
+      <p>{{ company.description }}</p>
+    </div>
+    <nav class="site-footer__nav" id="footer-nav" aria-label="{% translate 'Навигация по сайту' %}">
+      <div>
+        <p class="site-footer__title"><a href="/podemniki/">{% translate "Подъёмники" %}</a></p>
+        <ul>{% for cat in nav_categories %}<li><a href="{{ cat.url }}">{{ cat.title }}</a></li>{% endfor %}</ul>
+      </div>
+      <div>
+        <p class="site-footer__title">{% translate "Компания" %}</p>
+        <ul>
+          <li><a href="/gidrocilindry/">{% translate "Гидроцилиндры" %}</a></li>
+          <li><a href="/proekty/">{% translate "Проекты" %}</a></li>
+          <li><a href="/stati/">{% translate "Статьи" %}</a></li>
+          <li><a href="/o-kompanii/">{% translate "О компании" %}</a></li>
+          <li><a href="/dostavka-i-oplata/">{% translate "Доставка и оплата" %}</a></li>
+          <li><a href="/kontakty/">{% translate "Контакты" %}</a></li>
+        </ul>
+      </div>
+    </nav>
+    <address class="site-footer__contacts">
+      <p class="site-footer__title">{% translate "Контакты" %}</p>
+      <a class="site-footer__phone" href="tel:{{ company.phone_href }}">{{ company.phone }}</a>
+      <a href="tel:{{ company.phone_extra_href }}">{{ company.phone_extra }}</a>
       <a href="mailto:{{ company.email }}">{{ company.email }}</a>
-      {% if company.address.street %}<br>{{ company.address.city }}, {{ company.address.street }}{% endif %}
+      <span>{{ company.address.city }}, {{ company.address.street }}</span>
+      <span>{{ company.opening_hours_display }}</span>
     </address>
-    <p><a href="{% url 'core:privacy' %}">{% translate "Политика конфиденциальности" %}</a></p>
+  </div>
+  <div class="container site-footer__bottom">
+    <p>© {% now "Y" %} {{ company.name }} — {% translate "торговая марка" %} {{ company.legal_name }}</p>
+    <a href="{% url 'core:privacy' %}">{% translate "Политика конфиденциальности" %}</a>
   </div>
 </footer>

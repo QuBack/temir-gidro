@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.urls import translate_url
 
+from .catalog import CATEGORIES
 from .company import COMPANY
 from .seo import absolute_url
 
@@ -15,6 +16,7 @@ def site(request):
         ]
     return {
         "company": COMPANY,
+        "nav_categories": CATEGORIES,
         # Query strings (utm, filters) are never part of the canonical URL.
         "canonical_url": absolute_url(path),
         "alternates": alternates,

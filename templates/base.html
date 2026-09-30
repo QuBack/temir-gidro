@@ -29,7 +29,10 @@
   {% if yandex_verification %}<meta name="yandex-verification" content="{{ yandex_verification }}">{% endif %}
   {% if google_verification %}<meta name="google-site-verification" content="{{ google_verification }}">{% endif %}
 
-  <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+  <link rel="icon" href="{% static 'img/favicon-32.png' %}" type="image/png">
+  <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}">
+  <meta name="theme-color" content="#102030">
+  <link rel="preload" href="{% static 'fonts/onest-cyrillic.woff2' %}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{% static 'css/main.css' %}">
   {% block extra_head %}{% endblock %}
   {% for item in jsonld %}{{ item|jsonld }}{% endfor %}
@@ -42,6 +45,7 @@
   </main>
   {% include "includes/footer.html" %}
 
+  <script src="{% static 'js/site.js' %}" defer></script>
   <script src="{% static 'js/lead-form.js' %}" defer></script>
   {% if yandex_metrika_id and seo_indexing %}
   <script src="{% static 'js/metrika.js' %}" data-counter-id="{{ yandex_metrika_id }}" defer></script>

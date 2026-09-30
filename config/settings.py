@@ -104,7 +104,7 @@ LANGUAGES = [
 LOCALE_PATHS = [BASE_DIR / "locale"]
 USE_I18N = True
 USE_TZ = True
-TIME_ZONE = env("TIME_ZONE", default="Asia/Almaty")
+TIME_ZONE = env("TIME_ZONE", default="Europe/Moscow")
 
 # --- Static & media -----------------------------------------------------------
 STATIC_URL = "/static/"

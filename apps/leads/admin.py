@@ -23,19 +23,52 @@ class LeadAdmin(admin.ModelAdmin):
     list_per_page = 50
     actions = ["mark_in_progress", "mark_closed", "mark_spam", "export_csv"]
     readonly_fields = [
-        "created_at", "updated_at", "source_page", "landing_page", "referrer",
-        "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term",
-        "language", "ip", "user_agent", "spam_reason",
+        "created_at",
+        "updated_at",
+        "source_page",
+        "landing_page",
+        "referrer",
+        "utm_source",
+        "utm_medium",
+        "utm_campaign",
+        "utm_content",
+        "utm_term",
+        "language",
+        "ip",
+        "user_agent",
+        "spam_reason",
     ]
     fieldsets = [
         (None, {"fields": ["status", "name", "phone", "email", "message", "manager_note"]}),
-        ("Источник", {"fields": [
-            "source_page", "landing_page", "referrer",
-            "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "language",
-        ]}),
-        ("Техническое", {"classes": ["collapse"], "fields": [
-            "created_at", "updated_at", "ip", "user_agent", "spam_reason",
-        ]}),
+        (
+            "Источник",
+            {
+                "fields": [
+                    "source_page",
+                    "landing_page",
+                    "referrer",
+                    "utm_source",
+                    "utm_medium",
+                    "utm_campaign",
+                    "utm_content",
+                    "utm_term",
+                    "language",
+                ]
+            },
+        ),
+        (
+            "Техническое",
+            {
+                "classes": ["collapse"],
+                "fields": [
+                    "created_at",
+                    "updated_at",
+                    "ip",
+                    "user_agent",
+                    "spam_reason",
+                ],
+            },
+        ),
     ]
 
     def get_queryset(self, request):
@@ -64,8 +97,19 @@ class LeadAdmin(admin.ModelAdmin):
         response["Content-Disposition"] = f'attachment; filename="{filename}"'
         response.write("﻿")  # BOM: Excel opens UTF-8 Cyrillic correctly
         writer = csv.writer(response, delimiter=";")
-        columns = ["created_at", "status", "name", "phone", "email", "message", "manager_note",
-                   "source_page", "utm_source", "utm_medium", "utm_campaign"]
+        columns = [
+            "created_at",
+            "status",
+            "name",
+            "phone",
+            "email",
+            "message",
+            "manager_note",
+            "source_page",
+            "utm_source",
+            "utm_medium",
+            "utm_campaign",
+        ]
         writer.writerow([Lead._meta.get_field(c).verbose_name for c in columns])
         for lead in queryset:
             row = []

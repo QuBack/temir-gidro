@@ -1,15 +1,41 @@
-{% load i18n %}
+{% load i18n static %}
 <a class="skip-link" href="#main">{% translate "Перейти к содержимому" %}</a>
-<header class="site-header">
+<div class="topbar">
+  <div class="container topbar__inner">
+    <span>{{ company.opening_hours_display }}</span>
+    <span class="topbar__addr">{{ company.address.city }}, {{ company.address.street }}</span>
+    <a href="mailto:{{ company.email }}">{{ company.email }}</a>
+    <a href="tel:{{ company.phone_extra_href }}">{{ company.phone_extra }}</a>
+  </div>
+</div>
+<header class="site-header" data-header>
   <div class="container site-header__inner">
-    <a class="site-header__logo" href="{% url 'core:home' %}">{{ company.name }}</a>
-    <nav aria-label="{% translate 'Основное меню' %}">
-      <ul class="site-nav">
-        {# TODO: menu items once the site structure is approved #}
-        <li><a href="{% url 'leads:create' %}">{% translate "Оставить заявку" %}</a></li>
+    <a class="site-header__logo" href="{% url 'core:home' %}">
+      <img src="{% static 'img/logo-temir-gidro.webp' %}" alt="{{ company.name }}" width="905" height="65">
+    </a>
+    {# Without JS the button is a link to the footer navigation. #}
+    <a class="nav-toggle" href="#footer-nav" data-nav-toggle aria-controls="site-nav" aria-expanded="false">
+      <span class="nav-toggle__bar"></span><span class="visually-hidden">{% translate "Меню" %}</span>
+    </a>
+    <nav class="site-nav" id="site-nav" aria-label="{% translate 'Основное меню' %}">
+      <ul class="site-nav__list">
+        <li class="site-nav__item site-nav__item--has-sub">
+          <a href="/podemniki/">{% translate "Подъёмники" %}</a>
+          <ul class="site-nav__sub">
+            {% for cat in nav_categories %}<li><a href="{{ cat.url }}">{{ cat.title }}</a></li>{% endfor %}
+          </ul>
+        </li>
+        <li class="site-nav__item"><a href="/gidrocilindry/">{% translate "Гидроцилиндры" %}</a></li>
+        <li class="site-nav__item"><a href="/proekty/">{% translate "Проекты" %}</a></li>
+        <li class="site-nav__item"><a href="/stati/">{% translate "Статьи" %}</a></li>
+        <li class="site-nav__item"><a href="/o-kompanii/">{% translate "О компании" %}</a></li>
+        <li class="site-nav__item"><a href="/kontakty/">{% translate "Контакты" %}</a></li>
       </ul>
     </nav>
-    <a class="site-header__phone" href="tel:{{ company.phone_href }}">{{ company.phone }}</a>
+    <div class="site-header__cta">
+      <a class="site-header__phone" href="tel:{{ company.phone_href }}">{{ company.phone }}</a>
+      <a class="btn btn--primary btn--sm" href="{% url 'leads:create' %}">{% translate "Рассчитать стоимость" %}</a>
+    </div>
     {% include "includes/language_switcher.html" %}
   </div>
 </header>

@@ -1,13 +1,215 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static images %}
 {% block content %}
-{# Placeholder content: final copy and layout come with the design. #}
-<section class="container">
-  <h1>{% translate "Подъёмники Temir-Gidro" %}</h1>
-  <p>{{ company.description }}</p>
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__media">
+    {% translate "Гидравлические ножничные подъёмники ТЕМИР ГИДРО в цехе" as hero_alt %}
+    {% picture hero_image hero_alt sizes="100vw" css_class="hero__poster" priority=True %}
+    {% if hero_video %}
+    {# Starts from site.js after load; skipped for reduced motion / data saver. #}
+    <video class="hero__video" data-hero-video muted loop playsinline preload="none" aria-hidden="true">
+      <source src="{% static hero_video %}" type="video/mp4">
+    </video>
+    {% endif %}
+  </div>
+  <div class="container hero__content">
+    <p class="eyebrow eyebrow--light">{% translate "Производитель гидравлического оборудования" %}</p>
+    <h1 class="hero__title" id="hero-title">{% translate "Гидравлические подъёмники" %} <span>{% translate "от производителя" %}</span></h1>
+    <p class="hero__lead">{% blocktranslate %}Проектируем и производим подъёмное оборудование и гидроцилиндры под вашу задачу — от расчёта до монтажа на объекте.{% endblocktranslate %}</p>
+    <div class="hero__actions">
+      <a class="btn btn--primary" href="#raschet">{% translate "Рассчитать стоимость" %}</a>
+      <a class="btn btn--ghost" href="#katalog">{% translate "Каталог подъёмников" %}</a>
+    </div>
+  </div>
+  <div class="container">
+    <dl class="hero__stats">
+      {% for value, label in stats %}
+      <div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>
+      {% endfor %}
+    </dl>
+  </div>
 </section>
-<section class="container" aria-labelledby="lead-heading">
-  <h2 id="lead-heading">{% translate "Оставьте заявку" %}</h2>
-  {% include "includes/lead_form.html" %}
+
+<section class="section" id="katalog" aria-labelledby="katalog-title">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">01 — {% translate "Каталог" %}</p>
+      <h2 id="katalog-title">{% translate "Подъёмное оборудование" %}</h2>
+      <p class="section-head__lead">{% translate "Серийные модели и оборудование по техническому заданию. Каждая линейка — на отдельной странице с характеристиками и вариантами исполнения." %}</p>
+    </div>
+    <ul class="cat-grid">
+      {% for cat in categories %}
+      <li class="cat-grid__item{% if cat.featured %} cat-grid__item--featured{% endif %}">
+        <a class="cat-card" href="{{ cat.url }}">
+          <div class="cat-card__media">
+            {% if cat.featured %}{% picture cat.image cat.title sizes="(min-width: 960px) 40vw, 90vw" %}
+            {% else %}{% picture cat.image cat.title sizes="(min-width: 960px) 20vw, 45vw" %}{% endif %}
+          </div>
+          <div class="cat-card__body">
+            <h3 class="cat-card__title">{{ cat.title }}</h3>
+            <p class="cat-card__text">{{ cat.text }}</p>
+            {% if cat.facts %}<ul class="chips">{% for f in cat.facts %}<li>{{ f }}</li>{% endfor %}</ul>{% endif %}
+          </div>
+          <span class="cat-card__arrow" aria-hidden="true">→</span>
+        </a>
+      </li>
+      {% endfor %}
+      <li class="cat-grid__item cat-grid__item--cta">
+        <div class="cta-card">
+          <h3>{% translate "Нужен нестандартный подъёмник?" %}</h3>
+          <p>{% translate "Спроектируем по вашему ТЗ, чертежу или образцу. Расчёт — в течение суток." %}</p>
+          <a class="btn btn--light" href="#raschet">{% translate "Отправить задачу" %}</a>
+        </div>
+      </li>
+    </ul>
+  </div>
 </section>
+
+<section class="section section--light" aria-labelledby="why-title">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">02 — {% translate "Почему мы" %}</p>
+      <h2 id="why-title">{% translate "Производим сами — отвечаем за результат" %}</h2>
+    </div>
+    <ol class="features">
+      {% for title, text in advantages %}
+      <li class="feature">
+        <h3 class="feature__title">{{ title }}</h3>
+        <p>{{ text }}</p>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+<section class="section section--dark" aria-labelledby="steps-title">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow eyebrow--light">03 — {% translate "Полный цикл" %}</p>
+      <h2 id="steps-title">{% translate "От заявки до монтажа" %}</h2>
+    </div>
+    <ol class="steps">
+      {% for title, text in steps %}
+      <li class="step">
+        <span class="step__num" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }}</span>
+        <h3 class="step__title">{{ title }}</h3>
+        <p>{{ text }}</p>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="cyl-title">
+  <div class="container split">
+    <div class="split__text">
+      <p class="eyebrow">04 — {% translate "Комплектующие" %}</p>
+      <h2 id="cyl-title">{{ cylinders.title }}</h2>
+      <p>{{ cylinders.text }}</p>
+      <dl class="specs">
+        {% for label, value in cylinders.specs %}<div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>{% endfor %}
+      </dl>
+      <a class="btn btn--primary" href="{{ cylinders.url }}">{% translate "Подробнее о гидроцилиндрах" %}</a>
+    </div>
+    <div class="split__media">
+      <div class="split__main">{% picture cylinders.image cylinders.title sizes="(min-width: 960px) 45vw, 90vw" %}</div>
+      <ul class="thumbs">
+        {% for p in cylinders.photos %}<li>{% translate "Производство гидроцилиндров" as ph_alt %}{% picture p ph_alt sizes="150px" %}</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section section--light" aria-labelledby="ind-title">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">05 — {% translate "Отрасли" %}</p>
+      <h2 id="ind-title">{% translate "Где работает наше оборудование" %}</h2>
+    </div>
+    <ul class="industries">
+      {% for title, text, url in industries %}
+      <li><a class="industry" href="{{ url }}"><h3>{{ title }}</h3><p>{{ text }}</p></a></li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="proj-title">
+  <div class="container">
+    <div class="section-head section-head--row">
+      <div>
+        <p class="eyebrow">06 — {% translate "Проекты" %}</p>
+        <h2 id="proj-title">{% translate "Решения под объект" %}</h2>
+      </div>
+      <a class="link-arrow" href="/proekty/">{% translate "Все проекты" %} →</a>
+    </div>
+    <ul class="projects">
+      {% for p in projects %}
+      <li>
+        <a class="project" href="{{ p.url }}">
+          {% picture p.image p.title sizes="(min-width: 960px) 30vw, 90vw" %}
+          <h3>{{ p.title }}</h3>
+          <p>{{ p.text }}</p>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section section--navy" id="raschet" aria-labelledby="lead-heading">
+  <div class="container lead">
+    <div class="lead__text">
+      <p class="eyebrow eyebrow--light">07 — {% translate "Расчёт стоимости" %}</p>
+      <h2 id="lead-heading">{% translate "Рассчитаем стоимость за 24 часа" %}</h2>
+      <p>{% translate "Цена зависит от конструкции, поэтому мы считаем её под задачу. Для расчёта достаточно указать:" %}</p>
+      <ul class="checklist">
+        <li>{% translate "габариты платформы — длину и ширину" %}</li>
+        <li>{% translate "высоту подъёма" %}</li>
+        <li>{% translate "грузоподъёмность" %}</li>
+        <li>{% translate "место установки и условия работы" %}</li>
+      </ul>
+      <p class="lead__phone">{% translate "Или позвоните:" %} <a href="tel:{{ company.phone_href }}">{{ company.phone }}</a></p>
+    </div>
+    <div class="lead__form">
+      {% include "includes/lead_form.html" %}
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="faq-title">
+  <div class="container faq">
+    <div class="section-head">
+      <p class="eyebrow">08 — {% translate "Вопросы" %}</p>
+      <h2 id="faq-title">{% translate "Частые вопросы" %}</h2>
+    </div>
+    <div class="faq__list">
+      {% for q, a in faq %}
+      <details class="faq__item"{% if forloop.first %} open{% endif %}>
+        <summary><h3>{{ q }}</h3></summary>
+        <p>{{ a }}</p>
+      </details>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section section--light" aria-labelledby="art-title">
+  <div class="container">
+    <div class="section-head section-head--row">
+      <div>
+        <p class="eyebrow">09 — {% translate "Статьи" %}</p>
+        <h2 id="art-title">{% translate "Полезно знать" %}</h2>
+      </div>
+      <a class="link-arrow" href="/stati/">{% translate "Все статьи" %} →</a>
+    </div>
+    <ul class="articles">
+      {% for title, text, url in articles %}
+      <li><a class="article-card" href="{{ url }}"><span class="article-card__tag">{% translate "Статья" %}</span><h3>{{ title }}</h3><p>{{ text }}</p></a></li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
 {% endblock %}

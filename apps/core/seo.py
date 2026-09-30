@@ -52,3 +52,15 @@ def breadcrumb_schema(crumbs: list[tuple[str, str]]) -> dict:
             for i, (title, path) in enumerate(crumbs, start=1)
         ],
     }
+
+
+def faq_schema(items: list[tuple[str, str]]) -> dict:
+    """items: [(question, answer), …] — must match the visible FAQ block."""
+    return {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {"@type": "Question", "name": str(q), "acceptedAnswer": {"@type": "Answer", "text": str(a)}}
+            for q, a in items
+        ],
+    }
