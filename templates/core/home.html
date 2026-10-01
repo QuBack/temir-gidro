@@ -29,84 +29,74 @@
   </div>
 </section>
 
-{% include "includes/lift_config.html" %}
-
-<section class="section" id="katalog" aria-labelledby="katalog-title">
+<section class="section section--grey" id="katalog" aria-labelledby="katalog-title">
   <div class="container">
-    <div class="section-head">
-      <h2 id="katalog-title">{% translate "Подъёмное оборудование" %}</h2>
-      <p class="section-head__lead">{% translate "Серийные модели и оборудование по техническому заданию. У каждой линейки — своя страница с характеристиками и вариантами исполнения." %}</p>
+    <div class="section-head section-head--center">
+      <h2 id="katalog-title">{% translate "Гидравлическое оборудование" %}</h2>
+      <p class="section-head__lead">{% translate "Серийные модели собственного производства. Размер платформы, высоту подъёма и грузоподъёмность подбираем под объект." %}</p>
     </div>
-    <div class="catalog">
-      {% for cat in categories %}{% if cat.featured %}
-      <a class="catalog__lead" href="{{ cat.url }}">
-        <div class="catalog__lead-media">{% picture cat.image cat.title sizes="(min-width: 60rem) 24rem, 60vw" %}</div>
-        <div class="catalog__lead-body">
-          <h3>{{ cat.title }}</h3>
-          <p>{{ cat.text }}</p>
-          {% if cat.facts %}<ul class="facts">{% for f in cat.facts %}<li>{{ f }}</li>{% endfor %}</ul>{% endif %}
-        </div>
-      </a>
-      {% endif %}{% endfor %}
-      <ul class="catalog__list">
-        {% for cat in categories %}{% if not cat.featured %}
-        <li>
-          <a class="catalog__row" href="{{ cat.url }}">
-            <div class="catalog__thumb">{% picture cat.image cat.title sizes="7rem" %}</div>
-            <div>
-              <h3>{{ cat.title }}</h3>
-              <p>{{ cat.text }}</p>
-            </div>
-            {% if cat.facts %}<ul class="facts">{% for f in cat.facts %}<li>{{ f }}</li>{% endfor %}</ul>{% endif %}
-          </a>
-        </li>
-        {% endif %}{% endfor %}
-        <li class="catalog__custom">
-          <p><strong>{% translate "Нет подходящей модели?" %}</strong> {% translate "Спроектируем подъёмник по вашему ТЗ, чертежу или образцу." %}</p>
-          <a class="btn btn--outline" href="#raschet">{% translate "Отправить задачу" %}</a>
-        </li>
-      </ul>
+    <ul class="lift-tiles lift-tiles--all">
+      {% for t in equipment_tiles %}
+      <li>
+        <a class="lift-tile" href="{{ t.url }}">
+          <div class="lift-tile__media">
+            {% if t.image %}{% picture t.image t.title sizes="(min-width: 60rem) 24vw, 45vw" %}
+            {% else %}{% include "includes/scissor_icon.html" with icon=t.icon %}{% endif %}
+          </div>
+          <div class="lift-tile__desc">
+            <h3>{{ t.title }}</h3>
+            <p>{{ t.label }}</p>
+          </div>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    <div class="tiles-cta">
+      <p><strong>{% translate "Нет подходящей модели?" %}</strong> {% translate "Спроектируем подъёмник по вашему ТЗ, чертежу или образцу." %}</p>
+      <a class="btn btn--outline" href="#raschet">{% translate "Отправить задачу" %}</a>
     </div>
   </div>
 </section>
 
-<section class="section section--grey" aria-labelledby="why-title">
-  <div class="container reasons">
-    <h2 id="why-title">{% translate "Производим сами и отвечаем за результат" %}</h2>
-    <ul class="reasons__list">
-      {% for title, text in advantages %}
-      <li><h3>{{ title }}</h3><p>{{ text }}</p></li>
+<section class="section" aria-labelledby="why-title">
+  <div class="container">
+    <div class="section-head section-head--center">
+      <h2 id="why-title">{% translate "Производим сами и отвечаем за результат" %}</h2>
+    </div>
+    <ul class="features">
+      {% for title, text, icon_name in advantages %}
+      <li class="feature">
+        <span class="feature__icon">{% icon icon_name %}</span>
+        <h3>{{ title }}</h3>
+        <p>{{ text }}</p>
+      </li>
       {% endfor %}
     </ul>
   </div>
 </section>
 
-<section class="process" id="etapy" aria-labelledby="steps-title" data-process>
-  {# drawings.js pins this block and drives the cylinder with scroll; without it the list stays static. #}
-  <div class="process__pin">
-    <div class="container">
-      <div class="section-head">
-        <h2 id="steps-title">{% translate "От заявки до монтажа" %}</h2>
-        <p class="section-head__lead">{% translate "Весь путь ведём сами — от первого звонка до пусконаладки на объекте." %}</p>
-      </div>
-      <div class="process__drawing" aria-hidden="true">
-        <svg class="cylinder" data-process-svg viewBox="0 0 1100 250" hidden></svg>
-      </div>
-      <div class="process__tabs" data-process-tabs hidden></div>
-      <ol class="process__steps">
-        {% for title, text in steps %}
-        <li class="process__step" data-step>
-          <span class="process__num" aria-hidden="true">{{ forloop.counter }}</span>
-          <h3>{{ title }}</h3>
-          <p>{{ text }}</p>
-        </li>
-        {% endfor %}
-      </ol>
+<section class="section section--grey" id="etapy" aria-labelledby="steps-title">
+  <div class="container">
+    <div class="section-head section-head--center">
+      <h2 id="steps-title">{% translate "От заявки до монтажа" %}</h2>
+      <p class="section-head__lead">{% translate "Весь путь ведём сами — от первого звонка до пусконаладки на объекте." %}</p>
     </div>
+    <ol class="steps">
+      {% for title, text, icon_name in steps %}
+      <li class="steps__item">
+        <span class="steps__icon">{% icon icon_name %}</span>
+        <span class="steps__num">{% translate "Шаг" %} {{ forloop.counter }}</span>
+        <h3>{{ title }}</h3>
+        <p>{{ text }}</p>
+      </li>
+      {% endfor %}
+    </ol>
   </div>
 </section>
 
-<section class="section section--grey" aria-labelledby="cyl-title">
+{% include "includes/lift_config.html" %}
+
+<section class="section" aria-labelledby="cyl-title">
   <div class="container split">
     <div class="split__text">
       <h2 id="cyl-title">{{ cylinders.title }}</h2>
@@ -125,7 +115,7 @@
   </div>
 </section>
 
-<section class="section" aria-labelledby="proj-title">
+<section class="section section--grey" aria-labelledby="proj-title">
   <div class="container">
     <div class="section-head">
       <h2 id="proj-title">{% translate "Решения под объект" %}</h2>
@@ -144,12 +134,12 @@
   </div>
 </section>
 
-<section class="section section--rule" aria-labelledby="ind-title">
+<section class="section" aria-labelledby="ind-title">
   <div class="container industries">
     <h2 id="ind-title">{% translate "Где работает наше оборудование" %}</h2>
     <ul class="industries__list">
-      {% for title, text, url in industries %}
-      <li><a href="{{ url }}"><h3>{{ title }}</h3><p>{{ text }}</p></a></li>
+      {% for title, text, url, icon_name in industries %}
+      <li><a href="{{ url }}">{% icon icon_name "industries__icon" %}<h3>{{ title }}</h3><p>{{ text }}</p></a></li>
       {% endfor %}
     </ul>
   </div>
@@ -178,8 +168,14 @@
       <a class="more-link" href="/stati/">{% translate "Все статьи" %}</a>
     </div>
     <ul class="articles">
-      {% for title, text, url in articles %}
-      <li><a class="article" href="{{ url }}"><h3>{{ title }}</h3><p>{{ text }}</p></a></li>
+      {% for a in articles %}
+      <li>
+        <a class="article" href="{{ a.url }}">
+          <div class="article__media">{% picture a.image a.title sizes="(min-width: 48rem) 30vw, 90vw" %}</div>
+          <h3>{{ a.title }}</h3>
+          <p>{{ a.text }}</p>
+        </a>
+      </li>
       {% endfor %}
     </ul>
   </div>

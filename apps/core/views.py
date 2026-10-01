@@ -34,7 +34,7 @@ class HomeView(SeoMixin, TemplateView):
             hero_lift=catalog.HERO_LIFT,
             hero_image=catalog.HERO_IMAGE,
             hero_video=catalog.HERO_VIDEO,
-            categories=catalog.CATEGORIES,
+            equipment_tiles=catalog.EQUIPMENT_TILES,
             cylinders=catalog.CYLINDERS,
             stats=catalog.STATS,
             advantages=catalog.ADVANTAGES,
@@ -72,6 +72,7 @@ class CatalogView(SeoMixin, BreadcrumbsMixin, TemplateView):
         context.update(
             lead_form=LeadForm.for_request(self.request),
             categories=catalog.CATEGORIES,
+            scissor_series=catalog.SCISSOR_SERIES,
             industries=catalog.INDUSTRIES,
         )
         return context

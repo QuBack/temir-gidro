@@ -16,6 +16,28 @@
   </div>
 </section>
 
+<section class="section section--grey" aria-labelledby="scissor-title">
+  <div class="container">
+    <h2 class="tiles-title" id="scissor-title"><a href="{{ scissor_series.url }}">{{ scissor_series.title }}</a></h2>
+    <ul class="lift-tiles">
+      {% for m in scissor_series.models %}
+      <li>
+        <a class="lift-tile" href="{{ m.url }}">
+          <div class="lift-tile__media">
+            {% if m.image %}{% picture m.image m.name sizes="(min-width: 60rem) 22vw, 45vw" %}
+            {% elif m.icon %}{% include "includes/scissor_icon.html" with icon=m.icon %}{% endif %}
+          </div>
+          <div class="lift-tile__desc">
+            <h3>{{ m.name }}</h3>
+            <p>{{ m.label }}</p>
+          </div>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
 <section class="section" aria-labelledby="types-title">
   <div class="container">
     <h2 class="visually-hidden" id="types-title">{% translate "Типы подъёмников" %}</h2>
@@ -38,8 +60,8 @@
   <div class="container industries">
     <h2 id="choose-title">{% translate "Какой подъёмник под вашу задачу" %}</h2>
     <ul class="industries__list">
-      {% for title, text, url in industries %}
-      <li><a href="{{ url }}"><h3>{{ title }}</h3><p>{{ text }}</p></a></li>
+      {% for title, text, url, icon_name in industries %}
+      <li><a href="{{ url }}">{% icon icon_name "industries__icon" %}<h3>{{ title }}</h3><p>{{ text }}</p></a></li>
       {% endfor %}
     </ul>
   </div>

@@ -58,11 +58,17 @@
 </section>
 
 <section class="section section--grey" aria-labelledby="how-title">
-  <div class="container reasons">
-    <h2 id="how-title">{% translate "Как мы работаем" %}</h2>
-    <ul class="reasons__list">
-      {% for title, text in advantages %}
-      <li><h3>{{ title }}</h3><p>{{ text }}</p></li>
+  <div class="container">
+    <div class="section-head">
+      <h2 id="how-title">{% translate "Как мы работаем" %}</h2>
+    </div>
+    <ul class="features">
+      {% for title, text, icon_name in advantages %}
+      <li class="feature">
+        <span class="feature__icon">{% icon icon_name %}</span>
+        <h3>{{ title }}</h3>
+        <p>{{ text }}</p>
+      </li>
       {% endfor %}
     </ul>
   </div>
@@ -73,10 +79,11 @@
     <div class="section-head">
       <h2 id="stages-title">{% translate "От заявки до монтажа" %}</h2>
     </div>
-    <ol class="process__steps">
-      {% for title, text in steps %}
-      <li class="process__step">
-        <span class="process__num" aria-hidden="true">{{ forloop.counter }}</span>
+    <ol class="steps">
+      {% for title, text, icon_name in steps %}
+      <li class="steps__item">
+        <span class="steps__icon">{% icon icon_name %}</span>
+        <span class="steps__num">{% translate "Шаг" %} {{ forloop.counter }}</span>
         <h3>{{ title }}</h3>
         <p>{{ text }}</p>
       </li>
