@@ -8,3 +8,6 @@ db.sqlite3
 .pytest_cache/
 .ruff_cache/
 *.mo
+venv/
+# Raw server responses and KillBot cookies from the SEO audit
+/temir-gidro.ru-audit/raw/

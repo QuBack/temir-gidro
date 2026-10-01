@@ -1,0 +1,54 @@
+{% load i18n static images %}
+<section class="section config" id="podbor" aria-labelledby="config-title" data-config>
+  <div class="container config__grid">
+    <div class="config__head">
+      <h2 id="config-title">{% translate "Задайте размеры — увидите схему подъёмника" %}</h2>
+      <p class="config__lead">{% translate "Двигайте ползунки: схема перестроится под ваш объект, а параметры можно сразу отправить на расчёт." %}</p>
+    </div>
+    <div class="config__form">
+      <div class="config__controls">
+        <div class="range">
+          <label for="cfg-l">{% translate "Длина платформы" %} <b>L</b></label>
+          <output for="cfg-l" data-out="L">2000 мм</output>
+          <input type="range" id="cfg-l" name="L" min="1000" max="6000" step="100" value="2000" data-unit="мм">
+        </div>
+        <div class="range">
+          <label for="cfg-b">{% translate "Ширина платформы" %} <b>B</b></label>
+          <output for="cfg-b" data-out="B">1200 мм</output>
+          <input type="range" id="cfg-b" name="B" min="600" max="3000" step="100" value="1200" data-unit="мм">
+        </div>
+        <div class="range">
+          <label for="cfg-h">{% translate "Высота подъёма" %} <b>H</b></label>
+          <output for="cfg-h" data-out="H">1500 мм</output>
+          <input type="range" id="cfg-h" name="H" min="500" max="6000" step="100" value="1500" data-unit="мм">
+        </div>
+        <div class="range">
+          <label for="cfg-q">{% translate "Грузоподъёмность" %} <b>Q</b></label>
+          <output for="cfg-q" data-out="Q">2 т</output>
+          <input type="range" id="cfg-q" name="Q" min="0.5" max="10" step="0.5" value="2" data-unit="т">
+        </div>
+      </div>
+      <a class="btn btn--primary" href="#raschet" data-config-send>{% translate "Отправить параметры на расчёт" %}</a>
+    </div>
+
+    <figure class="sheet">
+      <div class="sheet__drawing">
+        {# Replaced by a live SVG scheme from drawings.js; the render stays for no-JS. #}
+        <div class="config__fallback" data-config-fallback>
+          {% translate "Ножничный подъёмник ТЕМИР ГИДРО серии 3X" as lift_alt %}
+          {% picture hero_lift lift_alt sizes="14rem" %}
+        </div>
+        <svg class="scheme" data-config-svg viewBox="0 0 640 620" role="img" aria-labelledby="config-title" hidden></svg>
+      </div>
+      <figcaption class="stamp">
+        <span class="stamp__name">{% translate "Схема ножничного подъёмника" %}</span>
+        <dl class="stamp__facts">
+          <div><dt>{% translate "Платформа, мм" %}</dt><dd data-out="LB">2000 × 1200</dd></div>
+          <div><dt>{% translate "Подъём, мм" %}</dt><dd data-out="Hs">1500</dd></div>
+          <div><dt>{% translate "Нагрузка, кг" %}</dt><dd data-out="Qs">2000</dd></div>
+          <div><dt>{% translate "Пар ножниц" %}</dt><dd data-out="N">1</dd></div>
+        </dl>
+      </figcaption>
+    </figure>
+  </div>
+</section>

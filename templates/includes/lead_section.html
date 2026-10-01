@@ -1,0 +1,19 @@
+{% load i18n %}
+<section class="section section--dark" id="raschet" aria-labelledby="lead-heading">
+  <div class="container lead">
+    <div class="lead__text">
+      <h2 id="lead-heading">{% translate "Рассчитаем стоимость за 24 часа" %}</h2>
+      <p>{% translate "Цена зависит от конструкции, поэтому мы считаем её под задачу. Для расчёта напишите:" %}</p>
+      <dl class="params">
+        <div><dt>L × B</dt><dd>{% translate "длину и ширину платформы" %}</dd></div>
+        <div><dt>H</dt><dd>{% translate "высоту подъёма" %}</dd></div>
+        <div><dt>Q</dt><dd>{% translate "грузоподъёмность" %}</dd></div>
+        <div><dt>{% translate "Где" %}</dt><dd>{% translate "место установки и условия работы" %}</dd></div>
+      </dl>
+      <p class="lead__phone">{% translate "Или позвоните:" %} <a href="tel:{{ company.phone_href }}">{{ company.phone }}</a></p>
+    </div>
+    <div class="lead__form">
+      {% include "includes/lead_form.html" %}
+    </div>
+  </div>
+</section>

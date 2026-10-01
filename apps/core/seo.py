@@ -22,7 +22,8 @@ def organization_schema() -> dict:
         "name": COMPANY["name"],
         "description": str(COMPANY["description"]),
         "url": absolute_url("/"),
-        "logo": absolute_url(static("img/logo.svg")),
+        # Square brand mark (180×180): search engines need a logo of at least 112×112.
+        "logo": absolute_url(static("img/apple-touch-icon.png")),
         "telephone": COMPANY["phone_href"],
         "email": COMPANY["email"],
         "openingHours": COMPANY["opening_hours"],
@@ -51,6 +52,48 @@ def breadcrumb_schema(crumbs: list[tuple[str, str]]) -> dict:
             {"@type": "ListItem", "position": i, "name": str(title), "item": absolute_url(path)}
             for i, (title, path) in enumerate(crumbs, start=1)
         ],
+    }
+
+
+def product_schema(name, description, image_path: str, path: str) -> dict:
+    """A catalog line as schema.org Product, made by the organization."""
+    return {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": str(name),
+        "description": str(description),
+        "image": absolute_url(image_path),
+        "url": absolute_url(path),
+        "brand": {"@type": "Brand", "name": COMPANY["name"]},
+        "manufacturer": {"@id": absolute_url("/#organization")},
+    }
+
+
+def collection_schema(name, path: str, items: list[tuple[str, str]]) -> dict:
+    """A section page listing catalog lines: items are [(name, path), …]."""
+    return {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": str(name),
+        "url": absolute_url(path),
+        "mainEntity": {
+            "@type": "ItemList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": i, "name": str(title), "url": absolute_url(url)}
+                for i, (title, url) in enumerate(items, start=1)
+            ],
+        },
+    }
+
+
+def about_page_schema(name, path: str) -> dict:
+    """The "About" page, pointing at the organization described on it."""
+    return {
+        "@context": "https://schema.org",
+        "@type": "AboutPage",
+        "name": str(name),
+        "url": absolute_url(path),
+        "about": {"@id": absolute_url("/#organization")},
     }
 
 

@@ -9,18 +9,17 @@
     </div>
     <nav class="site-footer__nav" id="footer-nav" aria-label="{% translate 'Навигация по сайту' %}">
       <div>
-        <p class="site-footer__title"><a href="/podemniki/">{% translate "Подъёмники" %}</a></p>
+        <p class="site-footer__title"><a href="{% url 'core:catalog' %}">{% translate "Подъёмники" %}</a></p>
         <ul>{% for cat in nav_categories %}<li><a href="{{ cat.url }}">{{ cat.title }}</a></li>{% endfor %}</ul>
       </div>
       <div>
         <p class="site-footer__title">{% translate "Компания" %}</p>
         <ul>
           <li><a href="/gidrocilindry/">{% translate "Гидроцилиндры" %}</a></li>
-          <li><a href="/proekty/">{% translate "Проекты" %}</a></li>
           <li><a href="/stati/">{% translate "Статьи" %}</a></li>
-          <li><a href="/o-kompanii/">{% translate "О компании" %}</a></li>
+          <li><a href="{% url 'core:about' %}">{% translate "О компании" %}</a></li>
           <li><a href="/dostavka-i-oplata/">{% translate "Доставка и оплата" %}</a></li>
-          <li><a href="/kontakty/">{% translate "Контакты" %}</a></li>
+          <li><a href="{% url 'core:contacts' %}">{% translate "Контакты" %}</a></li>
         </ul>
       </div>
     </nav>

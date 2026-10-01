@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.templatetags.static import static
 from django.urls import translate_url
 
 from .catalog import CATEGORIES
@@ -19,6 +20,8 @@ def site(request):
         "nav_categories": CATEGORIES,
         # Query strings (utm, filters) are never part of the canonical URL.
         "canonical_url": absolute_url(path),
+        # Link previews in messengers and social networks when a page sets no og_image.
+        "default_og_image": absolute_url(static("img/og/temir-gidro-1200x630.jpg")),
         "alternates": alternates,
         "x_default_url": absolute_url(translate_url(path, settings.LANGUAGE_CODE)),
         "seo_indexing": settings.SEO_INDEXING,

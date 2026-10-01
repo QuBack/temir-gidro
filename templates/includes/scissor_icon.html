@@ -1,0 +1,6 @@
+{# Side-view pictogram of a scissor lift; `icon` comes from catalog.scissor_icon(). #}
+<svg class="scissor-icon" viewBox="0 0 {{ icon.width }} {{ icon.height }}" width="{{ icon.width }}" height="{{ icon.height }}" aria-hidden="true">
+  <rect class="scissor-icon__frame" x="2" y="{{ icon.top }}" width="{{ icon.width|add:'-4' }}" height="{{ icon.frame }}"/>
+  {% for x1, y1, x2, y2 in icon.lines %}<line x1="{{ x1 }}" y1="{{ y1 }}" x2="{{ x2 }}" y2="{{ y2 }}"/>{% endfor %}
+  <rect class="scissor-icon__frame" x="2" y="{{ icon.bottom }}" width="{{ icon.width|add:'-4' }}" height="{{ icon.frame }}"/>
+</svg>

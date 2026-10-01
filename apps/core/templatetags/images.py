@@ -7,6 +7,17 @@ register = template.Library()
 
 
 @register.simple_tag
+def icon(name, css_class=""):
+    """Decorative line icon from the static sprite (static/img/icons.svg, Lucide)."""
+    return format_html(
+        '<svg class="icon{}" aria-hidden="true" focusable="false"><use href="{}#{}"></use></svg>',
+        f" {css_class}" if css_class else "",
+        static("img/icons.svg"),
+        name,
+    )
+
+
+@register.simple_tag
 def picture(image, alt, sizes="100vw", css_class="", priority=False):
     """<picture> with AVIF + WebP srcsets for a pre-generated image set.
 

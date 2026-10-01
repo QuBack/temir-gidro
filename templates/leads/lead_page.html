@@ -1,8 +1,30 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n images %}
+{% block body_attrs %} class="overlay overlay--dark"{% endblock %}
 {% block content %}
-<section class="container">
-  <h1>{% translate "Оставить заявку" %}</h1>
-  {% include "includes/lead_form.html" %}
+<section class="lead-page" aria-labelledby="lead-page-title">
+  <div class="lead-page__photo">
+    {% translate "Гидравлические ножничные подъёмники ТЕМИР ГИДРО в цехе" as photo_alt %}
+    {% picture hero_image photo_alt sizes="100vw" priority=True %}
+  </div>
+  <div class="container lead-page__grid">
+    <div class="lead-page__head">
+      <h1 id="lead-page-title">{% translate "Оставить заявку" %}</h1>
+      <p class="lead-page__lead">{% translate "Опишите задачу — рассчитаем стоимость и перезвоним в рабочее время." %}</p>
+    </div>
+    <div class="lead-page__details">
+      <p>{% translate "Для расчёта пригодятся:" %}</p>
+      <dl class="params">
+        <div><dt>L × B</dt><dd>{% translate "длина и ширина платформы" %}</dd></div>
+        <div><dt>H</dt><dd>{% translate "высота подъёма" %}</dd></div>
+        <div><dt>Q</dt><dd>{% translate "грузоподъёмность" %}</dd></div>
+        <div><dt>{% translate "Где" %}</dt><dd>{% translate "место установки и условия работы" %}</dd></div>
+      </dl>
+      <p class="lead__phone">{% translate "Или позвоните:" %} <a href="tel:{{ company.phone_href }}">{{ company.phone }}</a></p>
+    </div>
+    <div class="lead-page__card">
+      {% include "includes/lead_form.html" %}
+    </div>
+  </div>
 </section>
 {% endblock %}

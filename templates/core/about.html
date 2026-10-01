@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load i18n images %}
+{% block body_attrs %} class="overlay"{% endblock %}
+{% block breadcrumbs %}{% endblock %}
+{% block content %}
+
+<section class="eq-hero about-hero" aria-labelledby="about-title">
+  {% include "includes/breadcrumbs.html" %}
+  <div class="container eq-hero__grid">
+    <div class="eq-hero__text">
+      <h1 id="about-title">{% translate "О компании" %}</h1>
+      <p class="eq-hero__lead">{% blocktranslate with name=company.name %}{{ name }} — производитель гидравлических подъёмников и гидроцилиндров. Проектируем оборудование под задачу заказчика, изготавливаем, испытываем и монтируем на объекте.{% endblocktranslate %}</p>
+      <p class="about-hero__legal">{% blocktranslate with name=company.name legal=company.legal_name city=company.address.city %}{{ name }} — торговая марка {{ legal }}. Офис в городе {{ city }}, оборудование отгружаем в любой регион России.{% endblocktranslate %}</p>
+      <dl class="plate about-hero__plate">
+        {% for value, label in stats %}<div><dt>{{ label }}</dt><dd data-count>{{ value }}</dd></div>{% endfor %}
+      </dl>
+    </div>
+    <div class="about-hero__photos">
+      <div class="about-hero__main">
+        {% translate "Гидравлические ножничные подъёмники ТЕМИР ГИДРО в цехе" as photo_alt %}
+        {% picture hero_image photo_alt sizes="(min-width: 60rem) 45vw, 100vw" priority=True %}
+      </div>
+      {% for p in cylinders.photos %}
+      <div>{% translate "Производство гидроцилиндров ТЕМИР ГИДРО" as ph_alt %}{% picture p ph_alt sizes="(min-width: 60rem) 15vw, 33vw" %}</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="make-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="make-title">{% translate "Что мы производим" %}</h2>
+    </div>
+    <ul class="cat-cards">
+      {% for cat in categories %}
+      <li>
+        <a class="cat-card" href="{{ cat.url }}">
+          <div class="cat-card__media">{% picture cat.image cat.title sizes="(min-width: 60rem) 30vw, (min-width: 40rem) 45vw, 90vw" %}</div>
+          <h3>{{ cat.title }}</h3>
+          <p>{{ cat.text }}</p>
+          {% if cat.facts %}<ul class="facts cat-card__meta">{% for f in cat.facts %}<li>{{ f }}</li>{% endfor %}</ul>{% endif %}
+        </a>
+      </li>
+      {% endfor %}
+      <li class="cat-cards__wide">
+        <a class="cat-card cat-card--wide" href="{{ cylinders.url }}">
+          <div class="cat-card__media">{% picture cylinders.image cylinders.title sizes="(min-width: 60rem) 40vw, 90vw" %}</div>
+          <h3>{{ cylinders.title }}</h3>
+          <p>{{ cylinders.text }}</p>
+          <dl class="specs cat-card__specs">
+            {% for label, value in cylinders.specs %}<div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>{% endfor %}
+          </dl>
+        </a>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section class="section section--grey" aria-labelledby="how-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="how-title">{% translate "Как мы работаем" %}</h2>
+    </div>
+    <ul class="features">
+      {% for title, text, icon_name in advantages %}
+      <li class="feature">
+        <span class="feature__icon">{% icon icon_name %}</span>
+        <h3>{{ title }}</h3>
+        <p>{{ text }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="stages-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="stages-title">{% translate "От заявки до монтажа" %}</h2>
+    </div>
+    <ol class="steps">
+      {% for title, text, icon_name in steps %}
+      <li class="steps__item">
+        <span class="steps__icon">{% icon icon_name %}</span>
+        <span class="steps__num">{% translate "Шаг" %} {{ forloop.counter }}</span>
+        <h3>{{ title }}</h3>
+        <p>{{ text }}</p>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+<section class="section about-req-section" aria-labelledby="req-title">
+  {# Decorative drawing on the right, hence the empty alt. #}
+  <div class="about-req-section__bg" aria-hidden="true">{% picture about_bg "" sizes="100vw" %}</div>
+  <div class="container about-req-section__inner">
+    <h2 id="req-title">{% translate "Реквизиты и контакты" %}</h2>
+    <dl class="contacts__list about-req">
+      <div><dt>{% translate "Торговая марка" %}</dt><dd>{{ company.name }}</dd></div>
+      <div><dt>{% translate "Юридическое лицо" %}</dt><dd>{{ company.legal_name }}</dd></div>
+      <div><dt>{% translate "Офис" %}</dt><dd>{{ company.address.city }}, {{ company.address.street }}</dd></div>
+      <div><dt>{% translate "Телефон" %}</dt><dd><a href="tel:{{ company.phone_href }}">{{ company.phone }}</a></dd></div>
+      <div><dt>{% translate "Почта" %}</dt><dd><a href="mailto:{{ company.email }}">{{ company.email }}</a></dd></div>
+      <div><dt>{% translate "Часы работы" %}</dt><dd>{{ company.opening_hours_display }}</dd></div>
+    </dl>
+  </div>
+</section>
+
+{% include "includes/lead_section.html" %}
+
+{% endblock %}

@@ -24,6 +24,9 @@ COMPANY = {
         "region": "Москва",
         "postal_code": "",  # TODO
         "country": "RU",
+        # Map search query: without the premises number, which Yandex's geocoder
+        # misreads as "entrance 1, floor 1, flat 1".
+        "map_query": "Москва, Чечёрский проезд, 24",
     },
     # schema.org openingHours format
     "opening_hours": ["Mo-Fr 08:30-17:30"],

@@ -1,4 +1,4 @@
-{% load i18n static %}
+{% load i18n static images %}
 <a class="skip-link" href="#main">{% translate "Перейти к содержимому" %}</a>
 <div class="topbar">
   <div class="container topbar__inner">
@@ -11,7 +11,8 @@
 <header class="site-header" data-header>
   <div class="container site-header__inner">
     <a class="site-header__logo" href="{% url 'core:home' %}">
-      <img src="{% static 'img/logo-temir-gidro.webp' %}" alt="{{ company.name }}" width="905" height="65">
+      <img class="site-header__logo-dark" src="{% static 'img/logo-temir-gidro.webp' %}" alt="{{ company.name }}" width="905" height="65">
+      <img class="site-header__logo-light" src="{% static 'img/logo-temir-gidro-white.webp' %}" alt="" width="905" height="65" loading="lazy">
     </a>
     {# Without JS the button is a link to the footer navigation. #}
     <a class="nav-toggle" href="#footer-nav" data-nav-toggle aria-controls="site-nav" aria-expanded="false">
@@ -20,21 +21,43 @@
     <nav class="site-nav" id="site-nav" aria-label="{% translate 'Основное меню' %}">
       <ul class="site-nav__list">
         <li class="site-nav__item site-nav__item--has-sub">
-          <a href="/podemniki/">{% translate "Подъёмники" %}</a>
-          <ul class="site-nav__sub">
-            {% for cat in nav_categories %}<li><a href="{{ cat.url }}">{{ cat.title }}</a></li>{% endfor %}
-          </ul>
+          <a href="{% url 'core:catalog' %}">{% translate "Подъёмники" %}</a>
+          {# Desktop: categories on the left, the hovered one's models on the right (CSS only). #}
+          <div class="mega">
+            <div class="container mega__inner">
+              <ul class="mega__cats">
+                {% for cat in nav_categories %}
+                <li class="mega__cat">
+                  <a class="mega__cat-link" href="{{ cat.url }}">{{ cat.title }}</a>
+                  <div class="mega__panel">
+                    <ul class="mega__models">
+                      {% for m in cat.models %}
+                      <li>
+                        <a class="mega__model{% if m.placeholder %} mega__model--stub{% endif %}" href="{{ m.url }}">
+                          <span class="mega__img">{% if m.image %}{% picture m.image m.name sizes="10rem" %}{% elif m.icon %}{% include "includes/scissor_icon.html" with icon=m.icon %}{% endif %}</span>
+                          <span class="mega__name">{{ m.name }}</span>
+                          <span class="mega__label">{{ m.label }}</span>
+                        </a>
+                      </li>
+                      {% endfor %}
+                    </ul>
+                    <a class="more-link" href="{{ cat.url }}">{% translate "Перейти в раздел" %}: {{ cat.title|lower }}</a>
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
         </li>
         <li class="site-nav__item"><a href="/gidrocilindry/">{% translate "Гидроцилиндры" %}</a></li>
-        <li class="site-nav__item"><a href="/proekty/">{% translate "Проекты" %}</a></li>
         <li class="site-nav__item"><a href="/stati/">{% translate "Статьи" %}</a></li>
-        <li class="site-nav__item"><a href="/o-kompanii/">{% translate "О компании" %}</a></li>
-        <li class="site-nav__item"><a href="/kontakty/">{% translate "Контакты" %}</a></li>
+        <li class="site-nav__item"><a href="{% url 'core:about' %}">{% translate "О компании" %}</a></li>
+        <li class="site-nav__item"><a href="{% url 'core:contacts' %}">{% translate "Контакты" %}</a></li>
       </ul>
     </nav>
     <div class="site-header__cta">
       <a class="site-header__phone" href="tel:{{ company.phone_href }}">{{ company.phone }}</a>
-      <a class="btn btn--primary btn--sm" href="{% url 'leads:create' %}">{% translate "Рассчитать стоимость" %}</a>
+      <a class="btn btn--primary btn--sm btn--shine" href="{% url 'leads:create' %}">{% translate "Оставить заявку" %}</a>
     </div>
     {% include "includes/language_switcher.html" %}
   </div>
