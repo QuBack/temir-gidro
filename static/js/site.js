@@ -18,6 +18,16 @@
   // section. It fills in gradually over the first ~140px of scroll: CSS blends
   // background, text and logo from --scroll-solid (0…1).
   if (header && document.body.classList.contains("overlay")) {
+    // The first section slides up under the top bar and header by --chrome; CSS has
+    // an estimate, here it becomes the exact height, so no strip of page shows above.
+    var topbar = document.querySelector(".topbar");
+    var syncChrome = function () {
+      var height = header.offsetHeight + (topbar ? topbar.offsetHeight : 0);
+      document.documentElement.style.setProperty("--chrome", height + "px");
+    };
+    syncChrome();
+    window.addEventListener("resize", syncChrome, { passive: true });
+
     var ticking = false;
     var syncHeader = function () {
       ticking = false;
@@ -30,7 +40,7 @@
     }, { passive: true });
   }
 
-  // Counters: numbers in [data-count] run up from zero once on load. The final
+  // Counters: numbers in [data-count] run up from zero once scrolled into view. The final
   // value is already in the HTML, so search engines and no-JS visitors get it as is.
   var counters = document.querySelectorAll("[data-count]");
   if (counters.length && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -41,8 +51,9 @@
       // Reserve the final width (in digit widths, not pixels, so it survives a resize)
       // while the digits grow; released when the count is done.
       el.style.minWidth = (target + suffix).length + "ch";
-      el.textContent = "0" + suffix;
-      var delay = 350 + i * 120, duration = 1400, begin = null;
+      // The final value stays in place until the first frame actually runs: a page
+      // rendered without animation frames (a crawler, a hidden tab) never shows zeros.
+      var delay = 150 + i * 120, duration = 1400, begin = null;
       var step = function (now) {
         if (begin === null) begin = now;
         var t = Math.min(1, (now - begin) / duration);
@@ -51,7 +62,12 @@
         if (t < 1) requestAnimationFrame(step);
         else el.style.minWidth = "";
       };
-      setTimeout(function () { requestAnimationFrame(step); }, delay);
+      var start = function () { setTimeout(function () { requestAnimationFrame(step); }, delay); };
+      if (!("IntersectionObserver" in window)) return start();
+      var io = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) { io.disconnect(); start(); }
+      }, { threshold: 0.5 });
+      io.observe(el);
     });
   }
 

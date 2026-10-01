@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n images %}
+{% block breadcrumbs %}{% endblock %}
 {% block content %}
 
 <section class="contacts" aria-labelledby="contacts-title">
@@ -48,6 +49,8 @@
     </div>
   </div>
 </section>
+{# Crumbs go under the first section, so the page opens with its heading. #}
+{% include "includes/breadcrumbs.html" %}
 
 <section class="section map-block" aria-labelledby="map-title">
   <div class="container map-block__grid">

@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load i18n static images %}
+{% block body_attrs %} class="overlay"{% endblock %}
+{% block breadcrumbs %}{% endblock %}
+{% block content %}
+
+<section class="eq-hero" aria-labelledby="cyl-title">
+  <div class="container eq-hero__grid">
+    <div class="eq-hero__text">
+      <h1 id="cyl-title">{{ page.title }}</h1>
+      <p class="eq-hero__lead">{{ page.lead }}</p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="#raschet">{% translate "Отправить чертёж" %}</a>
+        <a class="hero__phone" href="tel:{{ company.phone_href }}">{{ company.phone }}</a>
+      </div>
+    </div>
+    <figure class="sheet">
+      <div class="sheet__drawing eq-hero__drawing">
+        {% picture page.image page.title sizes="(min-width: 60rem) 34rem, 90vw" priority=True %}
+      </div>
+      <figcaption class="stamp">
+        <span class="stamp__name">{% translate "Гидроцилиндры" %}</span>
+        <dl class="stamp__facts">
+          {% for value, label in page.facts %}<div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>{% endfor %}
+        </dl>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+{% include "includes/breadcrumbs.html" %}
+
+<section class="section" aria-labelledby="types-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="types-title">{% translate "Какие гидроцилиндры мы делаем" %}</h2>
+      <p class="section-head__lead">{% translate "Три типа конструкции — подберём под нагрузку, условия работы и обслуживание." %}</p>
+    </div>
+    <ul class="features">
+      {% for title, text, icon_name in page.types %}
+      <li class="feature">
+        <span class="feature__icon">{% icon icon_name %}</span>
+        <h3>{{ title }}</h3>
+        <p>{{ text }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section section--grey" aria-labelledby="cycle-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="cycle-title">{% translate "Полный цикл производства" %}</h2>
+      <p class="section-head__lead">{% translate "Каждый этап — на нашем производстве: от расчёта до испытаний и отгрузки." %}</p>
+    </div>
+    <ol class="route">
+      {% for title, text, icon_name in page.steps %}
+      <li class="route__stop">
+        <span class="route__icon">{% icon icon_name %}</span>
+        <h3>{{ title }}</h3>
+        <p>{{ text }}</p>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="specs-title">
+  <div class="container split">
+    <div class="split__text">
+      <h2 id="specs-title">{% translate "Технические характеристики" %}</h2>
+      <p>{% translate "Диапазоны, в которых мы проектируем гидроцилиндры. Нестандартные размеры — по вашему чертежу." %}</p>
+      <table class="spec-table">
+        <caption class="visually-hidden">{% translate "Технические характеристики гидроцилиндров" %}</caption>
+        <tbody>
+          {% for label, value in page.specs %}<tr><th scope="row">{{ label }}</th><td>{{ value }}</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="split__media">
+      <ul class="cyl-photos">
+        {% for p in page.photos %}<li>{% translate "Производство гидроцилиндров ТЕМИР ГИДРО" as ph_alt %}{% picture p ph_alt sizes="(min-width: 60rem) 15vw, 30vw" %}</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section section--grey" aria-labelledby="order-title">
+  <div class="container reasons">
+    <h2 id="order-title">{% translate "Как заказать гидроцилиндр" %}</h2>
+    <div>
+      <p class="order-lead">{% translate "Пришлите любое из этого — посчитаем стоимость и сроки за 24 часа:" %}</p>
+      <ul class="checklist order-list">{% for o in page.order %}<li>{{ o }}</li>{% endfor %}</ul>
+      <p class="order-more">{% blocktranslate %}Если гидроцилиндр нужен для подъёмника — смотрите <a href="/podemniki/">каталог подъёмников</a>: цилиндры для них мы делаем сами. Чем отличаются конструкции, рассказываем в статье <a href="/stati/svarnoj-ili-razbornyj-gidrocilindr/">«Сварной или разборный гидроцилиндр»</a>.{% endblocktranslate %}</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="faq-title">
+  <div class="container faq">
+    <h2 id="faq-title">{% translate "Частые вопросы" %}</h2>
+    <div class="faq__list">
+      {% for q, a in page.faq %}
+      <details class="faq__item"{% if forloop.first %} open{% endif %}>
+        <summary><h3>{{ q }}</h3></summary>
+        <p>{{ a }}</p>
+      </details>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% include "includes/lead_section.html" %}
+
+{% endblock %}

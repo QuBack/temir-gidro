@@ -1,0 +1,29 @@
+{% load i18n images %}
+{% comment %}
+Request block of a model page: the model's own parameters on sliders, then the form.
+model.js writes the chosen values into the form's comment; without JS the sliders
+are just a hint and the visitor types the values.
+{% endcomment %}
+<section class="section section--dark section--drawing" id="zayavka" aria-labelledby="lead-heading">
+  {# Decorative drawing, hence the empty alt. #}
+  <div class="lead-bg" aria-hidden="true">{% picture lead_bg "" sizes="100vw" %}</div>
+  <div class="container lead">
+    <div class="lead__text" data-model-params data-model-name="{{ model.title }}">
+      <h2 id="lead-heading">{% blocktranslate with name=model.name %}Рассчитаем {{ name }} под ваш объект{% endblocktranslate %}</h2>
+      <p>{% translate "Задайте параметры — они попадут в заявку. Пришлём цену, чертёж и сроки в течение суток." %}</p>
+      <div class="model-params">
+        {% for name, label, letter, min, max, step, value, unit in model.sliders %}
+        <div class="range">
+          <label for="mp-{{ name|lower }}">{{ label }} <b>{{ letter }}</b></label>
+          <output for="mp-{{ name|lower }}" data-param-out="{{ name }}">{{ value }} {{ unit }}</output>
+          <input type="range" id="mp-{{ name|lower }}" data-param="{{ name }}" data-label="{{ label }}" data-unit="{{ unit }}" min="{{ min }}" max="{{ max }}" step="{{ step }}" value="{{ value }}">
+        </div>
+        {% endfor %}
+      </div>
+      <p class="lead__phone">{% translate "Или позвоните:" %} <a href="tel:{{ company.phone_href }}">{{ company.phone }}</a></p>
+    </div>
+    <div class="lead__form">
+      {% include "includes/lead_form.html" %}
+    </div>
+  </div>
+</section>

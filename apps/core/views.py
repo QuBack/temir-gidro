@@ -11,10 +11,17 @@ from django.views.generic import TemplateView
 
 from apps.leads.forms import LeadForm
 
-from . import catalog
+from . import articles, catalog, cylinders, lift_models
 from .company import COMPANY
 from .mixins import BreadcrumbsMixin, SeoMixin
-from .seo import about_page_schema, collection_schema, faq_schema, organization_schema, product_schema
+from .seo import (
+    about_page_schema,
+    article_schema,
+    collection_schema,
+    faq_schema,
+    organization_schema,
+    product_schema,
+)
 
 
 class HomeView(SeoMixin, TemplateView):
@@ -42,7 +49,7 @@ class HomeView(SeoMixin, TemplateView):
             industries=catalog.INDUSTRIES,
             projects=catalog.PROJECTS,
             faq=catalog.FAQ,
-            articles=catalog.ARTICLES,
+            articles=articles.latest(3),
         )
         return context
 
@@ -115,6 +122,147 @@ class EquipmentView(SeoMixin, BreadcrumbsMixin, TemplateView):
             lead_form=LeadForm.for_request(self.request),
             hero_lift=catalog.HERO_LIFT,
             related=[c for c in catalog.CATEGORIES if c["url"] != self.request.path],
+        )
+        return context
+
+
+class ModelView(SeoMixin, BreadcrumbsMixin, TemplateView):
+    """Serial model page (scissor lift 1X, …) from lift_models.MODELS."""
+
+    template_name = "core/model.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        self.model = lift_models.MODELS.get((kwargs["slug"], kwargs["model"]))
+        if self.model is None:
+            raise Http404
+        self.line = catalog.EQUIPMENT[kwargs["slug"]]
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_seo(self):
+        model = self.model
+        return {"seo_title": model["seo_title"], "seo_description": model["seo_description"], "noindex": False}
+
+    def get_breadcrumbs(self):
+        line_url = reverse("core:equipment", args=[self.model["line"]])
+        return [
+            (_("Подъёмники"), reverse("core:catalog")),
+            (self.line["title"], line_url),
+            (self.model["name"], self.request.path),
+        ]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        model = self.model
+        image = model["images"][0]["image"] if model["images"] else self.line["image"]
+        context["jsonld"] = [
+            organization_schema(),
+            *context.get("jsonld", []),
+            product_schema(
+                model["title"],
+                model["seo_description"],
+                static(f"img/{image['src']}-{image['widths'][-1]}.webp"),
+                self.request.path,
+                properties=model["specs"],
+                model=model["name"],
+            ),
+            faq_schema(model["faq"]),
+        ]
+        context.update(
+            model=model,
+            line=self.line,
+            short_specs=lift_models.short_specs(model),
+            kit_points=lift_models.kit_points(model),
+            kit_overlay=lift_models.kit_overlay(model),
+            delivery=lift_models.DELIVERY,
+            documents=lift_models.DOCUMENTS,
+            advantages=catalog.ADVANTAGES,
+            siblings=[m for m in lift_models.MODELS.values() if m["line"] == model["line"]],
+            lead_form=LeadForm.for_request(self.request),
+        )
+        return context
+
+
+def _image_url(image):
+    return static(f"img/{image['src']}-{image['widths'][-1]}.webp")
+
+
+class CylindersView(SeoMixin, BreadcrumbsMixin, TemplateView):
+    template_name = "core/cylinders.html"
+    seo_title = cylinders.PAGE["seo_title"]
+    seo_description = cylinders.PAGE["seo_description"]
+
+    def get_breadcrumbs(self):
+        return [(_("Гидроцилиндры"), reverse("core:cylinders"))]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        page = cylinders.PAGE
+        context["jsonld"] = [
+            organization_schema(),
+            *context.get("jsonld", []),
+            product_schema(
+                page["title"], page["seo_description"], _image_url(page["image"]), self.request.path,
+                properties=page["specs"],
+            ),
+            faq_schema(page["faq"]),
+        ]
+        context.update(page=page, lead_form=LeadForm.for_request(self.request))
+        return context
+
+
+class ArticleListView(SeoMixin, BreadcrumbsMixin, TemplateView):
+    template_name = "core/article_list.html"
+    seo_title = _("Статьи о подъёмниках и гидравлике — ТЕМИР ГИДРО")
+    seo_description = _(
+        "Как выбрать ножничный подъёмник, как устроены подземные контейнерные площадки, какой гидроцилиндр "
+        "выбрать, и наши проекты — статьи инженеров ТЕМИР ГИДРО."
+    )
+
+    def get_breadcrumbs(self):
+        return [(_("Статьи"), reverse("core:articles"))]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        items = articles.latest(len(articles.ARTICLES))
+        context["jsonld"] = [
+            organization_schema(),
+            *context.get("jsonld", []),
+            collection_schema(self.seo_title, reverse("core:articles"), [(a["title"], a["url"]) for a in items]),
+        ]
+        context["articles"] = items
+        return context
+
+
+class ArticleView(SeoMixin, BreadcrumbsMixin, TemplateView):
+    template_name = "core/article.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        self.article = articles.BY_SLUG.get(kwargs["slug"])
+        if self.article is None:
+            raise Http404
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_seo(self):
+        a = self.article
+        return {"seo_title": a["seo_title"], "seo_description": a["description"], "noindex": False}
+
+    def get_breadcrumbs(self):
+        return [(_("Статьи"), reverse("core:articles")), (self.article["title"], self.request.path)]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        a = self.article
+        context["jsonld"] = [
+            organization_schema(),
+            *context.get("jsonld", []),
+            article_schema(a, _image_url(a["image"]), self.request.path),
+        ]
+        context.update(
+            article=a,
+            og_type="article",
+            og_image=f"{settings.SITE_URL}{_image_url(a['image'])}",
+            more=[x for x in articles.latest(4) if x["slug"] != a["slug"]][:3],
+            lead_form=LeadForm.for_request(self.request),
         )
         return context
 

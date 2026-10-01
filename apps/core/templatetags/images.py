@@ -46,3 +46,9 @@ def picture(image, alt, sizes="100vw", css_class="", priority=False):
         height,
         loading,
     )
+
+
+@register.simple_tag
+def image_url(image):
+    """URL of the largest WebP variant of a pre-generated image set."""
+    return static(f"img/{image['src']}-{image['widths'][-1]}.webp")

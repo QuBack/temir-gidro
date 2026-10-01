@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% load i18n static images %}
+{% block body_attrs %} class="overlay"{% endblock %}
+{% block breadcrumbs %}{% endblock %}
+{% block content %}
+
+<section class="eq-hero model-hero" aria-labelledby="model-title">
+  {% include "includes/breadcrumbs.html" %}
+  <div class="container model-hero__grid">
+    <div class="model-gallery" data-gallery>
+      <div class="model-gallery__main">
+          {% for g in model.images %}
+          <div class="model-gallery__slide{% if g.photo %} model-gallery__slide--photo{% endif %}" data-slide{% if not forloop.first %} hidden{% endif %}>
+            {% picture g.image g.alt sizes="(min-width: 60rem) 36rem, 90vw" priority=forloop.first %}
+          </div>
+          {% endfor %}
+      </div>
+      {% if model.images|length > 1 %}
+      <ul class="model-gallery__thumbs">
+        {% for g in model.images %}
+        <li>
+          {# Without JS the thumbnail opens the full picture. #}
+          <a class="model-gallery__thumb{% if forloop.first %} is-active{% endif %}" href="{% image_url g.image %}" data-thumb="{{ forloop.counter0 }}" aria-label="{% translate 'Фото' %} {{ forloop.counter }}: {{ g.alt }}">
+            {% picture g.image "" sizes="6rem" %}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+
+    <div class="model-hero__info">
+      <h1 id="model-title">{{ model.title }}</h1>
+      <p class="eq-hero__lead">{{ model.lead }}</p>
+      <dl class="specs model-hero__specs">
+        {% for label, value in short_specs %}<div><dt>{{ label }}</dt><dd>{% if value %}{{ value }}{% else %}<span class="tbd">{% translate "уточняется" %}</span>{% endif %}</dd></div>{% endfor %}
+      </dl>
+      <a class="model-hero__more" href="#harakteristiki">{% translate "Все характеристики" %}</a>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="#zayavka">{% translate "Оставить заявку" %}</a>
+        <a class="hero__phone" href="tel:{{ company.phone_href }}">{{ company.phone }}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<nav class="page-nav" aria-label="{% translate 'Разделы страницы' %}">
+  <ul class="container page-nav__list">
+    <li><a href="#opisanie">{% translate "Описание" %}</a></li>
+    <li><a href="#harakteristiki">{% translate "Характеристики" %}</a></li>
+    <li><a href="#komplektaciya">{% translate "Комплектация" %}</a></li>
+    <li><a href="#postavka">{% translate "Поставка" %}</a></li>
+    <li><a href="#zayavka">{% translate "Расчёт стоимости" %}</a></li>
+    <li><a href="#voprosy">{% translate "Вопросы" %}</a></li>
+  </ul>
+</nav>
+
+<section class="section section--grey" id="opisanie" aria-labelledby="about-title">
+  <div class="container model-about">
+    <div class="prose">
+      <h2 id="about-title">{% blocktranslate with name=model.title %}{{ name }}: для каких задач{% endblocktranslate %}</h2>
+      {% for p in model.description %}<p>{{ p }}</p>{% endfor %}
+    </div>
+    <aside class="model-about__uses" aria-labelledby="uses-title">
+      <h3 id="uses-title">{% translate "Где применяют" %}</h3>
+      <ul class="checklist">
+        {% for u in model.uses %}<li>{{ u }}</li>{% endfor %}
+      </ul>
+    </aside>
+  </div>
+  {% if model.scenes %}
+  <div class="container model-scenes">{% include "includes/scenes.html" with scenes=model.scenes %}</div>
+  {% endif %}
+</section>
+
+<section class="section" id="harakteristiki" aria-labelledby="specs-title">
+  <div class="container model-specs">
+    <div class="section-head">
+      <h2 id="specs-title">{% translate "Технические характеристики" %}</h2>
+      <p class="section-head__lead">{% translate "Значения для серийного исполнения. Размеры платформы, высоту подъёма и грузоподъёмность меняем под вашу задачу." %}</p>
+    </div>
+    <table class="spec-table">
+      <caption class="visually-hidden">{% blocktranslate with name=model.title %}Технические характеристики: {{ name }}{% endblocktranslate %}</caption>
+      <tbody>
+        {% for label, value in model.specs %}
+        <tr><th scope="row">{{ label }}</th><td>{% if value %}{{ value }}{% else %}<span class="tbd">{% translate "уточняется" %}</span>{% endif %}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="section section--grey" id="komplektaciya" aria-labelledby="kit-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="kit-title">{% translate "Стандартная комплектация" %}</h2>
+      <p class="section-head__lead">{% translate "Что входит в подъёмник без доплат. Наведите на пункт списка — покажем узел на изображении." %}</p>
+    </div>
+    <div class="kit{% if not model.kit_image %} kit--list{% endif %}">
+      {% if model.kit_image %}
+      <figure class="kit__figure">
+        <div class="kit__canvas">
+          {% picture model.kit_image model.title sizes="(min-width: 60rem) 40rem, 90vw" %}
+          <svg class="kit__overlay" viewBox="0 0 {{ kit_overlay.w }} {{ kit_overlay.h }}" aria-hidden="true">
+            {% for p in kit_points %}{% if p.pos %}
+            <g class="kit__marker" data-kit-marker="{{ forloop.counter }}">
+              <circle cx="{{ p.pos.0 }}" cy="{{ p.pos.1 }}" r="{{ kit_overlay.r }}"></circle>
+              <text x="{{ p.pos.0 }}" y="{{ p.pos.1 }}" font-size="{{ kit_overlay.r }}">{{ forloop.counter }}</text>
+            </g>
+            {% endif %}{% endfor %}
+          </svg>
+        </div>
+      </figure>
+      {% endif %}
+      <ol class="kit__list">
+        {% for p in kit_points %}
+        <li class="kit__item" data-kit-item="{{ forloop.counter }}">
+          <span class="kit__num" aria-hidden="true">{{ forloop.counter }}</span>
+          <h3>{{ p.title }}</h3>
+          <p>{{ p.text }}</p>
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+    <div class="kit__options">
+      <h3>{% translate "По запросу" %}</h3>
+      <ul class="facts">{% for o in model.options %}<li>{{ o }}</li>{% endfor %}</ul>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="postavka" aria-labelledby="delivery-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="delivery-title">{% translate "Условия поставки" %}</h2>
+      <p class="section-head__lead">{% translate "Весь путь подъёмника — от расчёта до гарантии — ведём сами, без посредников." %}</p>
+    </div>
+    <ol class="route">
+      {% for title, text, icon_name in delivery %}
+      <li class="route__stop">
+        <span class="route__icon">{% icon icon_name %}</span>
+        <h3>{{ title }}</h3>
+        <p>{{ text }}</p>
+      </li>
+      {% endfor %}
+    </ol>
+    <div class="waybill">
+      <div class="waybill__docs">
+        <h3>{% translate "Документы в комплекте" %}</h3>
+        <ul class="checklist">{% for d in documents %}<li>{{ d }}</li>{% endfor %}</ul>
+      </div>
+      <dl class="stamp__facts waybill__stamp">
+        <div><dt>{% translate "Производитель" %}</dt><dd>{{ company.name }}</dd></div>
+        <div><dt>{% translate "Монтаж" %}</dt><dd>{% translate "на объекте" %}</dd></div>
+        <div><dt>{% translate "Доставка" %}</dt><dd>{% translate "вся Россия" %}</dd></div>
+        <div><dt>{% translate "Расчёт" %}</dt><dd>{% translate "24 ч" %}</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section class="section section--grey" aria-labelledby="why-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="why-title">{% translate "Почему заказывают у нас" %}</h2>
+    </div>
+    <ul class="features">
+      {% for title, text, icon_name in advantages %}
+      <li class="feature">
+        <span class="feature__icon">{% icon icon_name %}</span>
+        <h3>{{ title }}</h3>
+        <p>{{ text }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+{% include "includes/model_lead.html" %}
+
+<section class="section" id="voprosy" aria-labelledby="faq-title">
+  <div class="container faq">
+    <h2 id="faq-title">{% translate "Частые вопросы" %}</h2>
+    <div class="faq__list">
+      {% for q, a in model.faq %}
+      <details class="faq__item"{% if forloop.first %} open{% endif %}>
+        <summary><h3>{{ q }}</h3></summary>
+        <p>{{ a }}</p>
+      </details>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section section--grey" aria-labelledby="siblings-title">
+  <div class="container">
+    <div class="section-head section-head--row">
+      <h2 id="siblings-title">{% translate "Другие модели серии" %}</h2>
+      <a class="more-link" href="{% url 'core:equipment' model.line %}">{% translate "Все модели" %}: {{ model.line_title|lower }}</a>
+    </div>
+    <ul class="lift-tiles">
+      {% for m in siblings %}{% if m.slug != model.slug %}
+      <li>
+        <a class="lift-tile" href="{{ m.url }}">
+          <div class="lift-tile__media">
+            {% if m.images %}{% picture m.images.0.image m.title sizes="(min-width: 60rem) 22vw, 45vw" %}
+            {% else %}{% include "includes/scissor_icon.html" with icon=m.icon %}{% endif %}
+          </div>
+          <div class="lift-tile__desc"><h3>{{ m.title }}</h3></div>
+        </a>
+      </li>
+      {% endif %}{% endfor %}
+    </ul>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}<script src="{% static 'js/model.js' %}" defer></script>{% endblock %}

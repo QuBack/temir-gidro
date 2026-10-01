@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load i18n images %}
+{% block body_attrs %} class="overlay"{% endblock %}
+{% block breadcrumbs %}{% endblock %}
+{% block content %}
+
+<article aria-labelledby="article-title">
+  <header class="eq-hero article-hero">
+    {% include "includes/breadcrumbs.html" %}
+    <div class="container article-hero__inner">
+      <p class="article__meta"><span class="article__tag">{{ article.category }}</span> <time datetime="{{ article.date|date:'Y-m-d' }}">{{ article.date|date:"j E Y" }}</time></p>
+      <h1 id="article-title">{{ article.title }}</h1>
+      <p class="eq-hero__lead">{{ article.description }}</p>
+    </div>
+  </header>
+
+  <div class="section article-body">
+    <div class="container article-layout">
+      <div class="article-content">
+        <figure class="article-cover">{% picture article.image article.image_alt sizes="(min-width: 60rem) 46rem, 100vw" priority=True %}</figure>
+        <div class="prose">
+          {% include article.template with images=article.images %}
+        </div>
+      </div>
+      <aside class="article-aside" aria-label="{% translate 'Расчёт стоимости' %}">
+        <div class="article-cta">
+          <p class="article-cta__title">{% translate "Рассчитаем под вашу задачу" %}</p>
+          <p>{% translate "Пришлите параметры — ответим с ценой и чертежом в течение суток." %}</p>
+          <a class="btn btn--primary" href="#raschet">{% translate "Оставить заявку" %}</a>
+          <a class="article-cta__phone" href="tel:{{ company.phone_href }}">{{ company.phone }}</a>
+        </div>
+        {% if article.related %}
+        <a class="article-related" href="{{ article.related.0 }}">
+          <span>{% translate "По теме" %}</span>
+          {{ article.related.1 }}
+        </a>
+        {% endif %}
+      </aside>
+    </div>
+  </div>
+</article>
+
+{% include "includes/lead_section.html" %}
+
+{% if more %}
+<section class="section section--grey" aria-labelledby="more-title">
+  <div class="container">
+    <div class="section-head section-head--row">
+      <h2 id="more-title">{% translate "Другие статьи" %}</h2>
+      <a class="more-link" href="{% url 'core:articles' %}">{% translate "Все статьи" %}</a>
+    </div>
+    <ul class="articles">
+      {% for a in more %}
+      <li>
+        <a class="article" href="{{ a.url }}">
+          <div class="article__media">{% picture a.image a.image_alt sizes="(min-width: 48rem) 30vw, 90vw" %}</div>
+          <h3>{{ a.title }}</h3>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}
