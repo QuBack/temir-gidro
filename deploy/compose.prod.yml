@@ -17,10 +17,12 @@ services:
   caddy:
     image: caddy:2-alpine
     restart: unless-stopped
+    # HTTP_BIND / HTTPS_BIND from .env: a demo by IP serves plain HTTP only, so 443 is bound
+    # to localhost and never clashes with another web server on the machine.
     ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
+      - "${HTTP_BIND:-80}:80"
+      - "${HTTPS_BIND:-443}:443"
+      - "${HTTPS_BIND:-443}:443/udp"
     environment:
       SITE_DOMAIN: ${SITE_DOMAIN:-localhost}
     volumes:

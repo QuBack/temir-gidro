@@ -7,6 +7,8 @@
 #     sudo bash deploy/install.sh
 #   A domain, but closed from search engines (staging):
 #     sudo bash deploy/install.sh --domain test.temir-gidro.com --staging
+#   Demo by IP when port 80 is taken by another web server:
+#     sudo bash deploy/install.sh --port 8080
 #
 # Safe to run again: it keeps the existing .env (secrets, database password) and
 # only rebuilds and restarts the containers. Later updates: deploy/update.sh.
@@ -17,13 +19,15 @@ BRANCH="main"
 APP_DIR="/opt/temir-gidro"
 DOMAIN=""
 STAGING=0
+PORT=""
 
-usage() { sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//'; exit "${1:-0}"; }
+usage() { sed -n '2,15p' "$0" | sed 's/^# \{0,1\}//'; exit "${1:-0}"; }
 
 while [ $# -gt 0 ]; do
   case "$1" in
     --domain) DOMAIN="${2:?}"; shift 2 ;;
     --staging) STAGING=1; shift ;;
+    --port) PORT="${2:?}"; shift 2 ;;
     --repo) REPO_URL="${2:?}"; shift 2 ;;
     --branch) BRANCH="${2:?}"; shift 2 ;;
     --dir) APP_DIR="${2:?}"; shift 2 ;;
@@ -73,13 +77,17 @@ cd "$APP_DIR"
 
 # ---------- 3. Settings (.env), generated once ----------
 SERVER_IP="$(curl -fsS4 --max-time 5 https://api.ipify.org 2>/dev/null || hostname -I | awk '{print $1}')"
+# key=value in .env: replace the line or append it.
+set_env() {
+  if grep -q "^$1=" .env; then sed -i "s|^$1=.*|$1=$2|" .env; else echo "$1=$2" >> .env; fi
+}
 if [ ! -f .env ]; then
   say "Создаю .env с новыми паролями"
   rand() { openssl rand -base64 96 | tr -dc 'A-Za-z0-9' | head -c "$1"; }
   if [ -n "$DOMAIN" ]; then
     SITE_URL="https://$DOMAIN"; HOSTS="$DOMAIN,www.$DOMAIN"; HTTPS=True; CADDYFILE=deploy/Caddyfile
   else
-    SITE_URL="http://$SERVER_IP"; HOSTS="$SERVER_IP"; HTTPS=False; CADDYFILE=deploy/Caddyfile.ip
+    SITE_URL="http://$SERVER_IP${PORT:+:$PORT}"; HOSTS="$SERVER_IP"; HTTPS=False; CADDYFILE=deploy/Caddyfile.ip
   fi
   # A demo by IP or a staging server must not get into the search index.
   INDEXING=True
@@ -105,7 +113,15 @@ TELEGRAM_CHAT_ID=
 EOF
   chmod 600 .env
 else
-  say "Файл .env уже есть — оставляю как есть"
+  say "Файл .env уже есть — пароли оставляю как есть"
+fi
+# Demo by IP: plain HTTP only. 443 goes to localhost so another web server on the
+# machine can keep it; --port moves HTTP off 80 as well.
+if grep -q '^HTTPS=False' .env; then
+  if [ -n "$PORT" ]; then set_env SITE_URL "http://$SERVER_IP:$PORT"; fi
+  set_env HTTP_BIND "${PORT:-$(grep '^HTTP_BIND=' .env | cut -d= -f2- || true)}"
+  grep -q '^HTTP_BIND=.' .env || set_env HTTP_BIND 80
+  set_env HTTPS_BIND 127.0.0.1:8443
 fi
 
 # ---------- 4. Firewall ----------
@@ -116,13 +132,32 @@ fi
 
 # ---------- 5. Build and start ----------
 COMPOSE=(docker compose -f compose.yml -f deploy/compose.prod.yml)
+HTTP_PORT="$(grep '^HTTP_BIND=' .env | cut -d= -f2- || true)"; HTTP_PORT="${HTTP_PORT:-80}"
+# Ports must be free — unless our own Caddy already holds them (a re-run).
+if ! "${COMPOSE[@]}" ps --status running --services 2>/dev/null | grep -qx caddy; then
+  NEED="$HTTP_PORT"; grep -q '^HTTPS=False' .env || NEED="$NEED 443"
+  for port in $NEED; do
+    if ss -ltnH "sport = :$port" | grep -q .; then
+      echo; ss -ltnp "sport = :$port" | tail -n +2
+      if grep -q '^HTTPS=False' .env; then
+        die "порт $port занят программой выше. Остановите её или запустите с другим портом: sudo bash deploy/install.sh --port 8080"
+      fi
+      die "порт $port занят программой выше. Для сайта с доменом нужны свободные 80 и 443: остановите её (например, systemctl disable --now nginx apache2)"
+    fi
+  done
+fi
 say "Собираю и запускаю контейнеры (первый раз — несколько минут)"
 "${COMPOSE[@]}" up -d --build --remove-orphans
 
 say "Жду, пока сайт ответит"
 URL="$(grep '^SITE_URL=' .env | cut -d= -f2-)"
+HOST="${URL#*://}"; HOST="${HOST%%:*}"
 for _ in $(seq 1 60); do
-  CODE="$(curl -ks -o /dev/null -w '%{http_code}' --resolve "${URL#*://}:80:127.0.0.1" --resolve "${URL#*://}:443:127.0.0.1" "$URL/" || true)"
+  if grep -q '^HTTPS=False' .env; then
+    CODE="$(curl -s -o /dev/null -w '%{http_code}' -H "Host: $HOST" "http://127.0.0.1:$HTTP_PORT/" || true)"
+  else
+    CODE="$(curl -ks -o /dev/null -w '%{http_code}' --resolve "$HOST:443:127.0.0.1" "https://$HOST/" || true)"
+  fi
   [ "$CODE" = "200" ] && break
   sleep 3
 done
