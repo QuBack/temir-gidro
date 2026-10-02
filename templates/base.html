@@ -50,9 +50,11 @@
     {% block content %}{% endblock %}
   </main>
   {% include "includes/footer.html" %}
+  {% include "includes/lightbox.html" %}
 
   <script src="{% static 'js/site.js' %}" defer></script>
   <script src="{% static 'js/lead-form.js' %}" defer></script>
+  <script src="{% static 'js/lightbox.js' %}" defer></script>
   {% block extra_js %}{% endblock %}
   {% if yandex_metrika_id and seo_indexing %}
   <script src="{% static 'js/metrika.js' %}" data-counter-id="{{ yandex_metrika_id }}" defer></script>

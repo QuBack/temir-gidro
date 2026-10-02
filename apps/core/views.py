@@ -302,7 +302,7 @@ class ContactsView(SeoMixin, BreadcrumbsMixin, TemplateView):
     template_name = "core/contacts.html"
     seo_title = _("Контакты — ТЕМИР ГИДРО, гидравлические подъёмники в Москве")
     seo_description = _(
-        "Телефон 8 (800) 333-75-80, почта и адрес ТЕМИР ГИДРО в Москве. Оставьте заявку — перезвоним в рабочее время."
+        "Телефон +7 (499) 117-01-31, почта и адрес ТЕМИР ГИДРО в Москве. Оставьте заявку — перезвоним в рабочее время."
     )
 
     def get_breadcrumbs(self):

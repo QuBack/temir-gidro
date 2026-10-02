@@ -13,11 +13,11 @@ COMPANY = {
     "description": _(
         "Производство гидравлических подъёмников и гидроцилиндров. Проект под задачу, поставка и монтаж по России."
     ),
-    "phone": "8 (800) 333-75-80",
-    "phone_href": "+78003337580",
-    "phone_extra": "+7 (499) 117-01-31",
-    "phone_extra_href": "+74991170131",
-    "email": "gidro@temir.ru",  # TODO: confirm — the new domain is temir-gidro.com
+    "phone": "+7 (499) 117-01-31",
+    "phone_href": "+74991170131",
+    "phone_extra": "+7 (930) 012-95-92",
+    "phone_extra_href": "+79300129592",
+    "email": "gidro@temir.ru",
     "address": {
         "street": "Чечёрский проезд, д. 24, пом. 1/1",
         "city": "Москва",
@@ -31,5 +31,17 @@ COMPANY = {
     # schema.org openingHours format
     "opening_hours": ["Mo-Fr 08:30-17:30"],
     "opening_hours_display": _("Пн–Пт 08:30–17:30"),
-    "social": [],  # full profile URLs (VK, Telegram channel, RUTUBE …)
+    # Profiles: links in the footer and on the contacts page, sameAs in schema.org.
+    # icon is a symbol in static/img/icons.svg.
+    "social": [
+        {"name": "ВКонтакте", "url": "https://vk.ru/temir_gidro", "icon": "vk"},
+        {"name": "YouTube", "url": "https://www.youtube.com/@temir-gidro", "icon": "youtube"},
+        # Meta is banned in Russia: the law requires this note next to the name.
+        {
+            "name": "Instagram",
+            "url": "https://www.instagram.com/temirgidro/",
+            "icon": "instagram",
+            "note": _("Instagram принадлежит компании Meta, признанной экстремистской и запрещённой в РФ."),
+        },
+    ],
 }

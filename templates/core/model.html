@@ -11,7 +11,7 @@
       <div class="model-gallery__main">
           {% for g in model.images %}
           <div class="model-gallery__slide{% if g.photo %} model-gallery__slide--photo{% endif %}" data-slide{% if not forloop.first %} hidden{% endif %}>
-            {% picture g.image g.alt sizes="(min-width: 60rem) 36rem, 90vw" priority=forloop.first %}
+            <a class="zoom" href="{% image_url g.image %}" data-zoom="gallery">{% picture g.image g.alt sizes="(min-width: 60rem) 36rem, 90vw" priority=forloop.first %}</a>
           </div>
           {% endfor %}
       </div>

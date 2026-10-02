@@ -10,11 +10,10 @@
     <div class="contacts__info">
       <h1 id="contacts-title">{% translate "Контакты" %}</h1>
       <a class="contacts__phone" href="tel:{{ company.phone_href }}">{{ company.phone }}</a>
-      <p class="contacts__note">{% translate "Звонок бесплатный по России" %}</p>
 
       <dl class="contacts__list">
         <div>
-          <dt>{% translate "Телефон в Москве" %}</dt>
+          <dt>{% translate "Мобильный" %}</dt>
           <dd><a href="tel:{{ company.phone_extra_href }}">{{ company.phone_extra }}</a></dd>
         </div>
         <div>
@@ -30,6 +29,10 @@
               <a href="{{ map_links.gis }}" target="_blank" rel="noopener">2ГИС</a>
             </span>
           </dd>
+        </div>
+        <div>
+          <dt>{% translate "Мы в соцсетях" %}</dt>
+          <dd>{% include "includes/social.html" %}</dd>
         </div>
         <div>
           <dt>{% translate "Часы работы" %}</dt>

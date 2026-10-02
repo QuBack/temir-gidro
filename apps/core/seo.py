@@ -39,7 +39,7 @@ def organization_schema() -> dict:
     if COMPANY["legal_name"]:
         data["legalName"] = COMPANY["legal_name"]
     if COMPANY["social"]:
-        data["sameAs"] = COMPANY["social"]
+        data["sameAs"] = [s["url"] for s in COMPANY["social"]]
     return data
 
 

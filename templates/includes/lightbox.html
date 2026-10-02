@@ -1,0 +1,13 @@
+{% load i18n images %}
+{# Full-screen viewer for photos wrapped in <a data-zoom>; driven by static/js/lightbox.js. #}
+<dialog class="lightbox" data-lightbox aria-label="{% translate 'Просмотр фото' %}">
+  <form method="dialog">
+    <button class="lightbox__btn lightbox__close" aria-label="{% translate 'Закрыть' %}">{% icon "x" %}</button>
+  </form>
+  <div class="lightbox__stage" data-lightbox-stage>
+    <img class="lightbox__img" data-lightbox-img alt="">
+  </div>
+  <p class="lightbox__caption" data-lightbox-caption></p>
+  <button class="lightbox__btn lightbox__prev" type="button" data-lightbox-prev aria-label="{% translate 'Предыдущее фото' %}">{% icon "chevron-left" %}</button>
+  <button class="lightbox__btn lightbox__next" type="button" data-lightbox-next aria-label="{% translate 'Следующее фото' %}">{% icon "chevron-right" %}</button>
+</dialog>

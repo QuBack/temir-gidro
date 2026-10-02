@@ -30,6 +30,7 @@
       <a href="mailto:{{ company.email }}">{{ company.email }}</a>
       <span>{{ company.address.city }}, {{ company.address.street }}</span>
       <span>{{ company.opening_hours_display }}</span>
+      {% include "includes/social.html" with variant="footer" %}
     </address>
   </div>
   <div class="container site-footer__bottom">
