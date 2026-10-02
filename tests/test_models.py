@@ -73,3 +73,4 @@ def test_scissor_specs_from_old_site(client):
     assert "2350–16 000" in html and "2700–17 500" in html
     # Specs the client never published are left out, not shown as «уточняется».
     assert "уточняется" not in client.get("/podemniki/nozhnichnye/2x/").content.decode()
+    assert "1500–10 600" in client.get("/podemniki/nozhnichnye/2x/").content.decode()

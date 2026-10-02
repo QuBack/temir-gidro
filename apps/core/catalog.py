@@ -257,7 +257,7 @@ _PAINT_URL = "/podemniki/dlya-okrasochnyh-kamer/"
 
 # Equipment line pages: /podemniki/<slug>/. Static until the catalog models exist.
 # applications: (title, text, url, icon).
-# Spec ranges come from the client's old site (temir-gidro.ru); 2X has none yet — see todo.md.
+# Spec ranges come from the client's old site (temir-gidro.ru).
 EQUIPMENT = {
     "nozhnichnye": {
         "title": _("Ножничные подъёмники"),
@@ -296,7 +296,7 @@ EQUIPMENT = {
                 "url": _SCISSORS_URL + "2x/",
                 "label": _("Две пары ножниц"),
                 "image": SCISSOR_2X,
-                "specs": [],
+                "specs": [(_("Груз"), _("до 8000 кг")), (_("Подъём"), _("до 11 700 мм"))],
             },
             {
                 "name": _("Серия 3X"),

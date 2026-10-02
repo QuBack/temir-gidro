@@ -4,9 +4,9 @@ Built like a manufacturer's product card, but not a shop: no price, no
 quantity, no cart. The price is a calculation, so every block leads to the
 request form with the model's own parameter sliders.
 
-Spec ranges for 1X, 3X, 4X and the painting platforms come from the client's old
-site (temir-gidro.ru). TODO from the client (see todo.md): 2X specs and slider ranges,
-standard kit confirmation, lead time and warranty, kit images with callouts.
+Spec ranges for 1X–4X and the painting platforms come from the client's old
+site (temir-gidro.ru). TODO from the client (see todo.md): standard kit confirmation,
+lead time and warranty, kit images with callouts.
 """
 
 from django.utils.text import format_lazy
@@ -235,6 +235,7 @@ SCISSOR_MODELS = {
             "Две пары ножниц одна над другой: вдвое больше высота подъёма при той же длине платформы."
         ),
         "pairs": 2,
+        "ranges": ("500–8000", "1200–7000", "900–3000", "1500–10 600", "300–1100", "1800–11 700"),
         "images": [
             {"image": SCISSOR_2X, "alt": _("Ножничный подъёмник 2X ТЕМИР ГИДРО — общий вид")},
         ],
@@ -262,8 +263,8 @@ SCISSOR_MODELS = {
             _("Погрузка из приямка в кузов"),
             _("Подъём оборудования на рабочую площадку"),
         ],
-        "sliders": _sliders((800, 3000, 100, 1500), (600, 2000, 100, 1000), (1000, 4000, 100, 2500),
-                            (300, 5000, 100, 1000)),
+        "sliders": _sliders((1200, 7000, 100, 2000), (900, 3000, 100, 1200), (1500, 10600, 100, 3000),
+                            (500, 8000, 100, 1000)),
         "faq_extra": [
             (
                 _("Чем модель 2X отличается от 1X?"),
