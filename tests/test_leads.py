@@ -53,6 +53,9 @@ def test_invalid_submission_without_js_rerenders_form(client, lead_data):
         ({"website": "http://spam.example"}, "honeypot"),
         ({"token": "forged"}, "bad_token"),
         ({"token": signing.dumps(int(time.time()), salt=_TOKEN_SALT)}, "too_fast"),
+        ({"token": signing.dumps(int(time.time()) - 8 * 24 * 3600, salt=_TOKEN_SALT)}, "stale_token"),
+        ({"name": "Buy now https://spam.example"}, "links"),
+        ({"message": "http://a.example and www.b.example"}, "links"),
     ],
 )
 def test_spam_is_kept_silently_and_not_announced(
@@ -123,3 +126,12 @@ def test_admin_csv_export_neutralises_formulas(staff_client):
     assert response["Content-Type"].startswith("text/csv")
     assert "'=HYPERLINK" in body
     assert "+77001234567" in body
+
+
+def test_replayed_token_is_spam_but_one_link_is_fine(client, lead_data):
+    lead_data["message"] = "Чертёж: https://disk.yandex.ru/d/abc"
+    client.post("/zayavka/", lead_data)
+    client.post("/zayavka/", lead_data)  # the same page token again: a bot replaying one form
+    first, second = Lead.objects.order_by("pk")
+    assert first.status == Lead.Status.NEW and first.spam_reason == ""
+    assert (second.status, second.spam_reason) == (Lead.Status.SPAM, "token_reused")
