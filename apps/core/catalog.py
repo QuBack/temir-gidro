@@ -20,6 +20,8 @@ CONTACTS_BG = img("backgrounds/chertezh-nozhnichnogo-podemnika", (1672, 941), wi
 ABOUT_BG = img("backgrounds/chertezh-gidrocilindra", (1672, 941), widths=(768, 1280, 1672))
 # Request blocks: a faint lift drawing on navy (Codex), the drawing on the right.
 LEAD_BG = img("backgrounds/chertezh-podemnika-zayavka", (1672, 941), widths=(768, 1280, 1672))
+# Behind the scissor-lift configurator: drawings at the edges, an empty middle for the controls.
+CONFIG_BG = img("backgrounds/chertezh-nozhnichnyh-podemnikov-podbor", (1664, 936), widths=(768, 1280, 1664))
 # Configurator fallback when JS is off (with JS a live SVG scheme replaces it).
 HERO_LIFT = img("catalog/nozhnichnyj-podemnik-3x", (800, 1289))
 # Drop a muted 6–15 s loop into static/video/ and set the file name here;

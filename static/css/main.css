@@ -361,6 +361,13 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 
 /* ---------- Configurator: sliders + live scheme ---------- */
 .config { background: var(--grey); }
+/* A faint drawing of scissor lifts; its middle is empty, so the sliders stay readable. */
+.config-bg { position: absolute; inset: 0; z-index: -1; }
+.config-bg picture, .config-bg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.config-bg::after { content: ""; position: absolute; inset: 0; background: rgb(227 230 228 / .7); }
+@media (min-width: 60rem) {
+  .config-bg::after { background: linear-gradient(90deg, rgb(227 230 228 / .45) 0%, rgb(227 230 228 / .8) 25%, rgb(227 230 228 / .55) 55%, rgb(227 230 228 / .25) 100%); }
+}
 /* Phones: heading, scheme, sliders — so the scheme stays in view while dragging. */
 .config__grid { display: grid; gap: 2rem; grid-template-areas: "head" "sheet" "form"; }
 .config__head { grid-area: head; }
