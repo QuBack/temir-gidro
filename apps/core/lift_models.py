@@ -742,8 +742,3 @@ def kit_overlay(model):
     # The icon inside a marker: a square of side `is`, offset by `ix` from the centre.
     size = round(r * 1.2)
     return {"w": w, "h": h, "r": r, "is": size, "ix": -size // 2}
-
-
-def short_specs(model):
-    """The first four rows: shown next to the gallery."""
-    return model["specs"][:4]

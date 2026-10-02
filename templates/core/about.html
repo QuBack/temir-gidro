@@ -56,6 +56,22 @@
   </div>
 </section>
 
+<section class="section about-req-section" aria-labelledby="req-title">
+  {# Decorative photo on the right, hence the empty alt. #}
+  <div class="about-req-section__bg" aria-hidden="true">{% picture about_bg "" sizes="100vw" %}</div>
+  <div class="container about-req-section__inner">
+    <h2 id="req-title">{% translate "Реквизиты и контакты" %}</h2>
+    <dl class="contacts__list about-req">
+      <div><dt>{% translate "Торговая марка" %}</dt><dd>{{ company.name }}</dd></div>
+      <div><dt>{% translate "Юридическое лицо" %}</dt><dd>{{ company.legal_name }}</dd></div>
+      <div><dt>{% translate "Офис" %}</dt><dd>{{ company.address.city }}, {{ company.address.street }}</dd></div>
+      <div><dt>{% translate "Телефон" %}</dt><dd><a href="tel:{{ company.phone_href }}">{{ company.phone }}</a></dd></div>
+      <div><dt>{% translate "Почта" %}</dt><dd><a href="mailto:{{ company.email }}">{{ company.email }}</a></dd></div>
+      <div><dt>{% translate "Часы работы" %}</dt><dd>{{ company.opening_hours_display }}</dd></div>
+    </dl>
+  </div>
+</section>
+
 <section class="section section--grey" aria-labelledby="how-title">
   <div class="container">
     <div class="section-head">
@@ -74,22 +90,6 @@
 </section>
 
 {% include "includes/steps_timeline.html" %}
-
-<section class="section about-req-section" aria-labelledby="req-title">
-  {# Decorative photo on the right, hence the empty alt. #}
-  <div class="about-req-section__bg" aria-hidden="true">{% picture about_bg "" sizes="100vw" %}</div>
-  <div class="container about-req-section__inner">
-    <h2 id="req-title">{% translate "Реквизиты и контакты" %}</h2>
-    <dl class="contacts__list about-req">
-      <div><dt>{% translate "Торговая марка" %}</dt><dd>{{ company.name }}</dd></div>
-      <div><dt>{% translate "Юридическое лицо" %}</dt><dd>{{ company.legal_name }}</dd></div>
-      <div><dt>{% translate "Офис" %}</dt><dd>{{ company.address.city }}, {{ company.address.street }}</dd></div>
-      <div><dt>{% translate "Телефон" %}</dt><dd><a href="tel:{{ company.phone_href }}">{{ company.phone }}</a></dd></div>
-      <div><dt>{% translate "Почта" %}</dt><dd><a href="mailto:{{ company.email }}">{{ company.email }}</a></dd></div>
-      <div><dt>{% translate "Часы работы" %}</dt><dd>{{ company.opening_hours_display }}</dd></div>
-    </dl>
-  </div>
-</section>
 
 {% include "includes/lead_section.html" %}
 

@@ -170,7 +170,6 @@ class ModelView(SeoMixin, BreadcrumbsMixin, TemplateView):
         context.update(
             model=model,
             line=self.line,
-            short_specs=lift_models.short_specs(model),
             kit_points=lift_models.kit_points(model),
             kit_overlay=lift_models.kit_overlay(model),
             delivery=lift_models.DELIVERY,
