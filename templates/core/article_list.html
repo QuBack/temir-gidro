@@ -4,7 +4,8 @@
 {% block breadcrumbs %}{% endblock %}
 {% block content %}
 
-<section class="eq-hero cat-hero" aria-labelledby="articles-title">
+<section class="eq-hero cat-hero article-hero--bg" aria-labelledby="articles-title">
+  <div class="article-hero__bg" aria-hidden="true">{% picture article_bg "" sizes="100vw" %}</div>
   <div class="container">
     <h1 id="articles-title">{% translate "Статьи" %}</h1>
     <p class="eq-hero__lead">{% translate "Как выбрать подъёмник, как устроено оборудование и что мы сделали для заказчиков. Пишут инженеры ТЕМИР ГИДРО." %}</p>

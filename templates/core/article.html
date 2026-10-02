@@ -6,6 +6,7 @@
 
 <article aria-labelledby="article-title">
   <header class="eq-hero article-hero">
+    <div class="article-hero__bg" aria-hidden="true">{% picture article_bg "" sizes="100vw" %}</div>
     {% include "includes/breadcrumbs.html" %}
     <div class="container article-hero__inner">
       <p class="article__meta"><span class="article__tag">{{ article.category }}</span> <time datetime="{{ article.date|date:'Y-m-d' }}">{{ article.date|date:"j E Y" }}</time></p>
