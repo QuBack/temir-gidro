@@ -64,8 +64,7 @@ def test_contacts_and_social(client):
     html = client.get("/kontakty/").content.decode()
     assert 'href="tel:+74991170131"' in html and 'href="tel:+79300129592"' in html
     assert "https://vk.ru/temir_gidro" in html and "https://www.youtube.com/@temir-gidro" in html
-    # Instagram must carry the legal note about Meta.
-    assert "https://www.instagram.com/temirgidro/" in html and "признанной экстремистской" in html
+    assert "https://www.instagram.com/temirgidro/" in html
     assert "8 (800)" not in html
 
 

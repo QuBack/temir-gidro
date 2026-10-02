@@ -6,6 +6,7 @@
     <span class="topbar__addr">{{ company.address.city }}, {{ company.address.street }}</span>
     <a href="mailto:{{ company.email }}">{{ company.email }}</a>
     <a href="tel:{{ company.phone_extra_href }}">{{ company.phone_extra }}</a>
+    {% include "includes/social.html" with variant="topbar" %}
   </div>
 </div>
 <header class="site-header" data-header>

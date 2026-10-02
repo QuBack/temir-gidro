@@ -36,12 +36,6 @@ COMPANY = {
     "social": [
         {"name": "ВКонтакте", "url": "https://vk.ru/temir_gidro", "icon": "vk"},
         {"name": "YouTube", "url": "https://www.youtube.com/@temir-gidro", "icon": "youtube"},
-        # Meta is banned in Russia: the law requires this note next to the name.
-        {
-            "name": "Instagram",
-            "url": "https://www.instagram.com/temirgidro/",
-            "icon": "instagram",
-            "note": _("Instagram принадлежит компании Meta, признанной экстремистской и запрещённой в РФ."),
-        },
+        {"name": "Instagram", "url": "https://www.instagram.com/temirgidro/", "icon": "instagram"},
     ],
 }

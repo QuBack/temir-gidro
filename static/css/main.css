@@ -890,12 +890,15 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   color: var(--ink); text-decoration: none; transition: color .15s, border-color .15s;
 }
 .social a:hover { color: var(--red); border-color: var(--red); }
-.social sup { align-self: flex-start; margin-top: .45rem; font-size: .75rem; }
-.social__note { margin-top: .5rem; color: var(--muted); font-size: .75rem; line-height: 1.4; }
 .social--footer { margin-top: .75rem; }
 .site-footer .social a { border-color: rgb(255 255 255 / .2); color: #dde2e4; }
 .site-footer .social a:hover { border-color: var(--white); color: var(--white); text-decoration: none; }
-.site-footer .social__note { color: #8b959a; }
+/* Top bar: bare icons in the line of contacts. */
+.social--topbar { gap: .25rem; }
+.social--topbar a { min-width: 1.75rem; height: 1.75rem; border: 0; color: inherit; }
+.social--topbar a:hover { color: var(--white); }
+.social--topbar .icon { width: 1.125rem; height: 1.125rem; }
+.overlay:not(.overlay--dark) .social--topbar a:hover { color: var(--ink); }
 .site-footer__bottom {
   display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem;
   padding-block: 1.5rem; border-top: 1px solid rgb(255 255 255 / .12); font-size: .8125rem;

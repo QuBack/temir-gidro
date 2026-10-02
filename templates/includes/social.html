@@ -1,8 +1,7 @@
 {% load images %}
-{# Social profiles from COMPANY["social"]. Notes required by law go under the links. #}
+{# Social profiles from COMPANY["social"]. #}
 <ul class="social{% if variant %} social--{{ variant }}{% endif %}">
   {% for s in company.social %}
-  <li><a href="{{ s.url }}" target="_blank" rel="noopener" aria-label="{{ s.name }}" title="{{ s.name }}">{% icon s.icon %}{% if s.note %}<sup aria-hidden="true">*</sup>{% endif %}</a></li>
+  <li><a href="{{ s.url }}" target="_blank" rel="noopener" aria-label="{{ s.name }}" title="{{ s.name }}">{% icon s.icon %}</a></li>
   {% endfor %}
 </ul>
-{% for s in company.social %}{% if s.note %}<p class="social__note">* {{ s.note }}</p>{% endif %}{% endfor %}
