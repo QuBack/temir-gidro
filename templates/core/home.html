@@ -73,23 +73,7 @@
   </div>
 </section>
 
-<section class="section section--grey" id="etapy" aria-labelledby="steps-title">
-  <div class="container">
-    <div class="section-head section-head--center">
-      <h2 id="steps-title">{% translate "От заявки до монтажа" %}</h2>
-    </div>
-    <ol class="steps">
-      {% for title, text, icon_name in steps %}
-      <li class="steps__item">
-        <span class="steps__icon">{% icon icon_name %}</span>
-        <span class="steps__num">{% translate "Шаг" %} {{ forloop.counter }}</span>
-        <h3>{{ title }}</h3>
-        <p>{{ text }}</p>
-      </li>
-      {% endfor %}
-    </ol>
-  </div>
-</section>
+{% include "includes/steps_timeline.html" %}
 
 {% include "includes/lift_config.html" %}
 

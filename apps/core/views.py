@@ -45,7 +45,7 @@ class HomeView(SeoMixin, TemplateView):
             cylinders=catalog.CYLINDERS,
             stats=catalog.STATS,
             advantages=catalog.ADVANTAGES,
-            steps=catalog.STEPS,
+            steps=catalog.STEPS_TIMELINE,
             industries=catalog.INDUSTRIES,
             projects=catalog.PROJECTS,
             faq=catalog.FAQ,

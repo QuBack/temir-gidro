@@ -146,6 +146,25 @@ STEPS = [
     (_("Монтаж"), _("Поставка, монтаж и пусконаладка на объекте заказчика."), "hard-hat"),
 ]
 
+# Home page timeline: the same steps, each with a photo (generated with Codex, 2026).
+_STEP_PHOTOS = [
+    ("zayavka", _("Заявка на подъёмник: эскиз платформы с размерами на столе менеджера")),
+    ("raschet", _("Инженерный расчёт нагрузок подъёмника")),
+    ("proekt", _("3D-модель ножничного подъёмника в САПР и чертёж")),
+    ("proizvodstvo", _("Сварка рамы ножничного подъёмника в цехе ТЕМИР ГИДРО")),
+    ("montazh", _("Монтаж ножничного подъёмника в приямок на складе")),
+]
+STEPS_TIMELINE = [
+    {
+        "title": title,
+        "text": text,
+        "icon": icon,
+        "image": img(f"steps/etap-{slug}", (1536, 1024), widths=(600, 1024, 1536)),
+        "alt": alt,
+    }
+    for (title, text, icon), (slug, alt) in zip(STEPS, _STEP_PHOTOS, strict=True)
+]
+
 # (title, text, url, icon)
 INDUSTRIES = [
     (

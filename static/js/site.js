@@ -87,4 +87,44 @@
       else window.addEventListener("load", start, { once: true });
     }
   }
+
+  // Timeline: each step comes up as it scrolls in, the rail fills behind the reader.
+  // The steps are hidden only once this runs (html.reveal-on), so without JS, for
+  // crawlers and with reduced motion everything is simply shown.
+  var timeline = document.querySelector("[data-timeline]");
+  if (timeline && "IntersectionObserver" in window &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    var steps = timeline.querySelectorAll("[data-reveal]");
+    var reveal = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          reveal.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: "0px 0px -20% 0px", threshold: 0.2 });
+    steps.forEach(function (step) { reveal.observe(step); });
+    document.documentElement.classList.add("reveal-on");
+
+    // Rail fill: how far a line at 60% of the screen has gone down the timeline;
+    // a step's dot turns red when the fill reaches it.
+    var dots = timeline.querySelectorAll(".timeline__dot");
+    var railTicking = false;
+    var syncRail = function () {
+      railTicking = false;
+      var line = window.innerHeight * 0.6;
+      var box = timeline.getBoundingClientRect();
+      var reached = (line - box.top) / box.height;
+      timeline.style.setProperty("--progress", Math.min(1, Math.max(0, reached)).toFixed(3));
+      dots.forEach(function (dot) {
+        var d = dot.getBoundingClientRect();
+        dot.classList.toggle("is-reached", d.top + d.height / 2 <= line);
+      });
+    };
+    syncRail();
+    window.addEventListener("scroll", function () {
+      if (!railTicking) { railTicking = true; requestAnimationFrame(syncRail); }
+    }, { passive: true });
+    window.addEventListener("resize", syncRail, { passive: true });
+  }
 })();

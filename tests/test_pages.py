@@ -71,3 +71,10 @@ def test_contacts_and_social(client):
 def test_scene_photos_open_full_screen(client):
     html = client.get("/podemniki/dlya-okrasochnyh-kamer/1x/").content.decode()
     assert 'data-zoom="scenes"' in html and "data-lightbox" in html and "js/lightbox.js" in html
+
+
+def test_home_steps_timeline(client):
+    html = client.get("/").content.decode()
+    # Five steps, each with a photo; the content is in the HTML, JS only animates it.
+    assert html.count('class="timeline__item" data-reveal') == 5
+    assert "img/steps/etap-montazh-1536.webp" in html
