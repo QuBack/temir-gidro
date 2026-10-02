@@ -5,6 +5,7 @@ by the cylinders are restored from the same spot one pair above or below.
 """
 import math
 import sys
+
 from PIL import Image, ImageDraw
 
 SRC = r"C:\python-projects\temir-gidro\static\img\catalog\nozhnichnyj-podemnik-3x-800.webp"
