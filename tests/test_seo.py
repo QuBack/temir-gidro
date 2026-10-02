@@ -128,3 +128,32 @@ def test_default_og_image_and_logo(client):
     assert 'rel="manifest"' in html
     org = next(b for b in jsonld_blocks(html) if b["@type"] == "LocalBusiness")
     assert org["logo"].endswith("/img/apple-touch-icon.png")
+
+
+def test_sitemap_has_lastmod_and_images(client):
+    xml = client.get("/sitemap.xml").content.decode()
+    assert xml.count("<url>") == xml.count("<lastmod>")
+    assert "<image:loc>" in xml and "xmlns:image=" in xml
+
+
+def test_favicon_ico_redirects_to_static(client):
+    response = client.get("/favicon.ico")
+    assert response.status_code == 301 and response["Location"].endswith("img/favicon.ico")
+
+
+def test_indexnow_command_sends_sitemap(settings):
+    from io import StringIO
+    from unittest import mock
+
+    from django.core.management import call_command
+
+    settings.INDEXNOW_KEY = "a" * 32
+    response = mock.MagicMock(status=200)
+    response.__enter__.return_value = response
+    with mock.patch("urllib.request.urlopen", return_value=response) as urlopen:
+        out = StringIO()
+        call_command("indexnow", stdout=out)
+    payload = json.loads(urlopen.call_args.args[0].data)
+    assert payload["key"] == "a" * 32 and payload["keyLocation"].endswith("/" + "a" * 32 + ".txt")
+    assert any(u.endswith("/podemniki/nozhnichnye/1x/") for u in payload["urlList"])
+    assert "sent" in out.getvalue()

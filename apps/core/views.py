@@ -1,8 +1,8 @@
 from urllib.parse import quote
 
 from django.conf import settings
-from django.http import Http404
-from django.shortcuts import render
+from django.http import Http404, HttpResponse
+from django.shortcuts import redirect, render
 from django.templatetags.static import static
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -343,6 +343,16 @@ def robots_txt(request):
         {"sitemap_url": f"{settings.SITE_URL}/sitemap.xml", "seo_indexing": settings.SEO_INDEXING},
         content_type="text/plain; charset=utf-8",
     )
+
+
+def favicon(request):
+    """/favicon.ico: browsers and Yandex ask for it at the root before reading the page."""
+    return redirect(static("img/favicon.ico"), permanent=True)
+
+
+def indexnow_key(request):
+    """IndexNow key file at /<key>.txt: proves to Yandex and Bing that the pings are ours."""
+    return HttpResponse(settings.INDEXNOW_KEY, content_type="text/plain; charset=utf-8")
 
 
 def page_not_found(request, exception):

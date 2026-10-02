@@ -32,10 +32,12 @@ def organization_schema() -> dict:
             "streetAddress": address["street"],
             "addressLocality": address["city"],
             "addressRegion": address["region"],
-            "postalCode": address["postal_code"],
             "addressCountry": address["country"],
         },
     }
+    # An empty postalCode is an error for validators: added once the client gives it.
+    if address["postal_code"]:
+        data["address"]["postalCode"] = address["postal_code"]
     if COMPANY["legal_name"]:
         data["legalName"] = COMPANY["legal_name"]
     if COMPANY["social"]:
