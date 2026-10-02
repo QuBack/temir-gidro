@@ -25,6 +25,26 @@
 <symbol id="x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
 <symbol id="chevron-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
 <symbol id="chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+<!-- Kit: lift parts, drawn for this site in the same line style. -->
+<symbol id="kit-platform" viewBox="0 0 24 24"><path d="M2 7h20v4H2z"/><path d="M5 11v3M12 11v3M19 11v3"/><path d="M3 17h18"/></symbol>
+<symbol id="kit-sheet" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m7 9 2-2M13 9l2-2M10 13l2-2M16 13l2-2M7 15l2-2M13 15l2-2M10 19l2-2"/></symbol>
+<symbol id="kit-scissors" viewBox="0 0 24 24"><path d="M4 3h16M4 21h16"/><path d="M6 3l12 9L6 21"/><path d="M18 3 6 12l12 9"/><circle cx="12" cy="7.5" r="1"/><circle cx="12" cy="16.5" r="1"/></symbol>
+<symbol id="kit-cylinder" viewBox="0 0 24 24"><rect x="2" y="8" width="12" height="8" rx="1"/><path d="M14 12h6"/><path d="M20 9v6"/><path d="M6 8v8"/><path d="M10 16v3h4"/></symbol>
+<symbol id="kit-base" viewBox="0 0 24 24"><path d="M2 14h20v4H2z"/><path d="M6 14 9 8M18 14l-3-6"/><path d="M4 18v3M20 18v3"/></symbol>
+<symbol id="kit-feet" viewBox="0 0 24 24"><path d="M12 2v12"/><path d="M9 5h6M9 8h6M9 11h6"/><path d="M7 18h10l-2-4H9z"/><path d="M4 21h16"/></symbol>
+<symbol id="kit-power-unit" viewBox="0 0 24 24"><rect x="2" y="9" width="11" height="11" rx="1"/><rect x="13" y="12" width="9" height="8" rx="1"/><path d="M5 9V6h5v3"/><path d="M5 14h5M5 17h5"/><path d="M17.5 12V9"/></symbol>
+<symbol id="kit-panel" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><circle cx="12" cy="7" r="1.5"/><circle cx="12" cy="12" r="1.5"/><path d="M10 17h4"/></symbol>
+<symbol id="kit-valve" viewBox="0 0 24 24"><path d="M3 8v8l9-4z"/><path d="M21 8v8l-9-4z"/><path d="M12 12V5"/><path d="M9 5h6"/></symbol>
+<symbol id="kit-limits" viewBox="0 0 24 24"><path d="M4 3h16M4 21h16"/><path d="M12 7v10"/><path d="m9 9 3-3 3 3"/><path d="m9 15 3 3 3-3"/></symbol>
+<symbol id="kit-overload" viewBox="0 0 24 24"><path d="M7 9h10l3 12H4z"/><path d="M9 9a3 3 0 1 1 6 0"/><path d="M12 13v3"/><path d="M12 19h.01"/></symbol>
+<symbol id="kit-speed" viewBox="0 0 24 24"><path d="M3.34 18a10 10 0 1 1 17.32 0"/><path d="m12 14 4-5"/><path d="M6 14h1M17 14h1M12 6v1"/></symbol>
+<symbol id="kit-stop" viewBox="0 0 24 24"><path d="M3 12h9"/><path d="m9 9 3 3-3 3"/><path d="M15 4v16"/><path d="M15 6h4v12h-4"/></symbol>
+<symbol id="kit-anti-tip" viewBox="0 0 24 24"><path d="M12 4 4 18h16z"/><path d="M2 21h20"/><path d="M12 10v4"/></symbol>
+<symbol id="kit-frame" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1" stroke-dasharray="3 2.5"/><path d="M7 9h10v6H7z"/></symbol>
+<symbol id="kit-hatch" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="7" y="7" width="10" height="10" rx="1"/><path d="M10 12h4"/></symbol>
+<symbol id="kit-grease" viewBox="0 0 24 24"><path d="M12 3s5 6 5 10a5 5 0 0 1-10 0c0-4 5-10 5-10z"/><path d="M10 14a2 2 0 0 0 2 2"/></symbol>
+<symbol id="kit-rails" viewBox="0 0 24 24"><path d="M2 8h20M2 16h20"/><path d="M5 8v8M10 8v8M14 8v8M19 8v8"/></symbol>
+<symbol id="kit-mast" viewBox="0 0 24 24"><path d="M7 2v20M17 2v20"/><rect x="4" y="9" width="16" height="6" rx="1"/><path d="M4 22h16"/></symbol>
 <!-- Social marks: simplified line drawings in the same style. -->
 <symbol id="vk" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="6"/><path d="M6.5 8.5l2.5 7 2.5-7"/><path d="M13.5 8.5v7"/><path d="M17.5 8.5l-4 3.5 4 3.5"/></symbol>
 <symbol id="youtube" viewBox="0 0 24 24"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></symbol>

@@ -69,9 +69,9 @@
     </div>
     <div class="kit kit--list">
       <ol class="kit__list">
-        {% for title, text in item.kit %}
+        {% for title, text, icon_name in item.kit %}
         <li class="kit__item">
-          <span class="kit__num" aria-hidden="true">{{ forloop.counter }}</span>
+          <span class="kit__icon" aria-hidden="true">{% icon icon_name %}</span>
           <h3>{{ title }}</h3>
           <p>{{ text }}</p>
         </li>

@@ -105,7 +105,7 @@
             {% for p in kit_points %}{% if p.pos %}
             <g class="kit__marker" data-kit-marker="{{ forloop.counter }}">
               <circle cx="{{ p.pos.0 }}" cy="{{ p.pos.1 }}" r="{{ kit_overlay.r }}"></circle>
-              <text x="{{ p.pos.0 }}" y="{{ p.pos.1 }}" font-size="{{ kit_overlay.r }}">{{ forloop.counter }}</text>
+              <use href="{% static 'img/icons.svg' %}#{{ p.icon }}" x="{{ p.pos.0|add:kit_overlay.ix }}" y="{{ p.pos.1|add:kit_overlay.ix }}" width="{{ kit_overlay.is }}" height="{{ kit_overlay.is }}"></use>
             </g>
             {% endif %}{% endfor %}
           </svg>
@@ -115,7 +115,7 @@
       <ol class="kit__list">
         {% for p in kit_points %}
         <li class="kit__item" data-kit-item="{{ forloop.counter }}">
-          <span class="kit__num" aria-hidden="true">{{ forloop.counter }}</span>
+          <span class="kit__icon" aria-hidden="true">{% icon p.icon %}</span>
           <h3>{{ p.title }}</h3>
           <p>{{ p.text }}</p>
         </li>
