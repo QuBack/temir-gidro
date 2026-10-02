@@ -228,7 +228,7 @@ class ArticleListView(SeoMixin, BreadcrumbsMixin, TemplateView):
             *context.get("jsonld", []),
             collection_schema(self.seo_title, reverse("core:articles"), [(a["title"], a["url"]) for a in items]),
         ]
-        context["articles"] = items
+        context.update(articles=items, page_bg=catalog.ARTICLES_BG)
         return context
 
 
@@ -288,6 +288,7 @@ class AboutView(SeoMixin, BreadcrumbsMixin, TemplateView):
             lead_form=LeadForm.for_request(self.request),
             hero_image=catalog.HERO_IMAGE,
             about_bg=catalog.ABOUT_BG,
+            page_bg=catalog.ABOUT_HERO_BG,
             stats=catalog.STATS,
             advantages=catalog.ADVANTAGES,
             steps=catalog.STEPS_TIMELINE,

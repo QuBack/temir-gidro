@@ -2,7 +2,7 @@ from django.conf import settings
 from django.templatetags.static import static
 from django.urls import translate_url
 
-from .catalog import ARTICLE_BG, CATEGORIES, CONFIG_BG, LEAD_BG, SPECS_BG
+from .catalog import CATEGORIES, CONFIG_BG, LEAD_BG, SPECS_BG
 from .company import COMPANY
 from .seo import absolute_url
 
@@ -20,7 +20,6 @@ def site(request):
         "nav_categories": CATEGORIES,
         "lead_bg": LEAD_BG,
         "config_bg": CONFIG_BG,
-        "article_bg": ARTICLE_BG,
         "specs_bg": SPECS_BG,
         # Query strings (utm, filters) are never part of the canonical URL.
         "canonical_url": absolute_url(path),

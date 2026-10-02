@@ -4,7 +4,8 @@
 {% block breadcrumbs %}{% endblock %}
 {% block content %}
 
-<section class="eq-hero about-hero" aria-labelledby="about-title">
+<section class="eq-hero about-hero page-hero--bg" aria-labelledby="about-title">
+  <div class="page-hero-bg" aria-hidden="true">{% picture page_bg "" sizes="100vw" %}</div>
   <div class="container eq-hero__grid">
     <div class="eq-hero__text">
       <h1 id="about-title">{% translate "О компании" %}</h1>
