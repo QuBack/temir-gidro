@@ -18,9 +18,8 @@ HERO_IMAGE = img("hero/gidravlicheskie-podemniki", (1920, 765), widths=(768, 128
 # Generated drawing-style backgrounds (illustrations, never passed off as photos).
 # Soft photo headers (Codex, 2026): objects on the right, the text side kept clear.
 ABOUT_HERO_BG = img("backgrounds/ceh-temir-gidro-o-kompanii", (1672, 941), widths=(768, 1280, 1672))
-# TODO: soft photos for contacts and articles (Codex) — generation failed for lack of disk space on C:.
-CONTACTS_BG = img("backgrounds/chertezh-nozhnichnogo-podemnika", (1672, 941), widths=(768, 1280, 1672))
-ARTICLES_BG = img("backgrounds/chertezh-gidrocilindra-statya", (1664, 936), widths=(768, 1280, 1664))
+CONTACTS_BG = img("backgrounds/promyshlennyj-kvartal-moskvy", (1600, 900), widths=(768, 1280, 1600))
+ARTICLES_BG = img("backgrounds/verstak-inzhenera-statyi", (1600, 900), widths=(768, 1280, 1600))
 # Behind «Реквизиты и контакты» on the about page: a softened hall of red lifts, objects on the right.
 ABOUT_BG = img("backgrounds/ceh-nozhnichnyh-podemnikov", (1664, 936), widths=(768, 1280, 1664))
 # Behind the spec tables: a diamond-plate platform, texture on the right, plain on the left.
