@@ -1,0 +1,254 @@
+{
+  "summary": {
+    "health_score": 74,
+    "business_type": "B2B manufacturer (hydraulic lifts), Moscow, ships across Russia",
+    "top_findings": [
+      "Нет 301 со старого сайта",
+      "Политика конфиденциальности — заглушка",
+      "Битая ссылка /dostavka-i-oplata/ на всех страницах",
+      "Не закрыты коммерческие факторы (цены, отзывы, реквизиты, гарантия)",
+      "Нет реальных кейсов"
+    ],
+    "quick_wins": [
+      "Страница «Доставка и оплата» или убрать ссылку",
+      "lastmod для всех URL в sitemap",
+      "og:locale ru_RU и короче title",
+      "postalCode и geo в разметке",
+      "Вебвизор и цели на соцсети в Метрике"
+    ]
+  },
+  "categories": [
+    {
+      "name": "Technical SEO",
+      "score": 80,
+      "what_works": [
+        "canonical на всех страницах",
+        "robots.txt с Clean-param",
+        "sitemap",
+        "301 без слеша → со слешем",
+        "CSP и заголовки безопасности"
+      ],
+      "findings": [
+        {
+          "title": "Нет 301 со старого сайта",
+          "severity": "Critical",
+          "description": "В urls.py нет редиректов; таблица адресов есть в todo.md",
+          "recommendation": "Постраничные 301 + 410 для служебных адресов WordPress"
+        },
+        {
+          "title": "Битая ссылка в подвале",
+          "severity": "High",
+          "description": "/dostavka-i-oplata/ → 404 на всех 24 страницах",
+          "recommendation": "Сделать страницу или убрать ссылку"
+        },
+        {
+          "title": "lastmod у 4 из 23 URL",
+          "severity": "Medium",
+          "description": "sitemap.xml",
+          "recommendation": "Дата изменения для всех страниц"
+        },
+        {
+          "title": "Нет IndexNow",
+          "severity": "Medium",
+          "description": "—",
+          "recommendation": "Ключ-файл и пинг при деплое"
+        },
+        {
+          "title": "Фавикон 32×32, /favicon.ico 404",
+          "severity": "Low",
+          "description": "base.html",
+          "recommendation": "SVG/PNG ≥120×120 и /favicon.ico"
+        }
+      ]
+    },
+    {
+      "name": "Content Quality",
+      "score": 60,
+      "what_works": [
+        "Уникальные тексты 430–960 слов на страницах каталога",
+        "FAQ, характеристики, комплектация"
+      ],
+      "findings": [
+        {
+          "title": "Политика конфиденциальности — заглушка",
+          "severity": "Critical",
+          "description": "9 слов, формы собирают ПДн",
+          "recommendation": "Юридический текст по 152-ФЗ"
+        },
+        {
+          "title": "Нет реальных кейсов",
+          "severity": "High",
+          "description": "Блок «Решения под объект» без конкретики",
+          "recommendation": "3–5 объектов с фото и параметрами"
+        },
+        {
+          "title": "Нет отзывов",
+          "severity": "High",
+          "description": "—",
+          "recommendation": "Отзывы на сайте и в Яндекс Бизнесе"
+        },
+        {
+          "title": "Тонкие /stati/ и /kontakty/",
+          "severity": "Medium",
+          "description": "61 и 112 слов",
+          "recommendation": "Вводный текст, реквизиты, схема проезда"
+        },
+        {
+          "title": "Нет авторства",
+          "severity": "Medium",
+          "description": "Статьи от организации",
+          "recommendation": "Автор-инженер, dateModified"
+        }
+      ]
+    },
+    {
+      "name": "On-Page SEO",
+      "score": 82,
+      "what_works": [
+        "Уникальные title/description",
+        "Один H1",
+        "Иерархия без пропусков",
+        "Сильная перелинковка"
+      ],
+      "findings": [
+        {
+          "title": "Длинные title",
+          "severity": "Low",
+          "description": "1X 76, 2X 77, Гидроцилиндры 74, 3X 71",
+          "recommendation": "До ~70 символов"
+        },
+        {
+          "title": "og:locale = ru",
+          "severity": "Low",
+          "description": "base.html",
+          "recommendation": "ru_RU"
+        }
+      ]
+    },
+    {
+      "name": "Schema / Structured Data",
+      "score": 70,
+      "what_works": [
+        "LocalBusiness, BreadcrumbList, FAQPage, Product, BlogPosting — валидный JSON-LD"
+      ],
+      "findings": [
+        {
+          "title": "Пустой postalCode, нет geo/image",
+          "severity": "Medium",
+          "description": "LocalBusiness",
+          "recommendation": "Заполнить"
+        },
+        {
+          "title": "Product без offers",
+          "severity": "Medium",
+          "description": "Нет цен",
+          "recommendation": "AggregateOffer после появления цен «от»"
+        }
+      ]
+    },
+    {
+      "name": "Performance",
+      "score": 80,
+      "what_works": [
+        "AVIF/WebP, srcset, lazy, размеры",
+        "defer JS, Метрика после load",
+        "woff2 + preload"
+      ],
+      "findings": [
+        {
+          "title": "Нет замеров CWV",
+          "severity": "Info",
+          "description": "Сайт не опубликован",
+          "recommendation": "PageSpeed после запуска"
+        }
+      ]
+    },
+    {
+      "name": "AI Search Readiness",
+      "score": 65,
+      "what_works": [
+        "FAQ, таблицы, цифры",
+        "ИИ-краулеры не заблокированы"
+      ],
+      "findings": [
+        {
+          "title": "Нет авторства и дат обновления",
+          "severity": "Medium",
+          "description": "—",
+          "recommendation": "Автор, dateModified"
+        },
+        {
+          "title": "Нет llms.txt",
+          "severity": "Low",
+          "description": "/llms.txt 404",
+          "recommendation": "По желанию"
+        }
+      ]
+    },
+    {
+      "name": "Images",
+      "score": 90,
+      "what_works": [
+        "alt у всех",
+        "width/height",
+        "AVIF/WebP"
+      ],
+      "findings": [
+        {
+          "title": "Нет image sitemap",
+          "severity": "Low",
+          "description": "—",
+          "recommendation": "Добавить"
+        }
+      ]
+    }
+  ],
+  "action_plan": {
+    "phases": [
+      {
+        "name": "Phase 1: Critical Fixes",
+        "timeframe": "До запуска",
+        "items": [
+          "301 со старого сайта",
+          "Политика конфиденциальности"
+        ]
+      },
+      {
+        "name": "Phase 2: High-Impact Improvements",
+        "timeframe": "Недели 1–2",
+        "items": [
+          "Доставка и оплата",
+          "Цены «от»",
+          "Реквизиты",
+          "Кейсы",
+          "Отзывы и Яндекс Бизнес",
+          "Мессенджеры",
+          "Гарантия и сертификаты"
+        ]
+      },
+      {
+        "name": "Phase 3: Content & Authority",
+        "timeframe": "Месяц 1",
+        "items": [
+          "lastmod, image sitemap, IndexNow",
+          "Разметка организации",
+          "Авторство",
+          "Метрика: Вебвизор и цели"
+        ]
+      },
+      {
+        "name": "Phase 4: Monitoring & Iteration",
+        "timeframe": "Постоянно",
+        "items": [
+          "Вебмастер и Метрика",
+          "PageSpeed",
+          "Видимость в Алисе AI"
+        ]
+      }
+    ]
+  },
+  "artifacts": {
+    "findings_dir": "findings/",
+    "screenshots_dir": "screenshots/"
+  }
+}
