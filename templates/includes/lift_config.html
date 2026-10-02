@@ -4,14 +4,14 @@
   <div class="container config__grid">
     <div class="config__head">
       <h2 id="config-title">{% translate "Задайте размеры — увидите схему подъёмника" %}</h2>
-      <p class="config__lead">{% translate "Двигайте ползунки: схема перестроится под ваш объект, а параметры можно сразу отправить на расчёт." %}</p>
+      <p class="config__lead">{% translate "Двигайте ползунки: подберём число пар ножниц, посчитаем высоту в сложенном положении, время подъёма и срок поставки. Параметры можно сразу отправить на расчёт." %}</p>
     </div>
     <div class="config__form">
       <div class="config__controls">
         <div class="range">
           <label for="cfg-l">{% translate "Длина платформы" %} <b>L</b></label>
           <output for="cfg-l" data-out="L">2000 мм</output>
-          <input type="range" id="cfg-l" name="L" min="1200" max="7000" step="100" value="2000" data-unit="мм">
+          <input type="range" id="cfg-l" name="L" min="1200" max="5500" step="100" value="2000" data-unit="мм">
         </div>
         <div class="range">
           <label for="cfg-b">{% translate "Ширина платформы" %} <b>B</b></label>
@@ -19,16 +19,20 @@
           <input type="range" id="cfg-b" name="B" min="900" max="3000" step="100" value="1200" data-unit="мм">
         </div>
         <div class="range">
-          <label for="cfg-h">{% translate "Высота подъёма" %} <b>H</b></label>
+          <label for="cfg-h">{% translate "Ход платформы" %} <b>H</b></label>
           <output for="cfg-h" data-out="H">1500 мм</output>
-          <input type="range" id="cfg-h" name="H" min="500" max="6000" step="100" value="1500" data-unit="мм">
+          <input type="range" id="cfg-h" name="H" min="500" max="16000" step="100" value="1500" data-unit="мм">
         </div>
         <div class="range">
           <label for="cfg-q">{% translate "Грузоподъёмность" %} <b>Q</b></label>
           <output for="cfg-q" data-out="Q">2 т</output>
-          <input type="range" id="cfg-q" name="Q" min="0.5" max="10" step="0.5" value="2" data-unit="т">
+          <input type="range" id="cfg-q" name="Q" min="0.5" max="5.5" step="0.1" value="2" data-unit="т">
         </div>
       </div>
+      <p class="config__note" data-config-note hidden>{% blocktranslate trimmed %}
+        Даже четыре пары ножниц на такой платформе поднимут только на <b data-out="Hreach"></b> мм.
+        Удлините платформу или отправьте параметры — подберём другую схему.
+      {% endblocktranslate %}</p>
       <a class="btn btn--primary" href="#raschet" data-config-send>{% translate "Отправить параметры на расчёт" %}</a>
     </div>
 
@@ -43,11 +47,16 @@
       </div>
       <figcaption class="stamp">
         <span class="stamp__name">{% translate "Схема ножничного подъёмника" %}</span>
-        <dl class="stamp__facts">
+        {# Defaults match drawings.js for L 2000, H 1500, Q 2 t; without JS the stamp stays as is. #}
+        <dl class="stamp__facts stamp__facts--wide">
           <div><dt>{% translate "Платформа, мм" %}</dt><dd data-out="LB">2000 × 1200</dd></div>
-          <div><dt>{% translate "Подъём, мм" %}</dt><dd data-out="Hs">1500</dd></div>
+          <div><dt>{% translate "Ход, мм" %}</dt><dd data-out="Hs">1500</dd></div>
           <div><dt>{% translate "Нагрузка, кг" %}</dt><dd data-out="Qs">2000</dd></div>
-          <div><dt>{% translate "Пар ножниц" %}</dt><dd data-out="N">1</dd></div>
+          <div><dt>{% translate "Пар ножниц" %}</dt><dd data-out="N">2</dd></div>
+          <div><dt>{% translate "В сложенном виде, мм" %}</dt><dd data-out="Hmin">500</dd></div>
+          <div><dt>{% translate "Макс. высота, мм" %}</dt><dd data-out="Hmax">2000</dd></div>
+          <div><dt>{% translate "Время подъёма, с" %}</dt><dd data-out="T">25</dd></div>
+          <div><dt>{% translate "Срок, раб. дней" %}</dt><dd data-out="D">35</dd></div>
         </dl>
       </figcaption>
     </figure>

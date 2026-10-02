@@ -384,7 +384,6 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .config__controls { display: grid; gap: 1.25rem; margin-block: 2rem; }
 @media (max-width: 59.99rem) { .config__controls { margin-top: 0; } }
 /* On phones the values sit next to the sliders; the title block would only repeat them. */
-@media (max-width: 39.99rem) { .config .stamp { display: none; } .config .sheet__drawing { border-bottom: 1px solid var(--ink); } }
 
 .range { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: .25rem 1rem; }
 .range label { font-weight: 600; }
@@ -427,6 +426,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .scheme .s-cyl { stroke: var(--ink); stroke-width: 8; stroke-linecap: round; }
 .scheme .s-rod { stroke: #aeb6b9; stroke-width: 4; stroke-linecap: round; }
 .scheme .s-load { fill: var(--grey); stroke: var(--ink); stroke-width: 1.5; }
+.scheme .s-ghost { fill: none; stroke: var(--ink); stroke-width: 1; stroke-dasharray: 6 4; }
 .scheme .s-dim { stroke: var(--ink); stroke-width: 1; fill: none; }
 .scheme .s-arrow { fill: var(--ink); }
 .scheme text { fill: var(--ink); font-size: 26px; paint-order: stroke; stroke: var(--white); stroke-width: 6px; stroke-linejoin: round; }
@@ -444,7 +444,11 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   .stamp__facts > div + div { border-left: 1px solid var(--ink); }
   .stamp__facts > div:nth-child(odd) { border-right: 0; }
   .stamp__facts > div:nth-child(n+3) { border-top: 0; }
+  /* Two rows of four: the configurator's results. */
+  .stamp__facts--wide > div:nth-child(4n+1) { border-left: 0; }
+  .stamp__facts--wide > div:nth-child(n+5) { border-top: 1px solid var(--ink); }
 }
+.config__note { margin-top: 1rem; padding: .75rem 1rem; border-left: 3px solid var(--red); background: var(--white); font-size: .9375rem; }
 
 /* ---------- Sections ---------- */
 .section { padding-block: var(--section-y); }
