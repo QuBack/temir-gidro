@@ -66,3 +66,10 @@ def test_line_page_links_to_models(client):
     html = client.get("/podemniki/nozhnichnye/").content.decode()
     for slug in ("1x", "2x", "3x", "4x"):
         assert f'href="/podemniki/nozhnichnye/{slug}/"' in html
+
+
+def test_scissor_specs_from_old_site(client):
+    html = client.get("/podemniki/nozhnichnye/3x/").content.decode()
+    assert "2350–16 000" in html and "2700–17 500" in html
+    # Specs the client never published are left out, not shown as «уточняется».
+    assert "уточняется" not in client.get("/podemniki/nozhnichnye/2x/").content.decode()

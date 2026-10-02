@@ -882,7 +882,6 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .model-hero__info h1 { margin-top: 0; }
 .model-hero__specs { margin-top: 1.75rem; }
 .model-hero__more { display: inline-block; margin-top: .75rem; font-weight: 600; text-underline-offset: .2em; }
-.tbd { font-family: var(--font); font-size: .9375rem; font-weight: 400; color: var(--muted); }
 
 /* In-page navigation under the first section; sticks under the header while reading. */
 .page-nav { position: sticky; top: 4.25rem; z-index: 40; background: var(--white); border-bottom: 1px solid var(--line); }

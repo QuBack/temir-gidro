@@ -4,7 +4,8 @@ Built like a manufacturer's product card, but not a shop: no price, no
 quantity, no cart. The price is a calculation, so every block leads to the
 request form with the model's own parameter sliders.
 
-TODO from the client (see todo.md): real specs and slider ranges per model,
+Spec ranges for 1X, 3X, 4X and the painting platforms come from the client's old
+site (temir-gidro.ru). TODO from the client (see todo.md): 2X specs and slider ranges,
 standard kit confirmation, lead time and warranty, kit images with callouts.
 """
 
@@ -12,9 +13,6 @@ from django.utils.text import format_lazy
 from django.utils.translation import gettext_lazy as _
 
 from .catalog import FAQ, SCISSOR_1X, SCISSOR_2X, SCISSOR_3X, SCISSOR_4X, img
-
-# Shown instead of a value the client hasn't confirmed yet.
-TBD = None
 
 # ---------- Shared by the scissor series ----------
 
@@ -59,21 +57,24 @@ SCISSOR_OPTIONS = [
 ]
 
 
-def _spec_rows(pairs):
-    """Full spec table for a scissor model. TBD values render as «уточняется»."""
+# Serial ranges, in the order of a model's "ranges" tuple.
+_RANGE_LABELS = [
+    _("Грузоподъёмность, кг"),
+    _("Длина платформы, мм"),
+    _("Ширина платформы, мм"),
+    _("Рабочий ход, мм"),
+    _("Высота в сложенном положении, мм"),
+    _("Максимальная высота платформы, мм"),
+]
+
+
+def _spec_rows(pairs, ranges=None):
+    """Spec table for a scissor model: serial ranges first, if the client has them, then the design."""
     return [
-        (_("Грузоподъёмность, кг"), TBD),
-        (_("Длина платформы, мм"), TBD),
-        (_("Ширина платформы, мм"), TBD),
-        (_("Высота подъёма, мм"), TBD),
-        (_("Высота в сложенном положении, мм"), TBD),
+        *(zip(_RANGE_LABELS, ranges, strict=True) if ranges else ()),
         (_("Количество пар ножниц"), str(pairs)),
         (_("Привод"), _("электрогидравлический")),
-        (_("Напряжение питания"), TBD),
-        (_("Время подъёма, с"), TBD),
         (_("Управление"), _("пульт с кнопками «вверх / вниз / стоп»")),
-        (_("Цвет"), _("RAL 3020 / RAL 7016, другой — по запросу")),
-        (_("Масса, кг"), TBD),
     ]
 
 
@@ -171,6 +172,7 @@ SCISSOR_MODELS = {
             "грузоподъёмность на компактной базе."
         ),
         "pairs": 1,
+        "ranges": ("500–10 000", "1200–7000", "900–3000", "650–4800", "250–1000", "900–5800"),
         "images": [
             {"image": SCISSOR_1X, "alt": _("Ножничный подъёмник 1X ТЕМИР ГИДРО — общий вид")},
         ],
@@ -201,15 +203,15 @@ SCISSOR_MODELS = {
             _("Выравнивание уровня с конвейером или рольгангом"),
             _("Рабочее место на удобной высоте: сварка, упаковка, комплектация"),
         ],
-        "sliders": _sliders((800, 4000, 100, 1500), (600, 2500, 100, 1000), (500, 2000, 100, 1000),
+        "sliders": _sliders((1200, 7000, 100, 2000), (900, 3000, 100, 1200), (650, 4800, 50, 1000),
                             (500, 10000, 500, 2000)),
         "faq_extra": [
             (
                 _("На какую высоту поднимает модель 1X?"),
                 _(
-                    "Высота подъёма одной пары ножниц зависит от длины платформы: чем длиннее платформа, "
-                    "тем длиннее рычаги и тем выше подъём. Если нужна высота больше длины платформы, "
-                    "подойдут модели 2X–4X."
+                    "Рабочий ход серийных исполнений — от 650 до 4800 мм, платформа поднимается на высоту "
+                    "до 5800 мм. Ход одной пары ножниц зависит от длины платформы: чем длиннее платформа, "
+                    "тем длиннее рычаги и тем выше подъём. Если нужно выше — подойдут модели 2X–4X."
                 ),
             ),
             (
@@ -291,6 +293,7 @@ SCISSOR_MODELS = {
             "Три пары ножниц: высокий подъём при небольшой площади платформы — для перепадов в целый этаж."
         ),
         "pairs": 3,
+        "ranges": ("500–6000", "1200–7000", "900–3000", "2350–16 000", "350–1500", "2700–17 500"),
         "images": [
             {"image": SCISSOR_3X, "alt": _("Ножничный подъёмник 3X ТЕМИР ГИДРО — общий вид")},
         ],
@@ -318,8 +321,8 @@ SCISSOR_MODELS = {
             _("Подъём на высокие антресоли и стеллажные площадки"),
             _("Подъём узлов и оборудования на верхние площадки цеха"),
         ],
-        "sliders": _sliders((1000, 3000, 100, 1500), (800, 2000, 100, 1200), (2000, 5000, 100, 3500),
-                            (300, 3000, 100, 1000)),
+        "sliders": _sliders((1200, 7000, 100, 2000), (900, 3000, 100, 1200), (2350, 16000, 50, 4000),
+                            (500, 6000, 100, 1000)),
         "faq_extra": [
             (
                 _("Чем ножничный подъёмник лучше грузового лифта?"),
@@ -349,6 +352,7 @@ SCISSOR_MODELS = {
             "Четыре пары ножниц — самая высокая модель серии для больших перепадов высот."
         ),
         "pairs": 4,
+        "ranges": ("500–4000", "1600–6000", "1000–3000", "4500–18 100", "450–1900", "4950–20 000"),
         "images": [
             {"image": SCISSOR_4X, "alt": _("Ножничный подъёмник 4X ТЕМИР ГИДРО — общий вид")},
         ],
@@ -369,8 +373,8 @@ SCISSOR_MODELS = {
             _("Высокие стеллажные и технологические площадки"),
             _("Подъём между уровнями без строительства шахты лифта"),
         ],
-        "sliders": _sliders((1000, 3000, 100, 1500), (800, 2000, 100, 1200), (3000, 6000, 100, 4500),
-                            (300, 2000, 100, 800)),
+        "sliders": _sliders((1600, 6000, 100, 2000), (1000, 3000, 100, 1200), (4500, 18100, 100, 6000),
+                            (500, 4000, 100, 1000)),
         "faq_extra": [
             (
                 _("Когда выбирать 4X, а когда 3X?"),
@@ -389,7 +393,7 @@ for _slug, _m in SCISSOR_MODELS.items():
         line="nozhnichnye",
         line_title=_("Ножничные подъёмники"),
         url=f"{_SCISSORS}{_slug}/",
-        specs=_spec_rows(_m["pairs"]),
+        specs=_spec_rows(_m["pairs"], _m.pop("ranges", None)),
         kit=SCISSOR_KIT,
         options=SCISSOR_OPTIONS,
         faq=_faq(

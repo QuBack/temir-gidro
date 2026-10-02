@@ -63,3 +63,10 @@ def test_catalog_section(client):
     urls = [i["url"] for i in collection["mainEntity"]["itemListElement"]]
     assert f"{SITE}/podemniki/nozhnichnye/" in urls and len(urls) == 6
     assert f"<loc>{SITE}/podemniki/</loc>" in client.get("/sitemap.xml").content.decode()
+
+
+def test_console_lift_page(client):
+    html = client.get("/podemniki/konsolnye/").content.decode()
+    assert "Консольные подъёмники" in html
+    assert "1500–12 000" in html
+    assert f"<loc>{SITE}/podemniki/konsolnye/</loc>" in client.get("/sitemap.xml").content.decode()
