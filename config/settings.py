@@ -125,13 +125,16 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 X_FRAME_OPTIONS = "DENY"
 
+# HTTPS=False only for a demo server reached by IP over plain HTTP (deploy/install.sh
+# without a domain): no HTTPS redirect, no HSTS, cookies work without TLS.
+HTTPS = env.bool("HTTPS", default=True)
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-    SECURE_SSL_REDIRECT = env.bool("SECURE_SSL_REDIRECT", default=True)
-    SECURE_HSTS_SECONDS = env.int("SECURE_HSTS_SECONDS", default=60 * 60 * 24 * 365)
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = env.bool("SECURE_SSL_REDIRECT", default=HTTPS)
+    SECURE_HSTS_SECONDS = env.int("SECURE_HSTS_SECONDS", default=60 * 60 * 24 * 365 if HTTPS else 0)
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = HTTPS
+    SESSION_COOKIE_SECURE = HTTPS
+    CSRF_COOKIE_SECURE = HTTPS
 
 # Yandex.Metrika needs its script host, its pixel/collect endpoints and webvisor
 # frames; everything else is first-party. No inline scripts at all.

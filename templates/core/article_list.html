@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load i18n images %}
+{% block body_attrs %} class="overlay"{% endblock %}
+{% block breadcrumbs %}{% endblock %}
+{% block content %}
+
+<section class="eq-hero cat-hero" aria-labelledby="articles-title">
+  <div class="container">
+    <h1 id="articles-title">{% translate "Статьи" %}</h1>
+    <p class="eq-hero__lead">{% translate "Как выбрать подъёмник, как устроено оборудование и что мы сделали для заказчиков. Пишут инженеры ТЕМИР ГИДРО." %}</p>
+  </div>
+</section>
+
+<section class="section" aria-label="{% translate 'Список статей' %}">
+  <div class="container">
+    <ul class="articles articles--list">
+      {% for a in articles %}
+      <li>
+        <a class="article" href="{{ a.url }}">
+          <div class="article__media">{% picture a.image a.image_alt sizes="(min-width: 48rem) 30vw, 90vw" %}</div>
+          <p class="article__meta"><span class="article__tag">{{ a.category }}</span> <time datetime="{{ a.date|date:'Y-m-d' }}">{{ a.date|date:"j E Y" }}</time></p>
+          <h2 class="article__title">{{ a.title }}</h2>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+{% endblock %}

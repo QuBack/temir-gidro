@@ -11,3 +11,4 @@ db.sqlite3
 venv/
 # Raw server responses and KillBot cookies from the SEO audit
 /temir-gidro.ru-audit/raw/
+/backups/

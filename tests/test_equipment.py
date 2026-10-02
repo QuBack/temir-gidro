@@ -40,7 +40,15 @@ def test_painting_booth_page(client):
     html = client.get("/podemniki/dlya-okrasochnyh-kamer/").content.decode()
     assert html.count("<h1") == 1
     assert 'id="seriya-1x"' in html and 'id="seriya-2d"' in html
-    assert 'aria-labelledby="gallery-title"' not in html  # a single photo is no gallery
+    assert 'href="/podemniki/dlya-okrasochnyh-kamer/2d/"' in html
+
+
+@pytest.mark.parametrize("slug", ["chetyrehstoechnye", "avtomobilnye"])
+def test_lines_without_models(client, slug):
+    html = client.get(f"/podemniki/{slug}/").content.decode()
+    assert html.count("<h1") == 1
+    assert 'id="serii"' not in html  # no serial models yet
+    assert 'aria-labelledby="about-title"' in html and "photos/" in html
 
 
 def test_equipment_breadcrumbs_include_section(client):

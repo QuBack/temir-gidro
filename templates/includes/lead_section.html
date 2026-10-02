@@ -1,5 +1,7 @@
-{% load i18n %}
-<section class="section section--dark" id="raschet" aria-labelledby="lead-heading">
+{% load i18n images %}
+<section class="section section--dark section--drawing" id="raschet" aria-labelledby="lead-heading">
+  {# Decorative drawing, hence the empty alt. #}
+  <div class="lead-bg" aria-hidden="true">{% picture lead_bg "" sizes="100vw" %}</div>
   <div class="container lead">
     <div class="lead__text">
       <h2 id="lead-heading">{% translate "Рассчитаем стоимость за 24 часа" %}</h2>

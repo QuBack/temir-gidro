@@ -5,13 +5,12 @@
 {% block content %}
 
 <section class="eq-hero about-hero" aria-labelledby="about-title">
-  {% include "includes/breadcrumbs.html" %}
   <div class="container eq-hero__grid">
     <div class="eq-hero__text">
       <h1 id="about-title">{% translate "О компании" %}</h1>
       <p class="eq-hero__lead">{% blocktranslate with name=company.name %}{{ name }} — производитель гидравлических подъёмников и гидроцилиндров. Проектируем оборудование под задачу заказчика, изготавливаем, испытываем и монтируем на объекте.{% endblocktranslate %}</p>
       <p class="about-hero__legal">{% blocktranslate with name=company.name legal=company.legal_name city=company.address.city %}{{ name }} — торговая марка {{ legal }}. Офис в городе {{ city }}, оборудование отгружаем в любой регион России.{% endblocktranslate %}</p>
-      <dl class="plate about-hero__plate">
+      <dl class="stats about-hero__plate">
         {% for value, label in stats %}<div><dt>{{ label }}</dt><dd data-count>{{ value }}</dd></div>{% endfor %}
       </dl>
     </div>
@@ -26,6 +25,8 @@
     </div>
   </div>
 </section>
+{# Crumbs go under the first section, so the page opens with its heading. #}
+{% include "includes/breadcrumbs.html" %}
 
 <section class="section" aria-labelledby="make-title">
   <div class="container">
@@ -38,7 +39,6 @@
         <a class="cat-card" href="{{ cat.url }}">
           <div class="cat-card__media">{% picture cat.image cat.title sizes="(min-width: 60rem) 30vw, (min-width: 40rem) 45vw, 90vw" %}</div>
           <h3>{{ cat.title }}</h3>
-          <p>{{ cat.text }}</p>
           {% if cat.facts %}<ul class="facts cat-card__meta">{% for f in cat.facts %}<li>{{ f }}</li>{% endfor %}</ul>{% endif %}
         </a>
       </li>
@@ -47,7 +47,6 @@
         <a class="cat-card cat-card--wide" href="{{ cylinders.url }}">
           <div class="cat-card__media">{% picture cylinders.image cylinders.title sizes="(min-width: 60rem) 40vw, 90vw" %}</div>
           <h3>{{ cylinders.title }}</h3>
-          <p>{{ cylinders.text }}</p>
           <dl class="specs cat-card__specs">
             {% for label, value in cylinders.specs %}<div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>{% endfor %}
           </dl>

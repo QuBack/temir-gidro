@@ -4,7 +4,9 @@ from django.conf import settings
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 
+from .articles import ARTICLES
 from .catalog import EQUIPMENT
+from .lift_models import MODELS
 
 
 class CanonicalSitemap(Sitemap):
@@ -24,7 +26,15 @@ class CanonicalSitemap(Sitemap):
 
 class StaticViewSitemap(CanonicalSitemap):
     def items(self):
-        return ["core:home", "core:catalog", "core:about", "core:contacts", "core:privacy"]
+        return [
+            "core:home",
+            "core:catalog",
+            "core:cylinders",
+            "core:articles",
+            "core:about",
+            "core:contacts",
+            "core:privacy",
+        ]
 
     def location(self, item):
         return reverse(item)
@@ -38,4 +48,28 @@ class EquipmentSitemap(CanonicalSitemap):
         return reverse("core:equipment", args=[item])
 
 
-sitemaps = {"static": StaticViewSitemap, "equipment": EquipmentSitemap}
+class ModelSitemap(CanonicalSitemap):
+    def items(self):
+        return list(MODELS)
+
+    def location(self, item):
+        return reverse("core:model", args=item)
+
+
+class ArticleSitemap(CanonicalSitemap):
+    def items(self):
+        return ARTICLES
+
+    def location(self, item):
+        return reverse("core:article", args=[item["slug"]])
+
+    def lastmod(self, item):
+        return item["date"]
+
+
+sitemaps = {
+    "static": StaticViewSitemap,
+    "equipment": EquipmentSitemap,
+    "models": ModelSitemap,
+    "articles": ArticleSitemap,
+}

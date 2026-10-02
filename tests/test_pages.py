@@ -34,7 +34,7 @@ def test_lead_page_has_photo_and_form(client):
 def test_menu(client):
     html = client.get("/").content.decode()
     assert "/proekty/" not in html
-    assert 'href="/podemniki/nozhnichnye/#seriya-3x"' in html
+    assert 'href="/podemniki/nozhnichnye/3x/"' in html
     assert "Оставить заявку" in html
 
 
@@ -52,3 +52,9 @@ def test_about_page(client):
     types = {b["@type"] for b in jsonld_blocks(html)}
     assert {"LocalBusiness", "BreadcrumbList", "AboutPage"} <= types
     assert f"<loc>{SITE}/o-kompanii/</loc>" in client.get("/sitemap.xml").content.decode()
+
+
+def test_no_template_comments_leak(client):
+    # {# #} is single-line only: a multi-line one is printed as text.
+    for url in ("/", "/podemniki/", "/podemniki/nozhnichnye/", "/podemniki/nozhnichnye/1x/"):
+        assert "{#" not in client.get(url).content.decode()

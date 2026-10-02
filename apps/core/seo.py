@@ -55,9 +55,10 @@ def breadcrumb_schema(crumbs: list[tuple[str, str]]) -> dict:
     }
 
 
-def product_schema(name, description, image_path: str, path: str) -> dict:
-    """A catalog line as schema.org Product, made by the organization."""
-    return {
+def product_schema(name, description, image_path: str, path: str, properties=(), model="") -> dict:
+    """A catalog line or model as schema.org Product, made by the organization.
+    properties: [(name, value), …] — known specs as PropertyValue."""
+    data = {
         "@context": "https://schema.org",
         "@type": "Product",
         "name": str(name),
@@ -67,6 +68,13 @@ def product_schema(name, description, image_path: str, path: str) -> dict:
         "brand": {"@type": "Brand", "name": COMPANY["name"]},
         "manufacturer": {"@id": absolute_url("/#organization")},
     }
+    if model:
+        data["model"] = str(model)
+    if properties:
+        data["additionalProperty"] = [
+            {"@type": "PropertyValue", "name": str(k), "value": str(v)} for k, v in properties if v is not None
+        ]
+    return data
 
 
 def collection_schema(name, path: str, items: list[tuple[str, str]]) -> dict:
@@ -106,4 +114,21 @@ def faq_schema(items: list[tuple[str, str]]) -> dict:
             {"@type": "Question", "name": str(q), "acceptedAnswer": {"@type": "Answer", "text": str(a)}}
             for q, a in items
         ],
+    }
+
+
+def article_schema(article, image_path: str, path: str) -> dict:
+    """An article as schema.org BlogPosting, published by the organization."""
+    return {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": str(article["title"]),
+        "description": str(article["description"]),
+        "image": absolute_url(image_path),
+        "url": absolute_url(path),
+        "mainEntityOfPage": absolute_url(path),
+        "datePublished": article["date"].isoformat(),
+        "author": {"@id": absolute_url("/#organization")},
+        "publisher": {"@id": absolute_url("/#organization")},
+        "inLanguage": "ru",
     }

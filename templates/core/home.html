@@ -15,7 +15,7 @@
     {% endif %}
   </div>
   <div class="container hero__inner">
-    <div class="hero__panel">
+    <div class="hero__text">
       <h1 class="hero__title" id="hero-title">{% translate "Гидравлические подъёмники от производителя" %}</h1>
       <p class="hero__lead">{% blocktranslate %}Проектируем и производим подъёмники и гидроцилиндры под ваши размеры и нагрузку — от расчёта до монтажа на объекте.{% endblocktranslate %}</p>
       <div class="hero__actions">
@@ -23,9 +23,6 @@
         <a class="hero__phone" href="tel:{{ company.phone_href }}">{{ company.phone }}</a>
       </div>
     </div>
-    <dl class="plate">
-      {% for value, label in stats %}<div><dt>{{ label }}</dt><dd data-count>{{ value }}</dd></div>{% endfor %}
-    </dl>
   </div>
 </section>
 
@@ -33,7 +30,6 @@
   <div class="container">
     <div class="section-head section-head--center">
       <h2 id="katalog-title">{% translate "Гидравлическое оборудование" %}</h2>
-      <p class="section-head__lead">{% translate "Серийные модели собственного производства. Размер платформы, высоту подъёма и грузоподъёмность подбираем под объект." %}</p>
     </div>
     <ul class="lift-tiles lift-tiles--all">
       {% for t in equipment_tiles %}
@@ -45,7 +41,6 @@
           </div>
           <div class="lift-tile__desc">
             <h3>{{ t.title }}</h3>
-            <p>{{ t.label }}</p>
           </div>
         </a>
       </li>
@@ -63,6 +58,9 @@
     <div class="section-head section-head--center">
       <h2 id="why-title">{% translate "Производим сами и отвечаем за результат" %}</h2>
     </div>
+    <dl class="stats stats--row">
+      {% for value, label in stats %}<div><dt>{{ label }}</dt><dd data-count>{{ value }}</dd></div>{% endfor %}
+    </dl>
     <ul class="features">
       {% for title, text, icon_name in advantages %}
       <li class="feature">
@@ -126,7 +124,6 @@
         <a class="project" href="{{ p.url }}">
           {% picture p.image p.title sizes="(min-width: 48rem) 30vw, 90vw" %}
           <h3>{{ p.title }}</h3>
-          <p>{{ p.text }}</p>
         </a>
       </li>
       {% endfor %}
@@ -173,7 +170,6 @@
         <a class="article" href="{{ a.url }}">
           <div class="article__media">{% picture a.image a.title sizes="(min-width: 48rem) 30vw, 90vw" %}</div>
           <h3>{{ a.title }}</h3>
-          <p>{{ a.text }}</p>
         </a>
       </li>
       {% endfor %}

@@ -1,4 +1,5 @@
 # Production overlay: docker compose -f compose.yml -f deploy/compose.prod.yml up -d --build
+# (deploy/install.sh does it for you on a fresh server).
 # Caddy terminates HTTPS (automatic Let's Encrypt), compresses responses,
 # serves /media/ and redirects www → bare domain.
 services:
@@ -16,14 +17,17 @@ services:
   caddy:
     image: caddy:2-alpine
     restart: unless-stopped
+    # HTTP_BIND / HTTPS_BIND from .env: a demo by IP serves plain HTTP only, so 443 is bound
+    # to localhost and never clashes with another web server on the machine.
     ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
+      - "${HTTP_BIND:-80}:80"
+      - "${HTTPS_BIND:-443}:443"
+      - "${HTTPS_BIND:-443}:443/udp"
     environment:
-      SITE_DOMAIN: ${SITE_DOMAIN:?set SITE_DOMAIN, e.g. temir-gidro.kz}
+      SITE_DOMAIN: ${SITE_DOMAIN:-localhost}
     volumes:
-      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      # deploy/Caddyfile — domain with HTTPS; deploy/Caddyfile.ip — demo by IP over HTTP.
+      - ./${CADDYFILE:-deploy/Caddyfile}:/etc/caddy/Caddyfile:ro
       - media:/srv/media:ro
       - caddy_data:/data
       - caddy_config:/config
