@@ -88,24 +88,74 @@
     }
   }
 
-  // Timeline: each step comes up as it scrolls in, the rail fills behind the reader.
-  // The steps are hidden only once this runs (html.reveal-on), so without JS, for
-  // crawlers and with reduced motion everything is simply shown.
+  // Reveal on scroll, on every page: section heads, texts, cards and list items rise
+  // and fade in, photos also open from the bottom. Items that arrive together come
+  // one after another. Whatever is on screen at load is left alone, so the first
+  // screen never blinks; without JS, for crawlers and with reduced motion nothing
+  // is hidden. Once shown, the helper classes go, so the blocks' own hover effects work.
+  var REVEAL_BLOCKS = [
+    "main .section-head", "main .prose", "main .split__text", "main .scene__text", "main .config__head",
+    "main .config__form", "main .lead__text", "main .lead__form", "main .route", "main .waybill",
+    "main .spec-table", "main .kit__options", "main .map-block__info", "main .article-cta", "main .article-related",
+    "main .lift-tile", "main .cat-card", "main .feature", "main .faq__item", "main .article", "main .series__item",
+    "main .reasons__list > li", "main .industries__list > li", "main .project", "main .kit__item",
+    "main .stats > div", "main .steps__item", "main .contacts__list > div",
+  ].join(", ");
+  var REVEAL_PHOTOS = "main .scene__photo, main .eq-about__photo, main .split__main, main .kit__figure, main .sheet";
   var timeline = document.querySelector("[data-timeline]");
-  if (timeline && "IntersectionObserver" in window &&
-      !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    var steps = timeline.querySelectorAll("[data-reveal]");
-    var reveal = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          reveal.unobserve(entry.target);
+  if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    // Checked on scroll, not with IntersectionObserver: a fast scroll or a jump to an
+    // anchor can carry a block past the screen between two frames, and it would stay
+    // hidden. Here anything above the line is shown, whether on screen or passed.
+    var pending = [];
+    var fold = window.innerHeight;
+    var mark = function (el, photo) {
+      if (el.closest("[data-timeline]") || el.closest(".reveal") || el.getBoundingClientRect().top < fold) return;
+      el.classList.add("reveal");
+      if (photo) el.classList.add("reveal--photo");
+      pending.push({ el: el, cleanup: true });
+    };
+    document.querySelectorAll(REVEAL_PHOTOS).forEach(function (el) { mark(el, true); });
+    document.querySelectorAll(REVEAL_BLOCKS).forEach(function (el) { mark(el, false); });
+    // Timeline steps keep their own styles (html.reveal-on) and only get is-visible.
+    if (timeline) {
+      timeline.querySelectorAll("[data-reveal]").forEach(function (el) { pending.push({ el: el, cleanup: false }); });
+      document.documentElement.classList.add("reveal-on");
+    }
+
+    var revealTicking = false;
+    var revealDue = function () {
+      revealTicking = false;
+      var line = window.innerHeight * 0.88;
+      var due = pending.filter(function (p) { return p.el.getBoundingClientRect().top < line; });
+      if (!due.length) return;
+      pending = pending.filter(function (p) { return due.indexOf(p) < 0; });
+      due.sort(function (a, b) {
+        var ra = a.el.getBoundingClientRect(), rb = b.el.getBoundingClientRect();
+        return ra.top - rb.top || ra.left - rb.left;
+      });
+      // Blocks that arrive together come one after another.
+      due.forEach(function (p, i) {
+        var delay = Math.min(i, 5) * 90;
+        p.el.style.setProperty("--reveal-delay", delay + "ms");
+        p.el.classList.add("is-visible");
+        if (p.cleanup) {
+          setTimeout(function () {
+            p.el.classList.remove("reveal", "reveal--photo", "is-visible");
+            p.el.style.removeProperty("--reveal-delay");
+          }, delay + 1000);
         }
       });
-    }, { rootMargin: "0px 0px -20% 0px", threshold: 0.2 });
-    steps.forEach(function (step) { reveal.observe(step); });
-    document.documentElement.classList.add("reveal-on");
+    };
+    revealDue();
+    window.addEventListener("scroll", function () {
+      if (!revealTicking) { revealTicking = true; requestAnimationFrame(revealDue); }
+    }, { passive: true });
+    window.addEventListener("resize", revealDue, { passive: true });
+  }
 
+  // Timeline rail: fills behind the reader.
+  if (timeline && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     // Rail fill: how far a line at 60% of the screen has gone down the timeline;
     // a step's dot turns red when the fill reaches it.
     var dots = timeline.querySelectorAll(".timeline__dot");
