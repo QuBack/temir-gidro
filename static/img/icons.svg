@@ -46,7 +46,7 @@
 <symbol id="kit-rails" viewBox="0 0 24 24"><path d="M2 8h20M2 16h20"/><path d="M5 8v8M10 8v8M14 8v8M19 8v8"/></symbol>
 <symbol id="kit-mast" viewBox="0 0 24 24"><path d="M7 2v20M17 2v20"/><rect x="4" y="9" width="16" height="6" rx="1"/><path d="M4 22h16"/></symbol>
 <!-- Social marks: simplified line drawings in the same style. -->
-<symbol id="vk" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="6"/><path d="M6.5 8.5l2.5 7 2.5-7"/><path d="M13.5 8.5v7"/><path d="M17.5 8.5l-4 3.5 4 3.5"/></symbol>
+<symbol id="vk" viewBox="0 0 24 24"><path d="M3 7l3.5 10L10 7"/><path d="M13.5 7v10"/><path d="M20.5 7l-6 5 6 5"/></symbol>
 <symbol id="youtube" viewBox="0 0 24 24"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></symbol>
 <symbol id="instagram" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></symbol>
 </svg>

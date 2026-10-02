@@ -5,11 +5,12 @@
 {% block content %}
 
 <article aria-labelledby="article-title">
-  <header class="eq-hero article-hero">
-    <div class="article-hero__bg" aria-hidden="true">{% picture article_bg "" sizes="100vw" %}</div>
+  <header class="eq-hero article-hero article-hero--photo">
+    {# The article's own photo on the right, dissolving into the header: each article brings its own. #}
+    <figure class="article-hero__photo">{% picture article.image article.image_alt sizes="(min-width: 60rem) 55vw, 100vw" priority=True %}</figure>
     {% include "includes/breadcrumbs.html" %}
     <div class="container article-hero__inner">
-      <p class="article__meta"><span class="article__tag">{{ article.category }}</span> <time datetime="{{ article.date|date:'Y-m-d' }}">{{ article.date|date:"j E Y" }}</time></p>
+      <p class="article__meta"><span class="article__tag">{{ article.category }}</span> <time datetime="{{ article.date|date:'Y-m-d' }}">{{ article.date|date:"j E Y" }}</time>{% if article.author %} <span>{% translate "Автор" %}: {{ article.author.name }}</span>{% endif %}</p>
       <h1 id="article-title">{{ article.title }}</h1>
       <p class="eq-hero__lead">{{ article.description }}</p>
     </div>
@@ -18,7 +19,6 @@
   <div class="section article-body">
     <div class="container article-layout">
       <div class="article-content">
-        <figure class="article-cover">{% picture article.image article.image_alt sizes="(min-width: 60rem) 46rem, 100vw" priority=True %}</figure>
         <div class="prose">
           {% include article.template with images=article.images %}
         </div>

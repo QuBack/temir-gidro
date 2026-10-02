@@ -17,7 +17,10 @@ def img(src, size, widths=(400, 800)):
 HERO_IMAGE = img("hero/gidravlicheskie-podemniki", (1920, 765), widths=(768, 1280, 1920))
 # Generated drawing-style backgrounds (illustrations, never passed off as photos).
 CONTACTS_BG = img("backgrounds/chertezh-nozhnichnogo-podemnika", (1672, 941), widths=(768, 1280, 1672))
-ABOUT_BG = img("backgrounds/chertezh-gidrocilindra", (1672, 941), widths=(768, 1280, 1672))
+# Behind «Реквизиты и контакты» on the about page: a softened hall of red lifts, objects on the right.
+ABOUT_BG = img("backgrounds/ceh-nozhnichnyh-podemnikov", (1664, 936), widths=(768, 1280, 1664))
+# Behind the spec tables: a diamond-plate platform, texture on the right, plain on the left.
+SPECS_BG = img("backgrounds/riflenyj-list-platformy", (1664, 936), widths=(768, 1280, 1664))
 # Request blocks: a faint lift drawing on navy (Codex), the drawing on the right.
 LEAD_BG = img("backgrounds/chertezh-podemnika-zayavka", (1672, 941), widths=(768, 1280, 1672))
 # Behind the article headers: cylinder and lift drawings on the right, the text side left clear.
@@ -351,8 +354,10 @@ EQUIPMENT = {
         "scenes_title": _("Как мы делаем ножничные подъёмники"),
         "scenes": [
             {
-                "image": img("hero/gidravlicheskie-podemniki", (1920, 765), widths=(768, 1280, 1920)),
-                "alt": _("Ножничные подъёмники ТЕМИР ГИДРО в цехе перед отгрузкой"),
+                "image": img(
+                    "photos/proizvodstvo-temir-gidro-svarochnyj-uchastok", (1672, 941), widths=(768, 1280, 1672)
+                ),
+                "alt": _("Сварочный участок ТЕМИР ГИДРО: платформа подъёмника из рифлёного листа и маска сварщика"),
                 "title": _("Собственное производство"),
                 "text": _(
                     "Металлоконструкции, гидроцилиндры и гидростанции делаем сами, поэтому отвечаем за подъёмник "

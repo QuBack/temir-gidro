@@ -557,6 +557,14 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   .steps__item:not(:last-child)::before { left: calc(50% + 2.75rem); right: calc(-50% + 1.25rem); top: 2.25rem; bottom: auto; width: auto; height: 1px; }
 }
 
+/* A decorative photo behind a whole section (spec tables); faded on the text side. */
+.section-bg { position: absolute; inset: 0; z-index: -1; }
+.section-bg picture, .section-bg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 100% 50%; }
+.section-bg::after { content: ""; position: absolute; inset: 0; background: rgb(242 244 243 / .7); }
+@media (min-width: 48rem) {
+  .section-bg::after { background: linear-gradient(90deg, rgb(242 244 243 / .9) 0%, rgb(242 244 243 / .75) 50%, rgb(242 244 243 / .1) 80%); }
+}
+
 /* ---------- Reveal on scroll (site.js): blocks rise and fade in, photos also open from the bottom ---------- */
 /* `main` lifts these over the blocks' own transform/transition rules, declared later. */
 main .reveal {
@@ -937,23 +945,25 @@ main .reveal.is-visible { opacity: 1; transform: none; clip-path: inset(0); }
 .lightbox__next { right: 1rem; }
 .lightbox__btn[hidden] { display: none; }
 
-/* ---------- Social profiles: footer and contacts ---------- */
+/* ---------- Social profiles: header, footer and contacts — in the networks' own colours ---------- */
 .social { display: flex; flex-wrap: wrap; gap: .5rem; }
-.social a {
-  display: inline-flex; align-items: center; justify-content: center; gap: 1px;
-  min-width: 2.75rem; height: 2.75rem; border: 1px solid var(--line); border-radius: 6px;
-  color: var(--ink); text-decoration: none; transition: color .15s, border-color .15s;
+.social__link {
+  display: inline-flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem;
+  border-radius: 10px; color: var(--white); text-decoration: none;
+  transition: transform .15s, box-shadow .15s, filter .15s;
 }
-.social a:hover { color: var(--red); border-color: var(--red); }
+.social__link .icon { stroke-width: 2; }
+.social__link:hover { transform: translateY(-2px); filter: brightness(1.08); box-shadow: 0 .5rem 1rem rgb(0 0 0 / .18); }
+.social__link--vk { background: #0077ff; }
+.social__link--youtube { background: #ff0033; }
+.social__link--instagram { background: linear-gradient(45deg, #feda75 0%, #fa7e1e 25%, #d62976 55%, #962fbf 80%, #4f5bd5 100%); }
+.site-footer .social__link, .site-footer .social__link:hover { color: var(--white); text-decoration: none; }
 .social--footer { margin-top: .75rem; }
-.site-footer .social a { border-color: rgb(255 255 255 / .2); color: #dde2e4; }
-.site-footer .social a:hover { border-color: var(--white); color: var(--white); text-decoration: none; }
-/* Top bar: bare icons in the line of contacts. */
-.social--topbar { gap: .25rem; }
-.social--topbar a { min-width: 1.75rem; height: 1.75rem; border: 0; color: inherit; }
-.social--topbar a:hover { color: var(--white); }
-.social--topbar .icon { width: 1.125rem; height: 1.125rem; }
-.overlay:not(.overlay--dark) .social--topbar a:hover { color: var(--ink); }
+/* Top bar: small round badges in the line of contacts. */
+.social--topbar { gap: .4rem; }
+.social--topbar .social__link { width: 1.6rem; height: 1.6rem; border-radius: 50%; }
+.social--topbar .icon { width: 1rem; height: 1rem; }
+.topbar .social--topbar .social__link, .topbar .social--topbar .social__link:hover { color: var(--white); }
 .site-footer__bottom {
   display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem;
   padding-block: 1.5rem; border-top: 1px solid rgb(255 255 255 / .12); font-size: .8125rem;
@@ -1078,8 +1088,34 @@ main .reveal.is-visible { opacity: 1; transform: none; clip-path: inset(0); }
 .section--dark .range input::-moz-range-thumb { border-color: var(--white); background: var(--navy); }
 html:has(.page-nav) { scroll-padding-top: 7.5rem; }
 
-/* Model page first section: plain white, the render without a frame. */
-.model-hero { background: var(--white); }
+/* Model page first section: deep red stage, text on the left, the render on the right with a soft light
+   behind it (as on the old site's cylinder page). Line pages keep the light hero. */
+.model-hero {
+  color: var(--white);
+  background:
+    radial-gradient(ellipse 55% 70% at 75% 55%, rgb(255 255 255 / .12), transparent 70%),
+    radial-gradient(ellipse 90% 110% at 65% 45%, #a5121a 0%, #860c12 40%, #56070b 78%, #2c0306 100%);
+}
+.model-hero h1, .model-hero .eq-hero__lead { color: var(--white); }
+.model-hero .eq-hero__lead { opacity: .85; }
+.model-hero .breadcrumbs, .model-hero .breadcrumbs a { color: rgb(255 255 255 / .75); }
+.model-hero .breadcrumbs li + li::before { color: rgb(255 255 255 / .4); }
+.model-hero .specs { border-top-color: rgb(255 255 255 / .6); }
+.model-hero .specs > div { border-bottom-color: rgb(255 255 255 / .2); }
+.model-hero .specs dt { color: rgb(255 255 255 / .7); }
+.model-hero__more, .model-hero .hero__phone { color: var(--white); }
+.model-hero .btn--primary { background: var(--white); color: var(--red); }
+.model-hero .btn--primary:hover { background: var(--grey); color: var(--red); }
+.model-hero .model-gallery__slide img { filter: drop-shadow(0 1.5rem 1.75rem rgb(0 0 0 / .35)); }
+.model-hero .model-gallery__slide--photo { padding: 0; }
+.model-hero .model-gallery__slide--photo picture { border-radius: 12px; overflow: hidden; background: var(--white); }
+.model-hero .model-gallery__slide--photo img { filter: none; }
+.model-hero .model-gallery__thumb { border-color: rgb(255 255 255 / .25); background: rgb(255 255 255 / .08); }
+.model-hero .model-gallery__thumb:hover { border-color: var(--white); }
+.model-hero .model-gallery__thumb.is-active { border-color: var(--white); box-shadow: inset 0 0 0 1px var(--white); }
+/* Phones: the model first, so it is on the first screen; wider: text left, model right. */
+@media (max-width: 59.99rem) { .model-hero .model-gallery { order: -1; } }
+@media (min-width: 60rem) { .model-hero__grid { grid-template-columns: 1fr 1.1fr; align-items: center; } }
 
 /* Equipment line without serial models: the story and a photo of it at work. */
 .eq-about { display: grid; gap: 2.5rem; align-items: center; }
@@ -1125,7 +1161,23 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
 @media (min-width: 48rem) {
   .article-hero__bg::after { background: linear-gradient(90deg, rgb(227 230 228 / .92) 0%, rgb(227 230 228 / .85) 45%, rgb(227 230 228 / .35) 68%, rgb(227 230 228 / 0) 85%); }
 }
-.article-hero__inner { max-width: 56rem; }
+/* Article page: phone — the photo under the text; wider — on the right half, fading into the grey. */
+.article-hero__photo { margin: 0; }
+.article-hero--photo { display: flex; flex-direction: column; }
+.article-hero--photo .article-hero__photo { order: 3; margin: 2rem 1rem 0; overflow: hidden; border-radius: 12px; }
+.article-hero__photo img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+@media (min-width: 60rem) {
+  .article-hero--photo { display: block; min-height: 34rem; }
+  .article-hero--photo .article-hero__photo {
+    position: absolute; top: var(--chrome); right: 0; bottom: 0; z-index: -1; width: 58%; margin: 0; border-radius: 0;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 45%); mask-image: linear-gradient(90deg, transparent 0%, #000 45%);
+  }
+  .article-hero--photo .article-hero__photo picture, .article-hero--photo .article-hero__photo img { width: 100%; height: 100%; aspect-ratio: auto; }
+  .article-hero--photo .article-hero__inner > * { max-width: 34rem; }
+  .article-hero--photo h1 { text-wrap: balance; }
+}
+/* Left-aligned with the crumbs: the text column is narrower than the container, not centred. */
+.article-hero__inner > * { max-width: 46rem; }
 .article-hero h1 { margin-top: 1rem; font-size: clamp(2.25rem, 4.6vw, 3.75rem); }
 .article-body { padding-top: clamp(2rem, 5vw, 3.5rem); }
 .article-layout { display: grid; gap: 3rem; align-items: start; }
@@ -1145,6 +1197,12 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
 .prose a { text-underline-offset: .2em; }
 .prose strong { font-weight: 600; }
 .article-figure { margin: 2rem 0; }
+/* An engineer's words inside an article. */
+.article-quote { margin: 2rem 0; padding: 1.25rem 1.5rem; border-left: 3px solid var(--red); border-radius: 0 12px 12px 0; background: var(--grey-soft); }
+.article-quote p { margin: 0; font-size: 1.125rem; line-height: 1.55; }
+.article-quote cite { display: block; margin-top: .75rem; color: var(--muted); font-size: .875rem; font-style: normal; font-weight: 600; }
+.article-quote cite::before { content: "— "; }
+.table-scroll { margin: 1.5rem 0; overflow-x: auto; }
 .article-figure img { width: 100%; border-radius: 12px; }
 .article-figure figcaption { margin-top: .6rem; color: var(--muted); font-size: .875rem; }
 @media (min-width: 48rem) {

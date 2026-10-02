@@ -613,10 +613,12 @@ PAINT_MODELS = {
             {
                 "image": img("catalog/podemnik-dlya-okrasochnoj-kamery-2d-sboku", (800, 450)),
                 "alt": _("Подъёмник 2D — вид сбоку"),
+                "photo": True,  # on white, not a cut-out render
             },
             {
                 "image": img("catalog/podemnik-dlya-okrasochnoj-kamery-2d-front", (800, 450)),
                 "alt": _("Подъёмник 2D — вид спереди"),
+                "photo": True,
             },
         ],
         "scenes": [

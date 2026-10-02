@@ -78,3 +78,10 @@ def test_home_steps_timeline(client):
     # Five steps, each with a photo; the content is in the HTML, JS only animates it.
     assert html.count('class="timeline__item" data-reveal') == 5
     assert "img/steps/etap-montazh-1536.webp" in html
+
+
+def test_moved_article_has_author_and_photos(client):
+    html = client.get("/stati/nozhnichnyj-podemnik-konstrukciya-i-bezopasnost/").content.decode()
+    assert html.count("<h1") == 1 and "Владимир Теплов" in html
+    assert '"author":{"@type":"Person"' in html
+    assert "nozhnichnyj-podemnik-3x-ispytanie" in html and 'data-zoom="article"' in html

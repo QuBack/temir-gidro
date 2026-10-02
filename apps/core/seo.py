@@ -128,7 +128,11 @@ def article_schema(article, image_path: str, path: str) -> dict:
         "url": absolute_url(path),
         "mainEntityOfPage": absolute_url(path),
         "datePublished": article["date"].isoformat(),
-        "author": {"@id": absolute_url("/#organization")},
+        "author": (
+            {"@type": "Person", "name": article["author"]["name"]}
+            if article.get("author")
+            else {"@id": absolute_url("/#organization")}
+        ),
         "publisher": {"@id": absolute_url("/#organization")},
         "inLanguage": "ru",
     }

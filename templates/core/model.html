@@ -1,12 +1,25 @@
 {% extends "base.html" %}
 {% load i18n static images %}
-{% block body_attrs %} class="overlay"{% endblock %}
+{% block body_attrs %} class="overlay overlay--dark"{% endblock %}
 {% block breadcrumbs %}{% endblock %}
 {% block content %}
 
 <section class="eq-hero model-hero" aria-labelledby="model-title">
   {% include "includes/breadcrumbs.html" %}
   <div class="container model-hero__grid">
+    <div class="model-hero__info">
+      <h1 id="model-title">{{ model.title }}</h1>
+      <p class="eq-hero__lead">{{ model.lead }}</p>
+      <dl class="specs model-hero__specs">
+        {% for label, value in short_specs %}<div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>{% endfor %}
+      </dl>
+      <a class="model-hero__more" href="#harakteristiki">{% translate "Все характеристики" %}</a>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="#zayavka">{% translate "Оставить заявку" %}</a>
+        <a class="hero__phone" href="tel:{{ company.phone_href }}">{{ company.phone }}</a>
+      </div>
+    </div>
+
     <div class="model-gallery" data-gallery>
       <div class="model-gallery__main">
           {% for g in model.images %}
@@ -27,19 +40,6 @@
         {% endfor %}
       </ul>
       {% endif %}
-    </div>
-
-    <div class="model-hero__info">
-      <h1 id="model-title">{{ model.title }}</h1>
-      <p class="eq-hero__lead">{{ model.lead }}</p>
-      <dl class="specs model-hero__specs">
-        {% for label, value in short_specs %}<div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>{% endfor %}
-      </dl>
-      <a class="model-hero__more" href="#harakteristiki">{% translate "Все характеристики" %}</a>
-      <div class="hero__actions">
-        <a class="btn btn--primary" href="#zayavka">{% translate "Оставить заявку" %}</a>
-        <a class="hero__phone" href="tel:{{ company.phone_href }}">{{ company.phone }}</a>
-      </div>
     </div>
   </div>
 </section>
@@ -73,7 +73,8 @@
   {% endif %}
 </section>
 
-<section class="section" id="harakteristiki" aria-labelledby="specs-title">
+<section class="section section--drawing" id="harakteristiki" aria-labelledby="specs-title">
+  <div class="section-bg" aria-hidden="true">{% picture specs_bg "" sizes="100vw" %}</div>
   <div class="container model-specs">
     <div class="section-head">
       <h2 id="specs-title">{% translate "Технические характеристики" %}</h2>

@@ -73,26 +73,10 @@
   </div>
 </section>
 
-<section class="section" aria-labelledby="stages-title">
-  <div class="container">
-    <div class="section-head">
-      <h2 id="stages-title">{% translate "От заявки до монтажа" %}</h2>
-    </div>
-    <ol class="steps">
-      {% for title, text, icon_name in steps %}
-      <li class="steps__item">
-        <span class="steps__icon">{% icon icon_name %}</span>
-        <span class="steps__num">{% translate "Шаг" %} {{ forloop.counter }}</span>
-        <h3>{{ title }}</h3>
-        <p>{{ text }}</p>
-      </li>
-      {% endfor %}
-    </ol>
-  </div>
-</section>
+{% include "includes/steps_timeline.html" %}
 
 <section class="section about-req-section" aria-labelledby="req-title">
-  {# Decorative drawing on the right, hence the empty alt. #}
+  {# Decorative photo on the right, hence the empty alt. #}
   <div class="about-req-section__bg" aria-hidden="true">{% picture about_bg "" sizes="100vw" %}</div>
   <div class="container about-req-section__inner">
     <h2 id="req-title">{% translate "Реквизиты и контакты" %}</h2>

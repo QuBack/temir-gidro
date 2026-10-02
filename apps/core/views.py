@@ -291,7 +291,7 @@ class AboutView(SeoMixin, BreadcrumbsMixin, TemplateView):
             about_bg=catalog.ABOUT_BG,
             stats=catalog.STATS,
             advantages=catalog.ADVANTAGES,
-            steps=catalog.STEPS,
+            steps=catalog.STEPS_TIMELINE,
             categories=catalog.CATEGORIES,
             cylinders=catalog.CYLINDERS,
         )

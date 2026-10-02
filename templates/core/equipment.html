@@ -45,7 +45,8 @@
 {% endif %}
 
 {% if item.specs %}
-<section class="section section--grey" aria-labelledby="specs-title">
+<section class="section section--grey section--drawing" aria-labelledby="specs-title">
+  <div class="section-bg" aria-hidden="true">{% picture specs_bg "" sizes="100vw" %}</div>
   <div class="container eq-specs">
     <div class="section-head">
       <h2 id="specs-title">{% translate "Технические характеристики" %}</h2>
