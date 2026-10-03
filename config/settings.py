@@ -171,6 +171,8 @@ SEO_INDEXING = env.bool("SEO_INDEXING", default=True)
 YANDEX_VERIFICATION = env("YANDEX_VERIFICATION", default="")
 GOOGLE_VERIFICATION = env("GOOGLE_VERIFICATION", default="")
 YANDEX_METRIKA_ID = env("YANDEX_METRIKA_ID", default="")
+# IndexNow (Yandex, Bing): 8–128 letters/digits/dashes; empty — no key file, no pings.
+INDEXNOW_KEY = env("INDEXNOW_KEY", default="")
 
 # --- Leads -------------------------------------------------------------------------
 TELEGRAM_BOT_TOKEN = env("TELEGRAM_BOT_TOKEN", default="")

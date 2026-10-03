@@ -13,3 +13,5 @@ echo ">>> Пересобираю и перезапускаю"
 "${COMPOSE[@]}" up -d --build --remove-orphans
 docker image prune -f >/dev/null
 "${COMPOSE[@]}" ps
+# Tell Yandex and Bing the pages may have changed (no-op without INDEXNOW_KEY).
+"${COMPOSE[@]}" exec -T web python manage.py indexnow || echo "IndexNow: не удалось отправить, сайт работает"

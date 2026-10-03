@@ -18,8 +18,12 @@
   window.temirGoal = function (goal) { window.ym(id, "reachGoal", goal); };
 
   document.addEventListener("click", function (event) {
-    var link = event.target.closest && event.target.closest('a[href^="tel:"], a[href^="mailto:"]');
+    if (!event.target.closest) return;
+    var link = event.target.closest('a[href^="tel:"], a[href^="mailto:"]');
     if (link) window.temirGoal(link.href.indexOf("tel:") === 0 ? "phone_click" : "email_click");
+    // Social profiles: one goal, the network goes along as a parameter.
+    var social = event.target.closest(".social__link");
+    if (social) window.ym(id, "reachGoal", "social_click", { network: social.getAttribute("aria-label") });
   });
 
   function load() {

@@ -32,14 +32,16 @@ def organization_schema() -> dict:
             "streetAddress": address["street"],
             "addressLocality": address["city"],
             "addressRegion": address["region"],
-            "postalCode": address["postal_code"],
             "addressCountry": address["country"],
         },
     }
+    # An empty postalCode is an error for validators: added once the client gives it.
+    if address["postal_code"]:
+        data["address"]["postalCode"] = address["postal_code"]
     if COMPANY["legal_name"]:
         data["legalName"] = COMPANY["legal_name"]
     if COMPANY["social"]:
-        data["sameAs"] = COMPANY["social"]
+        data["sameAs"] = [s["url"] for s in COMPANY["social"]]
     return data
 
 
@@ -128,7 +130,11 @@ def article_schema(article, image_path: str, path: str) -> dict:
         "url": absolute_url(path),
         "mainEntityOfPage": absolute_url(path),
         "datePublished": article["date"].isoformat(),
-        "author": {"@id": absolute_url("/#organization")},
+        "author": (
+            {"@type": "Person", "name": article["author"]["name"]}
+            if article.get("author")
+            else {"@id": absolute_url("/#organization")}
+        ),
         "publisher": {"@id": absolute_url("/#organization")},
         "inLanguage": "ru",
     }

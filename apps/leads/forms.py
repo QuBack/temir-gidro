@@ -1,14 +1,20 @@
+import hashlib
 import re
 import time
 
 from django import forms
 from django.conf import settings
 from django.core import signing
+from django.core.cache import cache
 from django.utils.translation import gettext_lazy as _
 
 from .models import Lead
 
 _TOKEN_SALT = "leads.form-rendered-at"
+# A form token is good for a week: older pages are reloaded by people, not kept open.
+_TOKEN_MAX_AGE = 7 * 24 * 3600
+# Spam bots post links; a customer rarely needs more than one (a drawing on a file share).
+_LINK = re.compile(r"https?://|www\.|\[url|<a\s", re.IGNORECASE)
 
 
 class LeadForm(forms.ModelForm):
@@ -58,10 +64,22 @@ class LeadForm(forms.ModelForm):
         """Empty string for a human submission, otherwise why it looks like spam."""
         if self.cleaned_data.get("website"):
             return "honeypot"
+        token = self.cleaned_data.get("token", "")
         try:
-            rendered_at = signing.loads(self.cleaned_data.get("token", ""), salt=_TOKEN_SALT)
+            rendered_at = signing.loads(token, salt=_TOKEN_SALT)
         except signing.BadSignature:
             return "bad_token"
-        if time.time() - rendered_at < settings.LEAD_MIN_FILL_SECONDS:
+        age = time.time() - rendered_at
+        if age < settings.LEAD_MIN_FILL_SECONDS:
             return "too_fast"
+        if age > _TOKEN_MAX_AGE:
+            return "stale_token"
+        # One token, one lead: a bot that loaded the page once can't replay it. A real double
+        # click lands here too — the first lead is already saved and announced.
+        digest = hashlib.sha256(token.encode()).hexdigest()
+        if not cache.add(f"lead-token:{digest}", 1, timeout=_TOKEN_MAX_AGE):
+            return "token_reused"
+        name, message = self.cleaned_data.get("name", ""), self.cleaned_data.get("message", "")
+        if _LINK.search(name) or len(_LINK.findall(message)) > 1:
+            return "links"
         return ""

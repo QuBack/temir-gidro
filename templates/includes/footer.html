@@ -18,7 +18,7 @@
           <li><a href="/gidrocilindry/">{% translate "Гидроцилиндры" %}</a></li>
           <li><a href="/stati/">{% translate "Статьи" %}</a></li>
           <li><a href="{% url 'core:about' %}">{% translate "О компании" %}</a></li>
-          <li><a href="/dostavka-i-oplata/">{% translate "Доставка и оплата" %}</a></li>
+          {# «Доставка и оплата» returns once the client sends the terms (see todo.md). #}
           <li><a href="{% url 'core:contacts' %}">{% translate "Контакты" %}</a></li>
         </ul>
       </div>
@@ -30,6 +30,7 @@
       <a href="mailto:{{ company.email }}">{{ company.email }}</a>
       <span>{{ company.address.city }}, {{ company.address.street }}</span>
       <span>{{ company.opening_hours_display }}</span>
+      {% include "includes/social.html" with variant="footer" %}
     </address>
   </div>
   <div class="container site-footer__bottom">

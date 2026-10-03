@@ -1,8 +1,8 @@
 from urllib.parse import quote
 
 from django.conf import settings
-from django.http import Http404
-from django.shortcuts import render
+from django.http import Http404, HttpResponse
+from django.shortcuts import redirect, render
 from django.templatetags.static import static
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -45,7 +45,7 @@ class HomeView(SeoMixin, TemplateView):
             cylinders=catalog.CYLINDERS,
             stats=catalog.STATS,
             advantages=catalog.ADVANTAGES,
-            steps=catalog.STEPS,
+            steps=catalog.STEPS_TIMELINE,
             industries=catalog.INDUSTRIES,
             projects=catalog.PROJECTS,
             faq=catalog.FAQ,
@@ -170,7 +170,6 @@ class ModelView(SeoMixin, BreadcrumbsMixin, TemplateView):
         context.update(
             model=model,
             line=self.line,
-            short_specs=lift_models.short_specs(model),
             kit_points=lift_models.kit_points(model),
             kit_overlay=lift_models.kit_overlay(model),
             delivery=lift_models.DELIVERY,
@@ -229,7 +228,7 @@ class ArticleListView(SeoMixin, BreadcrumbsMixin, TemplateView):
             *context.get("jsonld", []),
             collection_schema(self.seo_title, reverse("core:articles"), [(a["title"], a["url"]) for a in items]),
         ]
-        context["articles"] = items
+        context.update(articles=items, page_bg=catalog.ARTICLES_BG)
         return context
 
 
@@ -289,9 +288,10 @@ class AboutView(SeoMixin, BreadcrumbsMixin, TemplateView):
             lead_form=LeadForm.for_request(self.request),
             hero_image=catalog.HERO_IMAGE,
             about_bg=catalog.ABOUT_BG,
+            page_bg=catalog.ABOUT_HERO_BG,
             stats=catalog.STATS,
             advantages=catalog.ADVANTAGES,
-            steps=catalog.STEPS,
+            steps=catalog.STEPS_TIMELINE,
             categories=catalog.CATEGORIES,
             cylinders=catalog.CYLINDERS,
         )
@@ -302,7 +302,7 @@ class ContactsView(SeoMixin, BreadcrumbsMixin, TemplateView):
     template_name = "core/contacts.html"
     seo_title = _("Контакты — ТЕМИР ГИДРО, гидравлические подъёмники в Москве")
     seo_description = _(
-        "Телефон 8 (800) 333-75-80, почта и адрес ТЕМИР ГИДРО в Москве. Оставьте заявку — перезвоним в рабочее время."
+        "Телефон +7 (499) 117-01-31, почта и адрес ТЕМИР ГИДРО в Москве. Оставьте заявку — перезвоним в рабочее время."
     )
 
     def get_breadcrumbs(self):
@@ -343,6 +343,16 @@ def robots_txt(request):
         {"sitemap_url": f"{settings.SITE_URL}/sitemap.xml", "seo_indexing": settings.SEO_INDEXING},
         content_type="text/plain; charset=utf-8",
     )
+
+
+def favicon(request):
+    """/favicon.ico: browsers and Yandex ask for it at the root before reading the page."""
+    return redirect(static("img/favicon.ico"), permanent=True)
+
+
+def indexnow_key(request):
+    """IndexNow key file at /<key>.txt: proves to Yandex and Bing that the pings are ours."""
+    return HttpResponse(settings.INDEXNOW_KEY, content_type="text/plain; charset=utf-8")
 
 
 def page_not_found(request, exception):

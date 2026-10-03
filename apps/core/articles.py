@@ -12,6 +12,29 @@ from .catalog import img
 
 ARTICLES = [
     {
+        "slug": "nozhnichnyj-podemnik-konstrukciya-i-bezopasnost",
+        "category": _("Статьи"),
+        "title": _("Ножничный подъёмник: конструкция, безопасность и управление"),
+        "seo_title": _("Ножничный подъёмник: конструкция и безопасность | ТЕМИР ГИДРО"),
+        "description": _(
+            "Как устроен гидравлический ножничный подъёмник: платформа, гидроцилиндры, маслостанция, защита "
+            "от перегруза и концевые выключатели, посты управления, тандем до 20 т. Фото с производства."
+        ),
+        "text": _("Платформа, гидравлика, системы безопасности и управление — с фото с нашего производства."),
+        # Moved from the old site (temir-gidro.ru, «Ножничные подъемники»); its pictures were uploaded in July 2026.
+        "date": datetime.date(2026, 7, 1),
+        # The engineer quoted in the article; also the author in the BlogPosting markup.
+        "author": {"name": "Владимир Теплов"},
+        "image": img("articles/nozhnichnyj-podemnik-montazh-platformy", (1448, 1086), widths=(600, 1024, 1448)),
+        "image_alt": _("Ножничный подъёмник ТЕМИР ГИДРО в цехе: платформа с сигнальной разметкой и ножничный механизм"),
+        "related": ("/podemniki/nozhnichnye/", _("Ножничные подъёмники 1X–4X")),
+        "images": {
+            "montazh": img("articles/nozhnichnyj-podemnik-montazh-platformy", (1448, 1086), widths=(600, 1024, 1448)),
+            "ispytanie": img("articles/nozhnichnyj-podemnik-3x-ispytanie", (1086, 1448), widths=(400, 732, 1086)),
+            "s_gruzom": img("articles/nozhnichnyj-podemnik-s-gruzom", (1086, 1448), widths=(400, 732, 1086)),
+        },
+    },
+    {
         "slug": "nozhnichnyj-podemnik-dlya-avtoservisa",
         "category": _("Проекты"),
         "title": _("Ножничный подъёмник для автосервиса: снимаем КПП грузовика в смотровой яме"),

@@ -20,7 +20,7 @@
   <meta property="og:title" content="{{ seo_title|default:company.name }}">
   <meta property="og:description" content="{{ seo_description|default:company.description }}">
   <meta property="og:url" content="{{ canonical_url }}">
-  <meta property="og:locale" content="{{ LANGUAGE_CODE }}">
+  <meta property="og:locale" content="{% if LANGUAGE_CODE == 'ru' %}ru_RU{% else %}{{ LANGUAGE_CODE }}{% endif %}">
   {% if og_image or default_og_image %}
   <meta property="og:image" content="{% firstof og_image default_og_image %}">
   {% if not og_image %}<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">{% endif %}
@@ -30,7 +30,9 @@
   {% if yandex_verification %}<meta name="yandex-verification" content="{{ yandex_verification }}">{% endif %}
   {% if google_verification %}<meta name="google-site-verification" content="{{ google_verification }}">{% endif %}
 
-  <link rel="icon" href="{% static 'img/favicon-32.png' %}" type="image/png">
+  <link rel="icon" href="{% static 'img/favicon-32.png' %}" type="image/png" sizes="32x32">
+  {# Yandex shows the site icon in results: it wants at least 120×120. #}
+  <link rel="icon" href="{% static 'img/apple-touch-icon.png' %}" type="image/png" sizes="180x180">
   <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}">
   <link rel="manifest" href="{% static 'site.webmanifest' %}">
   <meta name="theme-color" content="#373f43">
@@ -50,9 +52,11 @@
     {% block content %}{% endblock %}
   </main>
   {% include "includes/footer.html" %}
+  {% include "includes/lightbox.html" %}
 
   <script src="{% static 'js/site.js' %}" defer></script>
   <script src="{% static 'js/lead-form.js' %}" defer></script>
+  <script src="{% static 'js/lightbox.js' %}" defer></script>
   {% block extra_js %}{% endblock %}
   {% if yandex_metrika_id and seo_indexing %}
   <script src="{% static 'js/metrika.js' %}" data-counter-id="{{ yandex_metrika_id }}" defer></script>

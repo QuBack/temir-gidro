@@ -1,17 +1,22 @@
 {% extends "base.html" %}
 {% load i18n static images %}
-{% block body_attrs %} class="overlay"{% endblock %}
+{% block body_attrs %} class="overlay overlay--dark"{% endblock %}
 {% block breadcrumbs %}{% endblock %}
 {% block content %}
 
 <section class="eq-hero model-hero" aria-labelledby="model-title">
   {% include "includes/breadcrumbs.html" %}
   <div class="container model-hero__grid">
+    <div class="model-hero__info">
+      <h1 id="model-title">{{ model.title }}</h1>
+      <p class="eq-hero__lead">{{ model.lead }}</p>
+    </div>
+
     <div class="model-gallery" data-gallery>
       <div class="model-gallery__main">
           {% for g in model.images %}
           <div class="model-gallery__slide{% if g.photo %} model-gallery__slide--photo{% endif %}" data-slide{% if not forloop.first %} hidden{% endif %}>
-            {% picture g.image g.alt sizes="(min-width: 60rem) 36rem, 90vw" priority=forloop.first %}
+            <a class="zoom" href="{% image_url g.image %}" data-zoom="gallery">{% picture g.image g.alt sizes="(min-width: 60rem) 36rem, 90vw" priority=forloop.first %}</a>
           </div>
           {% endfor %}
       </div>
@@ -27,19 +32,6 @@
         {% endfor %}
       </ul>
       {% endif %}
-    </div>
-
-    <div class="model-hero__info">
-      <h1 id="model-title">{{ model.title }}</h1>
-      <p class="eq-hero__lead">{{ model.lead }}</p>
-      <dl class="specs model-hero__specs">
-        {% for label, value in short_specs %}<div><dt>{{ label }}</dt><dd>{% if value %}{{ value }}{% else %}<span class="tbd">{% translate "уточняется" %}</span>{% endif %}</dd></div>{% endfor %}
-      </dl>
-      <a class="model-hero__more" href="#harakteristiki">{% translate "Все характеристики" %}</a>
-      <div class="hero__actions">
-        <a class="btn btn--primary" href="#zayavka">{% translate "Оставить заявку" %}</a>
-        <a class="hero__phone" href="tel:{{ company.phone_href }}">{{ company.phone }}</a>
-      </div>
     </div>
   </div>
 </section>
@@ -73,7 +65,8 @@
   {% endif %}
 </section>
 
-<section class="section" id="harakteristiki" aria-labelledby="specs-title">
+<section class="section section--drawing" id="harakteristiki" aria-labelledby="specs-title">
+  <div class="section-bg" aria-hidden="true">{% picture specs_bg "" sizes="100vw" %}</div>
   <div class="container model-specs">
     <div class="section-head">
       <h2 id="specs-title">{% translate "Технические характеристики" %}</h2>
@@ -83,7 +76,7 @@
       <caption class="visually-hidden">{% blocktranslate with name=model.title %}Технические характеристики: {{ name }}{% endblocktranslate %}</caption>
       <tbody>
         {% for label, value in model.specs %}
-        <tr><th scope="row">{{ label }}</th><td>{% if value %}{{ value }}{% else %}<span class="tbd">{% translate "уточняется" %}</span>{% endif %}</td></tr>
+        <tr><th scope="row">{{ label }}</th><td>{{ value }}</td></tr>
         {% endfor %}
       </tbody>
     </table>
@@ -105,7 +98,7 @@
             {% for p in kit_points %}{% if p.pos %}
             <g class="kit__marker" data-kit-marker="{{ forloop.counter }}">
               <circle cx="{{ p.pos.0 }}" cy="{{ p.pos.1 }}" r="{{ kit_overlay.r }}"></circle>
-              <text x="{{ p.pos.0 }}" y="{{ p.pos.1 }}" font-size="{{ kit_overlay.r }}">{{ forloop.counter }}</text>
+              <use href="{% static 'img/icons.svg' %}#{{ p.icon }}" x="{{ p.pos.0|add:kit_overlay.ix }}" y="{{ p.pos.1|add:kit_overlay.ix }}" width="{{ kit_overlay.is }}" height="{{ kit_overlay.is }}"></use>
             </g>
             {% endif %}{% endfor %}
           </svg>
@@ -115,7 +108,7 @@
       <ol class="kit__list">
         {% for p in kit_points %}
         <li class="kit__item" data-kit-item="{{ forloop.counter }}">
-          <span class="kit__num" aria-hidden="true">{{ forloop.counter }}</span>
+          <span class="kit__icon" aria-hidden="true">{% icon p.icon %}</span>
           <h3>{{ p.title }}</h3>
           <p>{{ p.text }}</p>
         </li>

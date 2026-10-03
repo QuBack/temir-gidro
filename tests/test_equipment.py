@@ -63,3 +63,17 @@ def test_catalog_section(client):
     urls = [i["url"] for i in collection["mainEntity"]["itemListElement"]]
     assert f"{SITE}/podemniki/nozhnichnye/" in urls and len(urls) == 6
     assert f"<loc>{SITE}/podemniki/</loc>" in client.get("/sitemap.xml").content.decode()
+
+
+def test_console_lift_page(client):
+    html = client.get("/podemniki/konsolnye/").content.decode()
+    assert "Консольные подъёмники" in html
+    assert "1500–12 000" in html
+    assert f"<loc>{SITE}/podemniki/konsolnye/</loc>" in client.get("/sitemap.xml").content.decode()
+
+
+def test_configurator_uses_client_tables(client):
+    html = client.get(URL).content.decode()
+    # Sliders stop where the client's tables end: 5.5 m and 5.5 t.
+    assert 'name="L" min="1200" max="5500"' in html and 'name="Q" min="0.5" max="5.5"' in html
+    assert 'data-out="Hmin"' in html and 'data-out="D"' in html and "data-config-note" in html
