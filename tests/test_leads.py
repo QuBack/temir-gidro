@@ -52,8 +52,9 @@ def test_invalid_submission_without_js_rerenders_form(client, lead_data):
     [
         ({"website": "http://spam.example"}, "honeypot"),
         ({"token": "forged"}, "bad_token"),
-        ({"token": signing.dumps(int(time.time()), salt=_TOKEN_SALT)}, "too_fast"),
-        ({"token": signing.dumps(int(time.time()) - 8 * 24 * 3600, salt=_TOKEN_SALT)}, "stale_token"),
+        # Token ages as callables: parametrize runs at collection, seconds before the test.
+        ({"token": lambda: signing.dumps(int(time.time()), salt=_TOKEN_SALT)}, "too_fast"),
+        ({"token": lambda: signing.dumps(int(time.time()) - 8 * 24 * 3600, salt=_TOKEN_SALT)}, "stale_token"),
         ({"name": "Buy now https://spam.example"}, "links"),
         ({"message": "http://a.example and www.b.example"}, "links"),
     ],
@@ -61,7 +62,7 @@ def test_invalid_submission_without_js_rerenders_form(client, lead_data):
 def test_spam_is_kept_silently_and_not_announced(
     client, lead_data, override, reason, django_capture_on_commit_callbacks
 ):
-    lead_data.update(override)
+    lead_data.update({k: v() if callable(v) else v for k, v in override.items()})
     with mock.patch("apps.leads.views.notify_new_lead") as notify:
         with django_capture_on_commit_callbacks(execute=True):
             response = client.post("/zayavka/", lead_data)
