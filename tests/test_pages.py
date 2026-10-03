@@ -95,7 +95,9 @@ def test_steps_have_no_step_numbers(client):
 def test_single_product_lines_get_tabs(client):
     html = client.get("/podemniki/konsolnye/").content.decode()
     assert "Как устроен консольный подъёмник 1L" in html
-    assert html.count("data-tab-panel") == 3 and "js/tabs.js" in html
+    assert html.count("data-tab-panel") == 4 and "js/tabs.js" in html
+    # Looks like a model page: the red stage, delivery as the last tab.
+    assert 'class="eq-hero model-hero"' in html and 'href="#postavka" data-tab' in html
     # Lines with a list of models stay one long page.
     assert "data-tab-panel" not in client.get("/podemniki/nozhnichnye/").content.decode()
 

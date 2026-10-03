@@ -1,9 +1,34 @@
 {% extends "base.html" %}
 {% load i18n static images %}
-{% block body_attrs %} class="overlay"{% endblock %}
+{% block body_attrs %} class="overlay{% if tabs %} overlay--dark{% endif %}"{% endblock %}
 {% block breadcrumbs %}{% endblock %}
 {% block content %}
 
+{% if tabs %}
+{# A product page (one lift, no series): the model page's deep red stage with the render. #}
+<section class="eq-hero model-hero" aria-labelledby="eq-title">
+  {% include "includes/breadcrumbs.html" %}
+  <div class="container model-hero__grid">
+    <div class="model-hero__info">
+      <h1 id="eq-title">{{ item.title }}</h1>
+      <p class="eq-hero__lead">{{ item.lead }}</p>
+    </div>
+    <div class="model-gallery">
+      <div class="model-gallery__main">
+        {% if hero_photo %}
+        <div class="model-gallery__slide model-gallery__slide--photo">
+          <a class="zoom" href="{% image_url item.about_image %}" data-zoom="views">{% picture item.about_image item.about_alt sizes="(min-width: 60rem) 42rem, 90vw" priority=True %}</a>
+        </div>
+        {% else %}
+        <div class="model-gallery__slide">
+          <a class="zoom" href="{% image_url item.image %}" data-zoom="views">{% picture item.image item.title sizes="(min-width: 60rem) 42rem, 90vw" priority=True %}</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% else %}
 <section class="eq-hero" aria-labelledby="eq-title">
   {% include "includes/breadcrumbs.html" %}
   <div class="container eq-hero__grid">
@@ -29,9 +54,10 @@
     </figure>
   </div>
 </section>
+{% endif %}
 
 {% if tabs %}<div class="tabs" data-tabs>
-{% include "includes/tabs_bar.html" with cta_href="#raschet" %}
+{% include "includes/tabs_bar.html" %}
 <div class="tabs__panels" data-tabs-panels>{% endif %}
 
 {% if item.about %}
@@ -86,7 +112,9 @@
 </section>
 {% endif %}
 
-{% if tabs %}</div>
+{% if tabs %}
+{% include "includes/delivery_tab.html" %}
+</div>
 </div>{% endif %}
 
 {% if item.models %}

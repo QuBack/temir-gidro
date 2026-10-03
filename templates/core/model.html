@@ -26,7 +26,7 @@
 </section>
 
 <div class="tabs" data-tabs>
-{% include "includes/tabs_bar.html" with tabs=tabs cta_href="#zayavka" %}
+{% include "includes/tabs_bar.html" %}
 <div class="tabs__panels" data-tabs-panels>
 
 <section class="section section--grey" id="opisanie" aria-labelledby="about-title" data-tab-panel>
@@ -114,35 +114,7 @@
   </div>
 </section>
 
-<section class="section" id="postavka" aria-labelledby="delivery-title" data-tab-panel>
-  <div class="container">
-    <div class="section-head">
-      <h2 id="delivery-title">{% translate "Условия поставки" %}</h2>
-      <p class="section-head__lead">{% translate "Весь путь подъёмника — от расчёта до гарантии — ведём сами, без посредников." %}</p>
-    </div>
-    <ol class="route">
-      {% for title, text, icon_name in delivery %}
-      <li class="route__stop">
-        <span class="route__icon">{% icon icon_name %}</span>
-        <h3>{{ title }}</h3>
-        <p>{{ text }}</p>
-      </li>
-      {% endfor %}
-    </ol>
-    <div class="waybill">
-      <div class="waybill__docs">
-        <h3>{% translate "Документы в комплекте" %}</h3>
-        <ul class="checklist">{% for d in documents %}<li>{{ d }}</li>{% endfor %}</ul>
-      </div>
-      <dl class="stamp__facts waybill__stamp">
-        <div><dt>{% translate "Производитель" %}</dt><dd>{{ company.name }}</dd></div>
-        <div><dt>{% translate "Монтаж" %}</dt><dd>{% translate "на объекте" %}</dd></div>
-        <div><dt>{% translate "Доставка" %}</dt><dd>{% translate "вся Россия" %}</dd></div>
-        <div><dt>{% translate "Расчёт" %}</dt><dd>{% translate "24 ч" %}</dd></div>
-      </dl>
-    </div>
-  </div>
-</section>
+{% include "includes/delivery_tab.html" %}
 
 </div>
 </div>

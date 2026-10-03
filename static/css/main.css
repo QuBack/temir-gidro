@@ -1067,8 +1067,6 @@ html.lightbox-open body { padding-right: var(--scrollbar, 0); }
 .page-nav__tab.is-active { color: var(--ink); }
 .page-nav__tab.is-active::after { transform: none; }
 .page-nav__tab:focus-visible { outline: 2px solid var(--red); outline-offset: -2px; }
-.page-nav__cta { display: none; min-height: 2.5rem; padding: .45rem 1.1rem; font-size: .9375rem; white-space: nowrap; }
-@media (min-width: 48rem) { .page-nav__cta { display: inline-flex; } }
 /* A tab opens right under the bar: less air above it than between ordinary blocks. */
 .tabs__panels > .section { padding-top: clamp(2.5rem, 5vw, 3.5rem); }
 .tabs__panels > [role="tabpanel"] { animation: tab-in .35s ease; }
@@ -1194,6 +1192,8 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
 .model-hero .model-gallery__slide--photo { padding: 0; }
 .model-hero .model-gallery__slide--photo picture { overflow: hidden; background: var(--white); }
 .model-hero .model-gallery__slide--photo img { filter: none; }
+/* A photo is not a render standing on the floor: no floor shadow under it. */
+.model-hero .model-gallery__main:has(.model-gallery__slide--photo)::after { display: none; }
 /* Phones: the model first, so it is on the first screen; wider: text left, model right. */
 @media (max-width: 59.99rem) { .model-hero .model-gallery { order: -1; } }
 @media (min-width: 60rem) { .model-hero__grid { grid-template-columns: 1fr 1.25fr; align-items: center; } }

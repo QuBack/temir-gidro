@@ -121,9 +121,17 @@ class EquipmentView(SeoMixin, BreadcrumbsMixin, TemplateView):
         sections = [("opisanie", _("Описание"), "about"), ("harakteristiki", _("Характеристики"), "specs"),
                     ("komplektaciya", _("Комплектация"), "kit")]
         tabs = [] if item["models"] else [(id_, title) for id_, title, key in sections if item.get(key)]
+        if len(tabs) > 1:
+            tabs.append(("postavka", _("Поставка")))
+        else:
+            tabs = []
         context.update(
             item=item,
-            tabs=tabs if len(tabs) > 1 else [],
+            tabs=tabs,
+            delivery=lift_models.DELIVERY,
+            documents=lift_models.DOCUMENTS,
+            # A render too small for the stage (console, car lift) gives way to the line's photo.
+            hero_photo=item["image"]["size"][0] < 600 and bool(item.get("about_image")),
             lead_form=LeadForm.for_request(self.request),
             hero_lift=catalog.HERO_LIFT,
             related=[c for c in catalog.CATEGORIES if c["url"] != self.request.path],
