@@ -5,6 +5,7 @@
 {% block content %}
 
 <section class="eq-hero" aria-labelledby="eq-title">
+  {% include "includes/breadcrumbs.html" %}
   <div class="container eq-hero__grid">
     <div class="eq-hero__text">
       <h1 id="eq-title">{{ item.title }}</h1>
@@ -28,8 +29,6 @@
     </figure>
   </div>
 </section>
-{# Crumbs go under the first section, so the page opens with its heading. #}
-{% include "includes/breadcrumbs.html" %}
 
 {% if tabs %}<div class="tabs" data-tabs>
 {% include "includes/tabs_bar.html" with cta_href="#raschet" %}

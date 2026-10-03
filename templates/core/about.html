@@ -5,6 +5,7 @@
 {% block content %}
 
 <section class="eq-hero about-hero page-hero--bg" aria-labelledby="about-title">
+  {% include "includes/breadcrumbs.html" %}
   <div class="page-hero-bg" aria-hidden="true">{% picture page_bg "" sizes="100vw" %}</div>
   <div class="container eq-hero__grid">
     <div class="eq-hero__text">
@@ -26,8 +27,6 @@
     </div>
   </div>
 </section>
-{# Crumbs go under the first section, so the page opens with its heading. #}
-{% include "includes/breadcrumbs.html" %}
 
 <section class="section" aria-labelledby="make-title">
   <div class="container">

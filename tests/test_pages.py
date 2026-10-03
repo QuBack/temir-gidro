@@ -98,3 +98,15 @@ def test_single_product_lines_get_tabs(client):
     assert html.count("data-tab-panel") == 3 and "js/tabs.js" in html
     # Lines with a list of models stay one long page.
     assert "data-tab-panel" not in client.get("/podemniki/nozhnichnye/").content.decode()
+
+
+@pytest.mark.parametrize(
+    "path",
+    ["/podemniki/", "/podemniki/nozhnichnye/", "/podemniki/konsolnye/", "/podemniki/nozhnichnye/1x/",
+     "/gidrocilindry/", "/stati/", "/o-kompanii/", "/kontakty/"],
+)
+def test_crumbs_open_the_first_section(client, path):
+    html = client.get(path).content.decode()
+    main = html[html.index("<main"):]
+    first = main[main.index("<section"):]
+    assert first.index('class="breadcrumbs') < first.index("</section>")

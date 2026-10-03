@@ -4,6 +4,7 @@
 {% block content %}
 
 <section class="contacts" aria-labelledby="contacts-title">
+  {% include "includes/breadcrumbs.html" %}
   {# Decorative photo, hence the empty alt. #}
   <div class="contacts__photo contacts__photo--soft" aria-hidden="true">{% picture contacts_bg "" sizes="100vw" %}</div>
   <div class="container contacts__grid">
@@ -52,8 +53,6 @@
     </div>
   </div>
 </section>
-{# Crumbs go under the first section, so the page opens with its heading. #}
-{% include "includes/breadcrumbs.html" %}
 
 <section class="section map-block" aria-labelledby="map-title">
   <div class="container map-block__grid">

@@ -5,6 +5,7 @@
 {% block content %}
 
 <section class="eq-hero cat-hero page-hero--bg" aria-labelledby="articles-title">
+  {% include "includes/breadcrumbs.html" %}
   <div class="page-hero-bg" aria-hidden="true">{% picture page_bg "" sizes="100vw" %}</div>
   <div class="container">
     <h1 id="articles-title">{% translate "Статьи" %}</h1>

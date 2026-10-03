@@ -275,8 +275,10 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 }
 .overlay .site-header__cta .btn--primary:hover { background: var(--red-dark); color: var(--white); }
 .overlay .eq-hero { padding-top: var(--chrome); }
-/* Crumbs moved under the section: the heading needs its own air below the header. */
+/* Crumbs open every page at the top of its first section, right under the header. */
 .overlay .eq-hero:not(:has(.breadcrumbs)) { padding-top: calc(var(--chrome) + clamp(1.5rem, 4vw, 3rem)); }
+.eq-hero > .breadcrumbs, .contacts > .breadcrumbs { position: relative; margin-bottom: clamp(1rem, 3vw, 2rem); }
+section.contacts { padding-top: 0; }
 
 /* ---------- Lead page: full-screen photo, white form ---------- */
 .lead-page {
@@ -457,15 +459,13 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 /* ---------- Sections ---------- */
 .section { padding-block: var(--section-y); }
 .section--grey { background: var(--grey-soft); }
-/* Tinted bands sit a step below the white page: a soft shade along the top and bottom edge
-   marks where one block ends and the next begins. */
+/* Tinted bands sit a step below the page: a soft shade along the top edge marks where the
+   next block begins. One side only, so two tinted blocks in a row meet at one soft line. */
 .section--grey, .section--drawing { position: relative; }
-.section--grey::before, .section--drawing::before,
-.section--grey::after, .section--drawing::after {
+.section--grey::before, .section--drawing::before {
   content: ""; position: absolute; left: 0; right: 0; height: 1.75rem; pointer-events: none;
 }
 .section--grey::before, .section--drawing::before { top: 0; background: linear-gradient(rgb(34 40 43 / .1), rgb(34 40 43 / 0)); }
-.section--grey::after, .section--drawing::after { bottom: 0; background: linear-gradient(to top, rgb(34 40 43 / .07), rgb(34 40 43 / 0)); }
 .section--rule { padding-top: 0; }
 .section--rule > .container { border-top: 1px solid var(--line); padding-top: var(--section-y); }
 .section--dark { background: var(--navy); color: #d6dde4; }
