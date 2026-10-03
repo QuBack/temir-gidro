@@ -1,0 +1,12 @@
+{% load i18n %}
+{% comment %}Product page sections as tabs: tabs = [(panel id, title), …]. Without JS these are
+plain anchors and every panel is shown one after another; static/js/tabs.js turns them into tabs.
+The bar sticks under the header while reading.{% endcomment %}
+<nav class="page-nav" aria-label="{% translate 'Разделы страницы' %}">
+  <div class="container page-nav__inner">
+    <ul class="page-nav__list" data-tabs-list>
+      {% for id, title in tabs %}<li><a class="page-nav__tab" href="#{{ id }}" data-tab>{{ title }}</a></li>{% endfor %}
+    </ul>
+    <a class="btn btn--primary page-nav__cta" href="{{ cta_href }}">{% translate "Рассчитать стоимость" %}</a>
+  </div>
+</nav>

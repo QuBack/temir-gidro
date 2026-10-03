@@ -85,3 +85,16 @@ def test_moved_article_has_author_and_photos(client):
     assert html.count("<h1") == 1 and "Владимир Теплов" in html
     assert '"author":{"@type":"Person"' in html
     assert "nozhnichnyj-podemnik-3x-ispytanie" in html and 'data-zoom="article"' in html
+
+
+def test_steps_have_no_step_numbers(client):
+    html = client.get("/").content.decode()
+    assert "timeline__num" not in html and "scene__num" not in html
+
+
+def test_single_product_lines_get_tabs(client):
+    html = client.get("/podemniki/konsolnye/").content.decode()
+    assert "Как устроен консольный подъёмник 1L" in html
+    assert html.count("data-tab-panel") == 3 and "js/tabs.js" in html
+    # Lines with a list of models stay one long page.
+    assert "data-tab-panel" not in client.get("/podemniki/nozhnichnye/").content.decode()

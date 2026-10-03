@@ -15,7 +15,6 @@ without JS, or with reduced motion, everything is simply shown.{% endcomment %}
           <figure class="timeline__photo">{% picture s.image s.alt sizes="(min-width: 60rem) 34rem, 90vw" %}</figure>
           <span class="timeline__dot" aria-hidden="true">{% icon s.icon %}</span>
           <div class="timeline__text">
-            <span class="timeline__num">{% translate "Шаг" %} {{ forloop.counter }}</span>
             <h3>{{ s.title }}</h3>
             <p>{{ s.text }}</p>
           </div>

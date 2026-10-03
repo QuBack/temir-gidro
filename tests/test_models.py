@@ -74,3 +74,20 @@ def test_scissor_specs_from_old_site(client):
     # Specs the client never published are left out, not shown as «уточняется».
     assert "уточняется" not in client.get("/podemniki/nozhnichnye/2x/").content.decode()
     assert "1500–10 600" in client.get("/podemniki/nozhnichnye/2x/").content.decode()
+
+
+def test_model_page_tabs_and_full_name_in_crumbs(client):
+    html = client.get("/podemniki/nozhnichnye/1x/").content.decode()
+    assert html.count("data-tab-panel") == 4 and "js/tabs.js" in html
+    for panel in ("opisanie", "harakteristiki", "komplektaciya", "postavka"):
+        assert f'href="#{panel}" data-tab' in html and f'id="{panel}"' in html
+    crumbs = html[html.index('class="breadcrumbs'):]
+    assert "Ножничный подъёмник 1X" in crumbs[: crumbs.index("</nav>")]
+
+
+def test_model_has_one_picture_on_first_screen(client):
+    html = client.get("/podemniki/dlya-okrasochnyh-kamer/2d/").content.decode()
+    hero = html[: html.index('class="tabs"')]
+    assert hero.count('data-zoom="views"') == 1
+    # The other two views sit under the description, in the same viewer group.
+    assert html.count('class="model-views__item zoom"') == 2

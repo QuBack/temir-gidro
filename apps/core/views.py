@@ -117,8 +117,13 @@ class EquipmentView(SeoMixin, BreadcrumbsMixin, TemplateView):
             ),
             faq_schema(item["faq"]),
         ]
+        # A line without serial models is a product page itself: its sections become tabs.
+        sections = [("opisanie", _("Описание"), "about"), ("harakteristiki", _("Характеристики"), "specs"),
+                    ("komplektaciya", _("Комплектация"), "kit")]
+        tabs = [] if item["models"] else [(id_, title) for id_, title, key in sections if item.get(key)]
         context.update(
             item=item,
+            tabs=tabs if len(tabs) > 1 else [],
             lead_form=LeadForm.for_request(self.request),
             hero_lift=catalog.HERO_LIFT,
             related=[c for c in catalog.CATEGORIES if c["url"] != self.request.path],
@@ -147,7 +152,7 @@ class ModelView(SeoMixin, BreadcrumbsMixin, TemplateView):
         return [
             (_("Подъёмники"), reverse("core:catalog")),
             (self.line["title"], line_url),
-            (self.model["name"], self.request.path),
+            (self.model["title"], self.request.path),
         ]
 
     def get_context_data(self, **kwargs):
@@ -170,6 +175,12 @@ class ModelView(SeoMixin, BreadcrumbsMixin, TemplateView):
         context.update(
             model=model,
             line=self.line,
+            tabs=[
+                ("opisanie", _("Описание")),
+                ("harakteristiki", _("Характеристики")),
+                ("komplektaciya", _("Комплектация")),
+                ("postavka", _("Поставка")),
+            ],
             kit_points=lift_models.kit_points(model),
             kit_overlay=lift_models.kit_overlay(model),
             delivery=lift_models.DELIVERY,

@@ -31,21 +31,25 @@
 {# Crumbs go under the first section, so the page opens with its heading. #}
 {% include "includes/breadcrumbs.html" %}
 
+{% if tabs %}<div class="tabs" data-tabs>
+{% include "includes/tabs_bar.html" with cta_href="#raschet" %}
+<div class="tabs__panels" data-tabs-panels>{% endif %}
+
 {% if item.about %}
-<section class="section" aria-labelledby="about-title">
+<section class="section" id="opisanie" aria-labelledby="about-title"{% if tabs %} data-tab-panel{% endif %}>
   <div class="container eq-about">
     <div class="prose">
       <h2 id="about-title">{{ item.about_title }}</h2>
       {% for p in item.about %}<p>{{ p }}</p>{% endfor %}
       <a class="btn btn--primary" href="#raschet">{% translate "Рассчитать под мой объект" %}</a>
     </div>
-    <figure class="eq-about__photo"><a class="zoom" href="{% image_url item.about_image %}" data-zoom="scenes">{% picture item.about_image item.about_alt sizes="(min-width: 60rem) 45vw, 100vw" %}</a></figure>
+    <figure class="eq-about__photo"><a class="zoom" href="{% image_url item.about_image %}" data-zoom="scenes">{% picture item.about_image item.about_alt sizes="(min-width: 60rem) 55vw, 100vw" %}</a></figure>
   </div>
 </section>
 {% endif %}
 
 {% if item.specs %}
-<section class="section section--grey section--drawing" aria-labelledby="specs-title">
+<section class="section section--grey section--drawing" id="harakteristiki" aria-labelledby="specs-title"{% if tabs %} data-tab-panel{% endif %}>
   <div class="section-bg" aria-hidden="true">{% picture specs_bg "" sizes="100vw" %}</div>
   <div class="container eq-specs">
     <div class="section-head">
@@ -63,7 +67,7 @@
 {% endif %}
 
 {% if item.kit %}
-<section class="section" aria-labelledby="kit-title">
+<section class="section" id="komplektaciya" aria-labelledby="kit-title"{% if tabs %} data-tab-panel{% endif %}>
   <div class="container">
     <div class="section-head">
       <h2 id="kit-title">{% translate "Стандартная комплектация" %}</h2>
@@ -82,6 +86,9 @@
   </div>
 </section>
 {% endif %}
+
+{% if tabs %}</div>
+</div>{% endif %}
 
 {% if item.models %}
 <section class="section" id="serii" aria-labelledby="series-title">
@@ -172,4 +179,4 @@
 
 {% endblock %}
 
-{% block extra_js %}<script src="{% static 'js/drawings.js' %}" defer></script>{% endblock %}
+{% block extra_js %}{% if tabs %}<script src="{% static 'js/tabs.js' %}" defer></script>{% endif %}<script src="{% static 'js/drawings.js' %}" defer></script>{% endblock %}
