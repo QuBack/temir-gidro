@@ -20,12 +20,32 @@ def test_equipment_page_renders(client):
 def test_equipment_jsonld(client):
     blocks = jsonld_blocks(client.get(URL).content.decode())
     types = {b["@type"] for b in blocks}
-    assert {"LocalBusiness", "BreadcrumbList", "Product", "FAQPage"} <= types
-    product = next(b for b in blocks if b["@type"] == "Product")
-    assert product["url"] == f"{SITE}{URL}"
-    assert product["manufacturer"]["@id"] == f"{SITE}/#organization"
+    # The scissor page lists its models: a collection, not a product without an offer.
+    assert {"LocalBusiness", "BreadcrumbList", "CollectionPage", "FAQPage"} <= types
+    assert "Product" not in types
+    collection = next(b for b in blocks if b["@type"] == "CollectionPage")
+    assert collection["url"] == f"{SITE}{URL}"
+    urls = [i["url"] for i in collection["mainEntity"]["itemListElement"]]
+    assert urls == [f"{SITE}{URL}{m}/" for m in ("1x", "2x", "3x", "4x")]
     crumbs = next(b for b in blocks if b["@type"] == "BreadcrumbList")
     assert crumbs["itemListElement"][-1]["item"] == f"{SITE}{URL}"
+
+
+def test_line_without_showcase_is_a_product(client):
+    types = {b["@type"] for b in jsonld_blocks(client.get("/podemniki/dlya-okrasochnyh-kamer/").content.decode())}
+    assert "Product" in types and "CollectionPage" not in types
+
+
+def test_scissor_showcase(client):
+    html = client.get(URL).content.decode()
+    for m in ("1x", "2x", "3x", "4x"):
+        assert f'id="seriya-{m}"' in html and f'href="{URL}{m}/"' in html
+    assert html.count("<h2") >= 4 and "Ножничный подъёмник 4X</h2>" in html
+    assert 'id="sravnenie"' in html and '<table class="compare">' in html and "до 20 000" in html
+    assert 'id="dlya-rascheta"' in html
+    # The configurator closes the page, right above the request form.
+    assert html.index('id="podbor"') > html.index('aria-labelledby="related-title"')
+    assert html.index('id="podbor"') < html.index('id="raschet"')
 
 
 def test_unknown_equipment_is_404(client):

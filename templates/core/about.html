@@ -21,14 +21,11 @@
         {% translate "Гидравлические ножничные подъёмники ТЕМИР ГИДРО в цехе" as photo_alt %}
         {% picture hero_image photo_alt sizes="(min-width: 60rem) 45vw, 100vw" priority=True %}
       </div>
-      {% for p in cylinders.photos %}
-      <div>{% translate "Производство гидроцилиндров ТЕМИР ГИДРО" as ph_alt %}{% picture p ph_alt sizes="(min-width: 60rem) 15vw, 33vw" %}</div>
-      {% endfor %}
     </div>
   </div>
 </section>
 
-<section class="section" aria-labelledby="make-title">
+<section class="section section--shade" aria-labelledby="make-title">
   <div class="container">
     <div class="section-head">
       <h2 id="make-title">{% translate "Что мы производим" %}</h2>
@@ -39,7 +36,6 @@
         <a class="cat-card" href="{{ cat.url }}">
           <div class="cat-card__media">{% picture cat.image cat.title sizes="(min-width: 60rem) 30vw, (min-width: 40rem) 45vw, 90vw" %}</div>
           <h3>{{ cat.title }}</h3>
-          {% if cat.facts %}<ul class="facts cat-card__meta">{% for f in cat.facts %}<li>{{ f }}</li>{% endfor %}</ul>{% endif %}
         </a>
       </li>
       {% endfor %}
@@ -72,7 +68,7 @@
   </div>
 </section>
 
-<section class="section section--grey" aria-labelledby="how-title">
+<section class="section section--grey section--shade-bottom" aria-labelledby="how-title">
   <div class="container">
     <div class="section-head">
       <h2 id="how-title">{% translate "Как мы работаем" %}</h2>

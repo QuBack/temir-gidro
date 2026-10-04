@@ -402,20 +402,35 @@ SCISSOR_MODELS = {
     },
 }
 
+def _summary(ranges):
+    """The line page's spec grid for a model: (icon, label, value, unit) from its serial ranges.
+    Load and height are shown as the top of the range, platform sizes and stroke as the range."""
+    load, length, width, stroke, _folded, height = ranges
+    return [
+        ("spec-height", _("Максимальная высота"), format_lazy(_("до {}"), height.split("–")[-1]), _("мм")),
+        ("spec-load", _("Грузоподъёмность"), format_lazy(_("до {}"), load.split("–")[-1]), _("кг")),
+        ("spec-length", _("Длина платформы"), length, _("мм")),
+        ("spec-width", _("Ширина платформы"), width, _("мм")),
+        ("spec-stroke", _("Рабочий ход"), stroke, _("мм")),
+    ]
+
+
 for _slug, _m in SCISSOR_MODELS.items():
+    _ranges = _m.pop("ranges")
     _m.update(
         slug=_slug,
         line="nozhnichnye",
         line_title=_("Ножничные подъёмники"),
         url=f"{_SCISSORS}{_slug}/",
-        specs=_spec_rows(_m["pairs"], _m.pop("ranges", None)),
+        specs=_spec_rows(_m["pairs"], _ranges),
+        summary=_summary(_ranges),
         kit=SCISSOR_KIT,
         options=SCISSOR_OPTIONS,
         faq=_faq(
             format_lazy(_("Сколько стоит ножничный подъёмник {}?"), _m["name"]), [*_m.pop("faq_extra"), _PEOPLE_FAQ]
         ),
     )
-del _slug, _m
+del _slug, _m, _ranges
 
 # ---------- Platforms for painting booths: 1X (scissor) and 2D (rail-mounted) ----------
 # Specs, kit and applications come from the client's old site (temir-gidro.ru).

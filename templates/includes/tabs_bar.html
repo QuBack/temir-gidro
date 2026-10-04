@@ -1,8 +1,19 @@
-{% load i18n %}
+{% load i18n images %}
 {% comment %}Product page sections as tabs: tabs = [(panel id, title), …]. Without JS these are
 plain anchors and every panel is shown one after another; static/js/tabs.js turns them into tabs.
-The bar sticks under the header while reading.{% endcomment %}
-<nav class="page-nav" aria-label="{% translate 'Разделы страницы' %}">
+The bar sticks to the top while reading. With bar_title, once stuck it also covers the header
+with a product line: picture, name and the request button (bar_image, bar_line, bar_cta).{% endcomment %}
+<nav class="page-nav{% if bar_title %} page-nav--product{% endif %}" aria-label="{% translate 'Разделы страницы' %}">
+  {% if bar_title %}
+  <div class="page-nav__product">
+    <div class="container page-nav__product-inner">
+      {% if bar_image %}<span class="page-nav__thumb">{% picture bar_image "" sizes="4rem" %}</span>{% endif %}
+      <p class="page-nav__name">{% if bar_line %}<span>{{ bar_line }}</span>{% endif %}{{ bar_title }}</p>
+      <a class="page-nav__phone" href="tel:{{ company.phone_href }}">{{ company.phone }}</a>
+      <a class="btn btn--primary btn--sm page-nav__cta" href="{{ bar_cta }}"><span class="page-nav__cta-full">{% translate "Рассчитать стоимость" %}</span><span class="page-nav__cta-short" aria-hidden="true">{% translate "Расчёт" %}</span></a>
+    </div>
+  </div>
+  {% endif %}
   <div class="container page-nav__inner">
     <ul class="page-nav__list" data-tabs-list>
       {% for id, title in tabs %}<li><a class="page-nav__tab" href="#{{ id }}" data-tab>{{ title }}</a></li>{% endfor %}

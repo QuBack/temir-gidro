@@ -49,4 +49,10 @@
 <symbol id="vk" viewBox="0 0 24 24"><path d="M3 7l3.5 10L10 7"/><path d="M13.5 7v10"/><path d="M20.5 7l-6 5 6 5"/></symbol>
 <symbol id="youtube" viewBox="0 0 24 24"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></symbol>
 <symbol id="instagram" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></symbol>
+<!-- Spec icons for the scissor-lift line page, drawn in the Lucide grid. -->
+<symbol id="spec-height" viewBox="0 0 24 24"><path d="M4 21h16"/><path d="M12 17V3"/><path d="m8 7 4-4 4 4"/></symbol>
+<symbol id="spec-load" viewBox="0 0 24 24"><path d="M5 20h14L17.5 9h-11z"/><path d="M9 9a3 3 0 0 1 6 0"/></symbol>
+<symbol id="spec-length" viewBox="0 0 24 24"><path d="M3 12h18"/><path d="m7 8-4 4 4 4"/><path d="m17 8 4 4-4 4"/></symbol>
+<symbol id="spec-width" viewBox="0 0 24 24"><rect x="6" y="5" width="12" height="14" rx="1"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="m4 10-2 2 2 2"/><path d="m20 10 2 2-2 2"/></symbol>
+<symbol id="spec-stroke" viewBox="0 0 24 24"><path d="M5 3h14"/><path d="M5 21h14"/><path d="M12 7v10"/><path d="m9 10 3-3 3 3"/><path d="m9 14 3 3 3-3"/></symbol>
 </svg>

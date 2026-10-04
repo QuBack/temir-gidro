@@ -465,7 +465,15 @@ section.contacts { padding-top: 0; }
 .section--grey::before, .section--drawing::before {
   content: ""; position: absolute; left: 0; right: 0; height: 1.75rem; pointer-events: none;
 }
-.section--grey::before, .section--drawing::before { top: 0; background: linear-gradient(rgb(34 40 43 / .1), rgb(34 40 43 / 0)); }
+.section--grey::before, .section--drawing::before, .section--shade::before { top: 0; background: linear-gradient(rgb(34 40 43 / .1), rgb(34 40 43 / 0)); }
+.section--shade { position: relative; }
+.section--shade::before { content: ""; position: absolute; left: 0; right: 0; height: 1.75rem; pointer-events: none; }
+/* The shade falls back into this block instead of the next one. */
+.section--shade-bottom::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1.75rem; pointer-events: none;
+  background: linear-gradient(to top, rgb(34 40 43 / .1), rgb(34 40 43 / 0));
+}
+.section--shade-bottom + .section::before { content: none; }
 .section--rule { padding-top: 0; }
 .section--rule > .container { border-top: 1px solid var(--line); padding-top: var(--section-y); }
 .section--dark { background: var(--navy); color: #d6dde4; }
@@ -765,6 +773,85 @@ main .reveal--photo.is-visible { clip-path: inset(-3rem); }
 
 .reasons__list h3 a { color: inherit; text-underline-offset: .2em; }
 .reasons__list h3 a:hover { color: var(--red); }
+
+/* ---------- Line page with a model showcase (scissor lifts 1X–4X) ----------
+   Each model is a sheet of graph paper with its render; next to it, the specs.
+   The sheets alternate sides, so the eye walks down the series as it grows taller. */
+.lineup { padding-block: clamp(3rem, 7vw, 5rem); }
+.lineup__grid { display: grid; gap: 2rem; align-items: center; }
+.lineup__sheet { padding: 0; box-shadow: var(--shadow-card); }
+.lineup__drawing {
+  display: grid; place-items: center; min-height: 20rem; padding: clamp(1.5rem, 4vw, 2.5rem);
+  /* Graph paper: 5 mm cells with a stronger line every fifth, as on drawing paper. */
+  background:
+    linear-gradient(rgb(34 40 43 / .09) 1px, transparent 1px) 0 0 / 3rem 3rem,
+    linear-gradient(90deg, rgb(34 40 43 / .09) 1px, transparent 1px) 0 0 / 3rem 3rem,
+    linear-gradient(rgb(34 40 43 / .04) 1px, transparent 1px) 0 0 / .6rem .6rem,
+    linear-gradient(90deg, rgb(34 40 43 / .04) 1px, transparent 1px) 0 0 / .6rem .6rem,
+    var(--white);
+}
+.lineup__drawing img { width: auto; max-height: 24rem; filter: drop-shadow(0 18px 16px rgb(34 40 43 / .12)); }
+.lineup__copy { max-width: 36rem; }
+.lineup__text { margin-top: 1rem; color: var(--muted); font-size: 1.0625rem; }
+/* Specs as a title block: thin ink cells, label above, value in the drawing face. */
+.lineup__specs { display: grid; grid-template-columns: 1fr; margin: 1.75rem 0 0; border-top: 1px solid var(--ink); border-left: 1px solid var(--ink); background: var(--white); }
+.lineup__specs > div { padding: .7rem .9rem .8rem; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+.lineup__specs dt { display: flex; align-items: center; gap: .5rem; color: var(--muted); font-size: .9375rem; line-height: 1.3; }
+.lineup__specs dt .icon { flex: none; width: 1.125rem; height: 1.125rem; color: var(--red); }
+.lineup__specs dd { margin: .3rem 0 0 1.625rem; font-family: var(--font-cond); font-size: 1.5rem; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lineup__specs dd span { font-family: var(--font); font-size: .9375rem; font-weight: 400; color: var(--muted); }
+.lineup__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.75rem; margin-top: 1.75rem; }
+.lineup__link { font-weight: 600; color: var(--ink); text-underline-offset: .25em; }
+.lineup__link:hover { color: var(--red); }
+@media (min-width: 30rem) {
+  .lineup__specs { grid-template-columns: repeat(2, 1fr); }
+  .lineup__specs > div:last-child:nth-child(odd) { grid-column: 1 / -1; }
+}
+@media (min-width: 60rem) {
+  .lineup__grid { grid-template-columns: 1fr 1fr; gap: clamp(3rem, 6vw, 5rem); }
+  .lineup__drawing { min-height: 30rem; }
+  .lineup__drawing img { max-height: 26rem; }
+  .lineup--alt .lineup__sheet { order: 2; }
+}
+
+/* Comparison of the models: a plain table, scrolls sideways on a phone. */
+.compare-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.compare { width: 100%; min-width: 46rem; border-collapse: collapse; border-top: 1px solid var(--ink); font-variant-numeric: tabular-nums; }
+.compare th, .compare td { padding: .85rem 1rem .85rem 0; border-bottom: 1px solid var(--line); text-align: left; vertical-align: baseline; }
+.compare thead th { color: var(--muted); font-size: .875rem; font-weight: 500; line-height: 1.3; border-bottom-color: var(--ink); }
+.compare tbody th { font-family: var(--font-cond); font-size: 1.5rem; font-weight: 700; }
+.compare tbody th a { color: var(--ink); text-underline-offset: .2em; }
+.compare tbody th a:hover { color: var(--red); }
+.compare td { font-family: var(--font-cond); font-size: 1.1875rem; font-weight: 600; white-space: nowrap; }
+.compare tbody tr:hover { background: var(--grey-soft); }
+.compare__note { margin-top: 1.25rem; max-width: 44rem; color: var(--muted); font-size: .9375rem; }
+
+/* What to send for a calculation: the request on the left, the list on the right. */
+.brief { display: grid; gap: 2.5rem; }
+.brief__head p { margin-top: 1rem; max-width: 34rem; color: var(--muted); }
+.brief__list { display: grid; gap: 0; border-top: 1px solid var(--ink); }
+.brief__list li { display: grid; grid-template-columns: auto 1fr; column-gap: 1rem; padding-block: 1.1rem; border-bottom: 1px solid var(--line); }
+.brief__list .reasons__icon { grid-row: span 2; }
+.brief__list h3 { align-self: end; }
+.brief__list p { color: var(--muted); font-size: .9375rem; }
+@media (min-width: 60rem) { .brief { grid-template-columns: 1fr 1fr; gap: clamp(3rem, 6vw, 5rem); align-items: start; } }
+
+/* Scissor line page: under the red hero the blocks alternate plain white and a barely-there #fafafa
+   (the hero is the first child, so the even children are white); no grey bands, no shades between
+   them, the configurator without its photo. A hairline marks where the next block starts. */
+.page-white main > :is(.section, .lineup):not(.section--dark) { background: var(--white); }
+.page-white main > :is(.section, .lineup):not(.section--dark):nth-child(odd) { background: #fafafa; }
+.page-white .section--grey::before, .page-white .config::before { content: none; }
+.page-white .config-bg { display: none; }
+/* From the red hero to the first model: a soft shade under the hero's edge, as between other blocks. */
+.line-hero + .lineup { position: relative; }
+.line-hero + .lineup::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1.75rem; pointer-events: none;
+  background: linear-gradient(rgb(34 40 43 / .1), rgb(34 40 43 / 0));
+}
+.page-white main > :is(.section, .lineup):not(.section--dark) + :is(.section, .lineup):not(.section--dark) {
+  border-top: 1px solid var(--line);
+}
 .catalog__row:hover h3 { color: var(--red); }
 
 .gallery { display: grid; gap: 1rem; }
@@ -845,7 +932,6 @@ main .reveal--photo.is-visible { clip-path: inset(-3rem); }
   .cat-card--wide .cat-card__media { grid-row: 1 / 4; margin-bottom: 0; aspect-ratio: 16 / 9; }
   .cat-card--wide h3 { align-self: end; }
 }
-.cat-card__meta { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; padding-top: .75rem; border-top: 1px solid var(--line); }
 
 /* ---------- About ---------- */
 .about-hero__legal { margin-top: 1rem; max-width: 34rem; color: var(--muted); }
@@ -1052,9 +1138,49 @@ html.lightbox-open body { padding-right: var(--scrollbar, 0); }
 
 /* Product page tabs (tabs.js) under the first section; the bar sticks under the header while reading.
    Without JS the same bar is a list of anchors to sections that follow one another. */
-.page-nav { position: sticky; top: 4.25rem; z-index: 40; background: var(--white); border-bottom: 1px solid var(--line); box-shadow: 0 6px 16px -12px rgb(34 40 43 / .35); }
+.page-nav { position: sticky; top: 4.25rem; z-index: 40; background: var(--white); border-bottom: 1px solid var(--line); box-shadow: 0 14px 24px -14px rgb(34 40 43 / .3); }
 .page-nav__inner { display: flex; align-items: center; gap: 1.5rem; }
+/* Tabs in the middle; auto margins rather than justify-content, so a list wider than a phone
+   still scrolls from its first tab. */
 .page-nav__list { display: flex; flex: 1; gap: clamp(1.25rem, 3vw, 2.5rem); overflow-x: auto; scrollbar-width: none; white-space: nowrap; }
+.page-nav__list > li:first-child { margin-left: auto; }
+.page-nav__list > li:last-child { margin-right: auto; }
+
+/* Product bar: the product line sits on top of the tabs, one header-height tall. Out of the way
+   (pulled up over the hero's edge, transparent, not clickable) until the bar sticks to the top;
+   then it covers the header: picture, name, phone, request button. The tabs stay where they were. */
+.page-nav--product {
+  top: 0; margin-top: -4.25rem; pointer-events: none;
+  background: linear-gradient(transparent 4.25rem, var(--white) 4.25rem);
+}
+.page-nav--product .page-nav__inner { pointer-events: auto; }
+.page-nav--product.is-stuck { z-index: 51; }
+.page-nav__product {
+  height: 4.25rem; border-bottom: 1px solid var(--line); background: var(--white);
+  opacity: 0; visibility: hidden; transform: translateY(-.5rem);
+  transition: opacity .2s, transform .2s, visibility 0s .2s;
+}
+.page-nav--product.is-stuck .page-nav__product {
+  opacity: 1; visibility: visible; transform: none; pointer-events: auto;
+  transition: opacity .2s, transform .2s;
+}
+.page-nav__product-inner { display: flex; align-items: center; gap: 1rem; height: 100%; }
+.page-nav__thumb { flex: none; display: grid; place-items: center; width: 3.5rem; height: 3rem; }
+.page-nav__thumb img { max-width: 100%; max-height: 3rem; width: auto; object-fit: contain; }
+.page-nav__name { flex: 1; min-width: 0; font-family: var(--font-cond); font-size: 1.1875rem; font-weight: 700; line-height: 1.15; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.page-nav__name span { display: block; font-family: var(--font); font-size: .8125rem; font-weight: 400; color: var(--muted); }
+.page-nav__phone { display: none; color: var(--ink); font-family: var(--font-cond); font-size: 1.25rem; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.page-nav__phone:hover { color: var(--red); }
+@media (min-width: 48rem) { .page-nav__phone { display: block; } }
+/* On a phone the button says just "Расчёт", so the model name keeps its room; readers still hear the full label. */
+.page-nav__cta-short { display: none; }
+@media (max-width: 29.99rem) {
+  .page-nav__cta-short { display: inline; }
+  /* The whole name on two lines rather than cut before the model's letters. */
+  .page-nav__name { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; font-size: 1.0625rem; }
+  .page-nav__name span { display: none; }
+  .page-nav__cta-full { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
 .page-nav__tab {
   position: relative; display: block; padding-block: 1.05rem; color: var(--muted); font-weight: 600; font-size: 1rem; text-decoration: none;
   transition: color .15s;
@@ -1197,6 +1323,23 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
 /* Phones: the model first, so it is on the first screen; wider: text left, model right. */
 @media (max-width: 59.99rem) { .model-hero .model-gallery { order: -1; } }
 @media (min-width: 60rem) { .model-hero__grid { grid-template-columns: 1fr 1.25fr; align-items: center; } }
+/* Line page hero (scissor lifts): the same red stage, no render, the title centred. */
+.line-hero {
+  padding-bottom: clamp(3.5rem, 8vw, 6rem);
+  background:
+    linear-gradient(180deg, rgb(14 1 3 / .75) 0%, rgb(14 1 3 / .4) 20%, transparent 42%),
+    radial-gradient(ellipse 70% 90% at 50% 60%, #850e14 0%, #6a090e 40%, #420509 78%, #210204 100%);
+}
+.line-hero__text { display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: clamp(1.5rem, 5vw, 4rem); }
+/* Text as on the home hero: white title with a soft shadow, light lead, red button, white phone. */
+.line-hero { color: #e6eaec; }
+.line-hero h1.hero__title { color: var(--white); }
+.line-hero .hero__lead { margin-inline: auto; }
+.line-hero .hero__actions { justify-content: center; }
+.line-hero .hero__phone { color: var(--white); }
+.line-hero .hero__phone:hover { color: #ff8a80; }
+.line-hero .eq-hero__link { color: rgb(236 220 217 / .85); }
+.line-hero .eq-hero__link:hover { color: var(--white); }
 
 /* Equipment line without serial models: the story and a photo of it at work. */
 .eq-about { display: grid; gap: 2.5rem; align-items: center; }
@@ -1240,6 +1383,11 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
 .page-hero-bg::after { content: ""; position: absolute; inset: 0; background: rgb(227 230 228 / .75); }
 @media (min-width: 48rem) {
   .page-hero-bg::after { background: linear-gradient(90deg, rgb(227 230 228 / .92) 0%, rgb(227 230 228 / .85) 45%, rgb(227 230 228 / .35) 68%, rgb(227 230 228 / 0) 85%); }
+}
+/* About: a lighter veil, the photo stays visible behind the text. */
+.about-hero .page-hero-bg::after { background: rgb(227 230 228 / .55); }
+@media (min-width: 48rem) {
+  .about-hero .page-hero-bg::after { background: linear-gradient(90deg, rgb(227 230 228 / .7) 0%, rgb(227 230 228 / .45) 35%, rgb(227 230 228 / 0) 60%); }
 }
 /* Article page: phone — the photo under the text; wider — on the right half, fading into the grey. */
 .article-hero__photo { margin: 0; }

@@ -89,4 +89,17 @@
   }
   window.addEventListener("hashchange", fromHash);
   fromHash();
+
+  // A product bar shows its product line only once stuck to the top (it then covers the header).
+  if (bar.classList.contains("page-nav--product")) {
+    var ticking = false;
+    var syncStuck = function () {
+      ticking = false;
+      bar.classList.toggle("is-stuck", window.scrollY > 0 && bar.getBoundingClientRect().top <= 0.5);
+    };
+    syncStuck();
+    window.addEventListener("scroll", function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(syncStuck); }
+    }, { passive: true });
+  }
 })();

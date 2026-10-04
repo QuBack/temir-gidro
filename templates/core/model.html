@@ -26,7 +26,7 @@
 </section>
 
 <div class="tabs" data-tabs>
-{% include "includes/tabs_bar.html" %}
+{% include "includes/tabs_bar.html" with bar_title=model.title bar_line=model.line_title bar_image=model.images.0.image bar_cta="#zayavka" %}
 <div class="tabs__panels" data-tabs-panels>
 
 <section class="section section--grey" id="opisanie" aria-labelledby="about-title" data-tab-panel>

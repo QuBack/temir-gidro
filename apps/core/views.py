@@ -106,10 +106,24 @@ class EquipmentView(SeoMixin, BreadcrumbsMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         item = self.item
         image = item["image"]
+        # A showcase line lists its models with their specs: the page is a collection of
+        # products (each described on its own page), not a product itself.
+        showcase = (
+            [{**m, **lift_models.MODELS[(self.kwargs["slug"], m["slug"])]} for m in item["models"]]
+            if item.get("showcase")
+            else []
+        )
         context["jsonld"] = [
             organization_schema(),
             *context.get("jsonld", []),
-            product_schema(
+            collection_schema(
+                item["seo_title"],
+                self.request.path,
+                [(m["title"], m["url"]) for m in showcase],
+                description=item["seo_description"],
+            )
+            if showcase
+            else product_schema(
                 item["title"],
                 item["seo_description"],
                 static(f"img/{image['src']}-{image['widths'][-1]}.webp"),
@@ -127,6 +141,7 @@ class EquipmentView(SeoMixin, BreadcrumbsMixin, TemplateView):
             tabs = []
         context.update(
             item=item,
+            showcase=showcase,
             tabs=tabs,
             delivery=lift_models.DELIVERY,
             documents=lift_models.DOCUMENTS,
