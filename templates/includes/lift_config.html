@@ -1,5 +1,5 @@
 {% load i18n static images %}
-<section class="section section--drawing config" id="podbor" aria-labelledby="config-title" data-config>
+<section class="section section--drawing config{% if flat %} section--flat{% endif %}" id="podbor" aria-labelledby="config-title" data-config>
   <div class="config-bg" aria-hidden="true">{% picture config_bg "" sizes="100vw" %}</div>
   <div class="container config__grid">
     <div class="config__head">

@@ -308,7 +308,6 @@ section.contacts { padding-top: 0; }
 .lead-page__details > p { margin: 1.5rem 0 1rem; }
 .lead-page h1 { color: var(--white); }
 .lead-page__lead { margin-top: 1rem; max-width: 34rem; }
-.lead-page .params { max-width: 30rem; }
 .lead-page .lead__phone { margin-top: 1.5rem; }
 .lead-page__card {
   background: var(--white); color: var(--ink); border-radius: var(--radius);
@@ -474,10 +473,13 @@ section.contacts { padding-top: 0; }
   background: linear-gradient(to top, rgb(34 40 43 / .1), rgb(34 40 43 / 0));
 }
 .section--shade-bottom + .section::before { content: none; }
+/* A tinted block that continues the one above it: no shade along its top edge. */
+.section--flat::before { content: none; }
 .section--rule { padding-top: 0; }
 .section--rule > .container { border-top: 1px solid var(--line); padding-top: var(--section-y); }
 .section--dark { background: var(--navy); color: #d6dde4; }
 .section--dark h2 { color: var(--white); }
+.section--dark .section-head__lead { color: #b5c1cc; }
 /* Request block: a faint drawing behind the navy; the drawing sits on the right, the text stays calm. */
 .section--drawing { position: relative; isolation: isolate; overflow: hidden; }
 .lead-bg { position: absolute; inset: 0; z-index: -1; }
@@ -936,10 +938,6 @@ main .reveal--photo.is-visible { clip-path: inset(-3rem); }
 /* ---------- About ---------- */
 .about-hero__legal { margin-top: 1rem; max-width: 34rem; color: var(--muted); }
 .about-hero__plate { margin-top: 2rem; }
-.about-hero__photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; }
-.about-hero__photos > div { position: relative; aspect-ratio: 1; overflow: hidden; background: var(--anthracite); }
-.about-hero__photos .about-hero__main { grid-column: 1 / -1; aspect-ratio: 16 / 9; }
-.about-hero__photos picture, .about-hero__photos img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .about-req { margin-top: 1.5rem; }
 /* Requisites on the left, the generated cylinder drawing visible on the right. */
 .about-req-section { position: relative; isolation: isolate; overflow: hidden; background: var(--grey); }
@@ -1138,7 +1136,7 @@ html.lightbox-open body { padding-right: var(--scrollbar, 0); }
 
 /* Product page tabs (tabs.js) under the first section; the bar sticks under the header while reading.
    Without JS the same bar is a list of anchors to sections that follow one another. */
-.page-nav { position: sticky; top: 4.25rem; z-index: 40; background: var(--white); border-bottom: 1px solid var(--line); box-shadow: 0 14px 24px -14px rgb(34 40 43 / .3); }
+.page-nav { position: sticky; top: 4.25rem; z-index: 40; background: var(--white); border-bottom: 1px solid var(--line); box-shadow: 0 14px 24px -14px rgb(34 40 43 / .21); }
 .page-nav__inner { display: flex; align-items: center; gap: 1.5rem; }
 /* Tabs in the middle; auto margins rather than justify-content, so a list wider than a phone
    still scrolls from its first tab. */
@@ -1195,6 +1193,8 @@ html.lightbox-open body { padding-right: var(--scrollbar, 0); }
 .page-nav__tab:focus-visible { outline: 2px solid var(--red); outline-offset: -2px; }
 /* A tab opens right under the bar: less air above it than between ordinary blocks. */
 .tabs__panels > .section { padding-top: clamp(2.5rem, 5vw, 3.5rem); }
+/* Under the bar's own shadow the block's top shade is lighter, so the two don't add up to a dark band. */
+.tabs__panels > .section::before { background: linear-gradient(rgb(34 40 43 / .07), rgb(34 40 43 / 0)); }
 .tabs__panels > [role="tabpanel"] { animation: tab-in .35s ease; }
 @keyframes tab-in { from { opacity: 0; transform: translateY(.5rem); } }
 @media (prefers-reduced-motion: reduce) { .tabs__panels > [role="tabpanel"] { animation: none; } }
@@ -1301,10 +1301,10 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
     radial-gradient(ellipse 55% 70% at 75% 55%, rgb(255 255 255 / .08), transparent 70%),
     radial-gradient(ellipse 90% 110% at 65% 45%, #850e14 0%, #6a090e 40%, #420509 78%, #210204 100%);
 }
-/* Warm off-white, not pure white: easier on the eyes against the red. */
-.model-hero h1 { color: #ecdcd9; }
-.model-hero .eq-hero__lead { color: rgb(236 220 217 / .72); }
-.model-hero .breadcrumbs, .model-hero .breadcrumbs a { color: rgb(255 255 255 / .75); }
+/* White on the red stage: the heading solid, the lead and crumbs a touch softer. */
+.model-hero h1 { color: var(--white); }
+.model-hero .eq-hero__lead { color: rgb(255 255 255 / .9); }
+.model-hero .breadcrumbs, .model-hero .breadcrumbs a { color: rgb(255 255 255 / .85); }
 .model-hero .breadcrumbs li + li::before { color: rgb(255 255 255 / .4); }
 /* The render stands on the floor of the stage and casts a soft shadow under itself. */
 .model-hero .model-gallery__slide picture { z-index: 1; }
@@ -1322,7 +1322,14 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
 .model-hero .model-gallery__main:has(.model-gallery__slide--photo)::after { display: none; }
 /* Phones: the model first, so it is on the first screen; wider: text left, model right. */
 @media (max-width: 59.99rem) { .model-hero .model-gallery { order: -1; } }
-@media (min-width: 60rem) { .model-hero__grid { grid-template-columns: 1fr 1.25fr; align-items: center; } }
+@media (min-width: 60rem) {
+  .model-hero__grid { grid-template-columns: 1fr 1.45fr; align-items: center; }
+  .model-hero .model-gallery__main { aspect-ratio: 4 / 3; }
+  /* The model a size smaller, pushed to the right edge: more air between it and the text. */
+  .model-hero .model-gallery { width: 82%; justify-self: end; }
+  /* The text sits a little above the model's middle, closer to the eye line. */
+  .model-hero__info { padding-bottom: 4rem; }
+}
 /* Line page hero (scissor lifts): the same red stage, no render, the title centred. */
 .line-hero {
   padding-bottom: clamp(3.5rem, 8vw, 6rem);
@@ -1384,11 +1391,8 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
 @media (min-width: 48rem) {
   .page-hero-bg::after { background: linear-gradient(90deg, rgb(227 230 228 / .92) 0%, rgb(227 230 228 / .85) 45%, rgb(227 230 228 / .35) 68%, rgb(227 230 228 / 0) 85%); }
 }
-/* About: a lighter veil, the photo stays visible behind the text. */
-.about-hero .page-hero-bg::after { background: rgb(227 230 228 / .55); }
-@media (min-width: 48rem) {
-  .about-hero .page-hero-bg::after { background: linear-gradient(90deg, rgb(227 230 228 / .7) 0%, rgb(227 230 228 / .45) 35%, rgb(227 230 228 / 0) 60%); }
-}
+/* About: no veil, the background photo is shown as is. */
+.about-hero .page-hero-bg::after { content: none; }
 /* Article page: phone — the photo under the text; wider — on the right half, fading into the grey. */
 .article-hero__photo { margin: 0; }
 .article-hero--photo { display: flex; flex-direction: column; }
@@ -1403,6 +1407,12 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
   .article-hero--photo .article-hero__photo picture, .article-hero--photo .article-hero__photo img { width: 100%; height: 100%; aspect-ratio: auto; }
   .article-hero--photo .article-hero__inner > * { max-width: 34rem; }
   .article-hero--photo h1 { text-wrap: balance; }
+}
+/* Inner pages open with a block 80% of the screen tall, as the about page: crumbs at the top, the
+   content centred in the rest. The home page and the request page have their own first screens. */
+@media (min-width: 60rem) {
+  .eq-hero { display: flex; flex-direction: column; min-height: 80svh; }
+  .eq-hero > .container { margin-block: auto; }
 }
 /* Left-aligned with the crumbs: the text column is narrower than the container, not centred. */
 .article-hero__inner > * { max-width: 46rem; }
@@ -1449,8 +1459,32 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
 .article-related:hover { border-color: var(--red); color: var(--red); }
 
 /* Cylinders page. */
-.cyl-photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; }
-.cyl-photos img { width: 100%; aspect-ratio: 1; object-fit: cover; box-shadow: var(--shadow-card); }
+/* The render as a cut-out on the grey of the first screen, no drawing sheet around it. */
+.cyl-hero__media img { width: 100%; height: auto; filter: drop-shadow(0 1rem 1.25rem rgb(34 40 43 / .18)); }
+/* Our cylinders: a strip of photos scrolled sideways (a swipe, the trackpad or the arrows). */
+.carousel { position: relative; }
+.carousel__track {
+  display: grid; grid-auto-flow: column; grid-auto-columns: min(70%, 18rem); gap: .75rem;
+  overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; overscroll-behavior-x: contain;
+  scrollbar-width: none; padding-bottom: .25rem;
+}
+.carousel__track::-webkit-scrollbar { display: none; }
+@media (prefers-reduced-motion: reduce) { .carousel__track { scroll-behavior: auto; } }
+@media (min-width: 60rem) { .carousel__track { grid-auto-columns: calc((100% - 3 * .75rem) / 4); } }
+.carousel__item { scroll-snap-align: start; }
+.carousel__item img { width: 100%; aspect-ratio: 1; object-fit: cover; background: var(--grey-soft); }
+.carousel__btn {
+  position: absolute; top: 50%; z-index: 1; display: grid; place-items: center; width: 2.75rem; height: 2.75rem;
+  border: 0; border-radius: 50%; background: var(--white); color: var(--ink); box-shadow: var(--shadow-card);
+  cursor: pointer; transform: translateY(-50%); transition: opacity .2s, color .15s;
+}
+.carousel__btn:hover { color: var(--red); }
+.carousel__btn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.carousel__btn:disabled { opacity: 0; pointer-events: none; }
+.carousel__btn .icon { width: 1.25rem; height: 1.25rem; }
+.carousel__btn--prev { left: -1.375rem; }
+.carousel__btn--next { right: -1.375rem; }
+@media (max-width: 59.99rem) { .carousel__btn--prev { left: .5rem; } .carousel__btn--next { right: .5rem; } }
 .order-lead { font-size: 1.125rem; }
 .order-list { margin-block: 1.25rem; }
 .order-more { color: var(--muted); max-width: 40rem; }

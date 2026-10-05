@@ -211,12 +211,26 @@
     }
     pins.push([xa, baseTop], [xb, baseTop]);
 
-    // Hydraulic cylinder: from the base to the centre pin of the lowest pair.
-    var sx = xa + (xb - xa) * 0.1, sy = baseTop - 3;
-    var ex = (xa + xb) / 2, ey = baseTop - h / 2;
-    var mx = sx + (ex - sx) * 0.55, my = sy + (ey - sy) * 0.55;
-    line(svg, mx, my, ex, ey, "s-rod");
-    line(svg, sx, sy, mx, my, "s-cyl");
+    // Hydraulic cylinders sit between the arms, as on the 1X–3X renders: the barrel's
+    // pivot low on a "\" or "/" arm, the rod's pivot higher up. A 4X is two 2X stacked,
+    // so it gets two cylinders. A point is [pair from the top, arm, share of the pair height].
+    function onArm(p) {
+      var t = p[2], y = platBottom + (p[0] + t) * h;
+      return [p[1] === "\\" ? xa + t * (xb - xa) : xb - t * (xb - xa), y];
+    }
+    var CYLINDERS = {
+      1: [[[0, "\\", 0.88], [0, "/", 0.35]]],
+      2: [[[1, "\\", 0.74], [0, "/", 0.72]]],
+      3: [[[2, "/", 0.14], [0, "/", 0.81]]],
+      4: [[[3, "\\", 0.74], [2, "/", 0.72]], [[1, "\\", 0.74], [0, "/", 0.72]]],
+    }[n];
+    CYLINDERS.forEach(function (cyl) {
+      var a = onArm(cyl[0]), b = onArm(cyl[1]);
+      var mx = a[0] + (b[0] - a[0]) * 0.55, my = a[1] + (b[1] - a[1]) * 0.55;
+      line(svg, mx, my, b[0], b[1], "s-rod");
+      line(svg, a[0], a[1], mx, my, "s-cyl");
+      pins.push(a, b);
+    });
 
     node(svg, "rect", { x: x0, y: baseTop, width: lw, height: 12, "class": "s-frame" });
     node(svg, "rect", { x: x0, y: platTop, width: lw, height: 14, "class": "s-frame" });

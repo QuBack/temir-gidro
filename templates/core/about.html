@@ -6,7 +6,7 @@
 
 <section class="eq-hero about-hero page-hero--bg" aria-labelledby="about-title">
   {% include "includes/breadcrumbs.html" %}
-  <div class="page-hero-bg" aria-hidden="true">{% picture page_bg "" sizes="100vw" %}</div>
+  <div class="page-hero-bg" aria-hidden="true">{% picture page_bg "" sizes="100vw" priority=True %}</div>
   <div class="container eq-hero__grid">
     <div class="eq-hero__text">
       <h1 id="about-title">{% translate "О компании" %}</h1>
@@ -15,12 +15,6 @@
       <dl class="stats about-hero__plate">
         {% for value, label in stats %}<div><dt>{{ label }}</dt><dd data-count>{{ value }}</dd></div>{% endfor %}
       </dl>
-    </div>
-    <div class="about-hero__photos">
-      <div class="about-hero__main">
-        {% translate "Гидравлические ножничные подъёмники ТЕМИР ГИДРО в цехе" as photo_alt %}
-        {% picture hero_image photo_alt sizes="(min-width: 60rem) 45vw, 100vw" priority=True %}
-      </div>
     </div>
   </div>
 </section>

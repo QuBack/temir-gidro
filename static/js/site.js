@@ -177,4 +177,30 @@
     }, { passive: true });
     window.addEventListener("resize", syncRail, { passive: true });
   }
+
+  // Photo strips: the arrows move one screenful of the strip; at either end the arrow hides.
+  // Without JS the strip still scrolls sideways by swipe or trackpad.
+  document.querySelectorAll("[data-carousel]").forEach(function (carousel) {
+    var track = carousel.querySelector("[data-carousel-track]");
+    var prev = carousel.querySelector("[data-carousel-prev]");
+    var next = carousel.querySelector("[data-carousel-next]");
+    var sync = function () {
+      var end = track.scrollWidth - track.clientWidth;
+      prev.disabled = track.scrollLeft <= 1;
+      next.disabled = track.scrollLeft >= end - 1;
+    };
+    var step = function (dir) {
+      var item = track.firstElementChild;
+      var gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      var size = item ? item.getBoundingClientRect().width + gap : track.clientWidth;
+      var perView = Math.max(1, Math.floor((track.clientWidth + gap) / size));
+      track.scrollBy({ left: dir * perView * size });
+    };
+    prev.hidden = next.hidden = false;
+    prev.addEventListener("click", function () { step(-1); });
+    next.addEventListener("click", function () { step(1); });
+    track.addEventListener("scroll", sync, { passive: true });
+    window.addEventListener("resize", sync, { passive: true });
+    sync();
+  });
 })();

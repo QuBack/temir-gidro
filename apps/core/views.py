@@ -146,7 +146,7 @@ class EquipmentView(SeoMixin, BreadcrumbsMixin, TemplateView):
             delivery=lift_models.DELIVERY,
             documents=lift_models.DOCUMENTS,
             # A render too small for the stage (console, car lift) gives way to the line's photo.
-            hero_photo=item["image"]["size"][0] < 600 and bool(item.get("about_image")),
+            hero_photo=item["image"]["size"][0] < 400 and bool(item.get("about_image")),
             lead_form=LeadForm.for_request(self.request),
             hero_lift=catalog.HERO_LIFT,
             related=[c for c in catalog.CATEGORIES if c["url"] != self.request.path],
@@ -320,7 +320,6 @@ class AboutView(SeoMixin, BreadcrumbsMixin, TemplateView):
         ]
         context.update(
             lead_form=LeadForm.for_request(self.request),
-            hero_image=catalog.HERO_IMAGE,
             about_bg=catalog.ABOUT_BG,
             page_bg=catalog.ABOUT_HERO_BG,
             stats=catalog.STATS,

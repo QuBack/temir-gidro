@@ -62,7 +62,7 @@ CATEGORIES = [
         "title": _("Подъёмники для мусорных контейнеров"),
         "url": "/podemniki/dlya-musornyh-kontejnerov/",
         "text": _("Подземные контейнерные площадки: баки скрыты в шахте и поднимаются к вывозу."),
-        "image": img("catalog/podemnik-dlya-musornyh-kontejnerov", (800, 800)),
+        "image": img("catalog/podemnik-dlya-musornyh-kontejnerov", (576, 629), widths=(400, 576)),
     },
     {
         "title": _("Подъёмники для окрасочных камер"),
@@ -97,7 +97,8 @@ CYLINDERS = {
         (_("Рабочее давление"), _("16–32 МПа")),
     ],
     "image": img("catalog/gidrocilindry", (1200, 535), widths=(400, 800, 1200)),
-    "photos": [img(f"photos/proizvodstvo-gidrocilindrov-{i}", (300, 300), widths=(300,)) for i in (1, 2, 3)],
+    # Our cylinders from the shop floor (old site carousel, 300 × 300 is all there is).
+    "photos": [img(f"photos/gidrocilindr-temir-gidro-{i}", (300, 300), widths=(300,)) for i in range(1, 10)],
 }
 
 STATS = [
@@ -611,7 +612,7 @@ EQUIPMENT = {
             "Контейнеры стоят в шахте под землёй, на поверхности — только аккуратные мусороприёмники. "
             "К приезду мусоровоза платформа поднимает их наверх."
         ),
-        "image": img("catalog/podemnik-dlya-musornyh-kontejnerov", (800, 800)),
+        "image": img("catalog/podemnik-dlya-musornyh-kontejnerov", (576, 629), widths=(400, 576)),
         "facts": [
             (_("до 8000 кг"), _("Грузоподъёмность")),
             (_("до 4800 мм"), _("Рабочий ход")),
@@ -646,7 +647,7 @@ EQUIPMENT = {
                 ),
             },
             {
-                "image": img("catalog/podemnik-dlya-musornyh-kontejnerov", (800, 800)),
+                "image": img("catalog/podemnik-dlya-musornyh-kontejnerov", (576, 629), widths=(400, 576)),
                 "render": True,
                 "alt": _("Подъёмник для мусорных контейнеров ТЕМИР ГИДРО с четырьмя контейнерами"),
                 "title": _("Безопасность"),

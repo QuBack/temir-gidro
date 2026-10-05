@@ -2,7 +2,7 @@
 {% comment %}Home page: the order route as a vertical timeline with a photo per step. The steps
 appear one by one and the rail fills as the page scrolls (static/js/site.js);
 without JS, or with reduced motion, everything is simply shown.{% endcomment %}
-<section class="section section--grey" id="etapy" aria-labelledby="steps-title">
+<section class="section section--grey{% if flat %} section--flat{% endif %}" id="etapy" aria-labelledby="steps-title">
   <div class="container">
     <div class="section-head section-head--center">
       <h2 id="steps-title">{% translate "От заявки до монтажа" %}</h2>
