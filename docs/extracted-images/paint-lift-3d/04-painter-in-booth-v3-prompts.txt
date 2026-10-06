@@ -1,0 +1,25 @@
+Mode: built-in image_gen generation followed by image editing
+Output: 04-painter-in-booth-v3.png
+
+GENERATION PROMPT
+
+Photorealistic industrial photo inside a large downdraft spray paint booth. A massive horizontal steel pressure vessel (about 4 m diameter, 15 m long) rests on two steel saddle supports bolted to a solid concrete plinth, not on floor gratings. Floor exhaust gratings run alongside the vessel.
+
+The vessel is being coated: the near section is finished in an even, smooth, high-gloss blue industrial enamel with a uniform wet-look finish, no wrinkles or orange peel. The far section is still matte grey primer. The boundary between blue and grey is a clean, visible wet edge, right where the painter is working. The manway flange and bolts on top are masked with tape and paper.
+
+The painter stands upright on a mobile scissor lift / boom lift platform (MEWP) positioned right next to the vessel, the platform guardrail about waist height, with a gate. He wears a full-body harness clipped by a short lanyard to the platform anchor point, a disposable white coverall, a full-face respirator with supplied-air hose, nitrile gloves.
+
+He holds an industrial airless spray gun at 25–30 cm from the vessel surface, spraying a narrow fan pattern perpendicular to the surface. A high-pressure paint hose runs from the gun down to an airless pump and a paint drum on the floor.
+
+Realistic overspray: light blue dusting on the painter's coverall, on the lift platform, on the masking paper, and on the floor near the vessel. Bright even booth lighting from ceiling and wall light panels. Wide-angle, eye-level, sharp details, natural colors, industrial documentary photography.
+
+Create a single new landscape photograph. Give the mobile lift a clearly recognizable wheeled chassis and scissor mechanism or boom, realistic platform gate and waist-high guardrails. The vessel is genuinely massive relative to the single adult painter. Show the solid concrete plinth directly under both vessel saddles, with exhaust gratings alongside it. The clean wet edge between the blue enamel and the grey primer must meet the spray application point. The blue enamel has smooth uninterrupted highlights and no mottling, drips, ripples, wrinkles or orange-peel texture. Preserve believable equipment scale, anatomy, hose routing and light. No text, branding or watermark.
+
+REFINEMENT PROMPT
+
+Use case: precise-object-edit. The supplied photograph is the edit target. Refine ONLY the blue enamel surface and its paint transition on the large pressure vessel. Keep the entire scene, framing, industrial booth, grey primer section, two steel saddles on solid concrete bases, adjacent exhaust grilles, masking paper on flanges, single standing painter, PPE, harness, mobile scissor lift, airless gun, hoses, pump, paint drum, and realistic light blue overspray on the floor and equipment unchanged.
+
+The vessel's finished blue section must look like freshly applied, perfectly smooth industrial high-gloss enamel on smooth steel. Give the enamel a uniform glass-smooth wet gloss with broad continuous clean reflections of rectangular ceiling light panels following the tank's curvature. The coating should have an optically smooth surface with no pebbling, no orange peel, no small bumps, no stippling, no mottling, no wrinkling, no textured noise, no rippled or hammered finish, no brush marks, no drips. Retain legitimate welded steel seams, the vessel silhouette and shape, but make all blue enamel between seams smooth and evenly colored. This smooth finish is the priority.
+
+Create a clean, clearly defined freshly painted wet edge at the blue-to-matte-grey boundary directly at the worker's active spray application point. Keep the nearby narrow fan plume fine and realistic, but the painted vessel surface should have a distinct blue wet edge rather than a wide cloudy mottled gradient. Maintain photorealistic industrial documentary appearance, natural colors, original landscape aspect ratio. No added text or watermarks.
+
