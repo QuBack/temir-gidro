@@ -2,3 +2,9 @@
 *.sh text eol=lf
 deploy/Caddyfile* text eol=lf
 Dockerfile text eol=lf
+
+# Third-party files stay byte-for-byte as published: the CSP hash of model-viewer's
+# shadow-DOM style (config/settings.py) breaks if line endings are converted.
+static/vendor/** -text
+*.glb binary
+*.wasm binary

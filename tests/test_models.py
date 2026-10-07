@@ -91,3 +91,48 @@ def test_model_has_one_picture_on_first_screen(client):
     assert hero.count('data-zoom="views"') == 1
     # The other two views sit under the description, in the same viewer group.
     assert html.count('class="model-views__item zoom"') == 2
+
+
+@pytest.mark.parametrize("slug", ["1x", "2x"])
+def test_scissor_model_has_3d_viewer(client, slug):
+    html = client.get(f"/podemniki/nozhnichnye/{slug}/").content.decode()
+    glb = f'data-model3d="/static/models/nozhnichnyj-podemnik-{slug}.glb"'
+    hero = html[: html.index('class="tabs"')]
+    assert "data-model3d" not in hero  # the first screen keeps just the render
+    assert html.count(glb) == 1 and 'id="3d" hidden' in html  # the block, shown by JS
+    assert 'src="/static/js/model3d.js"' in html and 'data-draco="/static/vendor/draco/"' in html
+
+
+def test_model_without_3d_has_no_viewer(client):
+    html = client.get("/podemniki/nozhnichnye/3x/").content.decode()
+    assert "data-model3d" not in html and "model3d.js" not in html
+
+
+def test_3d_files_are_served_from_our_static():
+    from django.contrib.staticfiles import finders
+
+    for path in ("models/nozhnichnyj-podemnik-1x.glb", "models/nozhnichnyj-podemnik-2x.glb",
+                 "vendor/model-viewer/model-viewer.min.js", "vendor/draco/draco_decoder.wasm",
+                 "vendor/draco/draco_wasm_wrapper.js", "js/model3d.js"):
+        assert finders.find(path), path
+
+
+def test_csp_allows_the_3d_viewer_and_nothing_wider(client, settings):
+    csp = client.get("/podemniki/nozhnichnye/1x/")["Content-Security-Policy"]
+    assert "'wasm-unsafe-eval'" in csp and "worker-src 'self' blob:" in csp
+    assert "'unsafe-inline'" not in csp and "'unsafe-eval'" not in csp
+    assert settings.MODEL_VIEWER_STYLE_HASH in csp
+
+
+def test_model_viewer_style_hash_matches_vendored_file(settings):
+    """The viewer styles its shadow DOM with one <style> block; CSP allows exactly that block."""
+    import base64
+    import hashlib
+    import re
+
+    from django.contrib.staticfiles import finders
+
+    source = open(finders.find("vendor/model-viewer/model-viewer.min.js"), encoding="utf-8").read()
+    style = re.search(r"<style>(\n:host \{.*?)</style>", source, re.S).group(1)
+    digest = base64.b64encode(hashlib.sha256(style.encode()).digest()).decode()
+    assert settings.MODEL_VIEWER_STYLE_HASH == f"'sha256-{digest}'"

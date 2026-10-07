@@ -118,6 +118,7 @@ STORAGES = {
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
 }
 WHITENOISE_MAX_AGE = 31536000
+WHITENOISE_MIMETYPES = {".glb": "model/gltf-binary"}  # 3D models of the lifts
 
 # --- Security -------------------------------------------------------------------
 SESSION_COOKIE_HTTPONLY = True
@@ -138,13 +139,19 @@ if not DEBUG:
 
 # Yandex.Metrika needs its script host, its pixel/collect endpoints and webvisor
 # frames; everything else is first-party. No inline scripts at all.
+# The 3D viewer (static/vendor/model-viewer) decodes Draco meshes with WebAssembly in a
+# worker started from a blob: URL, hands the model's textures over as blob: URLs and
+# styles its shadow DOM with one fixed <style> block, allowed by its hash
+# (tests/test_models.py recomputes it from the vendored file: update both on upgrade).
 _METRIKA = ["https://mc.yandex.ru", "https://mc.yandex.com", "https://yastatic.net"]
+MODEL_VIEWER_STYLE_HASH = "'sha256-F7kvx28zBT3UUQL/hTOYst+55RSmqyCY3muSCYmt6A4='"
 SECURE_CSP = {
     "default-src": [CSP.SELF],
-    "script-src": [CSP.SELF, *_METRIKA],
-    "style-src": [CSP.SELF],
-    "img-src": [CSP.SELF, "data:", *_METRIKA],
-    "connect-src": [CSP.SELF, *_METRIKA],
+    "script-src": [CSP.SELF, CSP.WASM_UNSAFE_EVAL, *_METRIKA],
+    "worker-src": [CSP.SELF, "blob:"],
+    "style-src": [CSP.SELF, MODEL_VIEWER_STYLE_HASH],
+    "img-src": [CSP.SELF, "data:", "blob:", *_METRIKA],
+    "connect-src": [CSP.SELF, "blob:", *_METRIKA],
     "frame-src": [*_METRIKA, "https://yandex.ru"],  # Yandex Maps widget on the contacts page
     "font-src": [CSP.SELF],
     "form-action": [CSP.SELF],
