@@ -190,6 +190,8 @@ SCISSOR_MODELS = {
         "images": [
             {"image": SCISSOR_1X, "alt": _("Ножничный подъёмник 1X ТЕМИР ГИДРО — общий вид")},
         ],
+        # 3D model for the viewer (static path; Draco-compressed GLB exported from Blender).
+        "model_3d": "models/nozhnichnyj-podemnik-1x.glb",
         # Kit image with callouts: (kit item index, x %, y %) on the picture.
         "kit_image": SCISSOR_1X,
         "kit_markers": [(0, 40, 4), (1, 20, 40), (2, 47, 58), (3, 52, 90), (4, 6, 83)],
@@ -253,6 +255,7 @@ SCISSOR_MODELS = {
         "images": [
             {"image": SCISSOR_2X, "alt": _("Ножничный подъёмник 2X ТЕМИР ГИДРО — общий вид")},
         ],
+        "model_3d": "models/nozhnichnyj-podemnik-2x.glb",
         "kit_image": SCISSOR_2X,
         "kit_markers": [(0, 62, 2), (1, 22, 30), (2, 32, 60), (3, 45, 96), (4, 95, 88)],
         "description": [

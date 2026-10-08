@@ -1,0 +1,5 @@
+{% load i18n images %}
+{# Switches the picture above it to the 3D viewer and back; shown by static/js/model3d.js. #}
+<button class="model3d-toggle" type="button" data-model3d-toggle data-label-photo="{% translate 'Показать фото' %}" hidden>
+  {% icon "rotate-3d" %}<span data-model3d-label>{% translate "Покрутить в 3D" %}</span>
+</button>
