@@ -82,7 +82,7 @@
       {% for p in item.about %}<p>{{ p }}</p>{% endfor %}
       <a class="btn btn--primary" href="#raschet">{% translate "Рассчитать под мой объект" %}</a>
     </div>
-    <figure class="eq-about__photo"><a class="zoom" href="{% image_url item.about_image %}" data-zoom="scenes">{% picture item.about_image item.about_alt sizes="(min-width: 60rem) 55vw, 100vw" %}</a></figure>
+    <figure class="eq-about__photo{% if item.about_plain %} eq-about__photo--plain{% endif %}"><a class="zoom" href="{% image_url item.about_image %}" data-zoom="scenes">{% picture item.about_image item.about_alt sizes="(min-width: 60rem) 55vw, 100vw" %}</a></figure>
   </div>
 </section>
 {% endif %}

@@ -1384,6 +1384,7 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
 .eq-about .btn { margin-top: 2rem; }
 .eq-about__photo { margin: 0; overflow: hidden; background: var(--grey-soft); box-shadow: var(--shadow-photo); }
 .eq-about__photo img { width: 100%; height: auto; }
+.eq-about__photo--plain { box-shadow: none; background: none; }
 
 /* Model at work: photo + story rows, alternating sides on wide screens. */
 .scenes { display: grid; gap: clamp(2.5rem, 6vw, 4.5rem); }
@@ -1420,8 +1421,25 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
 @media (min-width: 48rem) {
   .page-hero-bg::after { background: linear-gradient(90deg, rgb(227 230 228 / .92) 0%, rgb(227 230 228 / .85) 45%, rgb(227 230 228 / .35) 68%, rgb(227 230 228 / 0) 85%); }
 }
-/* About: no veil, the background photo is shown as is. */
-.about-hero .page-hero-bg::after { content: none; }
+/* About: the welding bay photo under a dark veil, heaviest behind the text; white lettering. */
+.about-hero { background: var(--anthracite); }
+.about-hero .page-hero-bg img { object-position: 60% 50%; }
+.about-hero .page-hero-bg::after { background: rgb(18 21 23 / .72); }
+/* Wide screens: the photo starts a third in and melts into the dark on the left, so the helmet
+   and the plate sit to the right of the text. */
+@media (min-width: 60rem) {
+  .about-hero .page-hero-bg picture {
+    left: 30%;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 40%); mask-image: linear-gradient(90deg, transparent 0%, #000 40%);
+  }
+  .about-hero .page-hero-bg img { object-position: 70% 50%; }
+  .about-hero .page-hero-bg::after { background: linear-gradient(90deg, rgb(18 21 23 / .5) 0%, rgb(18 21 23 / .3) 50%, rgb(18 21 23 / .1) 100%); }
+}
+.about-hero h1, .about-hero .stats dd { color: var(--white); }
+.about-hero .eq-hero__lead { color: rgb(255 255 255 / .9); }
+.about-hero .about-hero__legal, .about-hero .stats dt { color: rgb(255 255 255 / .7); }
+.about-hero .breadcrumbs, .about-hero .breadcrumbs a { color: rgb(255 255 255 / .85); }
+.about-hero .breadcrumbs li + li::before { color: rgb(255 255 255 / .4); }
 /* Article page: phone — the photo under the text; wider — on the right half, fading into the grey. */
 .article-hero__photo { margin: 0; }
 .article-hero--photo { display: flex; flex-direction: column; }
