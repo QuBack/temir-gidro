@@ -1,0 +1,135 @@
+[
+  {
+    "source": "general",
+    "file": "podemnik-okrasochnoj-kamery-3d-obshchij-vid-240.webp",
+    "width": 240,
+    "height": 141,
+    "bytes": 3476
+  },
+  {
+    "source": "general",
+    "file": "podemnik-okrasochnoj-kamery-3d-obshchij-vid-480.webp",
+    "width": 480,
+    "height": 281,
+    "bytes": 8380
+  },
+  {
+    "source": "general",
+    "file": "podemnik-okrasochnoj-kamery-3d-obshchij-vid-800.webp",
+    "width": 800,
+    "height": 469,
+    "bytes": 16262
+  },
+  {
+    "source": "general",
+    "file": "podemnik-okrasochnoj-kamery-3d-obshchij-vid-1200.webp",
+    "width": 1200,
+    "height": 703,
+    "bytes": 28864
+  },
+  {
+    "source": "general",
+    "file": "podemnik-okrasochnoj-kamery-3d-obshchij-vid.webp",
+    "width": 1639,
+    "height": 960,
+    "bytes": 43890
+  },
+  {
+    "source": "side",
+    "file": "podemnik-okrasochnoj-kamery-3d-bokovoj-vid-240.webp",
+    "width": 240,
+    "height": 160,
+    "bytes": 3126
+  },
+  {
+    "source": "side",
+    "file": "podemnik-okrasochnoj-kamery-3d-bokovoj-vid-480.webp",
+    "width": 480,
+    "height": 320,
+    "bytes": 7846
+  },
+  {
+    "source": "side",
+    "file": "podemnik-okrasochnoj-kamery-3d-bokovoj-vid-800.webp",
+    "width": 800,
+    "height": 533,
+    "bytes": 16326
+  },
+  {
+    "source": "side",
+    "file": "podemnik-okrasochnoj-kamery-3d-bokovoj-vid-1200.webp",
+    "width": 1200,
+    "height": 800,
+    "bytes": 30064
+  },
+  {
+    "source": "side",
+    "file": "podemnik-okrasochnoj-kamery-3d-bokovoj-vid.webp",
+    "width": 1536,
+    "height": 1024,
+    "bytes": 43602
+  },
+  {
+    "source": "right",
+    "file": "podemnik-okrasochnoj-kamery-3d-pravyj-rakurs-240.webp",
+    "width": 240,
+    "height": 160,
+    "bytes": 3976
+  },
+  {
+    "source": "right",
+    "file": "podemnik-okrasochnoj-kamery-3d-pravyj-rakurs-480.webp",
+    "width": 480,
+    "height": 320,
+    "bytes": 10086
+  },
+  {
+    "source": "right",
+    "file": "podemnik-okrasochnoj-kamery-3d-pravyj-rakurs-800.webp",
+    "width": 800,
+    "height": 533,
+    "bytes": 20762
+  },
+  {
+    "source": "right",
+    "file": "podemnik-okrasochnoj-kamery-3d-pravyj-rakurs-1200.webp",
+    "width": 1200,
+    "height": 800,
+    "bytes": 38306
+  },
+  {
+    "source": "right",
+    "file": "podemnik-okrasochnoj-kamery-3d-pravyj-rakurs.webp",
+    "width": 1536,
+    "height": 1024,
+    "bytes": 55504
+  },
+  {
+    "source": "tank",
+    "file": "okraska-cisterny-podemnik-3d-480.webp",
+    "width": 480,
+    "height": 301,
+    "bytes": 27988
+  },
+  {
+    "source": "tank",
+    "file": "okraska-cisterny-podemnik-3d-800.webp",
+    "width": 800,
+    "height": 502,
+    "bytes": 63604
+  },
+  {
+    "source": "tank",
+    "file": "okraska-cisterny-podemnik-3d-1200.webp",
+    "width": 1200,
+    "height": 752,
+    "bytes": 119952
+  },
+  {
+    "source": "tank",
+    "file": "okraska-cisterny-podemnik-3d.webp",
+    "width": 1584,
+    "height": 993,
+    "bytes": 173020
+  }
+]

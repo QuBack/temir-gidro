@@ -1,0 +1,60 @@
+{
+  "source": "C:\\Users\\user\\.codex\\attachments\\7acde870-0865-4438-8ea5-9a1454b13024\\Вставленный текст.txt",
+  "image_tags": 5,
+  "unique_images": 4,
+  "images": [
+    {
+      "number": 1,
+      "file": "01-general-view.png",
+      "path": "C:\\projects\\temir-gidro\\docs\\extracted-images\\paint-lift-3d\\01-general-view.png",
+      "alt": "Подъемник для окрасочной камеры 3D — общий вид с удлиненной кабиной",
+      "width": 1639,
+      "height": 960,
+      "bytes": 1272594,
+      "sha256": "eeb593493d664cf28adca9feb547114eb5d8c8905192402caa40851fa8306831",
+      "html_occurrences": [
+        1,
+        4
+      ]
+    },
+    {
+      "number": 2,
+      "file": "02-mechanisms-diagram.png",
+      "path": "C:\\projects\\temir-gidro\\docs\\extracted-images\\paint-lift-3d\\02-mechanisms-diagram.png",
+      "alt": "Подъемник для окрасочной камеры 3D — схема узлов и механизмов",
+      "width": 1669,
+      "height": 942,
+      "bytes": 1091806,
+      "sha256": "6922f94fbd0d28511b97b34ca0ffd1e37a498df3f03ab05bd1c2c61c037721ab",
+      "html_occurrences": [
+        2
+      ]
+    },
+    {
+      "number": 3,
+      "file": "03-dimensions-diagram.png",
+      "path": "C:\\projects\\temir-gidro\\docs\\extracted-images\\paint-lift-3d\\03-dimensions-diagram.png",
+      "alt": "Подъемник для окрасочной камеры 3D — габаритная схема",
+      "width": 1683,
+      "height": 935,
+      "bytes": 912792,
+      "sha256": "50b6f764226dbf0229949300cf20d0635848d285fa9e9e0f626f4b632d63d1c8",
+      "html_occurrences": [
+        3
+      ]
+    },
+    {
+      "number": 4,
+      "file": "04-painter-in-booth.png",
+      "path": "C:\\projects\\temir-gidro\\docs\\extracted-images\\paint-lift-3d\\04-painter-in-booth.png",
+      "alt": "Маляр в красной кабине подъемника 3D окрашивает крупную промышленную емкость в окрасочной камере",
+      "width": 1586,
+      "height": 992,
+      "bytes": 2660697,
+      "sha256": "331e966cd61295161f68e0040548cbe29253092f143bd40bb5b82277b9767d96",
+      "html_occurrences": [
+        5
+      ]
+    }
+  ]
+}

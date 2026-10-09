@@ -16,12 +16,15 @@ def img(src, size, widths=(400, 800)):
 # Full-width workshop photo in the hero — the LCP image.
 HERO_IMAGE = img("hero/gidravlicheskie-podemniki", (1920, 765), widths=(768, 1280, 1920))
 # Generated drawing-style backgrounds (illustrations, never passed off as photos).
-# Soft photo headers (Codex, 2026): objects on the right, the text side kept clear.
-ABOUT_HERO_BG = img("backgrounds/ceh-temir-gidro-o-kompanii", (1672, 941), widths=(768, 1280, 1672))
+# Photo headers: objects on the right, the text side kept clear.
+# About: our welding bay (a real photo) under a dark veil, white text on the left.
+ABOUT_HERO_BG = img("photos/proizvodstvo-temir-gidro-svarochnyj-uchastok", (1672, 941), widths=(768, 1280, 1672))
+# Contacts and articles: generated (Codex, 2026).
 CONTACTS_BG = img("backgrounds/promyshlennyj-kvartal-moskvy", (1600, 900), widths=(768, 1280, 1600))
 ARTICLES_BG = img("backgrounds/verstak-inzhenera-statyi", (1600, 900), widths=(768, 1280, 1600))
-# Behind «Реквизиты и контакты» on the about page: a softened hall of red lifts, objects on the right.
-ABOUT_BG = img("backgrounds/ceh-nozhnichnyh-podemnikov", (1664, 936), widths=(768, 1280, 1664))
+# Behind «Реквизиты и контакты» on the about page: an industrial park at sunset, buildings on the
+# right, haze on the left under the text (generated, Codex, 2026).
+ABOUT_BG = img("backgrounds/promyshlennyj-park-na-zakate", (1672, 941), widths=(768, 1280, 1672))
 # Behind the spec tables: a diamond-plate platform, texture on the right, plain on the left.
 SPECS_BG = img("backgrounds/riflenyj-list-platformy", (1664, 936), widths=(768, 1280, 1664))
 # Request blocks: a faint lift drawing on navy (Codex), the drawing on the right.
@@ -541,6 +544,7 @@ EQUIPMENT = {
             ),
         ],
         "about_image": img("photos/chetyrehstoechnyj-podemnik-s-avtomobilem", (1024, 683), widths=(600, 1024)),
+        "about_plain": True,  # a render on white: no card shadow, it stands on the page itself
         "about_alt": _("Четырёхстоечный подъёмник ТЕМИР ГИДРО с легковым автомобилем на платформе"),
         "specs": [
             (_("Грузоподъёмность, кг"), "2500–6000"),

@@ -1,0 +1,192 @@
+{
+  "desktop": {
+    "overflow": false,
+    "imageCount": 5,
+    "h1Count": 1,
+    "galleryThumbs": 3,
+    "images": [
+      {
+        "alt": "",
+        "src": "file:///C:/projects/temir-gidro/output/paint-lift-3d-wordpress/images/podemnik-okrasochnoj-kamery-3d-obshchij-vid-240.webp",
+        "loaded": true,
+        "width": "240",
+        "height": "141",
+        "loading": "eager",
+        "fetchpriority": null
+      },
+      {
+        "alt": "",
+        "src": "file:///C:/projects/temir-gidro/output/paint-lift-3d-wordpress/images/podemnik-okrasochnoj-kamery-3d-bokovoj-vid-240.webp",
+        "loaded": true,
+        "width": "240",
+        "height": "160",
+        "loading": "eager",
+        "fetchpriority": null
+      },
+      {
+        "alt": "",
+        "src": "file:///C:/projects/temir-gidro/output/paint-lift-3d-wordpress/images/podemnik-okrasochnoj-kamery-3d-pravyj-rakurs-240.webp",
+        "loaded": true,
+        "width": "240",
+        "height": "160",
+        "loading": "eager",
+        "fetchpriority": null
+      },
+      {
+        "alt": "Красный подъемник для окрасочной камеры 3D с выдвижной кабиной и горизонтальными направляющими",
+        "src": "file:///C:/projects/temir-gidro/output/paint-lift-3d-wordpress/images/podemnik-okrasochnoj-kamery-3d-obshchij-vid-800.webp",
+        "loaded": true,
+        "width": "1639",
+        "height": "960",
+        "loading": "eager",
+        "fetchpriority": "high"
+      },
+      {
+        "alt": "Маляр в кабине красного подъемника 3D окрашивает синюю цистерну в промышленной окрасочной камере",
+        "src": "file:///C:/projects/temir-gidro/output/paint-lift-3d-wordpress/images/okraska-cisterny-podemnik-3d-800.webp",
+        "loaded": true,
+        "width": "1584",
+        "height": "993",
+        "loading": "lazy",
+        "fetchpriority": null
+      }
+    ]
+  },
+  "mobile": {
+    "overflow": false,
+    "imageCount": 5,
+    "h1Count": 1,
+    "galleryThumbs": 3,
+    "images": [
+      {
+        "alt": "",
+        "src": "file:///C:/projects/temir-gidro/output/paint-lift-3d-wordpress/images/podemnik-okrasochnoj-kamery-3d-obshchij-vid-240.webp",
+        "loaded": true,
+        "width": "240",
+        "height": "141",
+        "loading": "eager",
+        "fetchpriority": null
+      },
+      {
+        "alt": "",
+        "src": "file:///C:/projects/temir-gidro/output/paint-lift-3d-wordpress/images/podemnik-okrasochnoj-kamery-3d-bokovoj-vid-240.webp",
+        "loaded": true,
+        "width": "240",
+        "height": "160",
+        "loading": "eager",
+        "fetchpriority": null
+      },
+      {
+        "alt": "",
+        "src": "file:///C:/projects/temir-gidro/output/paint-lift-3d-wordpress/images/podemnik-okrasochnoj-kamery-3d-pravyj-rakurs-240.webp",
+        "loaded": true,
+        "width": "240",
+        "height": "160",
+        "loading": "eager",
+        "fetchpriority": null
+      },
+      {
+        "alt": "Красный подъемник для окрасочной камеры 3D с выдвижной кабиной и горизонтальными направляющими",
+        "src": "file:///C:/projects/temir-gidro/output/paint-lift-3d-wordpress/images/podemnik-okrasochnoj-kamery-3d-obshchij-vid-800.webp",
+        "loaded": true,
+        "width": "1639",
+        "height": "960",
+        "loading": "eager",
+        "fetchpriority": "high"
+      },
+      {
+        "alt": "Маляр в кабине красного подъемника 3D окрашивает синюю цистерну в промышленной окрасочной камере",
+        "src": "file:///C:/projects/temir-gidro/output/paint-lift-3d-wordpress/images/okraska-cisterny-podemnik-3d-800.webp",
+        "loaded": true,
+        "width": "1584",
+        "height": "993",
+        "loading": "lazy",
+        "fetchpriority": null
+      }
+    ]
+  },
+  "narrow": {
+    "overflow": false,
+    "imageCount": 5,
+    "h1Count": 1,
+    "galleryThumbs": 3,
+    "images": [
+      {
+        "alt": "",
+        "src": "file:///C:/projects/temir-gidro/output/paint-lift-3d-wordpress/images/podemnik-okrasochnoj-kamery-3d-obshchij-vid-240.webp",
+        "loaded": true,
+        "width": "240",
+        "height": "141",
+        "loading": "eager",
+        "fetchpriority": null
+      },
+      {
+        "alt": "",
+        "src": "file:///C:/projects/temir-gidro/output/paint-lift-3d-wordpress/images/podemnik-okrasochnoj-kamery-3d-bokovoj-vid-240.webp",
+        "loaded": true,
+        "width": "240",
+        "height": "160",
+        "loading": "eager",
+        "fetchpriority": null
+      },
+      {
+        "alt": "",
+        "src": "file:///C:/projects/temir-gidro/output/paint-lift-3d-wordpress/images/podemnik-okrasochnoj-kamery-3d-pravyj-rakurs-240.webp",
+        "loaded": true,
+        "width": "240",
+        "height": "160",
+        "loading": "eager",
+        "fetchpriority": null
+      },
+      {
+        "alt": "Красный подъемник для окрасочной камеры 3D с выдвижной кабиной и горизонтальными направляющими",
+        "src": "file:///C:/projects/temir-gidro/output/paint-lift-3d-wordpress/images/podemnik-okrasochnoj-kamery-3d-obshchij-vid-800.webp",
+        "loaded": true,
+        "width": "1639",
+        "height": "960",
+        "loading": "eager",
+        "fetchpriority": "high"
+      },
+      {
+        "alt": "Маляр в кабине красного подъемника 3D окрашивает синюю цистерну в промышленной окрасочной камере",
+        "src": "file:///C:/projects/temir-gidro/output/paint-lift-3d-wordpress/images/okraska-cisterny-podemnik-3d-800.webp",
+        "loaded": true,
+        "width": "1584",
+        "height": "993",
+        "loading": "lazy",
+        "fetchpriority": null
+      }
+    ]
+  },
+  "gallery": [
+    {
+      "src": "images/podemnik-okrasochnoj-kamery-3d-obshchij-vid-1200.webp",
+      "counter": "1 / 3",
+      "pressed": [
+        "true",
+        "false",
+        "false"
+      ]
+    },
+    {
+      "src": "images/podemnik-okrasochnoj-kamery-3d-bokovoj-vid-1200.webp",
+      "counter": "2 / 3",
+      "pressed": [
+        "false",
+        "true",
+        "false"
+      ]
+    },
+    {
+      "src": "images/podemnik-okrasochnoj-kamery-3d-pravyj-rakurs-1200.webp",
+      "counter": "3 / 3",
+      "pressed": [
+        "false",
+        "false",
+        "true"
+      ]
+    }
+  ],
+  "noJavaScriptContentVisible": true,
+  "browserErrors": []
+}
