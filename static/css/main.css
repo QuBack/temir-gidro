@@ -380,7 +380,8 @@ body:not(.page-white) .config .range input::-webkit-slider-thumb { border-color:
 body:not(.page-white) .config .range input::-moz-range-thumb { border-color: var(--white); background: #4a070c; }
 body:not(.page-white) .config .btn--primary { background: var(--white); color: var(--red); }
 body:not(.page-white) .config .btn--primary:hover { background: #f1dcdc; color: var(--red-dark); }
-body:not(.page-white) .config .config__note { color: var(--ink); }
+/* The drawing sheet and the note stay white paper with dark lettering. */
+body:not(.page-white) .config .sheet, body:not(.page-white) .config .config__note { color: var(--ink); }
 /* Phones: heading, scheme, sliders — so the scheme stays in view while dragging. */
 .config__grid { display: grid; gap: 2rem; grid-template-areas: "head" "sheet" "form"; }
 .config__head { grid-area: head; }
