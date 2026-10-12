@@ -145,8 +145,10 @@ class EquipmentView(SeoMixin, BreadcrumbsMixin, TemplateView):
             tabs=tabs,
             delivery=lift_models.DELIVERY,
             documents=lift_models.DOCUMENTS,
-            # A render too small for the stage (console, car lift) gives way to the line's photo.
-            hero_photo=item["image"]["size"][0] < 400 and bool(item.get("about_image")),
+            # A render too small for the stage gives way to the line's photo. Height is what counts:
+            # the stage fits a render by height, so the narrow car and console renders (300 px tall)
+            # still stand on it.
+            hero_photo=item["image"]["size"][1] < 280 and bool(item.get("about_image")),
             lead_form=LeadForm.for_request(self.request),
             hero_lift=catalog.HERO_LIFT,
             related=[c for c in catalog.CATEGORIES if c["url"] != self.request.path],
