@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Каталог: раскрытие групп</title>
+<!-- Mockup: five ways for a group card on the home catalog to show its models.
+     Serve the project root (launch.json → "mockups") and open /docs/mockups/katalog-razvorot.html. -->
+<style>
+@font-face { font-family: "Onest"; src: url("../../static/fonts/onest-cyrillic.woff2") format("woff2"); font-weight: 100 900; unicode-range: U+0400-045F, U+2116; }
+@font-face { font-family: "Onest"; src: url("../../static/fonts/onest-latin.woff2") format("woff2"); font-weight: 100 900; unicode-range: U+0000-00FF, U+2000-206F; }
+@font-face { font-family: "Sofia Sans Condensed"; src: url("../../static/fonts/sofia-sans-condensed-cyrillic.woff2") format("woff2"); font-weight: 400 800; unicode-range: U+0400-045F, U+2116; }
+@font-face { font-family: "Sofia Sans Condensed"; src: url("../../static/fonts/sofia-sans-condensed-latin.woff2") format("woff2"); font-weight: 400 800; unicode-range: U+0000-00FF, U+2000-206F; }
+@font-face { font-family: "OpenGOST B"; src: url("../../static/fonts/opengost-type-b.woff2") format("woff2"); }
+
+:root {
+  --red: #c4161c; --red-dark: #9c0f14; --ink: #22282b; --anthracite: #373f43;
+  --grey: #e3e6e4; --grey-soft: #f2f4f3; --line: #c6ccc9; --muted: #586165; --white: #fff;
+  --font: "Onest", system-ui, sans-serif;
+  --font-cond: "Sofia Sans Condensed", "Onest", system-ui, sans-serif;
+  --font-draw: "OpenGOST B", "Sofia Sans Condensed", system-ui, sans-serif;
+  --container: 78rem; --gutter: 1rem; --radius: 4px;
+  --shadow-card: 0 1px 3px rgb(34 40 43 / .08), 0 12px 32px -16px rgb(34 40 43 / .3);
+  --ease: cubic-bezier(.3, .7, .2, 1);
+  --tile-h: clamp(14rem, 24vw, 17.5rem);
+}
+@media (min-width: 48rem) { :root { --gutter: 2rem; } }
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; font-family: var(--font); font-size: 1.0625rem; line-height: 1.6; color: var(--ink); background: var(--grey-soft); -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+h1, h2, h3, p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+a { color: var(--red); }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
+.container { max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
+.code { font-family: var(--font-draw); line-height: 1; letter-spacing: .02em; }
+
+/* ---------- Page chrome ---------- */
+.top { position: relative; z-index: 50; background: var(--anthracite); color: #dfe4e2; }
+@media (min-width: 48rem) { .top { position: sticky; top: 0; } }
+.top .container { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.5rem; min-height: 3.5rem; padding-block: .5rem; }
+.top b { font-family: var(--font-cond); font-size: 1.25rem; color: var(--white); }
+.top nav { display: flex; flex-wrap: wrap; gap: .25rem; margin-left: auto; }
+.top nav a { padding: .3rem .7rem; border: 1px solid rgb(255 255 255 / .25); border-radius: 2px; color: inherit; text-decoration: none; font-size: .9375rem; }
+.top nav a:hover { border-color: var(--white); color: var(--white); }
+.variant { padding-block: clamp(3rem, 7vw, 5rem); }
+.variant + .variant { border-top: 1px dashed var(--line); }
+.variant__tag { display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem 1rem; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--line); }
+.variant__tag span { font-family: var(--font-draw); font-size: 1.25rem; color: var(--red); }
+.variant__tag strong { font-family: var(--font-cond); font-size: 1.5rem; }
+.variant__tag p { flex-basis: 100%; max-width: 62rem; color: var(--muted); font-size: .9375rem; }
+.variant__tag p b { color: var(--ink); font-weight: 600; }
+.block-title { margin-bottom: clamp(1.75rem, 4vw, 2.75rem); text-align: center; font-family: var(--font-cond); font-weight: 700; font-size: clamp(2.125rem, 4.2vw, 3.25rem); line-height: 1.02; }
+
+/* ---------- Shared: the site's tile (render on white, dark fade, name on it) ---------- */
+.tile {
+  position: relative; display: block; width: 100%; height: var(--tile-h); overflow: hidden;
+  border-radius: var(--radius); background: var(--white); box-shadow: var(--shadow-card);
+  text-align: center; text-decoration: none; transition: box-shadow .3s;
+}
+.tile:hover { box-shadow: 0 12px 28px rgb(34 40 43 / .18); }
+.tile__img { position: absolute; inset: 1.25rem 1.25rem 4.5rem; display: flex; align-items: center; justify-content: center; transition: transform .5s var(--ease); }
+.tile__img img { max-height: 100%; width: auto; }
+.tile:hover .tile__img { transform: scale(1.05); }
+.tile::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to bottom, rgb(20 24 26 / 0) 62%, rgb(20 24 26 / .3) 80%, rgb(20 24 26 / .6)); }
+.tile__title { position: absolute; inset: auto 0 0; z-index: 1; padding: 1rem; color: var(--white); font-family: var(--font-cond); font-size: clamp(1rem, 1.6vw, 1.375rem); line-height: 1.1; font-weight: 700; text-shadow: 0 1px 6px rgb(0 0 0 / .45); }
+.tile:hover .tile__title { color: #ff8a80; }
+.badge {
+  position: absolute; top: .65rem; right: .65rem; z-index: 2; display: inline-flex; align-items: center; gap: .3rem;
+  padding: .15rem .5rem; border: 1px solid var(--ink); border-radius: 2px; background: var(--white);
+  font-family: var(--font-cond); font-weight: 600; font-size: .9375rem; line-height: 1.4; color: var(--ink);
+}
+/* Sheet edges behind a group card. */
+.stacked { position: relative; isolation: isolate; }
+.stacked::before, .stacked::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: var(--radius);
+  background: #f7f8f7; box-shadow: 0 0 0 1px var(--line), var(--shadow-card); transition: transform .35s var(--ease), opacity .3s;
+}
+.stacked::before { transform: translate(6px, -6px); }
+.stacked::after { z-index: -2; background: #eceeed; transform: translate(12px, -12px); }
+.stacked:hover::before { transform: translate(8px, -8px); }
+.stacked:hover::after { transform: translate(16px, -16px); }
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem 1rem; }
+@media (min-width: 60rem) { .grid { grid-template-columns: repeat(3, 1fr); gap: 2rem 1.5rem; } }
+.grid > li { min-width: 0; display: grid; margin: .75rem .75rem 0 0; }
+.mini {
+  position: relative; display: grid; grid-template-rows: 1fr auto; gap: .5rem; min-height: 0; padding: .9rem;
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); color: var(--ink); text-decoration: none;
+  transition: border-color .2s, transform .25s var(--ease), box-shadow .25s;
+}
+.mini:hover { border-color: var(--ink); transform: translateY(-3px); box-shadow: var(--shadow-card); }
+.mini__img { position: relative; min-height: 0; }
+.mini__img img { position: absolute; inset: 0; margin: auto; max-width: 100%; max-height: 100%; width: auto; height: auto; }
+.mini .code { color: var(--red); font-size: 1.25rem; text-align: left; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0s !important; animation-duration: 0s !important; } }
+
+/* =====================================================================
+   A · Разворот — the card stays on the left, its models unfold to the right
+   ===================================================================== */
+.va { grid-auto-flow: row dense; }
+.va__item { display: grid; }
+.va__item.is-open { grid-column: 1 / -1; grid-template-columns: subgrid; }
+.va__item.is-open > .va__cover::before, .va__item.is-open > .va__cover::after { opacity: 0; }
+.va__item.is-open .tile { box-shadow: 0 0 0 2px var(--ink), var(--shadow-card); }
+.va__models { display: none; }
+.va__item.is-open .va__models { display: block; position: relative; grid-column: 2 / -1; height: var(--tile-h); }
+.va__list { display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: .75rem; height: 100%; }
+.va__models .mini { animation: va-in .5s var(--ease) both; }
+.va__models li { min-width: 0; display: grid; }
+.va__models li:nth-child(1) .mini { animation-delay: .12s; }
+.va__models li:nth-child(2) .mini { animation-delay: .19s; }
+.va__models li:nth-child(3) .mini { animation-delay: .26s; }
+.va__models li:nth-child(4) .mini { animation-delay: .33s; }
+@keyframes va-in { from { opacity: 0; transform: translateX(-2.5rem) rotate(-2deg); } }
+.va__close {
+  position: absolute; top: -.6rem; right: -.6rem; z-index: 3; width: 2rem; height: 2rem; border-radius: 50%;
+  background: var(--ink); color: var(--white); font-size: 1.25rem; line-height: 2rem; animation: va-in .4s .3s both;
+}
+.va__arrow { position: absolute; z-index: 3; top: .65rem; right: .65rem; }
+.badge .chev { display: inline-block; transition: rotate .3s; }
+.va__item.is-open .badge { background: var(--ink); color: var(--white); }
+.va__item.is-open .badge .chev { rotate: -90deg; }
+::view-transition-group(*) { animation-duration: .45s; animation-timing-function: cubic-bezier(.3, .7, .2, 1); }
+@media (max-width: 59.99rem) {
+  .va__item.is-open .va__models { grid-column: 1 / -1; height: auto; }
+  .va__item.is-open > .va__cover { grid-column: 1 / -1; }
+  .va__item.is-open .tile { height: 11rem; }
+  .va__list { grid-template-columns: repeat(2, 1fr); }
+  .va__item.is-open .va__models .mini { height: 11rem; }
+}
+
+/* =====================================================================
+   B · Гармошка — every group is a strip; the chosen one opens wide
+   ===================================================================== */
+.vb { display: flex; gap: .75rem; height: 30rem; }
+.vb__item {
+  position: relative; flex: 1 1 0; min-width: 0; overflow: hidden; border-radius: var(--radius);
+  background: var(--white); box-shadow: var(--shadow-card); transition: flex-grow .65s var(--ease), box-shadow .3s;
+}
+.vb__item.is-active { flex-grow: 4.5; box-shadow: 0 0 0 2px var(--ink), var(--shadow-card); }
+.vb__spine { position: absolute; inset: 0; display: block; width: 100%; text-align: left; transition: opacity .3s; }
+.vb__spine img { position: absolute; left: 50%; top: 42%; width: 80%; max-height: 50%; object-fit: contain; translate: -50% -50%; opacity: .9; transition: transform .5s var(--ease); }
+.vb__spine:hover img { transform: scale(1.06); }
+.vb__spine-title {
+  position: absolute; left: 50%; bottom: 1rem; translate: -50% 0; writing-mode: vertical-rl; rotate: 180deg;
+  font-family: var(--font-cond); font-weight: 700; font-size: 1.25rem; line-height: 1.1; white-space: nowrap;
+}
+.vb__spine-count { position: absolute; top: .9rem; left: 0; right: 0; text-align: center; font-family: var(--font-draw); font-size: .9375rem; color: var(--muted); }
+.vb__item.is-active .vb__spine { opacity: 0; pointer-events: none; }
+.vb__stage { position: absolute; inset: 0; display: grid; grid-template-rows: auto 1fr auto; gap: 1rem; padding: 1.5rem; opacity: 0; visibility: hidden; transition: opacity .35s, visibility 0s .35s; }
+.vb__item.is-active .vb__stage { opacity: 1; visibility: visible; transition: opacity .45s .25s, visibility 0s; }
+.vb__head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.vb__head h3 { font-family: var(--font-cond); font-weight: 700; font-size: clamp(1.5rem, 2.4vw, 2rem); line-height: 1.05; white-space: nowrap; }
+.vb__head a { flex: none; font-weight: 600; font-size: .9375rem; }
+.vb__hero { position: relative; min-height: 0; }
+.vb__hero img { position: absolute; inset: 0; margin: auto; max-width: 100%; max-height: 100%; width: auto; height: auto; opacity: 0; transform: translateX(1.5rem); transition: opacity .4s, transform .5s var(--ease); }
+.vb__hero img.is-current { opacity: 1; transform: none; }
+.vb__hero .code { position: absolute; left: 0; top: 0; font-size: 3.5rem; color: var(--grey); }
+.vb__thumbs { display: flex; gap: .5rem; }
+.vb__thumbs a {
+  display: flex; align-items: center; gap: .5rem; padding: .35rem .75rem .35rem .4rem; border: 1px solid var(--line); border-radius: 2px;
+  color: var(--ink); text-decoration: none; transition: border-color .15s, background-color .15s;
+}
+.vb__thumbs a img { width: 2.5rem; height: 2.5rem; object-fit: contain; }
+.vb__thumbs a .code { font-size: 1.125rem; }
+.vb__thumbs a:hover, .vb__thumbs a.is-current { border-color: var(--ink); }
+.vb__thumbs a.is-current { background: var(--ink); color: var(--white); }
+@media (max-width: 47.99rem) {
+  .vb { flex-direction: column; height: auto; }
+  .vb__item { flex: none; height: 5rem; transition: height .55s var(--ease), box-shadow .3s; }
+  .vb__item.is-active { height: 26rem; }
+  .vb__spine img { left: auto; right: .75rem; top: 50%; width: 5rem; max-height: 4rem; translate: 0 -50%; }
+  .vb__spine-title { left: 1rem; bottom: auto; top: 50%; translate: 0 -50%; writing-mode: horizontal-tb; rotate: 0deg; font-size: 1.125rem; white-space: normal; max-width: 60%; }
+  .vb__spine-count { left: 1rem; right: auto; top: .5rem; text-align: left; font-size: .8125rem; }
+  .vb__stage { padding: 1rem; }
+  .vb__head { flex-wrap: wrap; } .vb__head h3 { white-space: normal; font-size: 1.375rem; }
+  .vb__thumbs { flex-wrap: wrap; }
+  .vb__thumbs a { padding-right: .5rem; } .vb__thumbs a img { width: 2rem; height: 2rem; }
+}
+
+/* =====================================================================
+   C · Переворот — the card turns over; the models are on its back
+   ===================================================================== */
+.vc__item { perspective: 1400px; }
+.vc__card { position: relative; height: var(--tile-h); transform-style: preserve-3d; transition: transform .75s cubic-bezier(.5, .1, .2, 1); }
+.vc__item.is-flipped .vc__card { transform: rotateY(180deg); }
+.vc__face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.vc__back {
+  transform: rotateY(180deg); display: grid; grid-template-rows: auto 1fr; grid-template-columns: minmax(0, 1fr); gap: .6rem; padding: .75rem;
+  border-radius: var(--radius); background: var(--white); box-shadow: 0 0 0 2px var(--ink), var(--shadow-card);
+}
+.vc__back-head { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+.vc__back-head h3 { font-family: var(--font-cond); font-weight: 700; font-size: 1.125rem; line-height: 1.1; text-align: left; }
+.vc__flip { flex: none; display: grid; place-items: center; width: 2rem; height: 2rem; border: 1px solid var(--line); border-radius: 50%; font-size: 1.125rem; }
+.vc__flip:hover { border-color: var(--ink); }
+.vc__models { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: .5rem; min-height: 0; }
+.vc__models li { display: grid; min-height: 0; }
+.vc__models .mini { padding: .4rem .5rem; gap: .25rem; }
+.vc__models .mini .code { font-size: 1rem; overflow-wrap: anywhere; }
+.vc__back-head h3 { min-width: 0; }
+@media (max-width: 39.99rem) { .vc__models .mini .code { font-size: .8125rem; } .vc__back-head h3 { font-size: 1rem; } }
+.vc__item.is-flipped.stacked::before { transform: translate(-6px, -6px); }
+.vc__item.is-flipped.stacked::after { transform: translate(-12px, -12px); }
+
+/* =====================================================================
+   D · Раздача — the deck is dealt onto the table like cards
+   ===================================================================== */
+.vd-overlay { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: var(--gutter); }
+.vd-overlay[hidden] { display: none; }
+.vd-backdrop { position: absolute; inset: 0; background: rgb(34 40 43 / .72); backdrop-filter: blur(3px); }
+.vd-stage { position: relative; display: grid; justify-items: center; gap: 1.5rem; width: 100%; max-width: 64rem; }
+.vd-stage h3 { color: var(--white); font-family: var(--font-cond); font-weight: 700; font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1; }
+.vd-hand { display: flex; justify-content: center; gap: 1.25rem; width: 100%; }
+.vd-hand li { flex: 0 1 14rem; }
+.vd-hand .mini { height: 19rem; border-color: transparent; box-shadow: 0 20px 40px -18px rgb(0 0 0 / .6); }
+.vd-hand .mini .code { font-size: 1.75rem; }
+.vd-hand .mini:hover { transform: translateY(-10px); }
+.vd-close { color: var(--white); font-size: .9375rem; text-decoration: underline; text-underline-offset: .2em; }
+.vd-fade { animation: vd-fade .35s both; }
+.vd-fade-out { animation: vd-fade .3s reverse both; }
+@keyframes vd-fade { from { opacity: 0; } }
+@media (max-width: 47.99rem) {
+  .vd-hand { display: grid; grid-template-columns: repeat(2, 1fr); gap: .75rem; }
+  .vd-hand .mini { height: 12.5rem; }
+}
+
+/* =====================================================================
+   E · Витрина — groups on the left, the chosen one on a big stand
+   ===================================================================== */
+.ve { display: grid; gap: 1rem; }
+@media (min-width: 60rem) { .ve { grid-template-columns: 19rem 1fr; gap: 1.5rem; } }
+.ve__tabs { display: flex; gap: .5rem; overflow-x: auto; scrollbar-width: none; padding-bottom: .25rem; }
+@media (min-width: 60rem) { .ve__tabs { flex-direction: column; overflow: visible; } }
+.ve__tab {
+  position: relative; flex: none; display: grid; grid-template-columns: 3rem 1fr; align-items: center; gap: .75rem; width: 100%;
+  padding: .6rem .9rem .6rem .6rem; border-radius: var(--radius); background: var(--white); box-shadow: var(--shadow-card);
+  text-align: left; transition: background-color .2s, color .2s;
+}
+.ve__tab img { width: 3rem; height: 3rem; object-fit: contain; }
+.ve__tab b { display: block; font-family: var(--font-cond); font-size: 1.125rem; line-height: 1.1; }
+.ve__tab small { font-family: var(--font-draw); font-size: .875rem; color: var(--muted); }
+.ve__tab::before { content: ""; position: absolute; left: 0; top: .5rem; bottom: .5rem; width: 3px; background: var(--red); transform: scaleY(0); transition: transform .3s var(--ease); }
+.ve__tab:hover { background: #fafbfa; }
+.ve__tab[aria-selected="true"] { background: var(--ink); color: var(--white); }
+.ve__tab[aria-selected="true"] small { color: #b8c0c3; }
+.ve__tab[aria-selected="true"]::before { transform: none; }
+@media (max-width: 59.99rem) { .ve__tab { width: auto; grid-template-columns: 2.25rem auto; } .ve__tab img { width: 2.25rem; height: 2.25rem; } }
+.ve__stage {
+  position: relative; display: grid; grid-template-rows: 1fr auto; min-height: clamp(22rem, 38vw, 30rem); overflow: hidden;
+  border-radius: var(--radius); background: var(--white); box-shadow: var(--shadow-card);
+  /* Drawing sheet: a frame with corner ticks. */
+  background-image:
+    linear-gradient(var(--line), var(--line)), linear-gradient(var(--line), var(--line)),
+    linear-gradient(var(--line), var(--line)), linear-gradient(var(--line), var(--line));
+  background-size: 1.25rem 1px, 1px 1.25rem, 1.25rem 1px, 1px 1.25rem;
+  background-position: 1rem 1rem, 1rem 1rem, calc(100% - 1rem) calc(100% - 1rem), calc(100% - 1rem) calc(100% - 1rem);
+  background-repeat: no-repeat;
+}
+.ve__watermark { position: absolute; right: 1.5rem; top: .75rem; font-family: var(--font-draw); font-size: clamp(5rem, 12vw, 9rem); line-height: 1; color: transparent; -webkit-text-stroke: 1px var(--line); pointer-events: none; transition: opacity .3s; }
+.ve__title { position: absolute; left: 2rem; top: 1.75rem; z-index: 1; font-family: var(--font-cond); font-weight: 700; font-size: clamp(1.5rem, 2.6vw, 2.25rem); line-height: 1; }
+.ve__hero { position: relative; margin: 4.5rem 2rem 1rem; min-height: 0; }
+.ve__hero img { position: absolute; inset: 0; margin: auto; max-width: 100%; max-height: 100%; width: auto; height: auto; opacity: 0; transform: translateY(1rem) scale(.97); transition: opacity .45s, transform .6s var(--ease); }
+.ve__hero img.is-current { opacity: 1; transform: none; }
+.ve__bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1rem; padding: 1rem 1.5rem; border-top: 1px solid var(--grey); }
+.ve__models { display: flex; flex-wrap: wrap; gap: .375rem; }
+.ve__models button { min-width: 3rem; min-height: 2.5rem; padding: .25rem .75rem; border: 1px solid var(--line); border-radius: 2px; font-family: var(--font-draw); font-size: 1.125rem; transition: border-color .15s, background-color .15s, color .15s; }
+.ve__models button:hover { border-color: var(--ink); }
+.ve__models button[aria-pressed="true"] { border-color: var(--ink); background: var(--ink); color: var(--white); }
+.btn { display: inline-flex; align-items: center; min-height: 2.75rem; padding: .55rem 1.2rem; border-radius: var(--radius); background: var(--red); color: var(--white); font-weight: 600; font-size: .9375rem; text-decoration: none; }
+.btn:hover { background: var(--red-dark); }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="container">
+    <b>Каталог на главной · раскрытие групп</b>
+    <nav aria-label="Варианты">
+      <a href="#a">A · Разворот</a><a href="#b">B · Гармошка</a><a href="#c">C · Переворот</a><a href="#d">D · Раздача</a><a href="#e">E · Витрина</a>
+    </nav>
+  </div>
+</header>
+
+<section class="variant" id="a">
+  <div class="container">
+    <div class="variant__tag"><span>A</span><strong>Разворот вправо</strong>
+      <p>Карточка группы встаёт в начало своего ряда, а <b>модели выезжают из неё вправо</b> веером карточек. Соседи по ряду
+        плавно уходят ниже. На телефоне модели раскрываются под карточкой сеткой 2×2.</p></div>
+    <h2 class="block-title">Гидравлическое оборудование</h2>
+    <ul class="grid va" data-va></ul>
+  </div>
+</section>
+
+<section class="variant" id="b">
+  <div class="container">
+    <div class="variant__tag"><span>B</span><strong>Гармошка</strong>
+      <p>Все пять групп — вертикальные полосы в один ряд. Наведение или клик <b>раздвигает полосу</b>: внутри большой рендер
+        и переключатель моделей (наведение на модель меняет картинку). Компактно — весь каталог в одну высоту экрана.
+        На телефоне — обычный аккордеон сверху вниз.</p></div>
+    <h2 class="block-title">Гидравлическое оборудование</h2>
+    <ul class="vb" data-vb></ul>
+  </div>
+</section>
+
+<section class="variant" id="c">
+  <div class="container">
+    <div class="variant__tag"><span>C</span><strong>Переворот</strong>
+      <p>Клик по стопке <b>переворачивает карточку</b>, на обороте — модели плиткой с кодами. Сетка не двигается,
+        ничего не прыгает; ↺ возвращает лицевую сторону. Хорошо на телефоне: всё в границах карточки.</p></div>
+    <h2 class="block-title">Гидравлическое оборудование</h2>
+    <ul class="grid" data-vc></ul>
+  </div>
+</section>
+
+<section class="variant" id="d">
+  <div class="container">
+    <div class="variant__tag"><span>D</span><strong>Раздача</strong>
+      <p>Клик по стопке затемняет страницу, и <b>листы разлетаются из колоды на стол</b> лёгким веером. Закрытие (фон, Esc)
+        собирает их обратно в карточку. Самый эффектный, но перекрывает страницу.</p></div>
+    <h2 class="block-title">Гидравлическое оборудование</h2>
+    <ul class="grid" data-vd></ul>
+  </div>
+</section>
+
+<section class="variant" id="e">
+  <div class="container">
+    <div class="variant__tag"><span>E</span><strong>Витрина</strong>
+      <p>Слева список групп, справа <b>большой «лист чертежа»</b> с рендером выбранной модели, огромным контурным кодом
+        и переключателем моделей. Это уже не плитки, а шоурум: одна модель крупно. На телефоне группы — лента сверху.</p></div>
+    <h2 class="block-title">Гидравлическое оборудование</h2>
+    <div class="ve" data-ve></div>
+  </div>
+</section>
+
+<div class="vd-overlay" hidden data-vd-overlay>
+  <div class="vd-backdrop" data-vd-close></div>
+  <div class="vd-stage" role="dialog" aria-modal="true" aria-labelledby="vd-title">
+    <h3 id="vd-title"></h3>
+    <ul class="vd-hand"></ul>
+    <button class="vd-close" type="button" data-vd-close>Собрать обратно</button>
+  </div>
+</div>
+
+<script>
+// Grouping as on the site now (apps/core/catalog.py → EQUIPMENT_GROUPS).
+const IMG = "../../static/img/catalog/";
+const S = "/podemniki/nozhnichnye/", P = "/podemniki/dlya-okrasochnyh-kamer/";
+const GROUPS = [
+  { slug: "scissor", title: "Ножничные подъёмники", url: S, cover: "nozhnichnyj-podemnik-800", models: [
+    { code: "1X", title: "Ножничный подъёмник 1X", url: S + "1x/", img: "nozhnichnyj-podemnik-800" },
+    { code: "2X", title: "Ножничный подъёмник 2X", url: S + "2x/", img: "nozhnichnyj-podemnik-2x-800" },
+    { code: "3X", title: "Ножничный подъёмник 3X", url: S + "3x/", img: "nozhnichnyj-podemnik-3x-800" },
+    { code: "4X", title: "Ножничный подъёмник 4X", url: S + "4x/", img: "nozhnichnyj-podemnik-4x-800" } ] },
+  { slug: "paint", title: "Окрасочные платформы", url: P, cover: "podemnik-dlya-okrasochnoj-kamery-800", models: [
+    { code: "1X", title: "Окрасочная платформа 1X", url: P + "1x/", img: "podemnik-dlya-okrasochnoj-kamery-800" },
+    { code: "2D", title: "Окрасочная платформа 2D", url: P + "2d/", img: "podemnik-dlya-okrasochnoj-kamery-2d-800" } ] },
+  { slug: "cars", title: "Автомобильные подъёмники", url: "/podemniki/avtomobilnye/", cover: "chetyrehstoechnyj-podemnik-800", models: [
+    { code: "Автомобильный", title: "Автомобильный подъёмник", url: "/podemniki/avtomobilnye/", img: "avtomobilnyj-podemnik-220" },
+    { code: "Четырёхстоечный", title: "Четырёхстоечный подъёмник", url: "/podemniki/chetyrehstoechnye/", img: "chetyrehstoechnyj-podemnik-800" } ] },
+  { slug: "console", title: "Консольный подъёмник 1L", url: "/podemniki/konsolnye/", cover: "konsolnyj-podemnik-124", models: [] },
+  { slug: "trash", title: "Подъёмник для мусорных контейнеров", url: "/podemniki/dlya-musornyh-kontejnerov/", cover: "podemnik-dlya-musornyh-kontejnerov-576", models: [] },
+];
+const src = (name) => `${IMG}${name}.webp`;
+const img = (name, alt, extra = "") => `<img src="${src(name)}" alt="${alt}" loading="lazy" decoding="async" ${extra}>`;
+const href = (u) => `href="#" data-href="${u}"`; // the mockup goes nowhere
+const count = (g) => `${g.models.length} модели`;
+const chev = `<span class="chev" aria-hidden="true">›</span>`;
+const tileInner = (g) => `${g.models.length ? `<span class="badge">${count(g)} ${chev}</span>` : ""}
+  <span class="tile__img">${img(g.cover, g.title)}</span><h3 class="tile__title">${g.title}</h3>`;
+const tile = (g, attrs = "") => g.models.length
+  ? `<button class="tile" type="button" aria-expanded="false" ${attrs}>${tileInner(g)}</button>`
+  : `<a class="tile" ${href(g.url)}>${tileInner(g)}</a>`;
+const mini = (m) => `<a class="mini" ${href(m.url)} aria-label="${m.title}"><span class="mini__img">${img(m.img, "")}</span><span class="code">${m.code}</span></a>`;
+const swap = (fn) => (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches)
+  ? document.startViewTransition(fn) : fn();
+
+/* ---------- A · Разворот ---------- */
+const va = document.querySelector("[data-va]");
+va.innerHTML = GROUPS.map((g) => `<li class="va__item" data-slug="${g.slug}">
+  <div class="va__cover ${g.models.length ? "stacked" : ""}" style="view-transition-name: va-${g.slug}">${tile(g)}</div>
+  ${g.models.length ? `<div class="va__models" style="--n:${g.models.length}">
+    <button class="va__close" type="button" aria-label="Свернуть">×</button>
+    <ul class="va__list">${g.models.map((m) => `<li>${mini(m)}</li>`).join("")}</ul></div>` : ""}
+</li>`).join("");
+let vaOpen = null;
+function vaToggle(item) {
+  const next = item === vaOpen ? null : item;
+  swap(() => {
+    if (vaOpen) { vaOpen.classList.remove("is-open"); vaOpen.style.gridRow = ""; vaOpen.querySelector(".tile").setAttribute("aria-expanded", "false"); }
+    vaOpen = next;
+    if (!next) return;
+    // The card takes the start of the row it sits in; its row-mates move below.
+    const tops = [...new Set([...va.children].map((li) => li.offsetTop))].sort((a, b) => a - b);
+    next.style.gridRow = tops.indexOf(next.offsetTop) + 1;
+    next.classList.add("is-open");
+    next.querySelector(".tile").setAttribute("aria-expanded", "true");
+  });
+}
+va.addEventListener("click", (e) => {
+  const item = e.target.closest(".va__item");
+  if (item && (e.target.closest("button.tile") || e.target.closest(".va__close"))) vaToggle(item);
+});
+
+/* ---------- B · Гармошка ---------- */
+const vb = document.querySelector("[data-vb]");
+vb.innerHTML = GROUPS.map((g, i) => {
+  const models = g.models.length ? g.models : [{ code: "", title: g.title, url: g.url, img: g.cover }];
+  return `<li class="vb__item${i ? "" : " is-active"}">
+    <button class="vb__spine" type="button" aria-label="${g.title}">
+      ${g.models.length ? `<span class="vb__spine-count">${count(g)}</span>` : ""}
+      <img src="${src(g.cover)}" alt="" decoding="async"><span class="vb__spine-title">${g.title}</span></button>
+    <div class="vb__stage">
+      <div class="vb__head"><h3>${g.title}</h3><a ${href(g.url)}>${g.models.length ? "Весь раздел" : "Подробнее"} →</a></div>
+      <div class="vb__hero">${models.map((m, j) => img(m.img, m.title, `class="${j ? "" : "is-current"}"`)).join("")}</div>
+      ${g.models.length ? `<div class="vb__thumbs">${models.map((m, j) =>
+        `<a ${href(m.url)} data-j="${j}" class="${j ? "" : "is-current"}">${img(m.img, "")}<span class="code">${m.code}</span></a>`).join("")}</div>` : "<div></div>"}
+    </div></li>`;
+}).join("");
+const vbItems = [...vb.children];
+const vbActivate = (item) => vbItems.forEach((it) => it.classList.toggle("is-active", it === item));
+vbItems.forEach((item) => {
+  item.querySelector(".vb__spine").addEventListener("click", () => vbActivate(item));
+  item.addEventListener("pointerenter", (e) => e.pointerType === "mouse" && innerWidth >= 768 && vbActivate(item));
+  item.querySelectorAll(".vb__thumbs a").forEach((a) => {
+    const show = () => {
+      item.querySelectorAll(".vb__thumbs a").forEach((x) => x.classList.toggle("is-current", x === a));
+      item.querySelectorAll(".vb__hero img").forEach((im, j) => im.classList.toggle("is-current", j === +a.dataset.j));
+    };
+    a.addEventListener("pointerenter", show);
+    a.addEventListener("focus", show);
+  });
+});
+
+/* ---------- C · Переворот ---------- */
+const vc = document.querySelector("[data-vc]");
+vc.innerHTML = GROUPS.map((g) => g.models.length
+  ? `<li class="vc__item stacked"><div class="vc__card">
+      <div class="vc__face vc__front">${tile(g)}</div>
+      <div class="vc__face vc__back" inert>
+        <div class="vc__back-head"><h3>${g.title}</h3><button class="vc__flip" type="button" aria-label="Вернуть карточку">↺</button></div>
+        <ul class="vc__models" style="grid-template-rows: repeat(${Math.ceil(g.models.length / 2)}, 1fr)">${g.models.map((m) => `<li>${mini(m)}</li>`).join("")}</ul>
+      </div></div></li>`
+  : `<li class="vc__item">${tile(g)}</li>`).join("");
+vc.addEventListener("click", (e) => {
+  const item = e.target.closest(".vc__item");
+  if (!item || !(e.target.closest("button.tile") || e.target.closest(".vc__flip"))) return;
+  const flipped = item.classList.toggle("is-flipped");
+  item.querySelector(".vc__front").inert = flipped;
+  item.querySelector(".vc__back").inert = !flipped;
+  setTimeout(() => item.querySelector(flipped ? ".vc__back .mini" : "button.tile").focus({ preventScroll: true }), 400);
+});
+
+/* ---------- D · Раздача ---------- */
+const vd = document.querySelector("[data-vd]");
+vd.innerHTML = GROUPS.map((g) => `<li class="${g.models.length ? "stacked" : ""}" data-slug="${g.slug}">${tile(g)}</li>`).join("");
+const overlay = document.querySelector("[data-vd-overlay]");
+const hand = overlay.querySelector(".vd-hand");
+let vdFrom = null;
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function deal(fromTile, back) {
+  // Each sheet flies between the deck (the clicked card) and its place in the hand.
+  const from = fromTile.getBoundingClientRect();
+  const cards = [...hand.children];
+  return Promise.all(cards.map((li, i) => {
+    li.style.transform = "";
+    const to = li.getBoundingClientRect();
+    const mid = i - (cards.length - 1) / 2;
+    const rest = innerWidth >= 768 ? `rotate(${mid * 3}deg) translateY(${Math.abs(mid) * 8}px)` : "none";
+    const start = `translate(${from.left + from.width / 2 - (to.left + to.width / 2)}px, ${from.top + from.height / 2 - (to.top + to.height / 2)}px) scale(${from.width / to.width}) rotate(${(i % 2 ? 1 : -1) * 4}deg)`;
+    li.style.transform = rest;
+    if (reduce) return Promise.resolve();
+    const frames = [{ transform: start, opacity: .6 }, { transform: rest, opacity: 1 }];
+    return li.animate(back ? frames.reverse() : frames, {
+      duration: back ? 380 : 620, delay: (back ? cards.length - 1 - i : i) * 70, easing: "cubic-bezier(.2, .8, .2, 1)", fill: "both",
+    }).finished;
+  }));
+}
+vd.addEventListener("click", (e) => {
+  const t = e.target.closest("button.tile");
+  if (!t) return;
+  const g = GROUPS.find((x) => x.slug === t.parentElement.dataset.slug);
+  overlay.querySelector("h3").textContent = g.title;
+  hand.innerHTML = g.models.map((m) => `<li>${mini(m)}</li>`).join("");
+  overlay.hidden = false;
+  overlay.querySelector(".vd-backdrop").className = "vd-backdrop vd-fade";
+  overlay.querySelector("h3").className = "vd-fade";
+  t.setAttribute("aria-expanded", "true");
+  t.style.visibility = "hidden";
+  vdFrom = t;
+  deal(t, false).then(() => hand.querySelector(".mini").focus({ preventScroll: true }));
+});
+async function vdClose() {
+  if (!vdFrom) return;
+  const t = vdFrom; vdFrom = null;
+  overlay.querySelector(".vd-backdrop").className = "vd-backdrop vd-fade-out";
+  overlay.querySelector("h3").className = "vd-fade-out";
+  await deal(t, true);
+  overlay.hidden = true;
+  t.style.visibility = "";
+  t.setAttribute("aria-expanded", "false");
+  t.focus({ preventScroll: true });
+}
+overlay.addEventListener("click", (e) => e.target.closest("[data-vd-close]") && vdClose());
+document.addEventListener("keydown", (e) => e.key === "Escape" && vdClose());
+
+/* ---------- E · Витрина ---------- */
+const ve = document.querySelector("[data-ve]");
+ve.innerHTML = `<div class="ve__tabs" role="tablist" aria-label="Группы">${GROUPS.map((g, i) =>
+  `<button class="ve__tab" type="button" role="tab" aria-selected="${!i}" data-i="${i}">${img(g.cover, "")}
+    <span><b>${g.title}</b><small>${g.models.length ? count(g) : "1 модель"}</small></span></button>`).join("")}</div>
+  <div class="ve__stage" role="tabpanel"><span class="ve__watermark" aria-hidden="true"></span><h3 class="ve__title"></h3>
+    <div class="ve__hero"></div><div class="ve__bar"><div class="ve__models"></div><a class="btn" href="#">Подробнее</a></div></div>`;
+const stage = ve.querySelector(".ve__stage");
+let veGroup = 0;
+function veShow(gi, mi = 0) {
+  const g = GROUPS[gi];
+  const models = g.models.length ? g.models : [{ code: g.slug === "console" ? "1L" : "", title: g.title, url: g.url, img: g.cover }];
+  if (gi !== veGroup || !stage.querySelector(".ve__hero img")) {
+    veGroup = gi;
+    stage.querySelector(".ve__title").textContent = g.title;
+    stage.querySelector(".ve__hero").innerHTML = models.map((m) => img(m.img, m.title)).join("");
+    stage.querySelector(".ve__models").innerHTML = models.length > 1
+      ? models.map((m, j) => `<button type="button" aria-pressed="false" data-j="${j}">${m.code}</button>`).join("") : "";
+    ve.querySelectorAll(".ve__tab").forEach((b, j) => b.setAttribute("aria-selected", j === gi));
+  }
+  const m = models[mi];
+  // Long names (car lifts) are too wide for the outline code: the watermark shows only short codes.
+  stage.querySelector(".ve__watermark").textContent = m.code.length <= 3 ? m.code : "";
+  stage.querySelector(".btn").dataset.href = m.url;
+  stage.querySelector(".btn").textContent = models.length > 1 ? `Подробнее о ${m.code.length <= 3 ? m.code : "модели"}` : "Подробнее";
+  stage.querySelectorAll(".ve__models button").forEach((b, j) => b.setAttribute("aria-pressed", j === mi));
+  const imgs = stage.querySelectorAll(".ve__hero img");
+  requestAnimationFrame(() => imgs.forEach((im, j) => im.classList.toggle("is-current", j === mi)));
+}
+ve.addEventListener("click", (e) => {
+  const tab = e.target.closest(".ve__tab");
+  if (tab) return veShow(+tab.dataset.i);
+  const mb = e.target.closest(".ve__models button");
+  if (mb) veShow(veGroup, +mb.dataset.j);
+});
+ve.addEventListener("pointerover", (e) => {
+  const mb = e.target.closest(".ve__models button");
+  if (mb && e.pointerType === "mouse") veShow(veGroup, +mb.dataset.j);
+});
+veShow(0);
+
+document.addEventListener("click", (e) => { if (e.target.closest('a[href="#"]')) e.preventDefault(); });
+</script>
+</body>
+</html>

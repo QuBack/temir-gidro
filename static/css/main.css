@@ -875,11 +875,6 @@ main .reveal--photo.is-visible { clip-path: inset(-3rem); }
 @media (min-width: 60rem) { .lift-tiles { grid-template-columns: repeat(4, 1fr); gap: 1.25rem; } }
 /* Any number of cards in one row on wide screens (e.g. "other lifts": five lines). */
 @media (min-width: 60rem) { .lift-tiles--fit { grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); } }
-@media (min-width: 60rem) {
-  .lift-tiles--all { grid-template-columns: repeat(12, 1fr); }
-  .lift-tiles--all > li { grid-column: span 3; }
-  .lift-tiles--all > li:nth-child(n+5) { grid-column: span 4; }
-}
 .tiles-cta {
   display: grid; gap: 1rem; justify-items: start; margin-top: 2rem; padding: 1.5rem;
   border-radius: var(--radius); background: var(--white);
@@ -910,6 +905,96 @@ main .reveal--photo.is-visible { clip-path: inset(-3rem); }
   .lift-tile__media { inset: .75rem .75rem 6rem; }
   .lift-tile__desc { padding: .75rem .5rem; font-size: .8125rem; line-height: 1.3; }
   .lift-tile h3 { font-size: 1rem; }
+}
+
+/* Home catalog: six cards; a series is a stack that opens its models in a panel under the row. */
+.eq-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem 1rem; }
+/* Rows of three; an incomplete last row stretches its cards to the full width
+   (panels are list items too, hence "of .eq-item"). */
+@media (min-width: 60rem) {
+  .eq-grid { grid-template-columns: repeat(6, 1fr); gap: 2rem 1.5rem; }
+  .eq-item { grid-column: span 2; }
+  .eq-item:nth-child(3n+1 of .eq-item):nth-last-child(2 of .eq-item),
+  .eq-item:nth-child(3n+2 of .eq-item):nth-last-child(1 of .eq-item) { grid-column: span 3; }
+  .eq-item:nth-child(3n+1 of .eq-item):nth-last-child(1 of .eq-item) { grid-column: 1 / -1; }
+}
+@media (max-width: 59.99rem) {
+  .eq-item:nth-child(odd of .eq-item):nth-last-child(1 of .eq-item) { grid-column: 1 / -1; }
+}
+/* Every card keeps room for the sheet edges, so a row lines up and the panel finds its row. */
+.eq-item { position: relative; isolation: isolate; min-width: 0; margin: .75rem .75rem 0 0; }
+.eq-item--group::before, .eq-item--group::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: var(--radius);
+  background: #f7f8f7; box-shadow: 0 0 0 1px var(--line), var(--shadow-card); transition: transform .35s cubic-bezier(.3, .7, .2, 1);
+}
+.eq-item--group::before { transform: translate(6px, -6px); }
+.eq-item--group::after { z-index: -2; background: #eceeed; transform: translate(12px, -12px); }
+.eq-item--group:hover::before { transform: translate(8px, -8px); }
+.eq-item--group:hover::after { transform: translate(16px, -16px); }
+.eq-card {
+  position: relative; display: block; height: clamp(14rem, 24vw, 17.5rem); overflow: hidden;
+  border-radius: var(--radius); background: var(--white); box-shadow: var(--shadow-card);
+  text-align: center; text-decoration: none; transition: box-shadow .3s;
+}
+.eq-card:hover { box-shadow: 0 12px 28px rgb(34 40 43 / .18); }
+.eq-card__media { position: absolute; inset: 1.25rem 1.25rem 4.5rem; transition: transform .5s cubic-bezier(.4, .7, .04, .88); }
+.eq-card__media picture { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.eq-card__media img { max-width: 100%; max-height: 100%; width: auto; height: auto; }
+.eq-card:hover .eq-card__media { transform: scale(1.05); }
+.eq-card::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to bottom, rgb(20 24 26 / 0) 62%, rgb(20 24 26 / .3) 80%, rgb(20 24 26 / .6));
+}
+.eq-card h3 { position: absolute; inset: auto 0 0; z-index: 1; padding: 1rem; color: var(--white); font-family: var(--font-cond); font-size: clamp(1.125rem, 1.6vw, 1.375rem); line-height: 1.1; font-weight: 700; text-shadow: 0 1px 6px rgb(0 0 0 / .45); transition: color .15s; }
+.eq-card:hover h3 { color: #ff8a80; }
+.eq-badge {
+  position: absolute; top: .65rem; right: .65rem; z-index: 2; display: inline-flex; align-items: center; gap: .25rem;
+  padding: .15rem .5rem; border: 1px solid var(--ink); border-radius: 2px; background: var(--white);
+  font-family: var(--font-cond); font-size: .9375rem; font-weight: 600; line-height: 1.4; color: var(--ink);
+}
+/* The chevron only means something once JS makes the card a toggle. */
+.eq-badge .icon { display: none; width: .9rem; height: .9rem; stroke-width: 2.4; rotate: 90deg; transition: rotate .3s; }
+[data-eq-toggle][aria-expanded] .eq-badge .icon { display: block; }
+.eq-card[aria-expanded="true"] { box-shadow: 0 0 0 2px var(--ink), var(--shadow-card); }
+.eq-card[aria-expanded="true"] .eq-badge { background: var(--ink); color: var(--white); }
+.eq-card[aria-expanded="true"] .eq-badge .icon { rotate: -90deg; }
+
+.eq-panel { grid-column: 1 / -1; display: grid; grid-template-rows: 0fr; margin-block: -.5rem; transition: grid-template-rows .4s cubic-bezier(.3, .7, .2, 1); }
+.eq-panel.is-open { grid-template-rows: 1fr; }
+.eq-panel.is-instant { transition: none; }
+.eq-panel__clip { min-height: 0; overflow: hidden; }
+/* The notch points at the card that opened the panel (--notch is set by site.js). */
+.eq-panel__body { position: relative; margin-top: 14px; padding: clamp(1.25rem, 3vw, 2rem); border-top: 3px solid var(--ink); background: var(--white); box-shadow: var(--shadow-card); }
+.eq-panel__body::before { content: ""; position: absolute; top: -14px; left: var(--notch, 50%); translate: -50% 0; border: 11px solid transparent; border-top: 0; border-bottom-color: var(--ink); }
+.eq-panel__title { margin-bottom: 1.25rem; font-family: var(--font-cond); font-size: clamp(1.5rem, 2.5vw, 2rem); line-height: 1.05; font-weight: 700; }
+.eq-models { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: 1rem; }
+.eq-model {
+  display: grid; grid-template-rows: 1fr auto; gap: .5rem; height: clamp(12rem, 20vw, 15rem); padding: 1rem;
+  border: 1px solid var(--line); border-radius: var(--radius); color: var(--ink); text-decoration: none;
+  transition: border-color .2s, transform .25s cubic-bezier(.3, .7, .2, 1);
+}
+.eq-model:hover { border-color: var(--ink); transform: translateY(-3px); }
+.eq-model__media { position: relative; min-height: 0; }
+.eq-model__media picture { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.eq-model__media img { max-width: 100%; max-height: 100%; width: auto; height: auto; }
+.eq-model__cap { font-family: var(--font-draw); font-size: 1.25rem; line-height: 1; color: var(--red); }
+.eq-panel.is-open .eq-model { animation: eq-rise .45s cubic-bezier(.3, .7, .2, 1) .12s both; }
+/* One after another (no inline styles: the CSP forbids them). */
+.eq-panel.is-open li:nth-child(2) .eq-model { animation-delay: .18s; }
+.eq-panel.is-open li:nth-child(3) .eq-model { animation-delay: .24s; }
+.eq-panel.is-open li:nth-child(4) .eq-model { animation-delay: .3s; }
+@keyframes eq-rise { from { opacity: 0; transform: translateY(12px); } }
+@media (prefers-reduced-motion: reduce) {
+  .eq-panel, .eq-item--group::before, .eq-item--group::after { transition: none; }
+  .eq-panel.is-open .eq-model { animation: none; }
+}
+@media (max-width: 39.99rem) {
+  .eq-card__media { inset: 2.5rem .75rem 4.5rem; }
+  .eq-card h3 { padding: .75rem .5rem; font-size: 1rem; }
+  .eq-badge { font-size: .875rem; }
+  .eq-models { grid-template-columns: repeat(2, 1fr); gap: .75rem; }
+  .eq-model { height: 11rem; padding: .75rem; }
+  .eq-model__cap { font-size: 1rem; overflow-wrap: anywhere; }
 }
 
 .cat-hero { padding-bottom: clamp(2.5rem, 5vw, 4rem); }

@@ -80,6 +80,29 @@ def test_home_steps_timeline(client):
     assert "img/steps/etap-montazh-1536.webp" in html
 
 
+def test_home_catalog_groups(client):
+    html = client.get("/").content.decode()
+    # Five cards; the three groups link to their sections and carry their models in a hidden
+    # panel, so every model page stays linked from the home page without JS.
+    assert html.count('class="eq-card"') == 5
+    assert html.count("data-eq-toggle") == 3
+    for slug in ("nozhnichnye", "okrasochnye", "avtomobilnye"):
+        assert f'id="eq-{slug}" hidden' in html
+    for url in ("/podemniki/nozhnichnye/4x/", "/podemniki/dlya-okrasochnyh-kamer/2d/", "/podemniki/chetyrehstoechnye/",
+                "/podemniki/konsolnye/"):
+        assert f'href="{url}"' in html
+
+
+def test_four_post_lifts_are_under_car_lifts_in_menus(client):
+    html = client.get("/kontakty/").content.decode()
+    # No section of their own in the mega-menu and the footer, a model under car lifts instead.
+    assert "Четырёхстоечные подъёмники" not in html
+    cars = html.split('href="/podemniki/avtomobilnye/">Автомобильные подъёмники</a>')[1].split("mega__cat-link")[0]
+    assert 'href="/podemniki/chetyrehstoechnye/"' in cars
+    # The page itself stays.
+    assert client.get("/podemniki/chetyrehstoechnye/").status_code == 200
+
+
 def test_moved_article_has_author_and_photos(client):
     html = client.get("/stati/nozhnichnyj-podemnik-konstrukciya-i-bezopasnost/").content.decode()
     assert html.count("<h1") == 1 and "Владимир Теплов" in html

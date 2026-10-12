@@ -994,30 +994,53 @@ for _cat in CATEGORIES:
     _cat["models"] = _MODELS.get(_cat["url"]) or _placeholders(_cat)
 del _cat
 
+# Menus (header mega-menu, footer): four-post lifts sit under car lifts as a second model.
+# Their own page stays where it is.
+_FOUR_POST = "/podemniki/chetyrehstoechnye/"
+_CARS = "/podemniki/avtomobilnye/"
+NAV_CATEGORIES = [
+    {**c, "models": _MODELS[_CARS] + _MODELS[_FOUR_POST]} if c["url"] == _CARS else c
+    for c in CATEGORIES
+    if c["url"] != _FOUR_POST
+]
+
 # Photo tiles on the catalog page: the 1X–4X series.
 SCISSOR_SERIES = {"title": _("Ножничные подъёмники"), "url": _SCISSORS, "models": _MODELS[_SCISSORS]}
 
-# Home page tiles: every model, each with its render. Scissor series first (a row of four).
+# Home page catalog: five cards. A series is one card that opens its models under the row
+# (without JS it is a link to the section); a single lift links straight to its page.
 _PAINT = "/podemniki/dlya-okrasochnyh-kamer/"
-EQUIPMENT_TILES = [
-    {"title": _("Ножничный подъёмник 1X"), "label": _("Одна пара ножниц"), "url": _SCISSORS + "1x/",
-     "image": SCISSOR_1X},
-    {"title": _("Ножничный подъёмник 2X"), "label": _("Две пары ножниц"), "url": _SCISSORS + "2x/",
-     "image": SCISSOR_2X},
-    {"title": _("Ножничный подъёмник 3X"), "label": _("Три пары ножниц"), "url": _SCISSORS + "3x/",
-     "image": SCISSOR_3X},
-    {"title": _("Ножничный подъёмник 4X"), "label": _("Четыре пары ножниц"), "url": _SCISSORS + "4x/",
-     "image": SCISSOR_4X},
-    {"title": _("Четырёхстоечный подъёмник"), "label": _("Автосервис и паркинг"),
-     "url": "/podemniki/chetyrehstoechnye/", "image": CATEGORIES[1]["image"]},
-    {"title": _("Автомобильный подъёмник"), "label": _("Между уровнями паркинга"),
-     "url": "/podemniki/avtomobilnye/", "image": CATEGORIES[4]["image"]},
-    {"title": _("Консольный подъёмник 1L"), "label": _("Грузы между этажами"),
-     "url": "/podemniki/konsolnye/", "image": CATEGORIES[5]["image"]},
-    {"title": _("Подъёмник для мусорных контейнеров"), "label": _("Подземные площадки"),
-     "url": "/podemniki/dlya-musornyh-kontejnerov/", "image": CATEGORIES[2]["image"]},
-    {"title": _("Окрасочная платформа 1X"), "label": _("Для окрасочных камер"), "url": _PAINT + "1x/",
-     "image": PAINT_1X},
-    {"title": _("Окрасочная платформа 2D"), "label": _("Для окрасочных камер"), "url": _PAINT + "2d/",
-     "image": PAINT_2D},
+EQUIPMENT_GROUPS = [
+    {
+        "slug": "nozhnichnye", "title": _("Ножничные подъёмники"), "url": _SCISSORS, "image": SCISSOR_1X,
+        "badge": _("4 модели"),
+        "models": [
+            {"code": "1X", "title": _("Ножничный подъёмник 1X"), "url": _SCISSORS + "1x/", "image": SCISSOR_1X},
+            {"code": "2X", "title": _("Ножничный подъёмник 2X"), "url": _SCISSORS + "2x/", "image": SCISSOR_2X},
+            {"code": "3X", "title": _("Ножничный подъёмник 3X"), "url": _SCISSORS + "3x/", "image": SCISSOR_3X},
+            {"code": "4X", "title": _("Ножничный подъёмник 4X"), "url": _SCISSORS + "4x/", "image": SCISSOR_4X},
+        ],
+    },
+    {
+        "slug": "okrasochnye", "title": _("Окрасочные платформы"), "url": _PAINT, "image": PAINT_1X,
+        "badge": _("2 модели"),
+        "models": [
+            {"code": "1X", "title": _("Окрасочная платформа 1X"), "url": _PAINT + "1x/", "image": PAINT_1X},
+            {"code": "2D", "title": _("Окрасочная платформа 2D"), "url": _PAINT + "2d/", "image": PAINT_2D},
+        ],
+    },
+    {
+        # The four-post render covers the stack: the car lift's own one is only 220 px wide.
+        "slug": "avtomobilnye", "title": _("Автомобильные подъёмники"), "url": _CARS, "image": CATEGORIES[1]["image"],
+        "badge": _("2 модели"),
+        "models": [
+            {"code": _("Автомобильный"), "title": _("Автомобильный подъёмник"), "url": _CARS,
+             "image": CATEGORIES[4]["image"]},
+            {"code": _("Четырёхстоечный"), "title": _("Четырёхстоечный подъёмник"), "url": _FOUR_POST,
+             "image": CATEGORIES[1]["image"]},
+        ],
+    },
+    {"title": _("Консольный подъёмник 1L"), "url": "/podemniki/konsolnye/", "image": CATEGORIES[5]["image"]},
+    {"title": _("Подъёмник для мусорных контейнеров"), "url": "/podemniki/dlya-musornyh-kontejnerov/",
+     "image": CATEGORIES[2]["image"]},
 ]

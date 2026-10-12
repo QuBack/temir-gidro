@@ -41,7 +41,7 @@ class HomeView(SeoMixin, TemplateView):
             hero_lift=catalog.HERO_LIFT,
             hero_image=catalog.HERO_IMAGE,
             hero_video=catalog.HERO_VIDEO,
-            equipment_tiles=catalog.EQUIPMENT_TILES,
+            equipment_groups=catalog.EQUIPMENT_GROUPS,
             cylinders=catalog.CYLINDERS,
             stats=catalog.STATS,
             advantages=catalog.ADVANTAGES,
