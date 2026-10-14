@@ -1313,23 +1313,61 @@ html.lightbox-open body { padding-right: var(--scrollbar, 0); }
 .model-3d { margin-top: clamp(2.5rem, 5vw, 3.5rem); }
 .model-3d h3 { margin-bottom: .25rem; font-family: var(--font-cond); font-size: 1.5rem; font-weight: 700; }
 .model-3d__hint { margin: 0 0 1rem; color: var(--muted); }
+/* Scene switch (the lift / the lift in its shaft): a segmented control above the stage. */
+.model-3d__scenes { display: inline-flex; margin-bottom: 1rem; border-radius: var(--radius); background: var(--white); box-shadow: var(--shadow-card); }
+.model-3d__scene {
+  min-height: 2.75rem; padding: .55rem 1.25rem; border: 0; border-radius: var(--radius); background: transparent;
+  color: var(--ink); font: inherit; font-size: .9375rem; font-weight: 600; cursor: pointer;
+  transition: color .15s, background-color .15s;
+}
+.model-3d__scene:hover { color: var(--red); }
+.model-3d__scene[aria-pressed="true"] { background: var(--red); color: var(--white); }
 .model-3d__stage { position: relative; aspect-ratio: 4 / 3; box-shadow: var(--shadow-card); }
 /* The picture keeps clear of the button in the corner. */
-.model-3d__stage picture { position: absolute; inset: 4.25rem clamp(1rem, 3vw, 2rem) clamp(1rem, 3vw, 2rem); }
+.model-3d__stage picture { position: absolute; inset: 5.25rem clamp(1rem, 3vw, 2rem) clamp(1rem, 3vw, 2rem); }
 .model-3d__stage img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 18px 16px rgb(34 40 43 / .12)); }
 @media (min-width: 60rem) { .model-3d__stage { aspect-ratio: 2 / 1; } }
 .model3d-viewer { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; --poster-color: transparent; }
 [data-model3d]:not(.is-3d) .model3d-viewer { opacity: 0; pointer-events: none; }
 [data-model3d].is-3d picture { visibility: hidden; }
+/* «Покрутить в 3D»: a raised red key — a darker lip under it, a highlight on top — that sinks
+   when pressed and pulses gently until the first click. Once the model is on, «Показать фото»
+   steps back to a quiet white chip so it does not compete with the model. */
 .model3d-toggle {
-  position: absolute; top: .75rem; right: .75rem; z-index: 3;
-  display: inline-flex; align-items: center; gap: .5rem; min-height: 2.75rem; padding: .55rem 1rem;
-  border: 0; border-radius: var(--radius); background: rgb(255 255 255 / .94); color: var(--ink);
-  font: inherit; font-size: .9375rem; font-weight: 600; cursor: pointer;
-  box-shadow: 0 4px 14px rgb(0 0 0 / .18); transition: color .15s, background-color .15s;
+  position: absolute; top: 1rem; right: 1rem; z-index: 3;
+  display: inline-flex; align-items: center; gap: .65rem; min-height: 3.25rem; padding: .75rem 1.4rem;
+  border: 0; border-radius: calc(var(--radius) * 2);
+  background: linear-gradient(180deg, #e0262d 0%, var(--red) 55%, #ad1318 100%); color: var(--white);
+  font: inherit; font-size: 1.0625rem; font-weight: 700; letter-spacing: .01em; cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / .35),
+    0 5px 0 var(--red-dark),
+    0 10px 22px rgb(156 15 20 / .45);
+  transition: transform .12s, box-shadow .12s, filter .15s;
 }
-.model3d-toggle:hover { background: var(--white); color: var(--red); }
-.model3d-toggle .icon { width: 1.25rem; height: 1.25rem; color: var(--red); }
+.model3d-toggle:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.model3d-toggle:active {
+  transform: translateY(4px);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .25), 0 1px 0 var(--red-dark), 0 4px 10px rgb(156 15 20 / .35);
+}
+.model3d-toggle:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.model3d-toggle .icon { width: 1.5rem; height: 1.5rem; color: var(--white); }
+[data-model3d]:not(.is-3d) .model3d-toggle:not([aria-busy="true"]) { animation: model3d-call 2.4s ease-out infinite; }
+@keyframes model3d-call {
+  0% { box-shadow: inset 0 1px 0 rgb(255 255 255 / .35), 0 5px 0 var(--red-dark), 0 10px 22px rgb(156 15 20 / .45), 0 0 0 0 rgb(196 22 28 / .55); }
+  70%, 100% { box-shadow: inset 0 1px 0 rgb(255 255 255 / .35), 0 5px 0 var(--red-dark), 0 10px 22px rgb(156 15 20 / .45), 0 0 0 16px rgb(196 22 28 / 0); }
+}
+[data-model3d].is-3d .model3d-toggle {
+  min-height: 2.75rem; padding: .55rem 1rem; border-radius: var(--radius);
+  background: rgb(255 255 255 / .94); color: var(--ink); font-size: .9375rem; font-weight: 600;
+  box-shadow: 0 4px 14px rgb(0 0 0 / .18);
+}
+[data-model3d].is-3d .model3d-toggle:hover { color: var(--red); transform: none; }
+[data-model3d].is-3d .model3d-toggle .icon { color: var(--red); }
+@media (prefers-reduced-motion: reduce) {
+  [data-model3d]:not(.is-3d) .model3d-toggle:not([aria-busy="true"]) { animation: none; }
+  .model3d-toggle, .model3d-toggle:hover, .model3d-toggle:active { transform: none; }
+}
 .model3d-toggle[aria-busy="true"] { cursor: progress; }
 .model3d-toggle[aria-busy="true"] .icon { animation: model3d-spin 1s linear infinite; }
 @keyframes model3d-spin { to { transform: rotate(360deg); } }
@@ -1453,6 +1491,36 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
   .model-hero .model-gallery { width: 82%; justify-self: end; }
   /* The text sits a little above the model's middle, closer to the eye line. */
   .model-hero__info { padding-bottom: 4rem; }
+  /* A tall render (2X–4X, 800 px wide and up to 1700 px high) is fitted by height and came out small.
+     Its box reaches up into the empty band under the crumbs and down towards the section's edge, so it
+     grows without making the section taller; a wide render (1X) is fitted by width and keeps its size. */
+  /* The spare band depends on the window height (the section is at least 80svh, its content centred):
+     about 100 px above the stage at 1000 px, none at 730 px. So the render grows by up to a quarter up
+     and an eighth down on a tall screen and stays inside the stage on a short laptop one. */
+  .model-hero .model-gallery__main:not(:has(.model-gallery__slide--photo)) {
+    overflow: visible;
+    --rise: clamp(-25%, calc(300px - 40svh), 0px);
+    --drop: clamp(-12%, calc(270px - 40svh), 0px);
+  }
+  /* Shifted right by a tenth of the stage: more air between the render and the text. */
+  .model-hero .model-gallery__slide:not(.model-gallery__slide--photo) picture {
+    top: var(--rise); bottom: var(--drop);
+    left: calc(clamp(1rem, 3vw, 2rem) + 10%); right: calc(clamp(1rem, 3vw, 2rem) - 10%);
+    max-width: none;  /* the box comes from the four offsets and may be wider than the stage */
+  }
+  .model-hero .model-gallery__main::after { bottom: calc(var(--drop, 0px) - 1.1rem); left: 28%; right: 8%; }
+  /* A wide render (1X, the painting platforms) is fitted by width, so growing up does nothing for it:
+     its box reaches left into the gap before the text instead, to stand as large as the tall ones. */
+  /* …and moves right by up to a tenth of the stage, where the window has room past the container:
+     the full tenth at 1920 px, nothing at 1280 px (there the box would run off the screen). */
+  .model-hero .model-gallery__main:has(.model-gallery__slide--wide) { --shift: clamp(0px, calc((100vw - 1280px) * .085), 10%); }
+  .model-hero .model-gallery__slide.model-gallery__slide--wide picture {
+    left: calc(clamp(1rem, 3vw, 2rem) - 25% + var(--shift)); right: calc(clamp(1rem, 3vw, 2rem) - 10% - var(--shift));
+  }
+  .model-hero .model-gallery__main:has(.model-gallery__slide--wide)::after {
+    left: calc(-5% + var(--shift)); right: calc(8% - var(--shift));
+  }
+  .model-hero { overflow-x: clip; }  /* a render reaching past the container never adds a sideways scroll */
 }
 /* Line page hero (scissor lifts): the same red stage, no render, the title centred. */
 .line-hero {

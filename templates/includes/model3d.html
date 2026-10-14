@@ -1,0 +1,18 @@
+{% load i18n static images %}
+{# «3D-модель»: scenes from catalog.scene3d(). Hidden until static/js/model3d.js is running: without it there is nothing to turn. #}
+{# With several scenes, the buttons above the stage switch between them; each scene loads its own model on request. #}
+<div class="container model-3d" id="3d" hidden>
+  <h3>{% translate "3D-модель" %}</h3>
+  <p class="model-3d__hint">{% translate "Покрутите подъёмник мышью или пальцем, приблизьте колесом или щипком." %}</p>
+  {% if scenes|length > 1 %}
+  <div class="model-3d__scenes" role="group" aria-label="{% translate 'Сцена 3D-модели' %}">
+    {% for s in scenes %}<button class="model-3d__scene" type="button" data-model3d-scene="{{ forloop.counter }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">{{ s.label }}</button>{% endfor %}
+  </div>
+  {% endif %}
+  {% for s in scenes %}
+  <div class="model-3d__stage" data-model3d="{% static s.src %}" data-model3d-alt="{{ s.alt }}"{% if s.env %} data-model3d-env="{% static s.env %}"{% endif %}{% if s.exposure %} data-model3d-exposure="{{ s.exposure }}"{% endif %}{% if s.orbit %} data-model3d-orbit="{{ s.orbit }}"{% endif %}{% if scenes|length > 1 %} data-model3d-panel="{{ forloop.counter }}"{% if not forloop.first %} hidden{% endif %}{% endif %}>
+    {% picture s.image s.alt sizes="(min-width: 60rem) 40rem, 90vw" %}
+    {% include "includes/model3d_toggle.html" %}
+  </div>
+  {% endfor %}
+</div>

@@ -59,8 +59,9 @@ def test_equipment_in_sitemap(client):
 def test_painting_booth_page(client):
     html = client.get("/podemniki/dlya-okrasochnyh-kamer/").content.decode()
     assert html.count("<h1") == 1
-    assert 'id="seriya-1x"' in html and 'id="seriya-2d"' in html
+    assert 'id="seriya-1x"' in html and 'id="seriya-2d"' in html and 'id="seriya-3d"' in html
     assert 'href="/podemniki/dlya-okrasochnyh-kamer/2d/"' in html
+    assert 'href="/podemniki/dlya-okrasochnyh-kamer/3d/"' in html
 
 
 @pytest.mark.parametrize("slug", ["chetyrehstoechnye", "avtomobilnye"])

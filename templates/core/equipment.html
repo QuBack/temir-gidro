@@ -84,6 +84,7 @@
     </div>
     <figure class="eq-about__photo{% if item.about_plain %} eq-about__photo--plain{% endif %}"><a class="zoom" href="{% image_url item.about_image %}" data-zoom="scenes">{% picture item.about_image item.about_alt sizes="(min-width: 60rem) 55vw, 100vw" %}</a></figure>
   </div>
+  {% if item.scenes_3d %}{% include "includes/model3d.html" with scenes=item.scenes_3d %}{% endif %}
 </section>
 {% endif %}
 
@@ -303,4 +304,5 @@
 
 {% endblock %}
 
-{% block extra_js %}{% if tabs %}<script src="{% static 'js/tabs.js' %}" defer></script>{% endif %}<script src="{% static 'js/drawings.js' %}" defer></script>{% endblock %}
+{% block extra_js %}{% if tabs %}<script src="{% static 'js/tabs.js' %}" defer></script>{% endif %}<script src="{% static 'js/drawings.js' %}" defer></script>
+{% if item.scenes_3d %}<script src="{% static 'js/model3d.js' %}" data-viewer="{% static 'vendor/model-viewer/model-viewer.min.js' %}" data-draco="{% get_static_prefix %}vendor/draco/" defer></script>{% endif %}{% endblock %}

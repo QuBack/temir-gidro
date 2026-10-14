@@ -10,7 +10,7 @@ URL = "/podemniki/nozhnichnye/1x/"
 
 @pytest.mark.parametrize(
     "path", ["nozhnichnye/1x", "nozhnichnye/2x", "nozhnichnye/3x", "nozhnichnye/4x",
-             "dlya-okrasochnyh-kamer/1x", "dlya-okrasochnyh-kamer/2d"]
+             "dlya-okrasochnyh-kamer/1x", "dlya-okrasochnyh-kamer/2d", "dlya-okrasochnyh-kamer/3d"]
 )
 def test_model_pages_render(client, path):
     response = client.get(f"/podemniki/{path}/")
@@ -93,7 +93,7 @@ def test_model_has_one_picture_on_first_screen(client):
     assert html.count('class="model-views__item zoom"') == 2
 
 
-@pytest.mark.parametrize("slug", ["1x", "2x"])
+@pytest.mark.parametrize("slug", ["1x", "2x", "3x"])
 def test_scissor_model_has_3d_viewer(client, slug):
     html = client.get(f"/podemniki/nozhnichnye/{slug}/").content.decode()
     glb = f'data-model3d="/static/models/nozhnichnyj-podemnik-{slug}.glb"'
@@ -103,8 +103,37 @@ def test_scissor_model_has_3d_viewer(client, slug):
     assert 'src="/static/js/model3d.js"' in html and 'data-draco="/static/vendor/draco/"' in html
 
 
+def test_3d_light_per_model(client):
+    """1X and 2X were tuned to the viewer's neutral light, 3X to the renders' studio HDR."""
+    old = client.get("/podemniki/nozhnichnye/1x/").content.decode()
+    new = client.get("/podemniki/nozhnichnye/3x/").content.decode()
+    assert "data-model3d-env" not in old
+    assert 'data-model3d-env="/static/models/studiya.hdr"' in new and "data-model3d-exposure" in new
+
+
 def test_model_without_3d_has_no_viewer(client):
-    html = client.get("/podemniki/nozhnichnye/3x/").content.decode()
+    html = client.get("/podemniki/nozhnichnye/4x/").content.decode()
+    assert "data-model3d" not in html and "model3d.js" not in html
+
+
+def test_console_lift_page_has_3d_viewer(client):
+    html = client.get("/podemniki/konsolnye/").content.decode()
+    assert html.count('data-model3d="/static/models/konsolnyj-podemnik.glb"') == 1
+    assert 'id="3d" hidden' in html and 'src="/static/js/model3d.js"' in html
+    assert "data-model3d-scene" not in html  # one scene, no switch
+
+
+def test_car_lift_page_switches_two_3d_scenes(client):
+    html = client.get("/podemniki/avtomobilnye/").content.decode()
+    block = html[html.index('id="3d"'):]
+    assert block.count('data-model3d-scene="') == 2 and 'aria-pressed="true"' in block
+    assert 'data-model3d="/static/models/avtomobilnyj-podemnik.glb"' in block
+    assert 'data-model3d="/static/models/avtomobilnyj-podemnik-v-shahte.glb"' in block
+    assert 'data-model3d-panel="2" hidden' in block  # the second scene waits for its button
+
+
+def test_line_page_without_3d_has_no_viewer(client):
+    html = client.get("/podemniki/chetyrehstoechnye/").content.decode()
     assert "data-model3d" not in html and "model3d.js" not in html
 
 
@@ -112,6 +141,9 @@ def test_3d_files_are_served_from_our_static():
     from django.contrib.staticfiles import finders
 
     for path in ("models/nozhnichnyj-podemnik-1x.glb", "models/nozhnichnyj-podemnik-2x.glb",
+                 "models/nozhnichnyj-podemnik-3x.glb", "models/konsolnyj-podemnik.glb",
+                 "models/avtomobilnyj-podemnik.glb", "models/avtomobilnyj-podemnik-v-shahte.glb",
+                 "models/studiya.hdr",
                  "vendor/model-viewer/model-viewer.min.js", "vendor/draco/draco_decoder.wasm",
                  "vendor/draco/draco_wasm_wrapper.js", "js/model3d.js"):
         assert finders.find(path), path
@@ -136,3 +168,14 @@ def test_model_viewer_style_hash_matches_vendored_file(settings):
     style = re.search(r"<style>(\n:host \{.*?)</style>", source, re.S).group(1)
     digest = base64.b64encode(hashlib.sha256(style.encode()).digest()).decode()
     assert settings.MODEL_VIEWER_STYLE_HASH == f"'sha256-{digest}'"
+
+
+def test_paint_3d_model_page(client):
+    html = client.get("/podemniki/dlya-okrasochnyh-kamer/3d/").content.decode()
+    assert "Подъёмник для окрасочной камеры 3D" in html
+    assert "по высоте, вдоль рельсов и к изделию" in html  # the third direction is the point of the model
+    assert html.count('class="model-views__item zoom"') == 2  # the side and right views from the old site
+    assert 'data-kit-marker="4"' in html  # the cab is marked on the render
+    # The other painting models link to it as a sibling.
+    sibling = client.get("/podemniki/dlya-okrasochnyh-kamer/2d/").content.decode()
+    assert 'href="/podemniki/dlya-okrasochnyh-kamer/3d/"' in sibling

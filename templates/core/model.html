@@ -16,7 +16,7 @@
     {% with g=model.images.0 %}
     <div class="model-gallery">
       <div class="model-gallery__main">
-        <div class="model-gallery__slide{% if g.photo %} model-gallery__slide--photo{% endif %}">
+        <div class="model-gallery__slide{% if g.photo %} model-gallery__slide--photo{% elif g.image.size.0 > g.image.size.1 %} model-gallery__slide--wide{% endif %}">
           <a class="zoom" href="{% image_url g.image %}" data-zoom="views">{% picture g.image g.alt sizes="(min-width: 60rem) 42rem, 90vw" priority=True %}</a>
         </div>
       </div>
@@ -42,17 +42,7 @@
       </ul>
     </aside>
   </div>
-  {% if model.model_3d %}{% with g=model.images.0 %}
-  {# Hidden until static/js/model3d.js is running: without it there is nothing to turn. #}
-  <div class="container model-3d" id="3d" hidden>
-    <h3>{% translate "3D-модель" %}</h3>
-    <p class="model-3d__hint">{% translate "Покрутите подъёмник мышью или пальцем, приблизьте колесом или щипком." %}</p>
-    <div class="model-3d__stage" data-model3d="{% static model.model_3d %}" data-model3d-alt="{{ g.alt }}">
-      {% picture g.image g.alt sizes="(min-width: 60rem) 40rem, 90vw" %}
-      {% include "includes/model3d_toggle.html" %}
-    </div>
-  </div>
-  {% endwith %}{% endif %}
+  {% if model.scenes_3d %}{% include "includes/model3d.html" with scenes=model.scenes_3d %}{% endif %}
   {% if model.images|length > 1 %}
   <div class="container model-views">
     <h3>{% translate "Другие виды" %}</h3>
@@ -188,4 +178,4 @@
 {% endblock %}
 
 {% block extra_js %}<script src="{% static 'js/tabs.js' %}" defer></script><script src="{% static 'js/model.js' %}" defer></script>
-{% if model.model_3d %}<script src="{% static 'js/model3d.js' %}" data-viewer="{% static 'vendor/model-viewer/model-viewer.min.js' %}" data-draco="{% get_static_prefix %}vendor/draco/" defer></script>{% endif %}{% endblock %}
+{% if model.scenes_3d %}<script src="{% static 'js/model3d.js' %}" data-viewer="{% static 'vendor/model-viewer/model-viewer.min.js' %}" data-draco="{% get_static_prefix %}vendor/draco/" defer></script>{% endif %}{% endblock %}

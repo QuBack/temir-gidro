@@ -8,3 +8,4 @@ Dockerfile text eol=lf
 static/vendor/** -text
 *.glb binary
 *.wasm binary
+*.hdr binary

@@ -38,10 +38,13 @@
     mv.setAttribute("camera-controls", "");
     mv.setAttribute("touch-action", "pan-y");           // vertical swipes still scroll the page
     mv.setAttribute("interaction-prompt", "none");
-    mv.setAttribute("environment-image", "neutral");
+    // Light: the scene's HDR (studio light of the renders) or the viewer's flat neutral one.
+    mv.setAttribute("environment-image", host.dataset.model3dEnv || "neutral");
+    if (host.dataset.model3dExposure) mv.setAttribute("exposure", host.dataset.model3dExposure);
     mv.setAttribute("shadow-intensity", "1");
     mv.setAttribute("shadow-softness", "0.8");
-    mv.setAttribute("camera-orbit", "60deg 78deg auto");   // three-quarter view, as on the renders
+    // Three-quarter view, as on the renders; a scene may face its logo side to the camera.
+    mv.setAttribute("camera-orbit", host.dataset.model3dOrbit || "60deg 78deg auto");
     mv.setAttribute("max-camera-orbit", "auto 95deg auto");  // not under the floor
     if (motion) {
       mv.setAttribute("auto-rotate", "");
@@ -86,6 +89,20 @@
           viewer = null;
         }, { once: true });
       }, function () { busy(false); });
+    });
+  });
+
+  // Several scenes in one block (the lift / the lift in its shaft): the buttons show one stage at a time.
+  document.querySelectorAll(".model-3d").forEach(function (block) {
+    var buttons = block.querySelectorAll("[data-model3d-scene]");
+    buttons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        var id = button.dataset.model3dScene;
+        buttons.forEach(function (b) { b.setAttribute("aria-pressed", b === button ? "true" : "false"); });
+        block.querySelectorAll("[data-model3d-panel]").forEach(function (panel) {
+          panel.hidden = panel.dataset.model3dPanel !== id;
+        });
+      });
     });
   });
 })();

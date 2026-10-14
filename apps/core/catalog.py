@@ -13,6 +13,19 @@ def img(src, size, widths=(400, 800)):
     return {"src": src, "size": size, "widths": widths}
 
 
+# Studio light of the client's renders (48-ll.hdr, cut to 1024 × 512). The GLBs exported in 2026-10
+# have glossy paint and chrome tuned to it; under the viewer's flat "neutral" light they look matte.
+STUDIO_HDR = "models/studiya.hdr"
+
+
+def scene3d(src, image, alt, label=None, env=STUDIO_HDR, exposure="1.15", orbit=None):
+    """One scene of the «3D-модель» block (includes/model3d.html, static/js/model3d.js):
+    a Draco GLB in static/, the render shown until the visitor asks for 3D, and the viewer's light.
+    env=None keeps the viewer's neutral light (the 1X and 2X models were tuned to it)."""
+    return {"src": src, "image": image, "alt": alt, "label": label, "env": env, "exposure": exposure,
+            "orbit": orbit}
+
+
 # Full-width workshop photo in the hero — the LCP image.
 HERO_IMAGE = img("hero/gidravlicheskie-podemniki", (1920, 765), widths=(768, 1280, 1920))
 # Generated drawing-style backgrounds (illustrations, never passed off as photos).
@@ -46,6 +59,7 @@ SCISSOR_3X = img("catalog/nozhnichnyj-podemnik-3x", (800, 1289))
 SCISSOR_4X = img("catalog/nozhnichnyj-podemnik-4x", (800, 1692))
 PAINT_1X = img("catalog/podemnik-dlya-okrasochnoj-kamery", (800, 490))
 PAINT_2D = img("catalog/podemnik-dlya-okrasochnoj-kamery-2d", (800, 503))
+PAINT_3D = img("catalog/podemnik-dlya-okrasochnoj-kamery-3d", (800, 705))
 
 CATEGORIES = [
     {
@@ -71,14 +85,14 @@ CATEGORIES = [
     {
         "title": _("Подъёмники для окрасочных камер"),
         "url": "/podemniki/dlya-okrasochnyh-kamer/",
-        "text": _("Рабочие платформы 1X и 2D для покраски крупногабаритных изделий."),
+        "text": _("Рабочие платформы 1X, 2D и 3D для покраски крупногабаритных изделий."),
         "image": img("catalog/podemnik-dlya-okrasochnoj-kamery", (800, 490)),
     },
     {
         "title": _("Автомобильные подъёмники"),
         "url": "/podemniki/avtomobilnye/",
         "text": _("Подъём автомобилей между уровнями паркинга и в шоурумах."),
-        "image": img("catalog/avtomobilnyj-podemnik", (220, 300), widths=(220,)),
+        "image": img("catalog/avtomobilnyj-podemnik", (893, 1220), widths=(220, 400, 893)),
     },
     {
         "title": _("Консольные подъёмники"),
@@ -426,7 +440,7 @@ EQUIPMENT = {
         "title": _("Подъёмники для окрасочных камер"),
         "seo_title": _("Подъёмники для окрасочных камер — рабочие платформы | ТЕМИР ГИДРО"),
         "seo_description": _(
-            "Рабочие платформы 1X и 2D для окрасочных камер: окраска вагонов, цистерн, резервуаров "
+            "Рабочие платформы 1X, 2D и 3D для окрасочных камер: окраска вагонов, цистерн, резервуаров "
             "и металлоконструкций без лесов. Платформа до 14 м, подъём до 12 м. Проект под камеру."
         ),
         "lead": _(
@@ -437,13 +451,13 @@ EQUIPMENT = {
         "facts": [
             (_("до 14 000 мм"), _("Длина платформы")),
             (_("до 12 000 мм"), _("Рабочий ход")),
-            ("1X, 2D", _("Модели")),
+            ("1X, 2D, 3D", _("Модели")),
             (_("24 ч"), _("Расчёт")),
         ],
         "models_title": _("Модели"),
         "models_lead": _(
             "1X — длинная ножничная платформа, поднимается по вертикали. 2D — платформа на рельсах: "
-            "движется и вверх, и вдоль изделия."
+            "движется и вверх, и вдоль изделия. 3D — то же, плюс кабина выдвигается к поверхности изделия."
         ),
         "models": [
             {
@@ -460,6 +474,14 @@ EQUIPMENT = {
                 "url": _PAINT_URL + "2d/",
                 "label": _("Рельсовая платформа"),
                 "image": PAINT_2D,
+                "specs": [(_("Платформа"), _("до 6000 мм")), (_("Подъём"), _("до 12 200 мм"))],
+            },
+            {
+                "name": "3D",
+                "slug": "3d",
+                "url": _PAINT_URL + "3d/",
+                "label": _("Рельсы и выдвижная кабина"),
+                "image": PAINT_3D,
                 "specs": [(_("Платформа"), _("до 6000 мм")), (_("Подъём"), _("до 12 200 мм"))],
             },
         ],
@@ -729,7 +751,7 @@ EQUIPMENT = {
             "Поднимают и опускают автомобиль между уровнями: в подземный гараж, на второй этаж паркинга "
             "или в шоурум. Проектируем под ваш участок и машину."
         ),
-        "image": img("catalog/avtomobilnyj-podemnik", (220, 300), widths=(220,)),
+        "image": img("catalog/avtomobilnyj-podemnik", (893, 1220), widths=(220, 400, 893)),
         "facts": [
             (_("до 8000 кг"), _("Грузоподъёмность")),
             (_("до 11 700 мм"), _("Высота подъёма")),
@@ -755,6 +777,21 @@ EQUIPMENT = {
         ],
         "about_image": img("photos/avtomobilnyj-podemnik-v-priyamke", (1254, 900), widths=(600, 1254)),
         "about_alt": _("Автомобильный подъёмник опускает машину в подземный гараж у жилого дома"),
+        # Two scenes, switched by buttons: the lift itself and the lift in its shaft between two levels.
+        "scenes_3d": [
+            scene3d(
+                "models/avtomobilnyj-podemnik.glb",
+                img("catalog/avtomobilnyj-podemnik-3d", (579, 899), widths=(400, 579)),
+                _("Автомобильный подъёмник ТЕМИР ГИДРО с легковым автомобилем на платформе"),
+                label=_("Подъёмник"), exposure="0.9", orbit="-35deg 70deg auto",
+            ),
+            scene3d(
+                "models/avtomobilnyj-podemnik-v-shahte.glb",
+                img("catalog/avtomobilnyj-podemnik-v-shahte-3d", (699, 896), widths=(400, 699)),
+                _("Автомобильный подъёмник в шахте между двумя уровнями паркинга, разрез"),
+                label=_("В шахте"), exposure="1.25", orbit="-30deg 62deg auto",
+            ),
+        ],
         "specs": [
             (_("Грузоподъёмность, кг"), "500–8000"),
             (_("Длина платформы, мм"), "1200–7000"),
@@ -850,6 +887,14 @@ EQUIPMENT = {
         ],
         "about_image": img("photos/konsolnyj-podemnik-na-sklade", (1536, 1024), widths=(600, 1024, 1536)),
         "about_alt": _("Консольный подъёмник 1L у стены склада: платформа с паллетой между полом и антресолью"),
+        "scenes_3d": [
+            scene3d(
+                "models/konsolnyj-podemnik.glb",
+                img("catalog/konsolnyj-podemnik-3d", (502, 1132), widths=(400, 502)),
+                _("Консольный подъёмник 1L ТЕМИР ГИДРО — общий вид"),
+                orbit="-35deg 80deg auto",
+            ),
+        ],
         "specs": [
             (_("Грузоподъёмность, кг"), "500–5000"),
             (_("Длина платформы, мм"), "1000–6000"),
@@ -957,6 +1002,12 @@ _MODELS = {
             "/podemniki/dlya-okrasochnyh-kamer/2d/",
             image=PAINT_2D,
         ),
+        _model(
+            "3D",
+            _("Рельсы и выдвижная кабина"),
+            "/podemniki/dlya-okrasochnyh-kamer/3d/",
+            image=PAINT_3D,
+        ),
     ],
     "/podemniki/chetyrehstoechnye/": [
         _model(
@@ -1024,10 +1075,11 @@ EQUIPMENT_GROUPS = [
     },
     {
         "slug": "okrasochnye", "title": _("Окрасочные платформы"), "url": _PAINT, "image": PAINT_1X,
-        "badge": _("2 модели"),
+        "badge": _("3 модели"),
         "models": [
             {"code": "1X", "title": _("Окрасочная платформа 1X"), "url": _PAINT + "1x/", "image": PAINT_1X},
             {"code": "2D", "title": _("Окрасочная платформа 2D"), "url": _PAINT + "2d/", "image": PAINT_2D},
+            {"code": "3D", "title": _("Окрасочная платформа 3D"), "url": _PAINT + "3d/", "image": PAINT_3D},
         ],
     },
     {
