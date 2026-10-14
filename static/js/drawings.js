@@ -72,9 +72,19 @@
       }
     }
 
+    // The width never exceeds the length: a narrower length pulls the width down with it,
+    // and the width slider stops at the length.
+    var widthInput = root.querySelector('input[name="B"]');
+    function keepWidth() {
+      if (target.B <= target.L) return;
+      target.B = target.L;
+      widthInput.value = target.L;
+    }
+
     inputs.forEach(function (input) {
       input.addEventListener("input", function () {
         target[input.name] = parseFloat(input.value);
+        keepWidth();
         sync();
         kick();
       });

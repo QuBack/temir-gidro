@@ -7,6 +7,8 @@
   <div class="hero__photo">
     {% translate "Гидравлические ножничные подъёмники ТЕМИР ГИДРО в цехе" as hero_alt %}
     {% picture hero_image hero_alt sizes="100vw" priority=True %}
+    {# Intro: a dark veil that a red line sweeps off the photo (CSS only, see .hero__sweep). #}
+    <span class="hero__sweep" aria-hidden="true"></span>
     {% if hero_video %}
     {# Starts from site.js after load; skipped for reduced motion / data saver. #}
     <video class="hero__video" data-hero-video muted loop playsinline preload="none" aria-hidden="true">

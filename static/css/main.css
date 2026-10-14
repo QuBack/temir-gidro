@@ -356,11 +356,35 @@ section.contacts { padding-top: 0; }
 @media (min-width: 48rem) { .stats--row { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 .stats--row { margin-bottom: clamp(2.5rem, 5vw, 4rem); }
 
+/* Intro, ~2.5 s on every visit: a red line sweeps a dark veil off the photo while the photo settles
+   from a close-up, then the headline comes into focus and the rest rises after it.
+   The photo and the headline are LCP candidates, so they are painted from the first frame (never
+   opacity: 0): the photo only moves and brightens under the veil, the headline only sharpens.
+   The veil is a separate layer, it does not delay their paint. */
+.hero__sweep { display: none; }
 @media (prefers-reduced-motion: no-preference) {
-  .hero__photo img { animation: hero-settle 2.2s cubic-bezier(.2, .6, .2, 1) both; }
-  .hero__text { animation: hero-rise .7s cubic-bezier(.2, .7, .3, 1) .15s both; }
+  .hero__photo img { animation: hero-settle 2.6s cubic-bezier(.2, .6, .2, 1) both; }
+  .hero__sweep {
+    display: block; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: var(--anthracite);
+    animation: hero-unveil 1.15s cubic-bezier(.65, 0, .25, 1) .15s both;
+  }
+  /* The line rides the veil's edge, with a glow like a cutting beam (outside the veil's clip,
+     so the glow also falls on the photo). */
+  .hero__photo::before {
+    content: ""; position: absolute; z-index: 2; top: 0; bottom: 0; left: 0; width: 2px; background: var(--red);
+    box-shadow: 0 0 12px 2px rgb(196 22 28 / .85), 0 0 48px 12px rgb(196 22 28 / .35);
+    animation: hero-beam 1.15s cubic-bezier(.65, 0, .25, 1) .15s both;
+  }
+  .hero__title { animation: hero-focus .9s cubic-bezier(.2, .7, .3, 1) .85s both; }
+  .hero__lead { animation: hero-rise .7s cubic-bezier(.2, .7, .3, 1) 1.2s both; }
+  .hero__actions { animation: hero-rise .7s cubic-bezier(.2, .7, .3, 1) 1.4s both; }
 }
-@keyframes hero-settle { from { transform: scale(1.08); } }
+@keyframes hero-settle { from { transform: scale(1.18); filter: brightness(.55) saturate(.6); } }
+@keyframes hero-unveil { from { clip-path: inset(0 0 0 0); } to { clip-path: inset(0 0 0 100%); } }
+@keyframes hero-beam { from { left: 0; } 92% { opacity: 1; } to { left: 100%; opacity: 0; } }
+/* Faint, not invisible: the headline still counts as painted for LCP. */
+@keyframes hero-focus { from { transform: translateY(.35em); filter: blur(12px); letter-spacing: .04em; color: rgb(255 255 255 / .06); text-shadow: none; } }
 @keyframes hero-rise { from { opacity: 0; transform: translateY(1.5rem); } }
 
 /* ---------- Configurator: sliders + live scheme ---------- */
@@ -492,6 +516,8 @@ body:not(.page-white) .config .sheet, body:not(.page-white) .config .config__not
 .section--dark .section-head__lead { color: #b5c1cc; }
 /* Request block: a faint drawing behind the navy; the drawing sits on the right, the text stays calm. */
 .section--drawing { position: relative; isolation: isolate; overflow: hidden; }
+/* Request blocks: dark red under the red drawing (the navy stays for the cylinders' dark block). */
+.section--dark.section--drawing { background: #5e0b0f; color: rgb(255 255 255 / .85); }
 .lead-bg { position: absolute; inset: 0; z-index: -1; }
 .lead-bg picture, .lead-bg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 100% 50%; }
 .section-head { max-width: 44rem; margin-bottom: clamp(2rem, 4vw, 3rem); }
@@ -1033,8 +1059,28 @@ main .reveal--photo.is-visible { clip-path: inset(-3rem); }
 
 /* ---------- About ---------- */
 .about-hero__legal { margin-top: 1rem; max-width: 34rem; color: var(--muted); }
-.about-hero__plate { margin-top: 2rem; }
 .about-req { margin-top: 1.5rem; }
+/* Who we are: the company text on the left, the director's words on the right. */
+.about-intro { display: grid; gap: 2.5rem; align-items: start; }
+@media (min-width: 60rem) { .about-intro { grid-template-columns: 1.15fr 1fr; gap: 5rem; } }
+.about-intro__text { display: grid; gap: 1.25rem; max-width: 40rem; }
+.about-intro__text > p { color: var(--muted); }
+.about-intro__address { margin-top: -.5rem; font-weight: 600; color: var(--ink) !important; }
+.about-intro__text h3 { margin-top: .75rem; font-family: var(--font-cond); font-size: clamp(1.5rem, 2.4vw, 1.875rem); font-weight: 700; }
+.about-intro__list { display: grid; gap: .6rem; }
+.about-intro__list li { position: relative; padding-left: 1.5rem; }
+.about-intro__list li::before { content: ""; position: absolute; left: 0; top: .7em; width: .75rem; height: 2px; background: var(--red); }
+.about-quote { position: relative; margin: 0; padding: 2.5rem 2rem 2rem; background: var(--grey-soft); border-top: 3px solid var(--red); }
+@media (min-width: 60rem) { .about-intro__aside { position: sticky; top: 7rem; margin-top: 4rem; } }
+.about-intro__stats { margin-top: 2.5rem; }
+.about-quote::before {
+  content: "«"; position: absolute; top: -.15em; right: 1.5rem; color: var(--red); opacity: .15;
+  font-family: var(--font-cond); font-size: 9rem; font-weight: 700; line-height: 1;
+}
+.about-quote blockquote { margin: 0; }
+.about-quote blockquote p { font-family: var(--font-cond); font-size: clamp(1.375rem, 2.2vw, 1.75rem); font-weight: 600; line-height: 1.25; }
+.about-quote figcaption { display: grid; gap: .15rem; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .9375rem; }
+.about-quote figcaption b { color: var(--ink); font-size: 1.0625rem; }
 /* Requisites on the left, the generated cylinder drawing visible on the right. */
 .about-req-section { position: relative; isolation: isolate; overflow: hidden; background: var(--grey); }
 .about-req-section__bg { position: absolute; inset: 0; z-index: -1; }

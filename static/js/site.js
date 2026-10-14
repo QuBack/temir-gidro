@@ -71,6 +71,16 @@
     });
   }
 
+  // Hero intro (CSS) runs on every visit: a page restored by the Back button comes from the
+  // back/forward cache with its animations finished, so they are played again.
+  var hero = document.querySelector(".hero");
+  if (hero && hero.getAnimations) {
+    window.addEventListener("pageshow", function (event) {
+      if (!event.persisted) return;
+      hero.getAnimations({ subtree: true }).forEach(function (a) { a.cancel(); a.play(); });
+    });
+  }
+
   // Hero video: starts after the page (and the LCP poster) has loaded.
   var video = document.querySelector("[data-hero-video]");
   if (video) {
