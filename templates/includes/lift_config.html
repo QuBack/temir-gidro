@@ -46,7 +46,8 @@
         <svg class="scheme" data-config-svg viewBox="0 0 640 620" role="img" aria-labelledby="config-title" hidden></svg>
       </div>
       <figcaption class="stamp">
-        <span class="stamp__name">{% translate "Схема ножничного подъёмника" %}</span>
+        {# The model follows the number of scissor pairs the scheme picks: 2 pairs → 2X. #}
+        <span class="stamp__name">{% translate "Схема ножничного подъёмника" %} <b class="stamp__model" data-out="M">2X</b></span>
         {# Defaults match drawings.js for L 2000, H 1500, Q 2 t; without JS the stamp stays as is. #}
         <dl class="stamp__facts stamp__facts--wide">
           <div><dt>{% translate "Платформа, мм" %}</dt><dd data-out="LB">2000 × 1200</dd></div>

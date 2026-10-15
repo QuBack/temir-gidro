@@ -1,9 +1,10 @@
 {% load images %}
 {# Equipment at work: photo and its story side by side, alternating sides. #}
+{# A "wide" scene (a scheme with a legend) spans the row, uncropped and centred, with its text below. #}
 <div class="scenes">
   {% for sc in scenes %}
-  <article class="scene{% if forloop.counter|divisibleby:2 %} scene--flip{% endif %}">
-    <figure class="scene__photo{% if sc.render %} scene__photo--render{% endif %}"><a class="zoom" href="{% image_url sc.image %}" data-zoom="scenes">{% picture sc.image sc.alt sizes="(min-width: 60rem) 50vw, 100vw" %}</a></figure>
+  <article class="scene{% if sc.wide %} scene--wide{% elif forloop.counter|divisibleby:2 %} scene--flip{% endif %}">
+    <figure class="scene__photo{% if sc.render %} scene__photo--render{% endif %}"><a class="zoom" href="{% image_url sc.image %}" data-zoom="scenes">{% if sc.wide %}{% picture sc.image sc.alt sizes="(min-width: 75rem) 72rem, 100vw" %}{% else %}{% picture sc.image sc.alt sizes="(min-width: 60rem) 50vw, 100vw" %}{% endif %}</a></figure>
     <div class="scene__text">
       <h3>{{ sc.title }}</h3>
       <p>{{ sc.text }}</p>

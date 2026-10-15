@@ -40,6 +40,7 @@
       out("Hs", String(target.H));
       out("Qs", String(Math.round(target.Q * 1000))); // kg: in ГОСТ lettering "т" reads like "m"
       out("N", String(c.n));
+      out("M", c.n + "X"); // the serial model: one pair is 1X, two are 2X…
       out("Hmin", String(c.hmin));
       out("Hmax", String(c.hmin + target.H));
       out("T", String(c.time));
@@ -108,7 +109,7 @@
       if (!field) return;
       var c = calc(target);
       var line = "Параметры подъёмника: платформа " + target.L + " × " + target.B + " мм, ход " +
-        target.H + " мм, грузоподъёмность " + tons(target.Q) + " т, пар ножниц: " + c.n + ".";
+        target.H + " мм, грузоподъёмность " + tons(target.Q) + " т, модель " + c.n + "X (пар ножниц: " + c.n + ").";
       var rest = field.value.replace(/^Параметры подъёмника:.*\n?/, "");
       field.value = line + (rest ? "\n" + rest : "");
       var name = document.getElementById("lead-name");

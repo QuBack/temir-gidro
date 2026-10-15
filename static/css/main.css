@@ -472,6 +472,8 @@ body:not(.page-white) .config .sheet, body:not(.page-white) .config .config__not
 
 .stamp { border: 1px solid var(--ink); }
 .stamp__name { display: block; padding: .5rem .75rem; border-bottom: 1px solid var(--ink); font-family: var(--font-draw); font-size: 1.125rem; }
+/* The configurator's serial model (1X–4X) right in the title block, in the lifts' red. */
+.stamp__model { margin-left: .25rem; color: var(--red); font-size: 1.375rem; font-weight: 700; }
 .stamp__facts { display: grid; grid-template-columns: repeat(2, 1fr); margin: 0; }
 .stamp__facts > div { display: flex; flex-direction: column-reverse; padding: .5rem .75rem; }
 .stamp__facts > div:nth-child(odd) { border-right: 1px solid var(--ink); }
@@ -1566,6 +1568,11 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
   .model-hero .model-gallery__main:has(.model-gallery__slide--wide)::after {
     left: calc(-5% + var(--shift)); right: calc(8% - var(--shift));
   }
+  /* A line page's wide render (the four-post lift with a car) stands alone on the stage: a fifth larger
+     and a little further right than a model's. */
+  .model-hero .model-gallery__slide.model-gallery__slide--wide-lg picture {
+    left: calc(clamp(1rem, 3vw, 2rem) - 30% + var(--shift)); right: calc(clamp(1rem, 3vw, 2rem) - 25% - var(--shift));
+  }
   .model-hero { overflow-x: clip; }  /* a render reaching past the container never adds a sideways scroll */
 }
 /* Line page hero (scissor lifts): the same red stage, no render, the title centred. */
@@ -1613,6 +1620,14 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
 .scene__photo--render picture { position: absolute; inset: clamp(1rem, 3vw, 2rem); }
 .scene__photo--render img { width: 100%; height: 100%; aspect-ratio: auto; object-fit: contain; }
 .scene__text .more-link { display: inline-block; margin-top: 1.25rem; }
+/* A scheme with its legend: the whole row, centred and uncropped (its labels sit at the edges),
+   the title and text centred under it. */
+@media (min-width: 60rem) { .scene.scene--wide { grid-template-columns: 1fr; gap: 2rem; } }
+.scene--wide .scene__photo { width: 100%; max-width: 72rem; justify-self: center; background: var(--white); }
+.scene--wide .scene__photo img { aspect-ratio: auto; object-fit: contain; }
+.scene--wide:hover .scene__photo img { transform: none; }
+.scene--wide .scene__text { justify-self: center; max-width: 46rem; text-align: center; }
+.scene--wide .scene__text p { max-width: none; }
 
 /* ---------- Articles: list and article page ---------- */
 .articles--list { row-gap: 3rem; }

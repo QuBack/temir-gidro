@@ -74,7 +74,7 @@ CATEGORIES = [
         "title": _("Четырёхстоечные подъёмники"),
         "url": "/podemniki/chetyrehstoechnye/",
         "text": _("Самонесущая конструкция на сдвоенных цепях для автосервиса и парковки."),
-        "image": img("catalog/chetyrehstoechnyj-podemnik", (800, 531)),
+        "image": img("catalog/chetyrehstoechnyj-podemnik", (1200, 787), widths=(400, 800, 1200)),
     },
     {
         "title": _("Подъёмники для мусорных контейнеров"),
@@ -98,7 +98,7 @@ CATEGORIES = [
         "title": _("Консольные подъёмники"),
         "url": "/podemniki/konsolnye/",
         "text": _("Модель 1L для подъёма грузов между этажами вдоль стены."),
-        "image": img("catalog/konsolnyj-podemnik", (124, 293), widths=(124,)),
+        "image": img("catalog/konsolnyj-podemnik", (292, 584), widths=(124, 292)),
     },
 ]
 
@@ -541,7 +541,7 @@ EQUIPMENT = {
             "Самонесущий подъёмник на четырёх стойках для легковых и грузовых автомобилей: "
             "до 6 тонн и до 13 метров подъёма. Платформу делаем под ваш объект."
         ),
-        "image": img("catalog/chetyrehstoechnyj-podemnik", (800, 531)),
+        "image": img("catalog/chetyrehstoechnyj-podemnik", (1200, 787), widths=(400, 800, 1200)),
         "facts": [
             (_("до 6000 кг"), _("Грузоподъёмность")),
             (_("до 13 000 мм"), _("Высота подъёма")),
@@ -665,6 +665,7 @@ EQUIPMENT = {
         "scenes": [
             {
                 "image": img("photos/shema-podemnika-dlya-kontejnerov", (1200, 848), widths=(600, 1200)),
+                "wide": True,  # the scheme with its 21-item legend: full width, uncropped, text below
                 "alt": _("Схема подъёмника для мусорных контейнеров с обозначением узлов"),
                 "title": _("Конструкция и управление"),
                 "text": _(
@@ -778,18 +779,20 @@ EQUIPMENT = {
         "about_image": img("photos/avtomobilnyj-podemnik-v-priyamke", (1254, 900), widths=(600, 1254)),
         "about_alt": _("Автомобильный подъёмник опускает машину в подземный гараж у жилого дома"),
         # Two scenes, switched by buttons: the lift itself and the lift in its shaft between two levels.
+        # The shaft scene comes first: until the click it shows the line's own render, as on 1X/2X;
+        # the lift alone has no such render, so it keeps the Blender one.
         "scenes_3d": [
+            scene3d(
+                "models/avtomobilnyj-podemnik-v-shahte.glb",
+                img("catalog/avtomobilnyj-podemnik", (893, 1220), widths=(220, 400, 893)),
+                _("Автомобильный подъёмник в шахте между двумя уровнями паркинга, разрез"),
+                label=_("В шахте"), exposure="1.25", orbit="-30deg 62deg auto",
+            ),
             scene3d(
                 "models/avtomobilnyj-podemnik.glb",
                 img("catalog/avtomobilnyj-podemnik-3d", (579, 899), widths=(400, 579)),
                 _("Автомобильный подъёмник ТЕМИР ГИДРО с легковым автомобилем на платформе"),
                 label=_("Подъёмник"), exposure="0.9", orbit="-35deg 70deg auto",
-            ),
-            scene3d(
-                "models/avtomobilnyj-podemnik-v-shahte.glb",
-                img("catalog/avtomobilnyj-podemnik-v-shahte-3d", (699, 896), widths=(400, 699)),
-                _("Автомобильный подъёмник в шахте между двумя уровнями паркинга, разрез"),
-                label=_("В шахте"), exposure="1.25", orbit="-30deg 62deg auto",
             ),
         ],
         "specs": [
@@ -890,7 +893,7 @@ EQUIPMENT = {
         "scenes_3d": [
             scene3d(
                 "models/konsolnyj-podemnik.glb",
-                img("catalog/konsolnyj-podemnik-3d", (502, 1132), widths=(400, 502)),
+                CATEGORIES[5]["image"],  # the line's own render until the click, as on 1X/2X
                 _("Консольный подъёмник 1L ТЕМИР ГИДРО — общий вид"),
                 orbit="-35deg 80deg auto",
             ),
@@ -1038,7 +1041,7 @@ _MODELS = {
             "1L",
             _("Подъём грузов между этажами"),
             "/podemniki/konsolnye/",
-            image=img("catalog/konsolnyj-podemnik", (124, 293), widths=(124,)),
+            image=img("catalog/konsolnyj-podemnik", (292, 584), widths=(124, 292)),
         ),
     ],
 }
