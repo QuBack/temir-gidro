@@ -21,7 +21,7 @@
         <div class="range">
           <label for="cfg-h">{% translate "Ход платформы" %} <b>H</b></label>
           <output for="cfg-h" data-out="H">1500 мм</output>
-          <input type="range" id="cfg-h" name="H" min="500" max="16000" step="100" value="1500" data-unit="мм">
+          <input type="range" id="cfg-h" name="H" min="500" max="12000" step="100" value="1500" data-unit="мм">
         </div>
         <div class="range">
           <label for="cfg-q">{% translate "Грузоподъёмность" %} <b>Q</b></label>
@@ -30,8 +30,8 @@
         </div>
       </div>
       <p class="config__note" data-config-note hidden>{% blocktranslate trimmed %}
-        Даже четыре пары ножниц на такой платформе поднимут только на <b data-out="Hreach"></b> мм.
-        Удлините платформу или отправьте параметры — подберём другую схему.
+        Модель 4X на такой платформе даёт ход только <b data-out="Hreach"></b> мм — нужна 5X.
+        Отправьте параметры — рассчитаем её индивидуально, или удлините платформу.
       {% endblocktranslate %}</p>
       <a class="btn btn--primary" href="#raschet" data-config-send>{% translate "Отправить параметры на расчёт" %}</a>
     </div>

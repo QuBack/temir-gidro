@@ -150,7 +150,9 @@
   }
 
   // Pairs of scissors, folded height, reach, lift time and lead time for L, H (stroke), Q.
-  // One pair rises to (L − 150) × 0,866 (arms at 60°); the stroke is that minus the folded height.
+  // 1X rises to (L − 150) × 0,866 (arms at 60°) and each next model doubles it (client's rule,
+  // 2026-10): 2X × 2, 3X × 4, 4X × 8. The stroke is that minus the folded height. 5X waits for
+  // its folded heights from the client, so above 4X the form asks for an individual quote.
   function calc(v) {
     var kg = v.Q * 1000;
     var q = classOf(LOADS, kg);
@@ -158,10 +160,11 @@
     if (q === 0 && v.L > LENGTHS_LIGHT[2]) { q = 1; }
     l = q === 0 ? classOf(LENGTHS_LIGHT, v.L) : classOf(LENGTHS, v.L);
     var perPair = (v.L - 150) * 0.866;
+    var top = function (n) { return perPair * Math.pow(2, n - 1); };
     var n = 1;
-    while (n < 4 && n * perPair - HMIN[q][l][n - 1] < v.H) n++;
+    while (n < 4 && top(n) - HMIN[q][l][n - 1] < v.H) n++;
     var hmin = HMIN[q][l][n - 1];
-    var reach = Math.floor((n * perPair - hmin) / 10) * 10;
+    var reach = Math.floor((top(n) - hmin) / 10) * 10;
     var speed = kg <= 1000 ? 70 : kg <= 2000 ? 60 : kg <= 4000 ? 50 : 40; // mm/s
     return {
       n: n, hmin: hmin, reach: reach, ok: reach >= v.H,
