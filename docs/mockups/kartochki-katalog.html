@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Карточки каталога — варианты</title>
+<style>
+  @font-face { font-family: "Sofia Sans Condensed"; font-weight: 400 900; font-display: swap;
+    src: url("../../static/fonts/sofia-sans-condensed-latin.woff2") format("woff2"); }
+  @font-face { font-family: "Onest"; font-weight: 400 700; font-display: swap;
+    src: url("../../static/fonts/onest-cyrillic.woff2") format("woff2"); unicode-range: U+0400-04FF; }
+  @font-face { font-family: "Onest"; font-weight: 400 700; font-display: swap;
+    src: url("../../static/fonts/onest-latin.woff2") format("woff2"); }
+  :root { --red: #c4161c; --red-dark: #9c0f14; --ink: #22282b; --muted: #5d6669; --line: #dfe3e2; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 2.5rem 1rem 4rem; background: #eef0ef; color: var(--ink); font: 16px/1.5 "Onest", system-ui, sans-serif; }
+  .wrap { max-width: 74rem; margin: 0 auto; }
+  h1 { margin: 0 0 .5rem; font: 700 2.5rem/1.1 "Sofia Sans Condensed", sans-serif; }
+  .lead { margin: 0 0 3rem; max-width: 48rem; color: var(--muted); }
+  .variant { margin: 0 0 4.5rem; }
+  .variant > h2 { margin: 0 0 .25rem; font: 700 1.75rem/1.2 "Sofia Sans Condensed", sans-serif; }
+  .variant > p { margin: 0 0 1.75rem; max-width: 50rem; color: var(--muted); font-size: .9375rem; }
+
+  /* Same grid as the site: 3 on top, 2 below. */
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem 1rem; list-style: none; margin: 0; padding: 0; }
+  @media (min-width: 60rem) {
+    .grid { grid-template-columns: repeat(6, 1fr); gap: 2rem 1.5rem; }
+    .grid > li { grid-column: span 2; }
+    .grid > li:nth-child(n+4) { grid-column: span 3; }
+  }
+  .grid > li { position: relative; isolation: isolate; min-width: 0; margin: .75rem .75rem 0 0; }
+
+  /* The logo's chevrons, reused as an SVG sprite. */
+  .chev { display: inline-flex; gap: .12em; flex: none; }
+  .chev svg { width: .62em; height: 1em; overflow: visible; }
+  .chev svg { fill: none; stroke: currentColor; stroke-width: 4.2; stroke-linecap: square; stroke-linejoin: miter; }
+
+  .card { position: relative; display: block; aspect-ratio: 4 / 3; color: inherit; text-decoration: none; }
+  .card__media { position: absolute; display: flex; align-items: center; justify-content: center; transition: transform .5s cubic-bezier(.4, .7, .04, .88); }
+  .card__media img { max-width: 100%; max-height: 100%; width: auto; height: auto; }
+  .card:hover .card__media { transform: scale(1.05); }
+  .card h3 { margin: 0; font: 700 clamp(1.0625rem, 1.6vw, 1.375rem)/1.1 "Sofia Sans Condensed", sans-serif; }
+
+  /* ---------- A. Шеврон-табличка ---------- */
+  .va .card { background: #fff; box-shadow: 0 2px 6px rgb(34 40 43 / .08); transition: box-shadow .2s; }
+  .va .card:hover { box-shadow: 0 0 0 3px var(--red), 0 14px 30px rgb(34 40 43 / .16); }
+  .va .card__media { inset: 1.25rem 1.25rem 4.25rem; }
+  .va .card__name { position: absolute; right: 0; bottom: 1.25rem; z-index: 1; display: flex; align-items: center; gap: .75rem;
+    padding: .6rem 1rem .6rem 1.75rem; background: var(--ink); color: #fff;
+    clip-path: polygon(1rem 0, 100% 0, 100% 100%, 1rem 100%, 0 50%); transition: background .2s; }
+  .va .card:hover .card__name { background: var(--red); }
+  .va .chev { font-size: 1.15rem; }
+  .va .chev svg { color: #fff; transition: color .2s, transform .3s; }
+  .va .chev svg:nth-child(n+2) { color: #e8323a; }
+  .va .card:hover .chev svg { transform: translateX(.25em); }
+  .va .card:hover .chev svg { color: #fff; }
+  .va .card:hover .chev svg:nth-child(2) { transition-delay: .05s; }
+  .va .card:hover .chev svg:nth-child(3) { transition-delay: .1s; }
+
+  /* ---------- B. Срезанный угол ---------- */
+  .vb .card { background: #fff; clip-path: polygon(2.25rem 0, 100% 0, 100% 100%, 0 100%, 0 2.25rem);
+    filter: drop-shadow(0 4px 10px rgb(34 40 43 / .1)); }
+  .vb .card::before { content: ""; position: absolute; left: 0; top: 0; width: 3.2rem; height: 3.2rem; z-index: 1;
+    background: linear-gradient(135deg, transparent 50%, var(--red) 50%, var(--red) calc(50% + 4px), transparent calc(50% + 4px)); }
+  .vb .card__media { inset: 1.5rem 1.25rem 4.25rem; }
+  .vb .card__name { position: absolute; inset: auto 0 0; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    padding: .9rem 1rem; border-top: 1px solid var(--line); background: #fff; }
+  .vb .chev { font-size: 1.3rem; }
+  .vb .chev svg { color: var(--ink); }
+  .vb .chev svg:nth-child(n+2) { color: var(--red); }
+  .vb .card:hover h3 { color: var(--red); }
+  .vb .card:hover .chev svg { animation: run .9s infinite; }
+  .vb .card:hover .chev svg:nth-child(2) { animation-delay: .15s; }
+  .vb .card:hover .chev svg:nth-child(3) { animation-delay: .3s; }
+  @keyframes run { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+
+  /* ---------- C. Шеврон-водяной знак ---------- */
+  .vc .card { overflow: hidden; background: linear-gradient(180deg, #fff 0%, #f6f7f7 100%); box-shadow: 0 2px 6px rgb(34 40 43 / .08); transition: box-shadow .2s; }
+  .vc .card:hover { box-shadow: 0 14px 30px rgb(34 40 43 / .16); }
+  .vc .card__mark { position: absolute; right: -6%; top: 50%; z-index: 0; font-size: clamp(9rem, 18vw, 15rem); line-height: 1; transform: translateY(-62%);
+    transition: transform .6s cubic-bezier(.4, .7, .04, .88); }
+  .vc .card__mark svg { color: #f0f1f1; stroke-width: 4; transition: color .4s; }
+  .vc .card:hover .card__mark { transform: translate(4%, -62%); }
+  .vc .card:hover .card__mark svg:nth-child(n+2) { color: #f7dcdc; }
+  .vc .card__media { inset: 1.25rem 1.25rem 4.5rem; z-index: 1; }
+  .vc .card__name { position: absolute; inset: auto 0 0; z-index: 1; padding: 1rem 1.25rem 1.1rem; }
+  .vc .card__name::before { content: ""; display: block; width: 2.5rem; height: 4px; margin-bottom: .55rem; background: var(--red); transition: width .35s; }
+  .vc .card:hover .card__name::before { width: 5rem; }
+
+  /* ---------- D. Тёмная плашка с логотипом ---------- */
+  .vd .card { overflow: hidden; background: #fff; box-shadow: 0 2px 6px rgb(34 40 43 / .08); transition: box-shadow .2s, transform .2s; }
+  .vd .card:hover { transform: translateY(-4px); box-shadow: 0 16px 32px rgb(34 40 43 / .18); }
+  .vd .card__media { inset: 1.25rem 1.25rem 4.5rem; }
+  .vd .card__name { position: absolute; inset: auto 0 0; z-index: 1; display: flex; align-items: center; gap: .75rem;
+    padding: .85rem 1rem; background: var(--ink); color: #fff; }
+  .vd .card__name::after { content: ""; position: absolute; left: 0; top: 0; height: 3px; width: 0; background: var(--red); transition: width .4s; }
+  .vd .card:hover .card__name::after { width: 100%; }
+  .vd .chev { font-size: 1.2rem; }
+  .vd .chev svg { color: #fff; }
+  .vd .chev svg:nth-child(n+2) { color: #e8323a; }
+
+  /* Group stack (series with models) — kept from the site. */
+  .stack::before, .stack::after { content: ""; position: absolute; inset: 0; z-index: -1; background: #f7f8f8; box-shadow: 0 1px 4px rgb(34 40 43 / .08); transition: transform .25s; }
+  .stack::before { transform: translate(6px, -6px); }
+  .stack::after { z-index: -2; background: #eceeed; transform: translate(12px, -12px); }
+  .stack:hover::before { transform: translate(8px, -8px); }
+  .stack:hover::after { transform: translate(16px, -16px); }
+  .vb .stack::before, .vb .stack::after { clip-path: polygon(2.25rem 0, 100% 0, 100% 100%, 0 100%, 0 2.25rem); }
+
+  @media (max-width: 40rem) {
+    .card h3 { font-size: 1rem; }
+    .va .card__name { padding: .45rem .6rem .45rem 1.25rem; bottom: .75rem; gap: .4rem; }
+    .va .chev, .vd .chev, .vb .chev { display: none; }
+    .card__media { inset: .75rem .75rem 3.75rem !important; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="c" viewBox="0 0 12 20"><path d="M2 2 L10 10 L2 18"/></symbol>
+</svg>
+<div class="wrap">
+  <h1>Карточки «Гидравлическое оборудование»</h1>
+  <p class="lead">Четыре варианта с мотивом логотипа — три шеврона «›››» (первый тёмный, два красных). Наведите курсор на карточку, чтобы увидеть анимацию. Первые три карточки — серии с моделями, у них остаётся «стопка листов».</p>
+
+  <section class="variant va">
+    <h2>A. Шеврон-табличка</h2>
+    <p>Как у референса: название на плашке справа, но плашка срезана стрелкой-шевроном. При наведении плашка краснеет, шевроны «бегут» вперёд, карточка обводится красным.</p>
+    <ul class="grid" data-cards></ul>
+  </section>
+
+  <section class="variant vb">
+    <h2>B. Срезанный угол</h2>
+    <p>Угол карточки срезан, как у шевронов логотипа, по срезу — красная линия. Внизу белая строка с названием и «›››» в цветах логотипа; при наведении шевроны мигают по очереди.</p>
+    <ul class="grid" data-cards></ul>
+  </section>
+
+  <section class="variant vc">
+    <h2>C. Шеврон-водяной знак</h2>
+    <p>Самый спокойный: за подъёмником — крупные бледные шевроны логотипа, под ним короткая красная черта и тёмное название. При наведении знак сдвигается и розовеет, черта удлиняется.</p>
+    <ul class="grid" data-cards></ul>
+  </section>
+
+  <section class="variant vd">
+    <h2>D. Тёмная плашка с логотипом</h2>
+    <p>Низ карточки — графитовая полоса с «›››» как в логотипе и белым названием. Контрастно, текст читается лучше, чем сейчас на сером градиенте. При наведении карточка приподнимается, сверху плашки пробегает красная линия.</p>
+    <ul class="grid" data-cards></ul>
+  </section>
+</div>
+<script>
+  const IMG = "../../static/img/catalog/";
+  const items = [
+    ["Ножничные подъёмники", "nozhnichnye-podemniki-1x-3x-1280.webp", true],
+    ["Окрасочные платформы", "podemnik-dlya-okrasochnoj-kamery-800.webp", true],
+    ["Автомобильные подъёмники", "chetyrehstoechnyj-podemnik-800.webp", true],
+    ["Консольный подъёмник 1L", "konsolnyj-podemnik-292.webp", false],
+    ["Подъёмник для мусорных контейнеров", "podemnik-dlya-musornyh-kontejnerov-576.webp", false],
+  ];
+  const chev = '<span class="chev" aria-hidden="true">' + '<svg><use href="#c"/></svg>'.repeat(3) + '</span>';
+  // ?only=va shows one variant (for screenshots sent to the client).
+  const only = new URLSearchParams(location.search).get("only");
+  if (only) document.querySelectorAll(".wrap > h1, .lead, .variant:not(." + only + ")").forEach(el => el.remove());
+  document.querySelectorAll("[data-cards]").forEach(ul => {
+    const v = ul.closest(".variant").classList[1];
+    ul.innerHTML = items.map(([t, src, group]) => {
+      const mark = v === "vc" ? '<span class="card__mark chev" aria-hidden="true">' + '<svg><use href="#c"/></svg>'.repeat(3) + '</span>' : "";
+      const name = v === "vc" ? `<h3>${t}</h3>` : v === "vd" ? `${chev}<h3>${t}</h3>` : `<h3>${t}</h3>${chev}`;
+      return `<li class="${group ? "stack" : ""}"><a class="card" href="#">${mark}
+        <span class="card__media"><img src="${IMG + src}" alt="${t}"></span>
+        <span class="card__name">${name}</span></a></li>`;
+    }).join("");
+  });
+</script>
+</body>
+</html>

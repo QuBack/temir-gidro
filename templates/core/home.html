@@ -7,6 +7,8 @@
   <div class="hero__photo">
     {% translate "Гидравлические ножничные подъёмники ТЕМИР ГИДРО в цехе" as hero_alt %}
     {% picture hero_image hero_alt sizes="100vw" priority=True %}
+    {# Intro: a dark veil that a red line sweeps off the photo (CSS only, see .hero__sweep). #}
+    <span class="hero__sweep" aria-hidden="true"></span>
     {% if hero_video %}
     {# Starts from site.js after load; skipped for reduced motion / data saver. #}
     <video class="hero__video" data-hero-video muted loop playsinline preload="none" aria-hidden="true">
@@ -16,7 +18,8 @@
   </div>
   <div class="container hero__inner">
     <div class="hero__text">
-      <h1 class="hero__title" id="hero-title">{% translate "Гидравлические подъёмники от производителя" %}</h1>
+      {# Three lines on purpose: the intro widens the letters, and a free wrap jumped from three lines to two. #}
+      <h1 class="hero__title" id="hero-title">{% blocktranslate trimmed %}Гидравлические<br>подъёмники<br>от производителя{% endblocktranslate %}</h1>
       <p class="hero__lead">{% blocktranslate %}Проектируем и производим подъёмники и гидроцилиндры под ваши размеры и нагрузку — от расчёта до монтажа на объекте.{% endblocktranslate %}</p>
       <div class="hero__actions">
         <a class="btn btn--primary" href="#podbor">{% translate "Подобрать параметры" %}</a>
@@ -31,19 +34,34 @@
     <div class="section-head section-head--center">
       <h2 id="katalog-title">{% translate "Гидравлическое оборудование" %}</h2>
     </div>
-    <ul class="lift-tiles lift-tiles--all">
-      {% for t in equipment_tiles %}
-      <li>
-        <a class="lift-tile" href="{{ t.url }}">
-          <div class="lift-tile__media">
-            {% if t.image %}{% picture t.image t.title sizes="(min-width: 60rem) 24vw, 45vw" %}
-            {% else %}{% include "includes/scissor_icon.html" with icon=t.icon %}{% endif %}
-          </div>
-          <div class="lift-tile__desc">
-            <h3>{{ t.title }}</h3>
-          </div>
+    {# A series card links to its section; site.js turns it into a toggle that opens the models under the row. #}
+    <ul class="eq-grid" data-eq-grid>
+      {% for g in equipment_groups %}
+      <li class="eq-item{% if g.models %} eq-item--group{% endif %}">
+        <a class="eq-card" href="{{ g.url }}"{% if g.models %} data-eq-toggle aria-controls="eq-{{ g.slug }}"{% endif %}>
+          <span class="eq-card__media">{% picture g.image g.title sizes="(min-width: 60rem) 30vw, 45vw" %}</span>
+          <h3>{{ g.title }}</h3>
         </a>
       </li>
+      {% if g.models %}
+      <li class="eq-panel" id="eq-{{ g.slug }}" hidden>
+        <div class="eq-panel__clip">
+          <div class="eq-panel__body">
+            <h3 class="eq-panel__title">{{ g.title }}</h3>
+            <ul class="eq-models">
+              {% for m in g.models %}
+              <li>
+                <a class="eq-model" href="{{ m.url }}">
+                  <span class="eq-model__media">{% picture m.image m.title sizes="(min-width: 60rem) 18vw, 40vw" %}</span>
+                  <span class="eq-model__cap">{{ m.code }}</span>
+                </a>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </li>
+      {% endif %}
       {% endfor %}
     </ul>
     <div class="tiles-cta">
@@ -73,9 +91,9 @@
   </div>
 </section>
 
-{% include "includes/steps_timeline.html" %}
+{% include "includes/steps_timeline.html" with flat=True %}
 
-{% include "includes/lift_config.html" %}
+{% include "includes/lift_config.html" with flat=True %}
 
 <section class="section" aria-labelledby="cyl-title">
   <div class="container split">

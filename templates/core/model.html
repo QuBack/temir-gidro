@@ -12,42 +12,24 @@
       <p class="eq-hero__lead">{{ model.lead }}</p>
     </div>
 
-    <div class="model-gallery" data-gallery>
+    {# One picture on the first screen; the model's other views are under its description. #}
+    {% with g=model.images.0 %}
+    <div class="model-gallery">
       <div class="model-gallery__main">
-          {% for g in model.images %}
-          <div class="model-gallery__slide{% if g.photo %} model-gallery__slide--photo{% endif %}" data-slide{% if not forloop.first %} hidden{% endif %}>
-            <a class="zoom" href="{% image_url g.image %}" data-zoom="gallery">{% picture g.image g.alt sizes="(min-width: 60rem) 36rem, 90vw" priority=forloop.first %}</a>
-          </div>
-          {% endfor %}
+        <div class="model-gallery__slide{% if g.photo %} model-gallery__slide--photo{% elif g.image.size.0 > g.image.size.1 %} model-gallery__slide--wide{% endif %}">
+          <a class="zoom" href="{% image_url g.image %}" data-zoom="views">{% picture g.image g.alt sizes="(min-width: 60rem) 42rem, 90vw" priority=True %}</a>
+        </div>
       </div>
-      {% if model.images|length > 1 %}
-      <ul class="model-gallery__thumbs">
-        {% for g in model.images %}
-        <li>
-          {# Without JS the thumbnail opens the full picture. #}
-          <a class="model-gallery__thumb{% if forloop.first %} is-active{% endif %}" href="{% image_url g.image %}" data-thumb="{{ forloop.counter0 }}" aria-label="{% translate 'Фото' %} {{ forloop.counter }}: {{ g.alt }}">
-            {% picture g.image "" sizes="6rem" %}
-          </a>
-        </li>
-        {% endfor %}
-      </ul>
-      {% endif %}
     </div>
+    {% endwith %}
   </div>
 </section>
 
-<nav class="page-nav" aria-label="{% translate 'Разделы страницы' %}">
-  <ul class="container page-nav__list">
-    <li><a href="#opisanie">{% translate "Описание" %}</a></li>
-    <li><a href="#harakteristiki">{% translate "Характеристики" %}</a></li>
-    <li><a href="#komplektaciya">{% translate "Комплектация" %}</a></li>
-    <li><a href="#postavka">{% translate "Поставка" %}</a></li>
-    <li><a href="#zayavka">{% translate "Расчёт стоимости" %}</a></li>
-    <li><a href="#voprosy">{% translate "Вопросы" %}</a></li>
-  </ul>
-</nav>
+<div class="tabs" data-tabs>
+{% include "includes/tabs_bar.html" with bar_title=model.title bar_line=model.line_title bar_image=model.images.0.image bar_cta="#zayavka" %}
+<div class="tabs__panels" data-tabs-panels>
 
-<section class="section section--grey" id="opisanie" aria-labelledby="about-title">
+<section class="section section--grey" id="opisanie" aria-labelledby="about-title" data-tab-panel>
   <div class="container model-about">
     <div class="prose">
       <h2 id="about-title">{% blocktranslate with name=model.title %}{{ name }}: для каких задач{% endblocktranslate %}</h2>
@@ -60,12 +42,23 @@
       </ul>
     </aside>
   </div>
+  {% if model.scenes_3d %}{% include "includes/model3d.html" with scenes=model.scenes_3d %}{% endif %}
+  {% if model.images|length > 1 %}
+  <div class="container model-views">
+    <h3>{% translate "Другие виды" %}</h3>
+    <ul class="model-views__list">
+      {% for g in model.images|slice:"1:" %}
+      <li><a class="model-views__item zoom" href="{% image_url g.image %}" data-zoom="views">{% picture g.image g.alt sizes="(min-width: 60rem) 24rem, 45vw" %}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
   {% if model.scenes %}
   <div class="container model-scenes">{% include "includes/scenes.html" with scenes=model.scenes %}</div>
   {% endif %}
 </section>
 
-<section class="section section--drawing" id="harakteristiki" aria-labelledby="specs-title">
+<section class="section section--drawing" id="harakteristiki" aria-labelledby="specs-title" data-tab-panel>
   <div class="section-bg" aria-hidden="true">{% picture specs_bg "" sizes="100vw" %}</div>
   <div class="container model-specs">
     <div class="section-head">
@@ -83,7 +76,7 @@
   </div>
 </section>
 
-<section class="section section--grey" id="komplektaciya" aria-labelledby="kit-title">
+<section class="section section--grey" id="komplektaciya" aria-labelledby="kit-title" data-tab-panel>
   <div class="container">
     <div class="section-head">
       <h2 id="kit-title">{% translate "Стандартная комплектация" %}</h2>
@@ -122,37 +115,12 @@
   </div>
 </section>
 
-<section class="section" id="postavka" aria-labelledby="delivery-title">
-  <div class="container">
-    <div class="section-head">
-      <h2 id="delivery-title">{% translate "Условия поставки" %}</h2>
-      <p class="section-head__lead">{% translate "Весь путь подъёмника — от расчёта до гарантии — ведём сами, без посредников." %}</p>
-    </div>
-    <ol class="route">
-      {% for title, text, icon_name in delivery %}
-      <li class="route__stop">
-        <span class="route__icon">{% icon icon_name %}</span>
-        <h3>{{ title }}</h3>
-        <p>{{ text }}</p>
-      </li>
-      {% endfor %}
-    </ol>
-    <div class="waybill">
-      <div class="waybill__docs">
-        <h3>{% translate "Документы в комплекте" %}</h3>
-        <ul class="checklist">{% for d in documents %}<li>{{ d }}</li>{% endfor %}</ul>
-      </div>
-      <dl class="stamp__facts waybill__stamp">
-        <div><dt>{% translate "Производитель" %}</dt><dd>{{ company.name }}</dd></div>
-        <div><dt>{% translate "Монтаж" %}</dt><dd>{% translate "на объекте" %}</dd></div>
-        <div><dt>{% translate "Доставка" %}</dt><dd>{% translate "вся Россия" %}</dd></div>
-        <div><dt>{% translate "Расчёт" %}</dt><dd>{% translate "24 ч" %}</dd></div>
-      </dl>
-    </div>
-  </div>
-</section>
+{% include "includes/delivery_tab.html" %}
 
-<section class="section section--grey" aria-labelledby="why-title">
+</div>
+</div>
+
+<section class="section section--grey section--flat" aria-labelledby="why-title">
   <div class="container">
     <div class="section-head">
       <h2 id="why-title">{% translate "Почему заказывают у нас" %}</h2>
@@ -209,4 +177,5 @@
 
 {% endblock %}
 
-{% block extra_js %}<script src="{% static 'js/model.js' %}" defer></script>{% endblock %}
+{% block extra_js %}<script src="{% static 'js/tabs.js' %}" defer></script><script src="{% static 'js/model.js' %}" defer></script>
+{% if model.scenes_3d %}<script src="{% static 'js/model3d.js' %}" data-viewer="{% static 'vendor/model-viewer/model-viewer.min.js' %}" data-draco="{% get_static_prefix %}vendor/draco/" defer></script>{% endif %}{% endblock %}

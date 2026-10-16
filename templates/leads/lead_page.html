@@ -13,13 +13,6 @@
       <p class="lead-page__lead">{% translate "Опишите задачу — рассчитаем стоимость и перезвоним в рабочее время." %}</p>
     </div>
     <div class="lead-page__details">
-      <p>{% translate "Для расчёта пригодятся:" %}</p>
-      <dl class="params">
-        <div><dt>L × B</dt><dd>{% translate "длина и ширина платформы" %}</dd></div>
-        <div><dt>H</dt><dd>{% translate "высота подъёма" %}</dd></div>
-        <div><dt>Q</dt><dd>{% translate "грузоподъёмность" %}</dd></div>
-        <div><dt>{% translate "Где" %}</dt><dd>{% translate "место установки и условия работы" %}</dd></div>
-      </dl>
       <p class="lead__phone">{% translate "Или позвоните:" %} <a href="tel:{{ company.phone_href }}">{{ company.phone }}</a></p>
     </div>
     <div class="lead-page__card">

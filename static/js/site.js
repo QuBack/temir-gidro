@@ -71,6 +71,16 @@
     });
   }
 
+  // Hero intro (CSS) runs on every visit: a page restored by the Back button comes from the
+  // back/forward cache with its animations finished, so they are played again.
+  var hero = document.querySelector(".hero");
+  if (hero && hero.getAnimations) {
+    window.addEventListener("pageshow", function (event) {
+      if (!event.persisted) return;
+      hero.getAnimations({ subtree: true }).forEach(function (a) { a.cancel(); a.play(); });
+    });
+  }
+
   // Hero video: starts after the page (and the LCP poster) has loaded.
   var video = document.querySelector("[data-hero-video]");
   if (video) {
@@ -88,6 +98,68 @@
     }
   }
 
+  // Home catalog: a series card (a link to its section without JS) opens its models
+  // in a panel under the card's row, one panel at a time.
+  var eqGrid = document.querySelector("[data-eq-grid]");
+  if (eqGrid) {
+    var eqItems = eqGrid.querySelectorAll(".eq-item");
+    var eqOpen = null;
+    var eqReduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var eqPanels = eqGrid.querySelectorAll(".eq-panel");
+    var placePanel = function (card, panel) {
+      // After the last card of the row; the notch points at the card. A shown panel takes
+      // a whole row and would push cards down, so the rows are read with every panel out.
+      eqPanels.forEach(function (p) { p.hidden = true; });
+      var top = card.parentNode.offsetTop, last = card.parentNode;
+      eqItems.forEach(function (item) { if (Math.abs(item.offsetTop - top) < 4) last = item; });
+      if (last.nextElementSibling !== panel) last.after(panel);
+      panel.hidden = false;
+      var box = card.getBoundingClientRect(), grid = eqGrid.getBoundingClientRect();
+      panel.style.setProperty("--notch", (box.left - grid.left + box.width / 2) + "px");
+    };
+    var closePanel = function (instant) {
+      if (!eqOpen) return;
+      var was = eqOpen;
+      eqOpen = null;
+      was.card.setAttribute("aria-expanded", "false");
+      was.panel.classList.remove("is-open");
+      if (instant || eqReduce) was.panel.hidden = true;
+      else setTimeout(function () { if (!was.panel.classList.contains("is-open")) was.panel.hidden = true; }, 400);
+    };
+    var openPanel = function (card) {
+      var panel = document.getElementById(card.getAttribute("aria-controls"));
+      // Switching groups swaps the panels at once, without a collapse in between.
+      var switching = !!eqOpen;
+      closePanel(true);
+      panel.classList.toggle("is-instant", switching);
+      placePanel(card, panel);
+      void panel.offsetHeight; // commit the collapsed state, then animate open
+      panel.classList.add("is-open");
+      card.setAttribute("aria-expanded", "true");
+      eqOpen = { card: card, panel: panel };
+      requestAnimationFrame(function () { panel.classList.remove("is-instant"); });
+      setTimeout(function () {
+        if (eqOpen && eqOpen.panel === panel) panel.scrollIntoView({ block: "nearest", behavior: eqReduce ? "auto" : "smooth" });
+      }, switching || eqReduce ? 0 : 420);
+    };
+    eqGrid.querySelectorAll("[data-eq-toggle]").forEach(function (card) {
+      card.setAttribute("role", "button");
+      card.setAttribute("aria-expanded", "false");
+      card.addEventListener("click", function (event) {
+        event.preventDefault();
+        if (eqOpen && eqOpen.card === card) closePanel();
+        else openPanel(card);
+      });
+      card.addEventListener("keydown", function (event) {
+        if (event.key === " ") { event.preventDefault(); card.click(); }
+      });
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && eqOpen) { var card = eqOpen.card; closePanel(); card.focus(); }
+    });
+    window.addEventListener("resize", function () { if (eqOpen) placePanel(eqOpen.card, eqOpen.panel); }, { passive: true });
+  }
+
   // Reveal on scroll, on every page: section heads, texts, cards and list items rise
   // and fade in, photos also open from the bottom. Items that arrive together come
   // one after another. Whatever is on screen at load is left alone, so the first
@@ -97,7 +169,7 @@
     "main .section-head", "main .prose", "main .split__text", "main .scene__text", "main .config__head",
     "main .config__form", "main .lead__text", "main .lead__form", "main .route", "main .waybill",
     "main .spec-table", "main .kit__options", "main .map-block__info", "main .article-cta", "main .article-related",
-    "main .lift-tile", "main .cat-card", "main .feature", "main .faq__item", "main .article", "main .series__item",
+    "main .lift-tile", "main .eq-item", "main .cat-card", "main .feature", "main .faq__item", "main .article", "main .series__item",
     "main .reasons__list > li", "main .industries__list > li", "main .project", "main .kit__item",
     "main .stats > div", "main .steps__item", "main .contacts__list > div",
   ].join(", ");
@@ -177,4 +249,30 @@
     }, { passive: true });
     window.addEventListener("resize", syncRail, { passive: true });
   }
+
+  // Photo strips: the arrows move one screenful of the strip; at either end the arrow hides.
+  // Without JS the strip still scrolls sideways by swipe or trackpad.
+  document.querySelectorAll("[data-carousel]").forEach(function (carousel) {
+    var track = carousel.querySelector("[data-carousel-track]");
+    var prev = carousel.querySelector("[data-carousel-prev]");
+    var next = carousel.querySelector("[data-carousel-next]");
+    var sync = function () {
+      var end = track.scrollWidth - track.clientWidth;
+      prev.disabled = track.scrollLeft <= 1;
+      next.disabled = track.scrollLeft >= end - 1;
+    };
+    var step = function (dir) {
+      var item = track.firstElementChild;
+      var gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      var size = item ? item.getBoundingClientRect().width + gap : track.clientWidth;
+      var perView = Math.max(1, Math.floor((track.clientWidth + gap) / size));
+      track.scrollBy({ left: dir * perView * size });
+    };
+    prev.hidden = next.hidden = false;
+    prev.addEventListener("click", function () { step(-1); });
+    next.addEventListener("click", function () { step(1); });
+    track.addEventListener("scroll", sync, { passive: true });
+    window.addEventListener("resize", sync, { passive: true });
+    sync();
+  });
 })();

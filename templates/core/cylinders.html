@@ -5,6 +5,7 @@
 {% block content %}
 
 <section class="eq-hero" aria-labelledby="cyl-title">
+  {% include "includes/breadcrumbs.html" %}
   <div class="container eq-hero__grid">
     <div class="eq-hero__text">
       <h1 id="cyl-title">{{ page.title }}</h1>
@@ -14,20 +15,12 @@
         <a class="hero__phone" href="tel:{{ company.phone_href }}">{{ company.phone }}</a>
       </div>
     </div>
-    <figure class="sheet">
-      <div class="sheet__drawing eq-hero__drawing">
-        {% picture page.image page.title sizes="(min-width: 60rem) 34rem, 90vw" priority=True %}
-      </div>
-      <figcaption class="stamp">
-        <span class="stamp__name">{% translate "Гидроцилиндры" %}</span>
-        <dl class="stamp__facts">
-          {% for value, label in page.facts %}<div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>{% endfor %}
-        </dl>
-      </figcaption>
-    </figure>
+    {# The render on its own, no drawing sheet: a cut-out on the grey. #}
+    <div class="cyl-hero__media">
+      {% picture page.image page.title sizes="(min-width: 60rem) 40rem, 90vw" priority=True %}
+    </div>
   </div>
 </section>
-{% include "includes/breadcrumbs.html" %}
 
 <section class="section" aria-labelledby="types-title">
   <div class="container">
@@ -66,21 +59,34 @@
 </section>
 
 <section class="section" aria-labelledby="specs-title">
-  <div class="container split">
-    <div class="split__text">
+  <div class="container">
+    <div class="section-head">
       <h2 id="specs-title">{% translate "Технические характеристики" %}</h2>
-      <p>{% translate "Диапазоны, в которых мы проектируем гидроцилиндры. Нестандартные размеры — по вашему чертежу." %}</p>
-      <table class="spec-table">
-        <caption class="visually-hidden">{% translate "Технические характеристики гидроцилиндров" %}</caption>
-        <tbody>
-          {% for label, value in page.specs %}<tr><th scope="row">{{ label }}</th><td>{{ value }}</td></tr>{% endfor %}
-        </tbody>
-      </table>
+      <p class="section-head__lead">{% translate "Диапазоны, в которых мы проектируем гидроцилиндры. Нестандартные размеры — по вашему чертежу." %}</p>
     </div>
-    <div class="split__media">
-      <ul class="cyl-photos">
-        {% for p in page.photos %}<li>{% translate "Производство гидроцилиндров ТЕМИР ГИДРО" as ph_alt %}{% picture p ph_alt sizes="(min-width: 60rem) 15vw, 30vw" %}</li>{% endfor %}
+    <table class="spec-table">
+      <caption class="visually-hidden">{% translate "Технические характеристики гидроцилиндров" %}</caption>
+      <tbody>
+        {% for label, value in page.specs %}<tr><th scope="row">{{ label }}</th><td>{{ value }}</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+{# Our cylinders from the shop floor: a strip that scrolls sideways, arrows from site.js. #}
+<section class="section section--dark" aria-labelledby="works-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="works-title">{% translate "Наши гидроцилиндры" %}</h2>
+      <p class="section-head__lead">{% translate "Гидроцилиндры нашего производства для промышленного и подъёмного оборудования." %}</p>
+    </div>
+    <div class="carousel" data-carousel>
+      {% translate "Гидроцилиндр производства ТЕМИР ГИДРО" as ph_alt %}
+      <ul class="carousel__track" data-carousel-track>
+        {% for p in page.photos %}<li class="carousel__item">{% picture p ph_alt sizes="(min-width: 60rem) 18rem, 70vw" %}</li>{% endfor %}
       </ul>
+      <button class="carousel__btn carousel__btn--prev" type="button" data-carousel-prev aria-label="{% translate 'Предыдущие фото' %}" hidden>{% icon "chevron-left" %}</button>
+      <button class="carousel__btn carousel__btn--next" type="button" data-carousel-next aria-label="{% translate 'Следующие фото' %}" hidden>{% icon "chevron-right" %}</button>
     </div>
   </div>
 </section>

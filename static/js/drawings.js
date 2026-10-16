@@ -40,6 +40,7 @@
       out("Hs", String(target.H));
       out("Qs", String(Math.round(target.Q * 1000))); // kg: in ГОСТ lettering "т" reads like "m"
       out("N", String(c.n));
+      out("M", c.n + "X"); // the serial model: one pair is 1X, two are 2X…
       out("Hmin", String(c.hmin));
       out("Hmax", String(c.hmin + target.H));
       out("T", String(c.time));
@@ -72,9 +73,19 @@
       }
     }
 
+    // The width never exceeds the length: a narrower length pulls the width down with it,
+    // and the width slider stops at the length.
+    var widthInput = root.querySelector('input[name="B"]');
+    function keepWidth() {
+      if (target.B <= target.L) return;
+      target.B = target.L;
+      widthInput.value = target.L;
+    }
+
     inputs.forEach(function (input) {
       input.addEventListener("input", function () {
         target[input.name] = parseFloat(input.value);
+        keepWidth();
         sync();
         kick();
       });
@@ -98,7 +109,7 @@
       if (!field) return;
       var c = calc(target);
       var line = "Параметры подъёмника: платформа " + target.L + " × " + target.B + " мм, ход " +
-        target.H + " мм, грузоподъёмность " + tons(target.Q) + " т, пар ножниц: " + c.n + ".";
+        target.H + " мм, грузоподъёмность " + tons(target.Q) + " т, модель " + c.n + "X (пар ножниц: " + c.n + ").";
       var rest = field.value.replace(/^Параметры подъёмника:.*\n?/, "");
       field.value = line + (rest ? "\n" + rest : "");
       var name = document.getElementById("lead-name");
@@ -139,7 +150,9 @@
   }
 
   // Pairs of scissors, folded height, reach, lift time and lead time for L, H (stroke), Q.
-  // One pair rises to (L − 150) × 0,866 (arms at 60°); the stroke is that minus the folded height.
+  // 1X rises to (L − 150) × 0,866 (arms at 60°) and each next model doubles it (client's rule,
+  // 2026-10): 2X × 2, 3X × 4, 4X × 8. The stroke is that minus the folded height. 5X waits for
+  // its folded heights from the client, so above 4X the form asks for an individual quote.
   function calc(v) {
     var kg = v.Q * 1000;
     var q = classOf(LOADS, kg);
@@ -147,10 +160,11 @@
     if (q === 0 && v.L > LENGTHS_LIGHT[2]) { q = 1; }
     l = q === 0 ? classOf(LENGTHS_LIGHT, v.L) : classOf(LENGTHS, v.L);
     var perPair = (v.L - 150) * 0.866;
+    var top = function (n) { return perPair * Math.pow(2, n - 1); };
     var n = 1;
-    while (n < 4 && n * perPair - HMIN[q][l][n - 1] < v.H) n++;
+    while (n < 4 && top(n) - HMIN[q][l][n - 1] < v.H) n++;
     var hmin = HMIN[q][l][n - 1];
-    var reach = Math.floor((n * perPair - hmin) / 10) * 10;
+    var reach = Math.floor((top(n) - hmin) / 10) * 10;
     var speed = kg <= 1000 ? 70 : kg <= 2000 ? 60 : kg <= 4000 ? 50 : 40; // mm/s
     return {
       n: n, hmin: hmin, reach: reach, ok: reach >= v.H,
@@ -211,12 +225,26 @@
     }
     pins.push([xa, baseTop], [xb, baseTop]);
 
-    // Hydraulic cylinder: from the base to the centre pin of the lowest pair.
-    var sx = xa + (xb - xa) * 0.1, sy = baseTop - 3;
-    var ex = (xa + xb) / 2, ey = baseTop - h / 2;
-    var mx = sx + (ex - sx) * 0.55, my = sy + (ey - sy) * 0.55;
-    line(svg, mx, my, ex, ey, "s-rod");
-    line(svg, sx, sy, mx, my, "s-cyl");
+    // Hydraulic cylinders sit between the arms, as on the 1X–3X renders: the barrel's
+    // pivot low on a "\" or "/" arm, the rod's pivot higher up. A 4X is two 2X stacked,
+    // so it gets two cylinders. A point is [pair from the top, arm, share of the pair height].
+    function onArm(p) {
+      var t = p[2], y = platBottom + (p[0] + t) * h;
+      return [p[1] === "\\" ? xa + t * (xb - xa) : xb - t * (xb - xa), y];
+    }
+    var CYLINDERS = {
+      1: [[[0, "\\", 0.88], [0, "/", 0.35]]],
+      2: [[[1, "\\", 0.74], [0, "/", 0.72]]],
+      3: [[[2, "/", 0.14], [0, "/", 0.81]]],
+      4: [[[3, "\\", 0.74], [2, "/", 0.72]], [[1, "\\", 0.74], [0, "/", 0.72]]],
+    }[n];
+    CYLINDERS.forEach(function (cyl) {
+      var a = onArm(cyl[0]), b = onArm(cyl[1]);
+      var mx = a[0] + (b[0] - a[0]) * 0.55, my = a[1] + (b[1] - a[1]) * 0.55;
+      line(svg, mx, my, b[0], b[1], "s-rod");
+      line(svg, a[0], a[1], mx, my, "s-cyl");
+      pins.push(a, b);
+    });
 
     node(svg, "rect", { x: x0, y: baseTop, width: lw, height: 12, "class": "s-frame" });
     node(svg, "rect", { x: x0, y: platTop, width: lw, height: 14, "class": "s-frame" });
@@ -244,14 +272,20 @@
     var hy = (platTop + foldTop) / 2;
     node(svg, "text", { x: dx - 8, y: hy, transform: "rotate(-90 " + (dx - 8) + " " + hy + ")", "text-anchor": "middle" },
       "H = " + Math.round(v.H / 10) * 10);
-    // Hmin: floor to the folded platform. Labelled only when there is room; the stamp always shows it.
+    // Hmin: floor to the folded platform, always labelled. With room, along the line like H; a low
+    // folded lift leaves too short a span, so then the label runs up from the floor on the line's
+    // other side, clear of the H label.
     line(svg, dx, foldTop + 2, dx, FLOOR - 2, "s-dim");
     arrow(svg, dx, foldTop + 1, "up");
     arrow(svg, dx, FLOOR - 1, "down");
-    if (hFolded >= 120) {
+    var hminText = "Hmin = " + c.hmin;
+    if (hFolded >= 150) {
       var my2 = (foldTop + FLOOR) / 2;
       node(svg, "text", { x: dx - 8, y: my2, transform: "rotate(-90 " + (dx - 8) + " " + my2 + ")", "text-anchor": "middle" },
-        "Hmin = " + c.hmin);
+        hminText);
+    } else {
+      var hx = dx + 28, hy2 = FLOOR - 4;
+      node(svg, "text", { x: hx, y: hy2, transform: "rotate(-90 " + hx + " " + hy2 + ")", "text-anchor": "start" }, hminText);
     }
 
     // L: under the floor.

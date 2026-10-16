@@ -1,22 +1,7 @@
-// Model page: photo gallery, kit callouts, request sliders. All content is
+// Model page: kit callouts, request sliders. All content is
 // server-rendered; this file only adds interaction.
 (function () {
   "use strict";
-
-  // ---------- Gallery: thumbnails switch the main picture ----------
-  var gallery = document.querySelector("[data-gallery]");
-  if (gallery) {
-    var slides = gallery.querySelectorAll("[data-slide]");
-    var thumbs = gallery.querySelectorAll("[data-thumb]");
-    thumbs.forEach(function (thumb) {
-      thumb.addEventListener("click", function (event) {
-        event.preventDefault();
-        var index = parseInt(thumb.dataset.thumb, 10);
-        slides.forEach(function (slide, i) { slide.hidden = i !== index; });
-        thumbs.forEach(function (t) { t.classList.toggle("is-active", t === thumb); });
-      });
-    });
-  }
 
   // ---------- Kit: a list item and its marker on the picture light up together ----------
   var kit = document.querySelector(".kit");

@@ -41,7 +41,7 @@ class HomeView(SeoMixin, TemplateView):
             hero_lift=catalog.HERO_LIFT,
             hero_image=catalog.HERO_IMAGE,
             hero_video=catalog.HERO_VIDEO,
-            equipment_tiles=catalog.EQUIPMENT_TILES,
+            equipment_groups=catalog.EQUIPMENT_GROUPS,
             cylinders=catalog.CYLINDERS,
             stats=catalog.STATS,
             advantages=catalog.ADVANTAGES,
@@ -106,10 +106,24 @@ class EquipmentView(SeoMixin, BreadcrumbsMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         item = self.item
         image = item["image"]
+        # A showcase line lists its models with their specs: the page is a collection of
+        # products (each described on its own page), not a product itself.
+        showcase = (
+            [{**m, **lift_models.MODELS[(self.kwargs["slug"], m["slug"])]} for m in item["models"]]
+            if item.get("showcase")
+            else []
+        )
         context["jsonld"] = [
             organization_schema(),
             *context.get("jsonld", []),
-            product_schema(
+            collection_schema(
+                item["seo_title"],
+                self.request.path,
+                [(m["title"], m["url"]) for m in showcase],
+                description=item["seo_description"],
+            )
+            if showcase
+            else product_schema(
                 item["title"],
                 item["seo_description"],
                 static(f"img/{image['src']}-{image['widths'][-1]}.webp"),
@@ -117,8 +131,24 @@ class EquipmentView(SeoMixin, BreadcrumbsMixin, TemplateView):
             ),
             faq_schema(item["faq"]),
         ]
+        # A line without serial models is a product page itself: its sections become tabs.
+        sections = [("opisanie", _("Описание"), "about"), ("harakteristiki", _("Характеристики"), "specs"),
+                    ("komplektaciya", _("Комплектация"), "kit")]
+        tabs = [] if item["models"] else [(id_, title) for id_, title, key in sections if item.get(key)]
+        if len(tabs) > 1:
+            tabs.append(("postavka", _("Поставка")))
+        else:
+            tabs = []
         context.update(
             item=item,
+            showcase=showcase,
+            tabs=tabs,
+            delivery=lift_models.DELIVERY,
+            documents=lift_models.DOCUMENTS,
+            # A render too small for the stage gives way to the line's photo. Height is what counts:
+            # the stage fits a render by height, so the narrow car and console renders (300 px tall)
+            # still stand on it.
+            hero_photo=item["image"]["size"][1] < 280 and bool(item.get("about_image")),
             lead_form=LeadForm.for_request(self.request),
             hero_lift=catalog.HERO_LIFT,
             related=[c for c in catalog.CATEGORIES if c["url"] != self.request.path],
@@ -147,7 +177,7 @@ class ModelView(SeoMixin, BreadcrumbsMixin, TemplateView):
         return [
             (_("Подъёмники"), reverse("core:catalog")),
             (self.line["title"], line_url),
-            (self.model["name"], self.request.path),
+            (self.model["title"], self.request.path),
         ]
 
     def get_context_data(self, **kwargs):
@@ -170,6 +200,12 @@ class ModelView(SeoMixin, BreadcrumbsMixin, TemplateView):
         context.update(
             model=model,
             line=self.line,
+            tabs=[
+                ("opisanie", _("Описание")),
+                ("harakteristiki", _("Характеристики")),
+                ("komplektaciya", _("Комплектация")),
+                ("postavka", _("Поставка")),
+            ],
             kit_points=lift_models.kit_points(model),
             kit_overlay=lift_models.kit_overlay(model),
             delivery=lift_models.DELIVERY,
@@ -286,7 +322,6 @@ class AboutView(SeoMixin, BreadcrumbsMixin, TemplateView):
         ]
         context.update(
             lead_form=LeadForm.for_request(self.request),
-            hero_image=catalog.HERO_IMAGE,
             about_bg=catalog.ABOUT_BG,
             page_bg=catalog.ABOUT_HERO_BG,
             stats=catalog.STATS,

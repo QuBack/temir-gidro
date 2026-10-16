@@ -66,8 +66,8 @@ ARTICLES = [
         ),
         "text": _("Грузоподъёмность, высота, платформа, привод и безопасность — на что смотреть."),
         "date": datetime.date(2026, 10, 1),
-        "image": img("articles/kak-vybrat-nozhnichnyj-podemnik", (800, 533)),
-        "image_alt": _("Гидравлический ножничный подъёмник в цехе"),
+        "image": img("articles/kak-vybrat-nozhnichnyj-podemnik", (1200, 800), widths=(400, 800, 1200)),
+        "image_alt": _("Ножничный подъёмник ТЕМИР ГИДРО с поддонами груза на испытаниях в цехе"),
         "related": ("/podemniki/nozhnichnye/", _("Ножничные подъёмники 1X–4X")),
     },
     {
@@ -81,8 +81,8 @@ ARTICLES = [
         ),
         "text": _("Шахта, гидравлика, мусороприёмники и обслуживание — разбираем по узлам."),
         "date": datetime.date(2026, 10, 1),
-        "image": img("articles/podzemnye-kontejnernye-ploshchadki", (800, 533)),
-        "image_alt": _("Подземная контейнерная площадка во дворе жилого дома"),
+        "image": img("articles/podzemnye-kontejnernye-ploshchadki", (1200, 800), widths=(400, 800, 1200)),
+        "image_alt": _("Подъёмник ТЕМИР ГИДРО для подземной контейнерной площадки: четыре контейнера и мусороприёмники"),
         "related": ("/podemniki/dlya-musornyh-kontejnerov/", _("Подъёмники для мусорных контейнеров")),
     },
     {

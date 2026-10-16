@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кнопка 3D — цвета</title>
+<style>
+  @font-face { font-family: "Sofia Sans Condensed"; font-weight: 400 900; font-display: swap;
+    src: url("../../static/fonts/sofia-sans-condensed-latin.woff2") format("woff2"); }
+  @font-face { font-family: "Onest"; font-weight: 400 700; font-display: swap;
+    src: url("../../static/fonts/onest-cyrillic.woff2") format("woff2"); unicode-range: U+0400-04FF; }
+  @font-face { font-family: "Onest"; font-weight: 400 700; font-display: swap;
+    src: url("../../static/fonts/onest-latin.woff2") format("woff2"); }
+  :root { --red: #c4161c; --ink: #22282b; --muted: #5d6669; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 2.5rem 1.25rem 4rem; background: #f2f3f3; color: var(--ink); font: 16px/1.5 "Onest", system-ui, sans-serif; }
+  .wrap { max-width: 74rem; margin: 0 auto; }
+  h1 { margin: 0 0 .5rem; font: 700 2.5rem/1.1 "Sofia Sans Condensed", sans-serif; }
+  .lead { margin: 0 0 2.5rem; max-width: 48rem; color: var(--muted); }
+  .grid { display: grid; gap: 2rem; }
+  @media (min-width: 60rem) { .grid { grid-template-columns: 1fr 1fr; } }
+  .card h2 { margin: 0 0 .25rem; font: 700 1.5rem/1.2 "Sofia Sans Condensed", sans-serif; }
+  .card p { margin: 0 0 1rem; color: var(--muted); font-size: .9375rem; }
+
+  /* The stage as on the site: a white sheet of graph paper with the 1X render. */
+  .stage {
+    position: relative; aspect-ratio: 2 / 1; overflow: hidden; box-shadow: 0 1px 3px rgb(34 40 43 / .08), 0 12px 32px -16px rgb(34 40 43 / .3);
+    background:
+      linear-gradient(rgb(34 40 43 / .09) 1px, transparent 1px) 0 0 / 3rem 3rem,
+      linear-gradient(90deg, rgb(34 40 43 / .09) 1px, transparent 1px) 0 0 / 3rem 3rem,
+      linear-gradient(rgb(34 40 43 / .04) 1px, transparent 1px) 0 0 / .6rem .6rem,
+      linear-gradient(90deg, rgb(34 40 43 / .04) 1px, transparent 1px) 0 0 / .6rem .6rem,
+      #fff;
+  }
+  .stage img { position: absolute; inset: 4.5rem 1.5rem 1.5rem; width: calc(100% - 3rem); height: calc(100% - 6rem); object-fit: contain;
+    filter: drop-shadow(0 18px 16px rgb(34 40 43 / .12)); }
+
+  /* The button, as on the site: floating solid letters, no plate. */
+  .b3d { position: absolute; top: 1rem; right: 1.25rem; z-index: 2; display: grid; place-items: center; padding: .25rem .5rem;
+    border: 0; background: none; cursor: pointer; perspective: 420px; -webkit-tap-highlight-color: transparent; }
+  .b3d::after { content: ""; position: absolute; left: 12%; right: 12%; bottom: -.5rem; height: .75rem; border-radius: 50%;
+    background: radial-gradient(ellipse at center, var(--glow, rgb(34 40 43 / .35)), transparent 70%); filter: blur(3px); }
+  .b3d:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; border-radius: 8px; }
+  .tilt { display: grid; place-items: center; transform-style: preserve-3d; will-change: transform; }
+  .word { display: grid; transform-style: preserve-3d; font: 900 3.75rem/1 "Sofia Sans Condensed", sans-serif; letter-spacing: .02em; }
+  .word > span { grid-area: 1 / 1; display: block; user-select: none; }
+  /* The face: a gradient clipped to the letters (metal), with a light sweep passing now and then. */
+  .word > .face { background: var(--face); -webkit-background-clip: text; background-clip: text; color: transparent;
+    -webkit-text-stroke: var(--stroke, 0); }
+  .word > .face.shine { background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / .85) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat, var(--face);
+    -webkit-background-clip: text; background-clip: text; animation: shine 3.8s ease-in-out infinite; }
+  @keyframes shine { 0%, 55% { background-position: -150% 0, 0 0; } 85%, 100% { background-position: 250% 0, 0 0; } }
+  .spin .word { animation: turn .7s cubic-bezier(.3, .7, .3, 1); }
+  @keyframes turn { from { rotate: y 0deg; } to { rotate: y 360deg; } }
+  @media (prefers-reduced-motion: reduce) { .spin .word, .word > .face.shine { animation: none; } }
+
+  /* Colours: face gradient, body from front to back, glow under the letters. */
+  .gold { --face: linear-gradient(180deg, #fff2b8 0%, #f7cf4f 38%, #d39b12 62%, #f3c74a 100%); --body: #c98f0e,#5c3a00; --glow: rgb(201 143 14 / .45); }
+  .gold-dark { --face: linear-gradient(180deg, #fff2b8 0%, #f7cf4f 38%, #d39b12 62%, #f3c74a 100%); --body: #2b2f31,#0d0f10; --glow: rgb(20 20 20 / .45); }
+  .chrome { --face: linear-gradient(180deg, #ffffff 0%, #d9dee1 40%, #8d969b 55%, #e7ebed 100%); --body: #8a9399,#30373b; --glow: rgb(34 40 43 / .35); --stroke: .5px rgb(60 66 70 / .5); }
+  .signal { --face: linear-gradient(180deg, #ffe36b 0%, #f5c400 55%, #e2a900 100%); --body: #2b2f31,#0d0f10; --glow: rgb(20 20 20 / .4); }
+  .red-white { --face: linear-gradient(180deg, #ffffff, #f1f1f1); --body: #e0262d,#5c060a; --glow: rgb(156 15 20 / .45); --stroke: 1px #c4161c; }
+
+  .note { margin-top: 2.5rem; padding: 1rem 1.25rem; border-left: 3px solid var(--red); background: #fff; color: var(--muted); font-size: .9375rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Кнопка «3D» — цвета</h1>
+  <p class="lead">Та же кнопка, что сейчас на сайте (объёмные буквы поворачиваются за мышью, по клику — оборот), но разного цвета. Фон — белый лист в клетку и рендер 1X, как на странице модели, чтобы было видно, что выделяется, а что сливается.</p>
+
+  <div class="grid">
+    <section class="card">
+      <h2>1. Золото</h2>
+      <p>Золотое лицо с переливом и бронзовый бок, по буквам иногда пробегает блик. Ярко и «дорого», на белом и рядом с красным читается сразу.</p>
+      <div class="stage"><img src="../../static/img/catalog/nozhnichnyj-podemnik-800.webp" alt="">
+        <button class="b3d gold" type="button" data-shine><span class="tilt"><span class="word" aria-hidden="true">3D</span></span></button></div>
+    </section>
+
+    <section class="card">
+      <h2>2. Золото на чёрном корпусе</h2>
+      <p>То же золотое лицо, но бок графитовый, почти чёрный. Контраст сильнее, чем у первого, выглядит строже, «как шильдик».</p>
+      <div class="stage"><img src="../../static/img/catalog/nozhnichnyj-podemnik-800.webp" alt="">
+        <button class="b3d gold-dark" type="button" data-shine><span class="tilt"><span class="word" aria-hidden="true">3D</span></span></button></div>
+    </section>
+
+    <section class="card">
+      <h2>3. Сигнальный жёлтый с чёрным</h2>
+      <p>Жёлтое лицо и чёрный бок — как сигнальная разметка на наших платформах. Самый заметный и «промышленный».</p>
+      <div class="stage"><img src="../../static/img/catalog/nozhnichnyj-podemnik-800.webp" alt="">
+        <button class="b3d signal" type="button"><span class="tilt"><span class="word" aria-hidden="true">3D</span></span></button></div>
+    </section>
+
+    <section class="card">
+      <h2>4. Хром</h2>
+      <p>Серебристое лицо с бликом, тёмно-серый бок — как хромированный шток цилиндра. Спокойнее золота, но всё равно металлический.</p>
+      <div class="stage"><img src="../../static/img/catalog/nozhnichnyj-podemnik-800.webp" alt="">
+        <button class="b3d chrome" type="button" data-shine><span class="tilt"><span class="word" aria-hidden="true">3D</span></span></button></div>
+    </section>
+
+    <section class="card">
+      <h2>5. Белое с красным боком</h2>
+      <p>Белое лицо с тонкой красной обводкой и толстый красный бок. Остаётся в цветах сайта, но выделяется лучше нынешнего красного.</p>
+      <div class="stage"><img src="../../static/img/catalog/nozhnichnyj-podemnik-800.webp" alt="">
+        <button class="b3d red-white" type="button"><span class="tilt"><span class="word" aria-hidden="true">3D</span></span></button></div>
+    </section>
+  </div>
+
+  <p class="note">Подвигайте мышью по странице и нажмите на буквы. Скажите номер — или что смешать (например, золото с чуть более тёмным боком) — перенесу на сайт.</p>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var SLICES = 16, STEP = 1.6, MAX = 28;
+  var buttons = [].slice.call(document.querySelectorAll(".b3d"));
+
+  function hex(h) { var n = parseInt(h.trim().slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; }
+  function mix(a, b, t) { return "rgb(" + a.map(function (v, i) { return Math.round(v + (b[i] - v) * t); }).join(",") + ")"; }
+
+  buttons.forEach(function (btn) {
+    var word = btn.querySelector(".word"), text = word.textContent;
+    var body = getComputedStyle(btn).getPropertyValue("--body").split(",").map(hex);
+    word.textContent = "";
+    for (var i = SLICES; i >= 0; i--) {
+      var s = document.createElement("span");
+      s.textContent = text;
+      s.style.transform = "translateZ(" + (-i * STEP) + "px)";
+      if (i) s.style.color = mix(body[0], body[1], i / SLICES);
+      else s.className = "face" + (btn.hasAttribute("data-shine") ? " shine" : "");
+      word.appendChild(s);
+    }
+    btn._tilt = btn.querySelector(".tilt");
+    btn._x = btn._y = btn._tx = btn._ty = 0;
+    btn.addEventListener("click", function () { btn.classList.remove("spin"); void btn.offsetWidth; btn.classList.add("spin"); });
+  });
+
+  var last = 0;
+  window.addEventListener("pointermove", function (e) {
+    last = performance.now();
+    buttons.forEach(function (btn) {
+      var r = btn.getBoundingClientRect();
+      var dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+      btn._ty = Math.max(-1, Math.min(1, dx / 260)) * MAX;
+      btn._tx = Math.max(-1, Math.min(1, -dy / 260)) * MAX;
+    });
+  }, { passive: true });
+
+  function frame(t) {
+    var idle = t - last > 2500;
+    buttons.forEach(function (btn, k) {
+      if (idle) { btn._ty = Math.sin(t / 1400 + k) * MAX * .6; btn._tx = Math.cos(t / 1900 + k) * MAX * .3; }
+      btn._x += (btn._tx - btn._x) * .12; btn._y += (btn._ty - btn._y) * .12;
+      btn._tilt.style.transform = "rotateX(" + btn._x.toFixed(2) + "deg) rotateY(" + btn._y.toFixed(2) + "deg)";
+    });
+    requestAnimationFrame(frame);
+  }
+  if (!reduce) requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

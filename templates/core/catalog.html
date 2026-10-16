@@ -5,6 +5,7 @@
 {% block content %}
 
 <section class="eq-hero cat-hero" aria-labelledby="catalog-title">
+  {% include "includes/breadcrumbs.html" %}
   <div class="container">
     <h1 id="catalog-title">{% translate "Каталог подъёмников" %}</h1>
     <p class="eq-hero__lead">{% translate "Серийные модели и оборудование по техническому заданию. Выберите тип подъёмника — или опишите задачу, и мы подберём конструкцию." %}</p>
@@ -45,7 +46,6 @@
         <a class="cat-card" href="{{ cat.url }}">
           <div class="cat-card__media">{% picture cat.image cat.title sizes="(min-width: 60rem) 30vw, (min-width: 40rem) 45vw, 90vw" %}</div>
           <h3>{{ cat.title }}</h3>
-          {% if cat.facts %}<ul class="facts cat-card__meta">{% for f in cat.facts %}<li>{{ f }}</li>{% endfor %}</ul>{% endif %}
         </a>
       </li>
       {% endfor %}

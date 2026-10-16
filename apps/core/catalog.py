@@ -13,21 +13,38 @@ def img(src, size, widths=(400, 800)):
     return {"src": src, "size": size, "widths": widths}
 
 
+# Studio light of the client's renders (48-ll.hdr, cut to 1024 × 512). The GLBs exported in 2026-10
+# have glossy paint and chrome tuned to it; under the viewer's flat "neutral" light they look matte.
+STUDIO_HDR = "models/studiya.hdr"
+
+
+def scene3d(src, image, alt, label=None, env=STUDIO_HDR, exposure="1.15", orbit=None):
+    """One scene of the «3D-модель» block (includes/model3d.html, static/js/model3d.js):
+    a Draco GLB in static/, the render shown until the visitor asks for 3D, and the viewer's light.
+    env=None keeps the viewer's neutral light (the 1X and 2X models were tuned to it)."""
+    return {"src": src, "image": image, "alt": alt, "label": label, "env": env, "exposure": exposure,
+            "orbit": orbit}
+
+
 # Full-width workshop photo in the hero — the LCP image.
 HERO_IMAGE = img("hero/gidravlicheskie-podemniki", (1920, 765), widths=(768, 1280, 1920))
 # Generated drawing-style backgrounds (illustrations, never passed off as photos).
-# Soft photo headers (Codex, 2026): objects on the right, the text side kept clear.
-ABOUT_HERO_BG = img("backgrounds/ceh-temir-gidro-o-kompanii", (1672, 941), widths=(768, 1280, 1672))
+# Photo headers: objects on the right, the text side kept clear.
+# About: our welding bay (a real photo) under a dark veil, white text on the left.
+ABOUT_HERO_BG = img("photos/proizvodstvo-temir-gidro-svarochnyj-uchastok", (1672, 941), widths=(768, 1280, 1672))
+# Contacts and articles: generated (Codex, 2026).
 CONTACTS_BG = img("backgrounds/promyshlennyj-kvartal-moskvy", (1600, 900), widths=(768, 1280, 1600))
 ARTICLES_BG = img("backgrounds/verstak-inzhenera-statyi", (1600, 900), widths=(768, 1280, 1600))
-# Behind «Реквизиты и контакты» on the about page: a softened hall of red lifts, objects on the right.
-ABOUT_BG = img("backgrounds/ceh-nozhnichnyh-podemnikov", (1664, 936), widths=(768, 1280, 1664))
+# Behind «Реквизиты и контакты» on the about page: an industrial park at sunset, buildings on the
+# right, haze on the left under the text (generated, Codex, 2026).
+ABOUT_BG = img("backgrounds/promyshlennyj-park-na-zakate", (1672, 941), widths=(768, 1280, 1672))
 # Behind the spec tables: a diamond-plate platform, texture on the right, plain on the left.
 SPECS_BG = img("backgrounds/riflenyj-list-platformy", (1664, 936), widths=(768, 1280, 1664))
 # Request blocks: a faint lift drawing on navy (Codex), the drawing on the right.
 LEAD_BG = img("backgrounds/chertezh-podemnika-zayavka", (1672, 941), widths=(768, 1280, 1672))
-# Behind the scissor-lift configurator: drawings at the edges, an empty middle for the controls.
-CONFIG_BG = img("backgrounds/chertezh-nozhnichnyh-podemnikov-podbor", (1664, 936), widths=(768, 1280, 1664))
+# Behind the scissor-lift configurator: burgundy, light-red drawings at the edges (the earlier grey
+# drawing recoloured), an empty middle for the controls.
+CONFIG_BG = img("backgrounds/chertezh-nozhnichnyh-podemnikov-bordo", (1664, 936), widths=(768, 1280, 1664))
 # Configurator fallback when JS is off (with JS a live SVG scheme replaces it).
 HERO_LIFT = img("catalog/nozhnichnyj-podemnik-3x", (800, 1289))
 # Drop a muted 6–15 s loop into static/video/ and set the file name here;
@@ -40,15 +57,18 @@ SCISSOR_2X = img("catalog/nozhnichnyj-podemnik-2x", (800, 1080))
 SCISSOR_3X = img("catalog/nozhnichnyj-podemnik-3x", (800, 1289))
 # Montage of the 3X render with a fourth pair (tools/make_4x_montage.py) until a real render arrives.
 SCISSOR_4X = img("catalog/nozhnichnyj-podemnik-4x", (800, 1692))
+# Three models in a row (1X in front, 3X at the back; 4X left out for now), composed from the renders
+# above, the 3X paint matched to 1X and 2X: the scissor series card and the scissor line's first screen.
+SCISSOR_LINEUP = img("catalog/nozhnichnye-podemniki-1x-3x", (1733, 1211), widths=(640, 1280, 1733))
 PAINT_1X = img("catalog/podemnik-dlya-okrasochnoj-kamery", (800, 490))
 PAINT_2D = img("catalog/podemnik-dlya-okrasochnoj-kamery-2d", (800, 503))
+PAINT_3D = img("catalog/podemnik-dlya-okrasochnoj-kamery-3d", (800, 705))
 
 CATEGORIES = [
     {
         "title": _("Ножничные подъёмники"),
         "url": "/podemniki/nozhnichnye/",
         "text": _("Серия 1X–4X: от одной до четырёх пар ножниц. Грузовые платформы для складов, цехов и погрузки."),
-        "facts": [_("до 10 т"), _("до 6 м")],
         # The 3X render is the configurator fallback; the catalog shows the single-pair 1X.
         "image": img("catalog/nozhnichnyj-podemnik", (800, 486)),
         "featured": True,
@@ -57,32 +77,31 @@ CATEGORIES = [
         "title": _("Четырёхстоечные подъёмники"),
         "url": "/podemniki/chetyrehstoechnye/",
         "text": _("Самонесущая конструкция на сдвоенных цепях для автосервиса и парковки."),
-        "image": img("catalog/chetyrehstoechnyj-podemnik", (800, 531)),
+        "image": img("catalog/chetyrehstoechnyj-podemnik", (1200, 787), widths=(400, 800, 1200)),
     },
     {
         "title": _("Подъёмники для мусорных контейнеров"),
         "url": "/podemniki/dlya-musornyh-kontejnerov/",
         "text": _("Подземные контейнерные площадки: баки скрыты в шахте и поднимаются к вывозу."),
-        "facts": [_("до 8 т")],
-        "image": img("catalog/podemnik-dlya-musornyh-kontejnerov", (800, 800)),
+        "image": img("catalog/podemnik-dlya-musornyh-kontejnerov", (576, 629), widths=(400, 576)),
     },
     {
         "title": _("Подъёмники для окрасочных камер"),
         "url": "/podemniki/dlya-okrasochnyh-kamer/",
-        "text": _("Рабочие платформы 1X и 2D для покраски крупногабаритных изделий."),
+        "text": _("Рабочие платформы 1X, 2D и 3D для покраски крупногабаритных изделий."),
         "image": img("catalog/podemnik-dlya-okrasochnoj-kamery", (800, 490)),
     },
     {
         "title": _("Автомобильные подъёмники"),
         "url": "/podemniki/avtomobilnye/",
         "text": _("Подъём автомобилей между уровнями паркинга и в шоурумах."),
-        "image": img("catalog/avtomobilnyj-podemnik", (220, 300), widths=(220,)),
+        "image": img("catalog/avtomobilnyj-podemnik", (893, 1220), widths=(220, 400, 893)),
     },
     {
         "title": _("Консольные подъёмники"),
         "url": "/podemniki/konsolnye/",
         "text": _("Модель 1L для подъёма грузов между этажами вдоль стены."),
-        "image": img("catalog/konsolnyj-podemnik", (124, 293), widths=(124,)),
+        "image": img("catalog/konsolnyj-podemnik", (292, 584), widths=(124, 292)),
     },
 ]
 
@@ -99,7 +118,8 @@ CYLINDERS = {
         (_("Рабочее давление"), _("16–32 МПа")),
     ],
     "image": img("catalog/gidrocilindry", (1200, 535), widths=(400, 800, 1200)),
-    "photos": [img(f"photos/proizvodstvo-gidrocilindrov-{i}", (300, 300), widths=(300,)) for i in (1, 2, 3)],
+    # Our cylinders from the shop floor (old site carousel, 300 × 300 is all there is).
+    "photos": [img(f"photos/gidrocilindr-temir-gidro-{i}", (300, 300), widths=(300,)) for i in range(1, 10)],
 }
 
 STATS = [
@@ -157,8 +177,8 @@ _STEP_PHOTOS = [
     ("zayavka", _("Заявка на подъёмник: эскиз платформы с размерами на столе менеджера")),
     ("raschet", _("Инженерный расчёт нагрузок подъёмника")),
     ("proekt", _("3D-модель ножничного подъёмника в САПР и чертёж")),
-    ("proizvodstvo", _("Сварка рамы ножничного подъёмника в цехе ТЕМИР ГИДРО")),
-    ("montazh", _("Монтаж ножничного подъёмника в приямок на складе")),
+    ("proizvodstvo", _("Сварщик приваривает платформу ножничного подъёмника в цехе ТЕМИР ГИДРО")),
+    ("montazh", _("Ножничный подъёмник ТЕМИР ГИДРО, смонтированный в приямке на объекте")),
 ]
 STEPS_TIMELINE = [
     {
@@ -288,10 +308,11 @@ _PAINT_URL = "/podemniki/dlya-okrasochnyh-kamer/"
 EQUIPMENT = {
     "nozhnichnye": {
         "title": _("Ножничные подъёмники"),
+        "hero_backdrop": SCISSOR_LINEUP,  # the models in a row beside the first screen's text
         "seo_title": _("Ножничные подъёмники от производителя — ТЕМИР ГИДРО"),
         "seo_description": _(
-            "Гидравлические ножничные подъёмники серий 1X–4X: грузоподъёмность до 10 т, высота подъёма до 20 м. "
-            "Размер платформы под задачу, монтаж и гарантия."
+            "Гидравлические ножничные подъёмники 1X–4X от производителя: до 10 000 кг, высота до 20 м. "
+            "Сравните модели и размеры платформ. Расчёт под ваш объект за 24 часа."
         ),
         "lead": _(
             "Грузовые платформы для складов, цехов и погрузки. Размер платформы, высоту подъёма "
@@ -307,12 +328,19 @@ EQUIPMENT = {
         ],
         "models_title": _("Серии 1X–4X"),
         "models_lead": _("Серия — это число пар ножниц: чем их больше, тем выше подъём при той же длине платформы."),
+        # One block per model with its spec grid (lift_models.SCISSOR_MODELS), then a comparison table.
+        "showcase": True,
+        "compare_title": _("Сравнение ножничных подъёмников 1X–4X"),
         # Each model shows an `image` or, until photos arrive, an `icon` pictogram.
         "models": [
             {
                 "name": _("Серия 1X"),
                 "slug": "1x",
                 "url": _SCISSORS_URL + "1x/",
+                "text": _(
+                    "Подъёмный стол для склада, цеха и погрузки. Самый грузоподъёмный в серии и низкий "
+                    "в сложенном положении. Размеры платформы подбираем под груз и площадку."
+                ),
                 "label": _("Одна пара ножниц"),
                 "image": SCISSOR_1X,
                 "specs": [(_("Груз"), _("до 10 000 кг")), (_("Подъём"), _("до 5800 мм"))],
@@ -321,6 +349,10 @@ EQUIPMENT = {
                 "name": _("Серия 2X"),
                 "slug": "2x",
                 "url": _SCISSORS_URL + "2x/",
+                "text": _(
+                    "Вторая пара ножниц удваивает ход платформы. Подаёт грузы на антресоль и мезонин, "
+                    "между уровнями склада и цеха."
+                ),
                 "label": _("Две пары ножниц"),
                 "image": SCISSOR_2X,
                 "specs": [(_("Груз"), _("до 8000 кг")), (_("Подъём"), _("до 11 700 мм"))],
@@ -329,6 +361,10 @@ EQUIPMENT = {
                 "name": _("Серия 3X"),
                 "slug": "3x",
                 "url": _SCISSORS_URL + "3x/",
+                "text": _(
+                    "Для большого перепада высот: паллеты, материалы и оборудование между этажами "
+                    "без шахты грузового лифта."
+                ),
                 "label": _("Три пары ножниц"),
                 "image": SCISSOR_3X,
                 "specs": [(_("Груз"), _("до 6000 кг")), (_("Подъём"), _("до 17 500 мм"))],
@@ -337,6 +373,10 @@ EQUIPMENT = {
                 "name": _("Серия 4X"),
                 "slug": "4x",
                 "url": _SCISSORS_URL + "4x/",
+                "text": _(
+                    "Самый высокий подъём в серии — до 20 м. Конструкцию и платформу рассчитываем под высоту "
+                    "загрузки, массу груза и место установки."
+                ),
                 "label": _("Четыре пары ножниц"),
                 "image": SCISSOR_4X,
                 "specs": [(_("Груз"), _("до 4000 кг")), (_("Подъём"), _("до 20 000 мм"))],
@@ -352,54 +392,59 @@ EQUIPMENT = {
                 "spray-can",
             ),
         ],
-        "scenes_title": _("Как мы делаем ножничные подъёмники"),
-        "scenes": [
-            {
-                "image": img(
-                    "photos/proizvodstvo-temir-gidro-svarochnyj-uchastok", (1672, 941), widths=(768, 1280, 1672)
-                ),
-                "alt": _("Сварочный участок ТЕМИР ГИДРО: платформа подъёмника из рифлёного листа и маска сварщика"),
-                "title": _("Собственное производство"),
-                "text": _(
-                    "Металлоконструкции, гидроцилиндры и гидростанции делаем сами, поэтому отвечаем за подъёмник "
-                    "целиком. Перед отгрузкой каждый подъёмник проходит испытания под нагрузкой: платформа "
-                    "уходит к заказчику проверенной, а не «как получилось»."
-                ),
-            },
-            {
-                "image": SCISSOR_3X,
-                "render": True,
-                "alt": _("Ножничный подъёмник 3X с тремя парами ножниц"),
-                "title": _("Высокий подъём на небольшой площади"),
-                "text": _(
-                    "Чем больше пар ножниц, тем выше поднимается платформа при той же длине. Модели 2X–4X "
-                    "заменяют грузовой лифт там, где нет места или бюджета на шахту: подача товара на антресоль, "
-                    "в торговый зал, на второй уровень склада."
-                ),
-                "url": _SCISSORS_URL + "3x/",
-                "link": _("Подробнее о модели 3X"),
-            },
-            {
-                "image": PAINT_1X,
-                "render": True,
-                "alt": _("Ножничная рабочая платформа для окрасочной камеры"),
-                "title": _("Рабочие платформы для людей"),
-                "text": _(
-                    "На базе ножничного механизма делаем длинные рабочие платформы с ограждением — для маляров "
-                    "в окрасочных камерах и для работы на высоте в цехах."
-                ),
-                "url": _PAINT_URL,
-                "link": _("Подъёмники для окрасочных камер"),
-            },
+        # What the client sends for a calculation: (title, text, icon).
+        "brief_title": _("Что нужно для расчёта подъёмника"),
+        "brief_text": _(
+            "Проектируем и изготавливаем ножничные подъёмники под объект. Чтобы подобрать модель и посчитать "
+            "стоимость, подготовьте данные о грузе и месте установки."
+        ),
+        "brief": [
+            (_("Масса и размеры груза"), _("Максимальная нагрузка, габариты, способ загрузки платформы."), "spec-load"),
+            (_("Высота и рабочий ход"), _("Отметки нижнего и верхнего уровней, число остановок."), "spec-stroke"),
+            (
+                _("Место установки"),
+                _("Размеры площадки, есть ли приямок, в помещении или на улице."),
+                "ruler-dimension-line",
+            ),
+            (_("Режим работы"), _("Сколько подъёмов за смену, управление, нужны ли ограждения."), "gauge"),
         ],
-        "faq": [FAQ[0], FAQ[1], FAQ[3], FAQ[4]],
+        # Questions about choosing a series: the home page and the model pages have their own.
+        "faq": [
+            (
+                _("Чем отличаются модели 1X, 2X, 3X и 4X?"),
+                _(
+                    "Числом пар ножниц. Чем их больше, тем выше поднимается платформа: от 5800 мм у 1X "
+                    "до 20 000 мм у 4X. Грузоподъёмность при этом снижается — с 10 000 кг у 1X до 4000 кг у 4X, "
+                    "поэтому модель подбирают по сочетанию высоты, нагрузки и размера платформы."
+                ),
+            ),
+            (
+                _("Чем рабочий ход отличается от максимальной высоты?"),
+                _(
+                    "Рабочий ход — путь платформы от нижнего положения до верхнего. Максимальная высота — "
+                    "высота платформы в поднятом положении от основания подъёмника, то есть ход плюс высота "
+                    "в сложенном положении. При подборе исходим из отметок загрузки на объекте."
+                ),
+            ),
+            (
+                _("Сколько стоит ножничный подъёмник?"),
+                _(
+                    "Цена зависит от грузоподъёмности, высоты подъёма, размеров платформы и опций, а также "
+                    "от условий установки и режима работы. Отправьте параметры через форму на странице — "
+                    "пришлём расчёт в течение суток."
+                ),
+            ),
+            FAQ[1],
+            FAQ[3],
+            FAQ[4],
+        ],
         "configurator": True,
     },
     "dlya-okrasochnyh-kamer": {
         "title": _("Подъёмники для окрасочных камер"),
         "seo_title": _("Подъёмники для окрасочных камер — рабочие платформы | ТЕМИР ГИДРО"),
         "seo_description": _(
-            "Рабочие платформы 1X и 2D для окрасочных камер: окраска вагонов, цистерн, резервуаров "
+            "Рабочие платформы 1X, 2D и 3D для окрасочных камер: окраска вагонов, цистерн, резервуаров "
             "и металлоконструкций без лесов. Платформа до 14 м, подъём до 12 м. Проект под камеру."
         ),
         "lead": _(
@@ -410,13 +455,13 @@ EQUIPMENT = {
         "facts": [
             (_("до 14 000 мм"), _("Длина платформы")),
             (_("до 12 000 мм"), _("Рабочий ход")),
-            ("1X, 2D", _("Модели")),
+            ("1X, 2D, 3D", _("Модели")),
             (_("24 ч"), _("Расчёт")),
         ],
         "models_title": _("Модели"),
         "models_lead": _(
             "1X — длинная ножничная платформа, поднимается по вертикали. 2D — платформа на рельсах: "
-            "движется и вверх, и вдоль изделия."
+            "движется и вверх, и вдоль изделия. 3D — то же, плюс кабина выдвигается к поверхности изделия."
         ),
         "models": [
             {
@@ -433,6 +478,14 @@ EQUIPMENT = {
                 "url": _PAINT_URL + "2d/",
                 "label": _("Рельсовая платформа"),
                 "image": PAINT_2D,
+                "specs": [(_("Платформа"), _("до 6000 мм")), (_("Подъём"), _("до 12 200 мм"))],
+            },
+            {
+                "name": "3D",
+                "slug": "3d",
+                "url": _PAINT_URL + "3d/",
+                "label": _("Рельсы и выдвижная кабина"),
+                "image": PAINT_3D,
                 "specs": [(_("Платформа"), _("до 6000 мм")), (_("Подъём"), _("до 12 200 мм"))],
             },
         ],
@@ -492,7 +545,7 @@ EQUIPMENT = {
             "Самонесущий подъёмник на четырёх стойках для легковых и грузовых автомобилей: "
             "до 6 тонн и до 13 метров подъёма. Платформу делаем под ваш объект."
         ),
-        "image": img("catalog/chetyrehstoechnyj-podemnik", (800, 531)),
+        "image": img("catalog/chetyrehstoechnyj-podemnik", (1200, 787), widths=(400, 800, 1200)),
         "facts": [
             (_("до 6000 кг"), _("Грузоподъёмность")),
             (_("до 13 000 мм"), _("Высота подъёма")),
@@ -518,6 +571,7 @@ EQUIPMENT = {
             ),
         ],
         "about_image": img("photos/chetyrehstoechnyj-podemnik-s-avtomobilem", (1024, 683), widths=(600, 1024)),
+        "about_plain": True,  # a render on white: no card shadow, it stands on the page itself
         "about_alt": _("Четырёхстоечный подъёмник ТЕМИР ГИДРО с легковым автомобилем на платформе"),
         "specs": [
             (_("Грузоподъёмность, кг"), "2500–6000"),
@@ -589,7 +643,7 @@ EQUIPMENT = {
             "Контейнеры стоят в шахте под землёй, на поверхности — только аккуратные мусороприёмники. "
             "К приезду мусоровоза платформа поднимает их наверх."
         ),
-        "image": img("catalog/podemnik-dlya-musornyh-kontejnerov", (800, 800)),
+        "image": img("catalog/podemnik-dlya-musornyh-kontejnerov", (576, 629), widths=(400, 576)),
         "facts": [
             (_("до 8000 кг"), _("Грузоподъёмность")),
             (_("до 4800 мм"), _("Рабочий ход")),
@@ -615,23 +669,13 @@ EQUIPMENT = {
         "scenes": [
             {
                 "image": img("photos/shema-podemnika-dlya-kontejnerov", (1200, 848), widths=(600, 1200)),
+                "wide": True,  # the scheme with its 21-item legend: full width, uncropped, text below
                 "alt": _("Схема подъёмника для мусорных контейнеров с обозначением узлов"),
                 "title": _("Конструкция и управление"),
                 "text": _(
                     "Основа — усиленная платформа под выбранные контейнеры. Её поднимают гидроцилиндры "
                     "от маслостанции; станция и электрошкаф стоят в аппаратной части приямка. Пульт ставят "
                     "так, чтобы оператор видел всю рабочую зону; дополнительно — проводной или радиопульт."
-                ),
-            },
-            {
-                "image": img("catalog/podemnik-dlya-musornyh-kontejnerov", (800, 800)),
-                "render": True,
-                "alt": _("Подъёмник для мусорных контейнеров ТЕМИР ГИДРО с четырьмя контейнерами"),
-                "title": _("Безопасность"),
-                "text": _(
-                    "Концевые выключатели контролируют верхнее и нижнее положение платформы. Защита от "
-                    "перегрузки не даст начать подъём сверх нормы, а клапаны гидросистемы не допустят "
-                    "самопроизвольного опускания при потере давления."
                 ),
             },
         ],
@@ -701,7 +745,7 @@ EQUIPMENT = {
             "Поднимают и опускают автомобиль между уровнями: в подземный гараж, на второй этаж паркинга "
             "или в шоурум. Проектируем под ваш участок и машину."
         ),
-        "image": img("catalog/avtomobilnyj-podemnik", (220, 300), widths=(220,)),
+        "image": img("catalog/avtomobilnyj-podemnik", (893, 1220), widths=(220, 400, 893)),
         "facts": [
             (_("до 8000 кг"), _("Грузоподъёмность")),
             (_("до 11 700 мм"), _("Высота подъёма")),
@@ -727,6 +771,23 @@ EQUIPMENT = {
         ],
         "about_image": img("photos/avtomobilnyj-podemnik-v-priyamke", (1254, 900), widths=(600, 1254)),
         "about_alt": _("Автомобильный подъёмник опускает машину в подземный гараж у жилого дома"),
+        # Two scenes, switched by buttons: the lift itself and the lift in its shaft between two levels.
+        # The shaft scene comes first: until the click it shows the line's own render, as on 1X/2X;
+        # the lift alone has no such render, so it keeps the Blender one.
+        "scenes_3d": [
+            scene3d(
+                "models/avtomobilnyj-podemnik-v-shahte.glb",
+                img("catalog/avtomobilnyj-podemnik", (893, 1220), widths=(220, 400, 893)),
+                _("Автомобильный подъёмник в шахте между двумя уровнями паркинга, разрез"),
+                label=_("В шахте"), exposure="1.25", orbit="-30deg 62deg auto",
+            ),
+            scene3d(
+                "models/avtomobilnyj-podemnik.glb",
+                img("catalog/avtomobilnyj-podemnik-3d", (579, 899), widths=(400, 579)),
+                _("Автомобильный подъёмник ТЕМИР ГИДРО с легковым автомобилем на платформе"),
+                label=_("Подъёмник"), exposure="0.9", orbit="-35deg 70deg auto",
+            ),
+        ],
         "specs": [
             (_("Грузоподъёмность, кг"), "500–8000"),
             (_("Длина платформы, мм"), "1200–7000"),
@@ -800,6 +861,35 @@ EQUIPMENT = {
             (_("до 12 200 мм"), _("Высота подъёма")),
             (_("150–200 мм"), _("Высота в сложенном виде")),
             (_("24 ч"), _("Расчёт")),
+        ],
+        "about_title": _("Как устроен консольный подъёмник 1L"),
+        "about": [
+            _(
+                "Подъёмник 1L — это вертикальная направляющая из двух стоек, которую крепят к стене, колонне "
+                "или металлоконструкции. По ней ходит каретка, а платформа выступает из неё консолью: "
+                "под платформой нет ни ножниц, ни опор, поэтому место вокруг подъёмника остаётся свободным."
+            ),
+            _(
+                "Его ставят там, где груз нужно поднять высоко, а места мало: между этажами цеха, на антресоль "
+                "склада, на ярус стеллажей или на перекрытие строящегося здания. Ход платформы — от 1,5 до 12 метров, "
+                "грузоподъёмность — до 5 тонн. Шахта и машинное помещение не нужны: маслостанция выносная, "
+                "её ставят у основания или в соседнем помещении."
+            ),
+            _(
+                "В нижнем положении платформа поднята над полом всего на 150–200 мм — тележку или рохлю "
+                "закатывают по короткому пандусу. Размер платформы, высоту и число остановок рассчитываем "
+                "под ваш объект, управление — с настенного пульта, по запросу добавляем пульты на этажах."
+            ),
+        ],
+        "about_image": img("photos/konsolnyj-podemnik-na-sklade", (1536, 1024), widths=(600, 1024, 1536)),
+        "about_alt": _("Консольный подъёмник 1L у стены склада: платформа с паллетой между полом и антресолью"),
+        "scenes_3d": [
+            scene3d(
+                "models/konsolnyj-podemnik.glb",
+                CATEGORIES[5]["image"],  # the line's own render until the click, as on 1X/2X
+                _("Консольный подъёмник 1L ТЕМИР ГИДРО — общий вид"),
+                orbit="-35deg 80deg auto",
+            ),
         ],
         "specs": [
             (_("Грузоподъёмность, кг"), "500–5000"),
@@ -908,6 +998,12 @@ _MODELS = {
             "/podemniki/dlya-okrasochnyh-kamer/2d/",
             image=PAINT_2D,
         ),
+        _model(
+            "3D",
+            _("Рельсы и выдвижная кабина"),
+            "/podemniki/dlya-okrasochnyh-kamer/3d/",
+            image=PAINT_3D,
+        ),
     ],
     "/podemniki/chetyrehstoechnye/": [
         _model(
@@ -938,7 +1034,7 @@ _MODELS = {
             "1L",
             _("Подъём грузов между этажами"),
             "/podemniki/konsolnye/",
-            image=img("catalog/konsolnyj-podemnik", (124, 293), widths=(124,)),
+            image=img("catalog/konsolnyj-podemnik", (292, 584), widths=(124, 292)),
         ),
     ],
 }
@@ -946,30 +1042,51 @@ for _cat in CATEGORIES:
     _cat["models"] = _MODELS.get(_cat["url"]) or _placeholders(_cat)
 del _cat
 
+# Menus (header mega-menu, footer): four-post lifts sit under car lifts as a second model.
+# Their own page stays where it is.
+_FOUR_POST = "/podemniki/chetyrehstoechnye/"
+_CARS = "/podemniki/avtomobilnye/"
+NAV_CATEGORIES = [
+    {**c, "models": _MODELS[_CARS] + _MODELS[_FOUR_POST]} if c["url"] == _CARS else c
+    for c in CATEGORIES
+    if c["url"] != _FOUR_POST
+]
+
 # Photo tiles on the catalog page: the 1X–4X series.
 SCISSOR_SERIES = {"title": _("Ножничные подъёмники"), "url": _SCISSORS, "models": _MODELS[_SCISSORS]}
 
-# Home page tiles: every model, each with its render. Scissor series first (a row of four).
+# Home page catalog: five cards. A series is one card that opens its models under the row
+# (without JS it is a link to the section); a single lift links straight to its page.
 _PAINT = "/podemniki/dlya-okrasochnyh-kamer/"
-EQUIPMENT_TILES = [
-    {"title": _("Ножничный подъёмник 1X"), "label": _("Одна пара ножниц"), "url": _SCISSORS + "1x/",
-     "image": SCISSOR_1X},
-    {"title": _("Ножничный подъёмник 2X"), "label": _("Две пары ножниц"), "url": _SCISSORS + "2x/",
-     "image": SCISSOR_2X},
-    {"title": _("Ножничный подъёмник 3X"), "label": _("Три пары ножниц"), "url": _SCISSORS + "3x/",
-     "image": SCISSOR_3X},
-    {"title": _("Ножничный подъёмник 4X"), "label": _("Четыре пары ножниц"), "url": _SCISSORS + "4x/",
-     "image": SCISSOR_4X},
-    {"title": _("Четырёхстоечный подъёмник"), "label": _("Автосервис и паркинг"),
-     "url": "/podemniki/chetyrehstoechnye/", "image": CATEGORIES[1]["image"]},
-    {"title": _("Автомобильный подъёмник"), "label": _("Между уровнями паркинга"),
-     "url": "/podemniki/avtomobilnye/", "image": CATEGORIES[4]["image"]},
-    {"title": _("Консольный подъёмник 1L"), "label": _("Грузы между этажами"),
-     "url": "/podemniki/konsolnye/", "image": CATEGORIES[5]["image"]},
-    {"title": _("Подъёмник для мусорных контейнеров"), "label": _("Подземные площадки"),
-     "url": "/podemniki/dlya-musornyh-kontejnerov/", "image": CATEGORIES[2]["image"]},
-    {"title": _("Окрасочная платформа 1X"), "label": _("Для окрасочных камер"), "url": _PAINT + "1x/",
-     "image": PAINT_1X},
-    {"title": _("Окрасочная платформа 2D"), "label": _("Для окрасочных камер"), "url": _PAINT + "2d/",
-     "image": PAINT_2D},
+EQUIPMENT_GROUPS = [
+    {
+        "slug": "nozhnichnye", "title": _("Ножничные подъёмники"), "url": _SCISSORS, "image": SCISSOR_LINEUP,
+        "models": [
+            {"code": "1X", "title": _("Ножничный подъёмник 1X"), "url": _SCISSORS + "1x/", "image": SCISSOR_1X},
+            {"code": "2X", "title": _("Ножничный подъёмник 2X"), "url": _SCISSORS + "2x/", "image": SCISSOR_2X},
+            {"code": "3X", "title": _("Ножничный подъёмник 3X"), "url": _SCISSORS + "3x/", "image": SCISSOR_3X},
+            {"code": "4X", "title": _("Ножничный подъёмник 4X"), "url": _SCISSORS + "4x/", "image": SCISSOR_4X},
+        ],
+    },
+    {
+        "slug": "okrasochnye", "title": _("Окрасочные платформы"), "url": _PAINT, "image": PAINT_1X,
+        "models": [
+            {"code": "1X", "title": _("Окрасочная платформа 1X"), "url": _PAINT + "1x/", "image": PAINT_1X},
+            {"code": "2D", "title": _("Окрасочная платформа 2D"), "url": _PAINT + "2d/", "image": PAINT_2D},
+            {"code": "3D", "title": _("Окрасочная платформа 3D"), "url": _PAINT + "3d/", "image": PAINT_3D},
+        ],
+    },
+    {
+        # The four-post render covers the stack: the car lift's own one is only 220 px wide.
+        "slug": "avtomobilnye", "title": _("Автомобильные подъёмники"), "url": _CARS, "image": CATEGORIES[1]["image"],
+        "models": [
+            {"code": _("Автомобильный"), "title": _("Автомобильный подъёмник"), "url": _CARS,
+             "image": CATEGORIES[4]["image"]},
+            {"code": _("Четырёхстоечный"), "title": _("Четырёхстоечный подъёмник"), "url": _FOUR_POST,
+             "image": CATEGORIES[1]["image"]},
+        ],
+    },
+    {"title": _("Консольный подъёмник 1L"), "url": "/podemniki/konsolnye/", "image": CATEGORIES[5]["image"]},
+    {"title": _("Подъёмник для мусорных контейнеров"), "url": "/podemniki/dlya-musornyh-kontejnerov/",
+     "image": CATEGORIES[2]["image"]},
 ]

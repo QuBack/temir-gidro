@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Каталог стопками</title>
+<!-- Mockup: the home «Гидравлическое оборудование» block regrouped into stacks.
+     Open straight from disk; images and fonts come from ../../static. -->
+<style>
+@font-face { font-family: "Onest"; src: url("../../static/fonts/onest-cyrillic.woff2") format("woff2"); font-weight: 100 900; unicode-range: U+0400-045F, U+2116; }
+@font-face { font-family: "Onest"; src: url("../../static/fonts/onest-latin.woff2") format("woff2"); font-weight: 100 900; unicode-range: U+0000-00FF, U+2000-206F; }
+@font-face { font-family: "Sofia Sans Condensed"; src: url("../../static/fonts/sofia-sans-condensed-cyrillic.woff2") format("woff2"); font-weight: 400 800; unicode-range: U+0400-045F, U+2116; }
+@font-face { font-family: "Sofia Sans Condensed"; src: url("../../static/fonts/sofia-sans-condensed-latin.woff2") format("woff2"); font-weight: 400 800; unicode-range: U+0000-00FF, U+2000-206F; }
+@font-face { font-family: "OpenGOST B"; src: url("../../static/fonts/opengost-type-b.woff2") format("woff2"); }
+
+:root {
+  --red: #c4161c; --red-dark: #9c0f14; --ink: #22282b; --anthracite: #373f43;
+  --grey: #e3e6e4; --grey-soft: #f2f4f3; --line: #c6ccc9; --muted: #586165; --white: #fff;
+  --font: "Onest", system-ui, sans-serif;
+  --font-cond: "Sofia Sans Condensed", "Onest", system-ui, sans-serif;
+  --font-draw: "OpenGOST B", "Sofia Sans Condensed", system-ui, sans-serif;
+  --container: 78rem; --gutter: 1rem; --radius: 4px;
+  --shadow-card: 0 1px 3px rgb(34 40 43 / .08), 0 12px 32px -16px rgb(34 40 43 / .3);
+  --ease: cubic-bezier(.3, .7, .2, 1);
+}
+@media (min-width: 48rem) { :root { --gutter: 2rem; } }
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; font-family: var(--font); font-size: 1.0625rem; line-height: 1.6; color: var(--ink); background: var(--white); -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+h1, h2, h3, p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+a { color: var(--red); }
+:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
+button { font: inherit; color: inherit; }
+.container { max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
+
+/* ---------- Page chrome ---------- */
+.top { position: relative; z-index: 50; background: var(--anthracite); color: #dfe4e2; }
+@media (min-width: 48rem) { .top { position: sticky; top: 0; } }
+.top .container { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.5rem; min-height: 3.5rem; padding-block: .5rem; }
+.top b { font-family: var(--font-cond); font-size: 1.25rem; letter-spacing: .01em; color: var(--white); }
+.top nav { display: flex; flex-wrap: wrap; gap: .25rem; margin-left: auto; }
+.top nav a { padding: .3rem .75rem; border: 1px solid rgb(255 255 255 / .25); border-radius: 2px; color: inherit; text-decoration: none; font-size: .9375rem; }
+.top nav a:hover { border-color: var(--white); color: var(--white); }
+
+.variant { position: relative; padding-block: clamp(3rem, 7vw, 5rem); background: var(--grey-soft); }
+.variant + .variant { border-top: 1px dashed var(--line); }
+.variant__tag { display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem 1rem; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--line); }
+.variant__tag span { font-family: var(--font-draw); font-size: 1.25rem; color: var(--red); }
+.variant__tag strong { font-family: var(--font-cond); font-size: 1.5rem; }
+.variant__tag p { flex-basis: 100%; max-width: 62rem; color: var(--muted); font-size: .9375rem; }
+.variant__tag p b { color: var(--ink); font-weight: 600; }
+.block-title { margin-bottom: clamp(1.75rem, 4vw, 2.75rem); text-align: center; font-family: var(--font-cond); font-weight: 700; font-size: clamp(2.125rem, 4.2vw, 3.25rem); line-height: 1.02; }
+
+.code { font-family: var(--font-draw); font-size: 1.125rem; line-height: 1; letter-spacing: .02em; }
+.more { font-weight: 600; font-size: .9375rem; text-underline-offset: .2em; }
+.more::after { content: " →"; }
+
+/* =====================================================================
+   A · Колода — each group is a deck of sheets; chips flip through models
+   ===================================================================== */
+.decks { display: grid; gap: 2.5rem 1.5rem; }
+@media (min-width: 36rem) { .decks { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 60rem) { .decks { grid-template-columns: repeat(3, 1fr); gap: 3rem 2rem; } }
+.deck { --step: 9px; display: grid; align-content: start; gap: 1rem; min-width: 0; }
+.deck:hover, .deck:focus-within { --step: 13px; }
+/* Room above / right for the sheets behind the front one. */
+.deck__stack { position: relative; aspect-ratio: 4 / 3; margin: 1.6rem 1.6rem 0 0; }
+.sheet {
+  --d: 0; position: absolute; inset: 0; display: block; border-radius: var(--radius);
+  background: var(--white); box-shadow: var(--shadow-card); color: var(--ink); text-decoration: none;
+  z-index: calc(10 - var(--d));
+  transform: translate(calc(var(--d) * var(--step)), calc(var(--d) * var(--step) * -1));
+  transition: transform .45s var(--ease), background-color .3s, opacity .3s;
+}
+.sheet:not(.is-front) { background: color-mix(in srgb, var(--white), var(--grey) calc(var(--d) * 35%)); box-shadow: 0 0 0 1px var(--line), var(--shadow-card); pointer-events: none; }
+.sheet[data-depth-hidden] { opacity: 0; }
+.sheet__img { position: absolute; inset: 2.25rem 1.25rem 1.25rem; display: flex; align-items: center; justify-content: center; transition: opacity .25s, transform .5s var(--ease); }
+.sheet__img img { max-height: 100%; width: auto; }
+.sheet:not(.is-front) .sheet__img, .sheet:not(.is-front) .sheet__code { opacity: 0; }
+.sheet.is-front:hover .sheet__img { transform: scale(1.05); }
+.sheet__code { position: absolute; top: .85rem; left: 1rem; transition: opacity .25s; }
+.sheet__count { position: absolute; top: .9rem; right: 1rem; font-family: var(--font-draw); font-size: .9375rem; color: var(--muted); }
+/* The old front card slides out down-left, then settles at the back. */
+.sheet.is-out { z-index: 20; animation: deck-out .38s var(--ease) forwards; }
+@keyframes deck-out { to { transform: translate(-14%, 8%) rotate(-5deg); opacity: 0; } }
+
+.deck__foot { display: grid; gap: .35rem; }
+.deck__foot h3 { font-family: var(--font-cond); font-size: clamp(1.375rem, 2vw, 1.625rem); line-height: 1.1; font-weight: 700; }
+.deck__foot h3 a { color: inherit; text-decoration: none; }
+.deck__foot h3 a:hover { color: var(--red); }
+.deck__meta { color: var(--muted); font-size: .9375rem; min-height: 1.5em; }
+.chips { display: flex; flex-wrap: wrap; gap: .375rem; margin-top: .25rem; }
+.chip {
+  min-width: 2.75rem; min-height: 2.25rem; padding: .25rem .6rem; border: 1px solid var(--line); border-radius: 2px;
+  background: var(--white); cursor: pointer; font-family: var(--font-draw); font-size: 1rem; line-height: 1;
+  transition: border-color .15s, background-color .15s, color .15s;
+}
+.chip:hover { border-color: var(--ink); }
+.chip[aria-selected="true"] { border-color: var(--ink); background: var(--ink); color: var(--white); }
+
+/* =====================================================================
+   B · Веер — wide cards for the series; the deck fans out on hover
+   ===================================================================== */
+.fans { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+@media (min-width: 60rem) { .fans { grid-template-columns: repeat(4, 1fr); gap: 1.25rem; } }
+.fan--wide { grid-column: span 2; }
+.fan--wide .fan__deck { top: 2.5rem; } /* below the «4 модели» badge */
+.fan {
+  position: relative; height: clamp(16rem, 26vw, 19.5rem); overflow: hidden;
+  background: var(--white); box-shadow: var(--shadow-card); transition: box-shadow .3s;
+}
+.fan:hover { box-shadow: 0 12px 28px rgb(34 40 43 / .18); }
+.fan__deck { position: absolute; inset: 1.25rem 1.25rem 5.25rem; }
+.fan__item {
+  --off: calc(var(--i) - (var(--n) - 1) / 2);
+  position: absolute; top: 0; bottom: 0; z-index: calc(var(--i) + 1);
+  left: calc(50% + var(--off) * 1.75rem); width: 46%;
+  transform: translateX(-50%) rotate(calc(var(--off) * 4deg));
+  display: flex; flex-direction: column; align-items: center; gap: .4rem; padding: .75rem .5rem .5rem;
+  background: var(--white); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: 0 8px 18px -10px rgb(34 40 43 / .45);
+  color: var(--ink); text-decoration: none;
+  transition: left .55s var(--ease), width .55s var(--ease), transform .55s var(--ease), border-color .2s;
+}
+.fan__item picture, .fan__item .fan__pic { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+.fan__item img { max-height: 100%; width: auto; }
+.fan__item .code { opacity: 0; transition: opacity .3s .15s, color .15s; }
+.fan--single .fan__item { left: 50%; width: 100%; border: 0; box-shadow: none; transform: translateX(-50%); padding: 0; }
+.fan--single:hover .fan__item img { transform: scale(1.06); }
+.fan__item img { transition: transform .5s var(--ease); }
+/* Spread: on hover / keyboard focus, and always on touch screens. */
+.fan:not(.fan--single):is(:hover, :focus-within) .fan__item {
+  left: calc((var(--i) + .5) * 100% / var(--n)); width: calc(100% / var(--n) - .75rem);
+  transform: translateX(-50%);
+}
+.fan:is(:hover, :focus-within) .fan__item .code { opacity: 1; }
+.fan:not(.fan--single) .fan__item:hover { border-color: var(--ink); transform: translateX(-50%) translateY(-4px); }
+.fan__item:hover .code { color: var(--red); }
+@media (hover: none) {
+  .fan:not(.fan--single) .fan__item { left: calc((var(--i) + .5) * 100% / var(--n)); width: calc(100% / var(--n) - .5rem); transform: translateX(-50%); }
+  .fan__item .code { opacity: 1; }
+}
+.fan::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background: linear-gradient(to bottom, rgb(20 24 26 / 0) 62%, rgb(20 24 26 / .3) 80%, rgb(20 24 26 / .6));
+}
+.fan__desc { position: absolute; inset: auto 0 0; z-index: 2; display: flex; align-items: end; justify-content: space-between; gap: .5rem 1rem; padding: 1rem 1.25rem; color: rgb(255 255 255 / .85); font-size: .875rem; }
+.fan--single .fan__desc { justify-content: center; text-align: center; }
+.fan__desc h3 { color: var(--white); font-family: var(--font-cond); font-size: clamp(1.125rem, 1.6vw, 1.375rem); line-height: 1.1; font-weight: 700; text-shadow: 0 1px 6px rgb(0 0 0 / .45); }
+.fan__desc h3 a { color: inherit; text-decoration: none; }
+.fan__desc h3 a::after { content: ""; position: absolute; inset: 0; } /* singles: whole card clickable */
+.fan:not(.fan--single) .fan__desc h3 a::after { content: none; }
+.fan__desc h3 a:hover { color: #ff8a80; }
+.fan__desc .more { flex: none; color: var(--white); }
+.fan__badge { position: absolute; top: .75rem; left: .9rem; z-index: 3; font-family: var(--font-draw); font-size: .9375rem; color: var(--muted); }
+@media (max-width: 39.99rem) {
+  .fan__deck { inset: .75rem .75rem 6rem; }
+  .fan__desc { flex-direction: column; align-items: start; padding: .75rem; }
+  .fan--single .fan__desc { align-items: center; }
+  .fan__desc h3 { font-size: 1rem; }
+  .fan__item { padding: .5rem .25rem .35rem; }
+  .fan__item .code { font-size: .9375rem; }
+}
+
+/* =====================================================================
+   C · Раскрытие — compact stacks; a click opens the models under the row
+   ===================================================================== */
+.xgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem 1rem; }
+@media (min-width: 60rem) { .xgrid { grid-template-columns: repeat(3, 1fr); gap: 2rem 1.5rem; } }
+.xwrap { position: relative; isolation: isolate; min-width: 0; }
+/* Two sheet edges peek out behind a group card. */
+/* Every card keeps the room for the edges, so a row lines up and the panel finds its row. */
+.xwrap { margin: .75rem .75rem 0 0; }
+.xwrap--stack::before, .xwrap--stack::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: var(--radius);
+  background: #f7f8f7; box-shadow: var(--shadow-card); transition: transform .35s var(--ease);
+}
+.xwrap--stack::before { transform: translate(6px, -6px); }
+.xwrap--stack::after { transform: translate(12px, -12px); background: #eceeed; z-index: -2; }
+.xwrap--stack:hover::before { transform: translate(8px, -8px); }
+.xwrap--stack:hover::after { transform: translate(16px, -16px); }
+.xcard {
+  position: relative; display: block; width: 100%; height: clamp(14rem, 24vw, 17.5rem); overflow: hidden;
+  padding: 0; border: 0; border-radius: var(--radius); background: var(--white); box-shadow: var(--shadow-card);
+  text-align: center; text-decoration: none; cursor: pointer; transition: box-shadow .3s;
+}
+.xcard:hover { box-shadow: 0 12px 28px rgb(34 40 43 / .18); }
+.xcard__img { position: absolute; inset: 1.25rem 1.25rem 4.5rem; display: flex; align-items: center; justify-content: center; transition: transform .5s var(--ease); }
+.xcard__img img { max-height: 100%; width: auto; }
+.xcard:hover .xcard__img { transform: scale(1.05); }
+.xcard::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to bottom, rgb(20 24 26 / 0) 62%, rgb(20 24 26 / .3) 80%, rgb(20 24 26 / .6));
+}
+.xcard h3 { position: absolute; inset: auto 0 0; z-index: 1; padding: 1rem; color: var(--white); font-family: var(--font-cond); font-size: clamp(1rem, 1.6vw, 1.375rem); line-height: 1.1; font-weight: 700; text-shadow: 0 1px 6px rgb(0 0 0 / .45); }
+.xcard:hover h3 { color: #ff8a80; }
+.xbadge {
+  position: absolute; top: .65rem; right: .65rem; z-index: 2; display: inline-flex; align-items: center; gap: .35rem;
+  padding: .2rem .55rem; border: 1px solid var(--ink); border-radius: 2px; background: var(--white);
+  font-family: var(--font-cond); font-weight: 600; font-size: .9375rem; color: var(--ink);
+}
+.xbadge svg { width: .75rem; height: .75rem; transition: transform .3s var(--ease); }
+.xcard[aria-expanded="true"] { box-shadow: 0 0 0 2px var(--ink), var(--shadow-card); }
+.xcard[aria-expanded="true"] .xbadge { background: var(--ink); color: var(--white); }
+.xcard[aria-expanded="true"] .xbadge svg { transform: rotate(180deg); }
+
+.xpanel { grid-column: 1 / -1; display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s var(--ease); margin-block: -.5rem; }
+.xpanel.is-open { grid-template-rows: 1fr; }
+.xpanel.no-anim { transition: none; }
+.xpanel__clip { overflow: hidden; min-height: 0; }
+.xpanel__body { position: relative; margin-top: 14px; padding: clamp(1.25rem, 3vw, 2rem); background: var(--white); border-top: 3px solid var(--ink); box-shadow: var(--shadow-card); }
+.xpanel__body::before { content: ""; position: absolute; top: -14px; left: var(--notch, 50%); translate: -50% 0; border: 11px solid transparent; border-top: 0; border-bottom-color: var(--ink); }
+.xpanel__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .5rem 1.5rem; margin-bottom: 1.5rem; }
+.xpanel__head h3 { font-family: var(--font-cond); font-size: clamp(1.5rem, 2.5vw, 2rem); line-height: 1.05; font-weight: 700; }
+.xpanel__head p { flex-basis: 100%; order: 2; color: var(--muted); font-size: .9375rem; }
+.xmodels { display: grid; grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); gap: 1rem; }
+.xmodel { display: grid; grid-template-rows: 1fr auto; gap: .5rem; height: 15rem; padding: 1rem; border: 1px solid var(--line); border-radius: var(--radius); color: var(--ink); text-decoration: none; transition: border-color .2s, transform .25s var(--ease); }
+.xmodel:hover { border-color: var(--ink); transform: translateY(-3px); }
+.xmodel__img { min-height: 0; display: flex; align-items: center; justify-content: center; }
+.xmodel__img img { max-height: 100%; width: auto; }
+.xmodel__cap { display: flex; align-items: baseline; gap: .6rem; }
+.xmodel__cap .code { color: var(--red); }
+.xmodel__cap span:last-child { font-size: .875rem; color: var(--muted); line-height: 1.25; }
+.xpanel.is-open .xmodel { animation: rise .45s var(--ease) both; animation-delay: calc(var(--i) * 60ms + 120ms); }
+@keyframes rise { from { opacity: 0; transform: translateY(12px); } }
+
+.tiles-cta { display: grid; gap: 1rem; justify-items: start; margin-top: 2.5rem; padding: 1.5rem; border-radius: var(--radius); background: var(--white); }
+@media (min-width: 40rem) { .tiles-cta { grid-template-columns: 1fr auto; align-items: center; } }
+.btn { display: inline-flex; align-items: center; min-height: 3rem; padding: .7rem 1.4rem; border: 2px solid var(--ink); border-radius: var(--radius); color: var(--ink); font-weight: 600; font-size: 1rem; text-decoration: none; }
+.btn:hover { background: var(--ink); color: var(--white); }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0s !important; animation-duration: 0s !important; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="container">
+    <b>Гидравлическое оборудование · стопки по группам</b>
+    <nav aria-label="Варианты">
+      <a href="#a">A · Колода</a><a href="#b">B · Веер</a><a href="#c">C · Раскрытие</a>
+    </nav>
+  </div>
+</header>
+
+<section class="variant" id="a">
+  <div class="container">
+    <div class="variant__tag">
+      <span>A</span><strong>Колода</strong>
+      <p>Каждая группа — стопка листов, сзади видны края остальных моделей. Кнопки <b>1X 2X 3X 4X</b> листают стопку
+        (клик или наведение), карточка спереди ведёт на модель, заголовок — на раздел. <b>6 карточек вместо 10</b>, сетка 3×2 ровная,
+        на телефоне всё работает без наведения.</p>
+    </div>
+    <h2 class="block-title">Гидравлическое оборудование</h2>
+    <ul class="decks" data-render="decks"></ul>
+    <div class="tiles-cta"><p><strong>Нет подходящей модели?</strong> Спроектируем подъёмник по вашему ТЗ, чертежу или образцу.</p><a class="btn" href="#">Отправить задачу</a></div>
+  </div>
+</section>
+
+<section class="variant" id="b">
+  <div class="container">
+    <div class="variant__tag">
+      <span>B</span><strong>Веер</strong>
+      <p>Серии (ножничные, окрасочные) — широкие карточки на две колонки, модели лежат в карточке веером и
+        <b>раскладываются в ряд при наведении</b> (на телефоне разложены сразу). Одиночные модели — обычные плитки как сейчас.
+        Получается 2 + 4: сверху линейки, снизу специальные подъёмники.</p>
+    </div>
+    <h2 class="block-title">Гидравлическое оборудование</h2>
+    <ul class="fans" data-render="fans"></ul>
+    <div class="tiles-cta"><p><strong>Нет подходящей модели?</strong> Спроектируем подъёмник по вашему ТЗ, чертежу или образцу.</p><a class="btn" href="#">Отправить задачу</a></div>
+  </div>
+</section>
+
+<section class="variant" id="c">
+  <div class="container">
+    <div class="variant__tag">
+      <span>C</span><strong>Раскрытие</strong>
+      <p>Компактная сетка 3×2 в нынешнем стиле плиток. У групп — бейдж «<b>4 модели</b>» и стопка за карточкой; по клику
+        под рядом раскрывается панель с моделями (как в Google Картинках). Одиночные плитки сразу ведут на страницу.
+        Самый близкий к текущему виду.</p>
+    </div>
+    <h2 class="block-title">Гидравлическое оборудование</h2>
+    <div class="xgrid" data-render="xgrid"></div>
+    <div class="tiles-cta"><p><strong>Нет подходящей модели?</strong> Спроектируем подъёмник по вашему ТЗ, чертежу или образцу.</p><a class="btn" href="#">Отправить задачу</a></div>
+  </div>
+</section>
+
+<script>
+// Same data as EQUIPMENT_TILES in apps/core/catalog.py, grouped.
+const IMG = "../../static/img/catalog/";
+const GROUPS = [
+  { id: "scissor", title: "Ножничные подъёмники", url: "/podemniki/nozhnichnye/",
+    text: "Серия 1X–4X: от одной до четырёх пар ножниц. Грузовые платформы для складов, цехов и погрузки.",
+    models: [
+      { code: "1X", title: "Ножничный подъёмник 1X", label: "Одна пара ножниц", url: "/podemniki/nozhnichnye/1x/", img: "nozhnichnyj-podemnik-800" },
+      { code: "2X", title: "Ножничный подъёмник 2X", label: "Две пары ножниц", url: "/podemniki/nozhnichnye/2x/", img: "nozhnichnyj-podemnik-2x-800" },
+      { code: "3X", title: "Ножничный подъёмник 3X", label: "Три пары ножниц", url: "/podemniki/nozhnichnye/3x/", img: "nozhnichnyj-podemnik-3x-800" },
+      { code: "4X", title: "Ножничный подъёмник 4X", label: "Четыре пары ножниц", url: "/podemniki/nozhnichnye/4x/", img: "nozhnichnyj-podemnik-4x-800" },
+    ] },
+  { id: "paint", title: "Окрасочные платформы", url: "/podemniki/dlya-okrasochnyh-kamer/",
+    text: "Рабочие платформы 1X и 2D для покраски крупногабаритных изделий.",
+    models: [
+      { code: "1X", title: "Окрасочная платформа 1X", label: "Ножничная, подъём по вертикали", url: "/podemniki/dlya-okrasochnyh-kamer/1x/", img: "podemnik-dlya-okrasochnoj-kamery-800" },
+      { code: "2D", title: "Окрасочная платформа 2D", label: "Рельсовая, вдоль изделия", url: "/podemniki/dlya-okrasochnyh-kamer/2d/", img: "podemnik-dlya-okrasochnoj-kamery-2d-800" },
+    ] },
+  { id: "four", title: "Четырёхстоечный подъёмник", url: "/podemniki/chetyrehstoechnye/",
+    models: [{ title: "Четырёхстоечный подъёмник", label: "Автосервис и паркинг", url: "/podemniki/chetyrehstoechnye/", img: "chetyrehstoechnyj-podemnik-800" }] },
+  { id: "auto", title: "Автомобильный подъёмник", url: "/podemniki/avtomobilnye/",
+    models: [{ title: "Автомобильный подъёмник", label: "Между уровнями паркинга", url: "/podemniki/avtomobilnye/", img: "avtomobilnyj-podemnik-220" }] },
+  { id: "cons", title: "Консольный подъёмник 1L", url: "/podemniki/konsolnye/",
+    models: [{ code: "1L", title: "Консольный подъёмник 1L", label: "Грузы между этажами", url: "/podemniki/konsolnye/", img: "konsolnyj-podemnik-124" }] },
+  { id: "trash", title: "Подъёмник для мусорных контейнеров", url: "/podemniki/dlya-musornyh-kontejnerov/",
+    models: [{ title: "Подъёмник для мусорных контейнеров", label: "Подземные площадки", url: "/podemniki/dlya-musornyh-kontejnerov/", img: "podemnik-dlya-musornyh-kontejnerov-576" }] },
+];
+// The mockup lives on disk: links go nowhere, the real paths stay in data-href.
+const href = (u) => `href="#" data-href="${u}"`;
+const pic = (m) => `<img src="${IMG}${m.img}.webp" alt="${m.title}" loading="lazy" decoding="async">`;
+const plural = (n) => n + (n < 5 ? " модели" : " моделей");
+const chevron = `<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>`;
+
+/* ---------- A · Колода ---------- */
+document.querySelector('[data-render="decks"]').innerHTML = GROUPS.map((g) => {
+  const many = g.models.length > 1;
+  return `<li class="deck" data-group="${g.id}">
+    <div class="deck__stack">
+      ${g.models.map((m, i) => `<a class="sheet" ${href(m.url)} style="--d:${i}" aria-label="${m.title}" tabindex="${i ? -1 : 0}">
+        ${m.code ? `<span class="sheet__code code">${m.code}</span>` : ""}
+        ${many ? `<span class="sheet__count">${i + 1} / ${g.models.length}</span>` : ""}
+        <span class="sheet__img">${pic(m)}</span></a>`).join("")}
+    </div>
+    <div class="deck__foot">
+      <h3><a ${href(g.url)}>${g.title}</a></h3>
+      <p class="deck__meta">${g.models[0].label}</p>
+      ${many ? `<div class="chips" role="tablist" aria-label="Модели">${g.models.map((m, i) =>
+        `<button class="chip" type="button" role="tab" aria-selected="${!i}" data-i="${i}">${m.code}</button>`).join("")}</div>` : ""}
+    </div>
+  </li>`;
+}).join("");
+
+document.querySelectorAll(".deck").forEach((deck) => {
+  const g = GROUPS.find((x) => x.id === deck.dataset.group);
+  const sheets = [...deck.querySelectorAll(".sheet")];
+  const chips = [...deck.querySelectorAll(".chip")];
+  const meta = deck.querySelector(".deck__meta");
+  const n = sheets.length;
+  let active = 0;
+  const layout = () => sheets.forEach((s, i) => {
+    const d = (i - active + n) % n;
+    s.style.setProperty("--d", d);
+    s.classList.toggle("is-front", d === 0);
+    s.tabIndex = d === 0 ? 0 : -1;
+    d > 2 ? s.setAttribute("data-depth-hidden", "") : s.removeAttribute("data-depth-hidden");
+  });
+  const show = (i) => {
+    if (i === active) return;
+    const old = sheets[active];
+    old.classList.add("is-out");
+    old.addEventListener("animationend", () => old.classList.remove("is-out"), { once: true });
+    active = i;
+    layout();
+    chips.forEach((c, j) => c.setAttribute("aria-selected", j === i));
+    meta.textContent = g.models[i].label;
+  };
+  layout();
+  chips.forEach((c, i) => {
+    c.addEventListener("click", () => show(i));
+    c.addEventListener("pointerenter", (e) => e.pointerType === "mouse" && show(i));
+    c.addEventListener("keydown", (e) => {
+      const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+      if (!step) return;
+      const j = (active + step + n) % n;
+      show(j); chips[j].focus();
+    });
+  });
+});
+
+/* ---------- B · Веер ---------- */
+document.querySelector('[data-render="fans"]').innerHTML = GROUPS.map((g) => {
+  const n = g.models.length, many = n > 1;
+  const codes = many ? g.models.map((m) => m.code) : [];
+  return `<li class="fan ${many ? "fan--wide" : "fan--single"}">
+    ${many ? `<span class="fan__badge">${plural(n)} · ${codes[0]}–${codes[n - 1]}</span>` : ""}
+    <div class="fan__deck" style="--n:${n}">
+      ${g.models.map((m, i) => `<a class="fan__item" ${href(m.url)} style="--i:${i}" ${many ? `aria-label="${m.title}"` : `tabindex="-1" aria-hidden="true"`}>
+        <span class="fan__pic">${pic(m)}</span>${many ? `<span class="code">${m.code}</span>` : ""}</a>`).join("")}
+    </div>
+    <div class="fan__desc">
+      <h3><a ${href(g.url)}>${g.title}</a></h3>
+      ${many ? `<a class="more" ${href(g.url)}>Вся серия</a>` : ""}
+    </div>
+  </li>`;
+}).join("");
+
+/* ---------- C · Раскрытие ---------- */
+const xgrid = document.querySelector('[data-render="xgrid"]');
+xgrid.innerHTML = GROUPS.map((g) => {
+  const many = g.models.length > 1;
+  const inner = `<span class="xcard__img">${pic(g.models[0])}</span><h3>${g.title}</h3>`;
+  return many
+    ? `<div class="xwrap xwrap--stack"><button class="xcard" type="button" data-group="${g.id}" aria-expanded="false" aria-controls="xpanel">
+        <span class="xbadge">${plural(g.models.length)} ${chevron}</span>${inner}</button></div>`
+    : `<div class="xwrap"><a class="xcard" ${href(g.url)}>${inner}</a></div>`;
+}).join("") + `<div class="xpanel" id="xpanel" role="region" aria-live="polite"><div class="xpanel__clip"><div class="xpanel__body"></div></div></div>`;
+
+const panel = xgrid.querySelector(".xpanel");
+const panelBody = panel.querySelector(".xpanel__body");
+let openBtn = null;
+
+function placePanel(btn) {
+  // After the last card in the clicked card's row; the notch points at the card.
+  const wraps = [...xgrid.querySelectorAll(".xwrap")];
+  const top = btn.parentElement.offsetTop;
+  const rowLast = wraps.filter((w) => Math.abs(w.offsetTop - top) < 4).pop();
+  rowLast.after(panel);
+  const r = btn.getBoundingClientRect(), gr = xgrid.getBoundingClientRect();
+  panel.style.setProperty("--notch", `${r.left - gr.left + r.width / 2}px`);
+}
+function closePanel() {
+  panel.classList.remove("is-open");
+  openBtn?.setAttribute("aria-expanded", "false");
+  openBtn = null;
+}
+xgrid.addEventListener("click", (e) => {
+  const btn = e.target.closest("button.xcard");
+  if (!btn) return;
+  if (btn === openBtn) return closePanel();
+  const g = GROUPS.find((x) => x.id === btn.dataset.group);
+  openBtn?.setAttribute("aria-expanded", "false");
+  panelBody.innerHTML = `<div class="xpanel__head"><h3>${g.title}</h3><a class="more" ${href(g.url)}>Все ${g.title.toLowerCase()}</a><p>${g.text}</p></div>
+    <ul class="xmodels">${g.models.map((m, i) => `<li><a class="xmodel" ${href(m.url)} style="--i:${i}">
+      <span class="xmodel__img">${pic(m).replace("lazy", "eager")}</span>
+      <span class="xmodel__cap"><span class="code">${m.code}</span><span>${m.label}</span></span></a></li>`).join("")}</ul>`;
+  const wasOpen = panel.classList.contains("is-open");
+  panel.classList.add("no-anim");
+  panel.classList.remove("is-open");
+  placePanel(btn);
+  panel.offsetHeight; // commit the closed state before animating open
+  panel.classList.toggle("no-anim", wasOpen); // switching groups: no collapse/expand flicker
+  panel.classList.add("is-open");
+  requestAnimationFrame(() => panel.classList.remove("no-anim"));
+  btn.setAttribute("aria-expanded", "true");
+  openBtn = btn;
+});
+document.addEventListener("keydown", (e) => e.key === "Escape" && openBtn && (openBtn.focus(), closePanel()));
+addEventListener("resize", () => openBtn && placePanel(openBtn));
+
+// No navigation in the mockup.
+document.addEventListener("click", (e) => { if (e.target.closest('a[href="#"]')) e.preventDefault(); });
+</script>
+</body>
+</html>

@@ -12,7 +12,7 @@ lead time and warranty, kit images with callouts.
 from django.utils.text import format_lazy
 from django.utils.translation import gettext_lazy as _
 
-from .catalog import FAQ, SCISSOR_1X, SCISSOR_2X, SCISSOR_3X, SCISSOR_4X, img
+from .catalog import FAQ, SCISSOR_1X, SCISSOR_2X, SCISSOR_3X, SCISSOR_4X, img, scene3d
 
 # ---------- Shared by the scissor series ----------
 
@@ -190,6 +190,8 @@ SCISSOR_MODELS = {
         "images": [
             {"image": SCISSOR_1X, "alt": _("Ножничный подъёмник 1X ТЕМИР ГИДРО — общий вид")},
         ],
+        # 3D model for the viewer (static path; Draco-compressed GLB exported from Blender).
+        "model_3d": "models/nozhnichnyj-podemnik-1x.glb",
         # Kit image with callouts: (kit item index, x %, y %) on the picture.
         "kit_image": SCISSOR_1X,
         "kit_markers": [(0, 40, 4), (1, 20, 40), (2, 47, 58), (3, 52, 90), (4, 6, 83)],
@@ -253,6 +255,7 @@ SCISSOR_MODELS = {
         "images": [
             {"image": SCISSOR_2X, "alt": _("Ножничный подъёмник 2X ТЕМИР ГИДРО — общий вид")},
         ],
+        "model_3d": "models/nozhnichnyj-podemnik-2x.glb",
         "kit_image": SCISSOR_2X,
         "kit_markers": [(0, 62, 2), (1, 22, 30), (2, 32, 60), (3, 45, 96), (4, 95, 88)],
         "description": [
@@ -312,6 +315,9 @@ SCISSOR_MODELS = {
         "images": [
             {"image": SCISSOR_3X, "alt": _("Ножничный подъёмник 3X ТЕМИР ГИДРО — общий вид")},
         ],
+        "model_3d": "models/nozhnichnyj-podemnik-3x.glb",
+        # Exported later than 1X/2X, with glossy paint tuned to the renders' studio light.
+        "model_3d_studio": True,
         "kit_image": SCISSOR_3X,
         "kit_markers": [(0, 62, 1.5), (1, 22, 30), (2, 50, 52), (3, 50, 96)],
         "description": [
@@ -402,22 +408,41 @@ SCISSOR_MODELS = {
     },
 }
 
+def _summary(ranges):
+    """The line page's spec grid for a model: (icon, label, value, unit) from its serial ranges.
+    Load and height are shown as the top of the range, platform sizes and stroke as the range."""
+    load, length, width, stroke, _folded, height = ranges
+    return [
+        ("spec-height", _("Максимальная высота"), format_lazy(_("до {}"), height.split("–")[-1]), _("мм")),
+        ("spec-load", _("Грузоподъёмность"), format_lazy(_("до {}"), load.split("–")[-1]), _("кг")),
+        ("spec-length", _("Длина платформы"), length, _("мм")),
+        ("spec-width", _("Ширина платформы"), width, _("мм")),
+        ("spec-stroke", _("Рабочий ход"), stroke, _("мм")),
+    ]
+
+
+_look = None
 for _slug, _m in SCISSOR_MODELS.items():
+    _ranges = _m.pop("ranges")
+    if "model_3d" in _m:
+        _look = {"orbit": "-30deg 78deg auto"} if _m.pop("model_3d_studio", False) else {"env": None, "exposure": None}
+        _m["scenes_3d"] = [scene3d(_m["model_3d"], _m["images"][0]["image"], _m["images"][0]["alt"], **_look)]
     _m.update(
         slug=_slug,
         line="nozhnichnye",
         line_title=_("Ножничные подъёмники"),
         url=f"{_SCISSORS}{_slug}/",
-        specs=_spec_rows(_m["pairs"], _m.pop("ranges", None)),
+        specs=_spec_rows(_m["pairs"], _ranges),
+        summary=_summary(_ranges),
         kit=SCISSOR_KIT,
         options=SCISSOR_OPTIONS,
         faq=_faq(
             format_lazy(_("Сколько стоит ножничный подъёмник {}?"), _m["name"]), [*_m.pop("faq_extra"), _PEOPLE_FAQ]
         ),
     )
-del _slug, _m
+del _slug, _m, _ranges, _look
 
-# ---------- Platforms for painting booths: 1X (scissor) and 2D (rail-mounted) ----------
+# ---------- Platforms for painting booths: 1X (scissor), 2D (rail-mounted), 3D (rails + extending cab) ----------
 # Specs, kit and applications come from the client's old site (temir-gidro.ru).
 
 _PAINT = "/podemniki/dlya-okrasochnyh-kamer/"
@@ -477,6 +502,32 @@ PAINT_2D_KIT = [
     (_("Маслёнки для смазки"), _("Для обслуживания подвижных узлов."), "kit-grease"),
 ]
 
+PAINT_3D_KIT = [
+    (
+        _("Рельсовые направляющие"),
+        _("Верхний и нижний рельс вдоль стены камеры: по ним подъёмник движется вдоль изделия."),
+        "kit-rails",
+    ),
+    (_("Мачта с кареткой"), _("Поднимает механизм выдвижения вместе с кабиной на нужную высоту."), "kit-mast"),
+    (
+        _("Механизм выдвижения кабины"),
+        _("Ножничный вынос подводит кабину к поверхности изделия и отводит обратно к стене."),
+        "kit-scissors",
+    ),
+    (
+        _("Рабочая кабина"),
+        _("Ограждённое место оператора: краскопульт, шланги и материалы остаются под рукой."),
+        "kit-platform",
+    ),
+    (_("Листовое покрытие платформы"), _("Нескользящий стальной лист."), "kit-sheet"),
+    (_("Гидроцилиндры"), _("Параметры подбираем по нагрузке, ходу подъёма и вылету кабины."), "kit-cylinder"),
+    (_("Маслостанция"), _("Насос, двигатель, бак и клапанный блок."), "kit-power-unit"),
+    (_("Настенный пульт управления"), _("Шкаф управления вне зоны распыления."), "kit-panel"),
+    (_("Концевые выключатели"), _("Ограничивают ход по высоте, вдоль рельсов и по вылету кабины."), "kit-limits"),
+    (_("Гидравлическая защита от перегруза"), _("Не позволяет превысить расчётную нагрузку."), "kit-overload"),
+    (_("Маслёнки для смазки"), _("Для обслуживания подвижных узлов."), "kit-grease"),
+]
+
 PAINT_OPTIONS = [
     _("Монтаж в приямок: сложенная платформа вровень с полом"),
     _("Два подъёмника по обеим сторонам изделия"),
@@ -487,6 +538,8 @@ PAINT_OPTIONS = [
 
 _PAINT_1X_IMG = img("catalog/podemnik-dlya-okrasochnoj-kamery", (800, 490))
 _PAINT_2D_IMG = img("catalog/podemnik-dlya-okrasochnoj-kamery-2d", (800, 503))
+# Renders from the client's old site (temir-gidro.ru, the 3D page): the cut-out one, then two views at a wall.
+_PAINT_3D_IMG = img("catalog/podemnik-dlya-okrasochnoj-kamery-3d", (800, 705))
 
 PAINT_MODELS = {
     "1x": {
@@ -701,7 +754,90 @@ PAINT_MODELS = {
         ],
         "price_question": _("Сколько стоит подъёмник для окрасочной камеры 2D?"),
     },
+    "3d": {
+        "name": "3D",
+        "title": _("Подъёмник для окрасочной камеры 3D"),
+        "seo_title": _("Подъёмник 3D для окрасочной камеры — выдвижная кабина | ТЕМИР ГИДРО"),
+        "seo_description": _(
+            "Рельсовый подъёмник 3D с выдвижной кабиной для окрасочных камер: движется по высоте, вдоль изделия "
+            "и к его поверхности. Ход до 12 000 мм, до 5000 кг. Окраска цистерн и резервуаров. Проект под камеру."
+        ),
+        "lead": _(
+            "Рабочая кабина движется в трёх направлениях: вверх-вниз, вдоль изделия по рельсам и к его "
+            "поверхности. Маляр выбирает положение у цистерны или резервуара, не покидая кабину."
+        ),
+        "images": [
+            {"image": _PAINT_3D_IMG, "alt": _("Подъёмник для окрасочной камеры 3D с выдвижной кабиной на рельсах")},
+            {
+                "image": img("catalog/podemnik-dlya-okrasochnoj-kamery-3d-sboku", (800, 533)),
+                "alt": _("Подъёмник 3D сбоку: мачта, привод и выдвинутая рабочая кабина"),
+                "photo": True,  # on white, not a cut-out render
+            },
+            {
+                "image": img("catalog/podemnik-dlya-okrasochnoj-kamery-3d-sprava", (800, 533)),
+                "alt": _("Подъёмник 3D в правом ракурсе: кабина, направляющие и гидроцилиндр"),
+                "photo": True,
+            },
+        ],
+        "kit_image": _PAINT_3D_IMG,
+        "kit_markers": [(0, 12, 4), (1, 50, 21), (2, 59, 61), (3, 80, 65)],
+        "specs": [
+            (_("Грузоподъёмность, кг"), "500–5000"),
+            (_("Длина платформы, мм"), "1000–6000"),
+            (_("Ширина платформы, мм"), "1000–2000"),
+            (_("Рабочий ход, мм"), "1500–12 000"),
+            (_("Высота в сложенном положении, мм"), "150–200"),
+            (_("Максимальная высота платформы, мм"), "1700–12 200"),
+            (_("Перемещение"), _("по высоте, вдоль рельсов и к изделию")),
+            (_("Привод"), _("электрогидравлический")),
+            (_("Управление"), _("настенный пульт")),
+        ],
+        "description": [
+            _(
+                "Подъёмник 3D — рельсовая рабочая платформа с выдвижной кабиной. Продольное перемещение задаёт "
+                "положение вдоль изделия, вертикальный подъём — высоту обслуживания, а выдвижение кабины — "
+                "расстояние до поверхности. Протяжённую поверхность маляр обрабатывает с одного рабочего места."
+            ),
+            _(
+                "Выдвижная кабина нужна там, где поверхность изделия не плоская: у цистерн, резервуаров и "
+                "цилиндрических корпусов. Подъём меняет высоту обработки, движение по рельсам переводит кабину "
+                "к следующему участку, а вынос подводит её к изгибу корпуса на расстояние распыления."
+            ),
+            _(
+                "Для расчёта нужны размеры камеры, длина и диаметр изделия, высота обслуживания и расстояние "
+                "от направляющих до изделия. Учитываем ворота, вентиляцию, освещение и коммуникации — по ним "
+                "определяем длину пути, ход подъёма, вылет и размеры кабины."
+            ),
+        ],
+        "uses": [
+            _("Наружная поверхность цистерн и резервуаров"),
+            _("Верхние и боковые участки цилиндрических корпусов"),
+            _("Крупные ёмкости и аппараты с выступающими элементами"),
+            _("Длинные металлоконструкции сложной формы"),
+        ],
+        "sliders": _sliders((1000, 6000, 100, 2000), (1000, 2000, 100, 1200), (1500, 12000, 500, 5000),
+                            (500, 5000, 100, 1000)),
+        "faq_extra": [
+            (
+                _("Чем 3D отличается от 2D?"),
+                _(
+                    "2D движется по высоте и вдоль изделия. У 3D кабина ещё и выдвигается к поверхности: "
+                    "маляр подходит к изгибу цистерны или резервуара на нужное расстояние распыления."
+                ),
+            ),
+            (
+                _("Какие данные нужны для расчёта?"),
+                _(
+                    "План камеры, длина и диаметр изделия, расположение опор и выступающих элементов, высота "
+                    "обслуживания и расстояние от стены с направляющими до изделия."
+                ),
+            ),
+        ],
+        "price_question": _("Сколько стоит подъёмник для окрасочной камеры 3D?"),
+    },
 }
+
+_PAINT_KITS = {"1x": PAINT_1X_KIT, "2d": PAINT_2D_KIT, "3d": PAINT_3D_KIT}
 
 for _slug, _m in PAINT_MODELS.items():
     _m.update(
@@ -709,7 +845,7 @@ for _slug, _m in PAINT_MODELS.items():
         line="dlya-okrasochnyh-kamer",
         line_title=_("Подъёмники для окрасочных камер"),
         url=f"{_PAINT}{_slug}/",
-        kit=PAINT_1X_KIT if _slug == "1x" else PAINT_2D_KIT,
+        kit=_PAINT_KITS[_slug],
         options=PAINT_OPTIONS,
         faq=_faq(_m.pop("price_question"), _m.pop("faq_extra")),
     )

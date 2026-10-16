@@ -1,0 +1,257 @@
+[
+  {
+    "label": "2D",
+    "styles": [
+      {
+        "selector": ".tg-product-title",
+        "fontFamily": "Manrope, \"IBM Plex Sans\", sans-serif",
+        "fontWeight": "800",
+        "fontSize": "32px",
+        "lineHeight": "38.4px",
+        "textShadow": "none",
+        "fontSynthesis": "weight style small-caps"
+      },
+      {
+        "selector": ".tg-section-title",
+        "fontFamily": "Manrope, \"IBM Plex Sans\", sans-serif",
+        "fontWeight": "800",
+        "fontSize": "26px",
+        "lineHeight": "31.2px",
+        "textShadow": "none",
+        "fontSynthesis": "weight style small-caps"
+      },
+      {
+        "selector": ".tg-use-copy h3",
+        "fontFamily": "Manrope, \"IBM Plex Sans\", sans-serif",
+        "fontWeight": "800",
+        "fontSize": "23px",
+        "lineHeight": "30.36px",
+        "textShadow": "none",
+        "fontSynthesis": "weight style small-caps"
+      },
+      {
+        "selector": ".tg-product-desc",
+        "fontFamily": "\"IBM Plex Sans\", Manrope, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+        "fontWeight": "400",
+        "fontSize": "15.5px",
+        "lineHeight": "26.35px",
+        "textShadow": "none",
+        "fontSynthesis": "weight style small-caps"
+      },
+      {
+        "selector": ".tg-use-copy p",
+        "fontFamily": "\"IBM Plex Sans\", Manrope, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+        "fontWeight": "400",
+        "fontSize": "15px",
+        "lineHeight": "26.25px",
+        "textShadow": "none",
+        "fontSynthesis": "weight style small-caps"
+      }
+    ],
+    "fonts": [
+      {
+        "selector": ".tg-product-title",
+        "fonts": [
+          {
+            "familyName": "Manrope ExtraLight",
+            "postScriptName": "Manrope-ExtraLight-ExtraBold",
+            "isCustomFont": true,
+            "glyphCount": 33
+          }
+        ]
+      },
+      {
+        "selector": ".tg-use-copy h3",
+        "fonts": [
+          {
+            "familyName": "Manrope ExtraLight",
+            "postScriptName": "Manrope-ExtraLight-ExtraBold",
+            "isCustomFont": true,
+            "glyphCount": 63
+          }
+        ]
+      },
+      {
+        "selector": ".tg-product-desc",
+        "fonts": [
+          {
+            "familyName": "Manrope ExtraLight",
+            "postScriptName": "Manrope-ExtraLight-Medium",
+            "isCustomFont": true,
+            "glyphCount": 346
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "3D",
+    "styles": [
+      {
+        "selector": ".tg-product-title",
+        "fontFamily": "Manrope, \"IBM Plex Sans\", sans-serif",
+        "fontWeight": "800",
+        "fontSize": "32px",
+        "lineHeight": "38.4px",
+        "textShadow": "none",
+        "fontSynthesis": "weight style small-caps"
+      },
+      {
+        "selector": ".tg-section-title",
+        "fontFamily": "Manrope, \"IBM Plex Sans\", sans-serif",
+        "fontWeight": "800",
+        "fontSize": "26px",
+        "lineHeight": "41.6px",
+        "textShadow": "none",
+        "fontSynthesis": "weight style small-caps"
+      },
+      {
+        "selector": ".tg-use-copy h3",
+        "fontFamily": "Manrope, \"IBM Plex Sans\", sans-serif",
+        "fontWeight": "800",
+        "fontSize": "23px",
+        "lineHeight": "30.36px",
+        "textShadow": "none",
+        "fontSynthesis": "weight style small-caps"
+      },
+      {
+        "selector": ".tg-product-desc",
+        "fontFamily": "\"IBM Plex Sans\", Manrope, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+        "fontWeight": "400",
+        "fontSize": "15.5px",
+        "lineHeight": "26.35px",
+        "textShadow": "none",
+        "fontSynthesis": "weight style small-caps"
+      },
+      {
+        "selector": ".tg-use-copy p",
+        "fontFamily": "\"IBM Plex Sans\", Manrope, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+        "fontWeight": "400",
+        "fontSize": "15px",
+        "lineHeight": "26.25px",
+        "textShadow": "none",
+        "fontSynthesis": "weight style small-caps"
+      }
+    ],
+    "fonts": [
+      {
+        "selector": ".tg-product-title",
+        "fonts": [
+          {
+            "familyName": "Arial Black",
+            "postScriptName": "Arial-Black",
+            "isCustomFont": false,
+            "glyphCount": 32
+          }
+        ]
+      },
+      {
+        "selector": ".tg-use-copy h3",
+        "fonts": [
+          {
+            "familyName": "Arial Black",
+            "postScriptName": "Arial-Black",
+            "isCustomFont": false,
+            "glyphCount": 42
+          }
+        ]
+      },
+      {
+        "selector": ".tg-product-desc",
+        "fonts": [
+          {
+            "familyName": "Segoe UI",
+            "postScriptName": "SegoeUI",
+            "isCustomFont": false,
+            "glyphCount": 357
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "3D fixed",
+    "styles": [
+      {
+        "selector": ".tg-product-title",
+        "fontFamily": "\"TG Paint Lift Manrope\", Manrope, \"IBM Plex Sans\", sans-serif",
+        "fontWeight": "800",
+        "fontSize": "32px",
+        "lineHeight": "38.4px",
+        "textShadow": "none",
+        "fontSynthesis": "weight style small-caps"
+      },
+      {
+        "selector": ".tg-section-title",
+        "fontFamily": "\"TG Paint Lift Manrope\", Manrope, \"IBM Plex Sans\", sans-serif",
+        "fontWeight": "800",
+        "fontSize": "26px",
+        "lineHeight": "31.2px",
+        "textShadow": "none",
+        "fontSynthesis": "weight style small-caps"
+      },
+      {
+        "selector": ".tg-use-copy h3",
+        "fontFamily": "\"TG Paint Lift Manrope\", Manrope, \"IBM Plex Sans\", sans-serif",
+        "fontWeight": "800",
+        "fontSize": "23px",
+        "lineHeight": "30.36px",
+        "textShadow": "none",
+        "fontSynthesis": "weight style small-caps"
+      },
+      {
+        "selector": ".tg-product-desc",
+        "fontFamily": "\"IBM Plex Sans\", \"TG Paint Lift Manrope\", Manrope, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+        "fontWeight": "400",
+        "fontSize": "15.5px",
+        "lineHeight": "26.35px",
+        "textShadow": "none",
+        "fontSynthesis": "weight style small-caps"
+      },
+      {
+        "selector": ".tg-use-copy p",
+        "fontFamily": "\"IBM Plex Sans\", \"TG Paint Lift Manrope\", Manrope, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+        "fontWeight": "400",
+        "fontSize": "15px",
+        "lineHeight": "26.25px",
+        "textShadow": "none",
+        "fontSynthesis": "weight style small-caps"
+      }
+    ],
+    "fonts": [
+      {
+        "selector": ".tg-product-title",
+        "fonts": [
+          {
+            "familyName": "Manrope ExtraLight",
+            "postScriptName": "Manrope-ExtraLight-ExtraBold",
+            "isCustomFont": true,
+            "glyphCount": 33
+          }
+        ]
+      },
+      {
+        "selector": ".tg-use-copy h3",
+        "fonts": [
+          {
+            "familyName": "Manrope ExtraLight",
+            "postScriptName": "Manrope-ExtraLight-ExtraBold",
+            "isCustomFont": true,
+            "glyphCount": 42
+          }
+        ]
+      },
+      {
+        "selector": ".tg-product-desc",
+        "fonts": [
+          {
+            "familyName": "Manrope ExtraLight",
+            "postScriptName": "Manrope-ExtraLight-Medium",
+            "isCustomFont": true,
+            "glyphCount": 356
+          }
+        ]
+      }
+    ]
+  }
+]
