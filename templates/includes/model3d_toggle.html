@@ -1,5 +1,8 @@
-{% load i18n images %}
-{# Switches the picture above it to the 3D viewer and back; shown by static/js/model3d.js. #}
+{% load i18n %}
+{% comment %}Switches the picture above it to the 3D viewer and back; shown by static/js/model3d.js.
+Until the model is on, it is just the letters «3D», solid (cut into slices by the script) and
+turning to follow the pointer; the words are for screen readers. With the model on, a plain chip.{% endcomment %}
 <button class="model3d-toggle" type="button" data-model3d-toggle data-label-photo="{% translate 'Показать фото' %}" hidden>
-  {% icon "rotate-3d" %}<span data-model3d-label>{% translate "Покрутить в 3D" %}</span>
+  <span class="model3d-toggle__tilt" aria-hidden="true" data-model3d-tilt><span class="model3d-toggle__word" data-model3d-word>3D</span></span>
+  <span class="model3d-toggle__label" data-model3d-label>{% translate "Покрутить в 3D" %}</span>
 </button>

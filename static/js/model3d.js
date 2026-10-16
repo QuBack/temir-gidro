@@ -13,6 +13,79 @@
   var motion = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var viewerReady = null;
 
+  // The button's «3D»: the letters cut into slices stacked in depth — a gold face (its gradient and
+  // shine in CSS), a bronze body darkening to the back — turning to face the pointer anywhere on the
+  // page. With no pointer (a phone, or the mouse gone for a while) they sway slowly; with reduced
+  // motion they stand still.
+  var SLICES = 16, STEP = 1.6, MAX_TURN = 28, BODY = [[201, 143, 14], [92, 58, 0]];
+  var tilting = [], lastMove = 0, running = false;
+
+  function rgb(c) { return "rgb(" + c.join(",") + ")"; }
+  function mix(a, b, t) { return a.map(function (v, i) { return Math.round(v + (b[i] - v) * t); }); }
+
+  function solidLetters(toggle) {
+    var word = toggle.querySelector("[data-model3d-word]");
+    var tilt = toggle.querySelector("[data-model3d-tilt]");
+    if (!word || !tilt) return;
+    var text = word.textContent;
+    word.textContent = "";
+    for (var i = SLICES; i >= 0; i--) {
+      var slice = document.createElement("span");
+      slice.textContent = text;
+      slice.style.transform = "translateZ(" + (-i * STEP) + "px)";
+      if (i) slice.style.color = rgb(mix(BODY[0], BODY[1], i / SLICES));
+      else slice.className = "model3d-toggle__face";
+      word.appendChild(slice);
+    }
+    if (!motion) return;
+    var item = { tilt: tilt, toggle: toggle, x: 0, y: 0, tx: 0, ty: 0, seen: false };
+    tilting.push(item);
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        item.seen = entries[0].isIntersecting;
+        if (item.seen) start();
+      }).observe(toggle);
+    } else {
+      item.seen = true;
+    }
+    start();
+  }
+
+  window.addEventListener("pointermove", function (e) {
+    if (e.pointerType === "touch") return;
+    lastMove = performance.now();
+    tilting.forEach(function (item) {
+      var r = item.toggle.getBoundingClientRect();
+      var dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+      item.ty = Math.max(-1, Math.min(1, dx / 260)) * MAX_TURN;
+      item.tx = Math.max(-1, Math.min(1, -dy / 260)) * MAX_TURN;
+    });
+    start();
+  }, { passive: true });
+
+  function start() {
+    if (running || !tilting.length) return;
+    running = true;
+    requestAnimationFrame(frame);
+  }
+
+  function frame(t) {
+    var idle = t - lastMove > 2500, any = false;
+    tilting.forEach(function (item, k) {
+      if (!item.seen) return;
+      any = true;
+      if (idle) {
+        item.ty = Math.sin(t / 1400 + k) * MAX_TURN * .6;
+        item.tx = Math.cos(t / 1900 + k) * MAX_TURN * .3;
+      }
+      item.x += (item.tx - item.x) * .12;
+      item.y += (item.ty - item.y) * .12;
+      item.tilt.style.transform = "rotateX(" + item.x.toFixed(2) + "deg) rotateY(" + item.y.toFixed(2) + "deg)";
+    });
+    running = any;
+    if (any) requestAnimationFrame(frame);
+  }
+
   function loadViewer() {
     if (!viewerReady) {
       // The viewer reads its settings from this global when its module runs.
@@ -66,6 +139,8 @@
     if (block) block.hidden = false;
     toggle.hidden = false;
 
+    solidLetters(toggle);
+
     function show3d(on) {
       host.classList.toggle("is-3d", on);
       label.textContent = on ? toggle.dataset.labelPhoto : label3d;
@@ -78,6 +153,7 @@
 
     toggle.addEventListener("click", function () {
       if (host.classList.contains("is-3d")) { show3d(false); return; }
+      toggle.classList.remove("is-turning"); void toggle.offsetWidth; toggle.classList.add("is-turning");
       if (viewer) { show3d(true); return; }
       busy(true);
       loadViewer().then(function () {

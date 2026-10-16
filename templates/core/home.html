@@ -39,7 +39,6 @@
       {% for g in equipment_groups %}
       <li class="eq-item{% if g.models %} eq-item--group{% endif %}">
         <a class="eq-card" href="{{ g.url }}"{% if g.models %} data-eq-toggle aria-controls="eq-{{ g.slug }}"{% endif %}>
-          {% if g.models %}<span class="eq-badge">{{ g.badge }}{% icon "chevron-right" %}</span>{% endif %}
           <span class="eq-card__media">{% picture g.image g.title sizes="(min-width: 60rem) 30vw, 45vw" %}</span>
           <h3>{{ g.title }}</h3>
         </a>

@@ -47,7 +47,9 @@
       </div>
       <figcaption class="stamp">
         {# The model follows the number of scissor pairs the scheme picks: 2 pairs → 2X. #}
-        <span class="stamp__name">{% translate "Схема ножничного подъёмника" %} <b class="stamp__model" data-out="M">2X</b></span>
+        {# On the right: the platform and the load in words; the numbers follow the sliders. #}
+        <span class="stamp__name stamp__name--split"><span>{% translate "Ножничный подъёмник" %} <b class="stamp__model" data-out="M">2X</b></span>
+          <span class="stamp__size">{% translate "Платформа" %} <span data-out="LB">2000 × 1200</span> {% translate "мм" %}, {% translate "нагрузка" %} <span data-out="Qs">2000</span> {% translate "кг" %}</span></span>
         {# Defaults match drawings.js for L 2000, H 1500, Q 2 t; without JS the stamp stays as is. #}
         <dl class="stamp__facts stamp__facts--wide">
           <div><dt>{% translate "Платформа, мм" %}</dt><dd data-out="LB">2000 × 1200</dd></div>

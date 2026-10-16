@@ -474,6 +474,9 @@ body:not(.page-white) .config .sheet, body:not(.page-white) .config .config__not
 .stamp__name { display: block; padding: .5rem .75rem; border-bottom: 1px solid var(--ink); font-family: var(--font-draw); font-size: 1.125rem; }
 /* The configurator's serial model (1X–4X) right in the title block, in the lifts' red. */
 .stamp__model { margin-left: .25rem; color: var(--red); font-size: 1.375rem; font-weight: 700; }
+/* Title on the left, the platform size and the load on the right; on a narrow sheet they wrap under it. */
+.stamp__name--split { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .15rem 1rem; }
+.stamp__size { color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .stamp__facts { display: grid; grid-template-columns: repeat(2, 1fr); margin: 0; }
 .stamp__facts > div { display: flex; flex-direction: column-reverse; padding: .5rem .75rem; }
 .stamp__facts > div:nth-child(odd) { border-right: 1px solid var(--ink); }
@@ -979,23 +982,15 @@ main .reveal--photo.is-visible { clip-path: inset(-3rem); }
 .eq-card__media picture { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
 .eq-card__media img { max-width: 100%; max-height: 100%; width: auto; height: auto; }
 .eq-card:hover .eq-card__media { transform: scale(1.05); }
+/* The scissor series: its models in a row, a wide picture: it takes the card nearly edge to edge. */
+.eq-card[aria-controls="eq-nozhnichnye"] .eq-card__media { inset: .5rem .25rem 3.25rem; }
 .eq-card::after {
   content: ""; position: absolute; inset: 0; pointer-events: none;
   background: linear-gradient(to bottom, rgb(20 24 26 / 0) 62%, rgb(20 24 26 / .3) 80%, rgb(20 24 26 / .6));
 }
 .eq-card h3 { position: absolute; inset: auto 0 0; z-index: 1; padding: 1rem; color: var(--white); font-family: var(--font-cond); font-size: clamp(1.125rem, 1.6vw, 1.375rem); line-height: 1.1; font-weight: 700; text-shadow: 0 1px 6px rgb(0 0 0 / .45); transition: color .15s; }
 .eq-card:hover h3 { color: #ff8a80; }
-.eq-badge {
-  position: absolute; top: .65rem; right: .65rem; z-index: 2; display: inline-flex; align-items: center; gap: .25rem;
-  padding: .15rem .5rem; border: 1px solid var(--ink); border-radius: 2px; background: var(--white);
-  font-family: var(--font-cond); font-size: .9375rem; font-weight: 600; line-height: 1.4; color: var(--ink);
-}
-/* The chevron only means something once JS makes the card a toggle. */
-.eq-badge .icon { display: none; width: .9rem; height: .9rem; stroke-width: 2.4; rotate: 90deg; transition: rotate .3s; }
-[data-eq-toggle][aria-expanded] .eq-badge .icon { display: block; }
 .eq-card[aria-expanded="true"] { box-shadow: 0 0 0 2px var(--ink), var(--shadow-card); }
-.eq-card[aria-expanded="true"] .eq-badge { background: var(--ink); color: var(--white); }
-.eq-card[aria-expanded="true"] .eq-badge .icon { rotate: -90deg; }
 
 .eq-panel { grid-column: 1 / -1; display: grid; grid-template-rows: 0fr; margin-block: -.5rem; transition: grid-template-rows .4s cubic-bezier(.3, .7, .2, 1); }
 .eq-panel.is-open { grid-template-rows: 1fr; }
@@ -1029,7 +1024,6 @@ main .reveal--photo.is-visible { clip-path: inset(-3rem); }
 @media (max-width: 39.99rem) {
   .eq-card__media { inset: 2.5rem .75rem 4.5rem; }
   .eq-card h3 { padding: .75rem .5rem; font-size: 1rem; }
-  .eq-badge { font-size: .875rem; }
   .eq-models { grid-template-columns: repeat(2, 1fr); gap: .75rem; }
   .eq-model { height: 11rem; padding: .75rem; }
   .eq-model__cap { font-size: 1rem; overflow-wrap: anywhere; }
@@ -1378,48 +1372,55 @@ html.lightbox-open body { padding-right: var(--scrollbar, 0); }
 .model3d-viewer { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; --poster-color: transparent; }
 [data-model3d]:not(.is-3d) .model3d-viewer { opacity: 0; pointer-events: none; }
 [data-model3d].is-3d picture { visibility: hidden; }
-/* «Покрутить в 3D»: a raised red key — a darker lip under it, a highlight on top — that sinks
-   when pressed and pulses gently until the first click. Once the model is on, «Показать фото»
-   steps back to a quiet white chip so it does not compete with the model. */
+/* «3D»: big solid gold letters floating in the corner — a gold face with a passing shine on a thick
+   bronze body (slices stacked in depth by model3d.js) and a warm shadow under them; they turn to
+   follow the pointer and make one turn on click. Gold stands out on the white sheet next to the red
+   lift. Once the model is on, «Показать фото» is a quiet white chip. */
 .model3d-toggle {
-  position: absolute; top: 1rem; right: 1rem; z-index: 3;
-  display: inline-flex; align-items: center; gap: .65rem; min-height: 3.25rem; padding: .75rem 1.4rem;
-  border: 0; border-radius: calc(var(--radius) * 2);
-  background: linear-gradient(180deg, #e0262d 0%, var(--red) 55%, #ad1318 100%); color: var(--white);
-  font: inherit; font-size: 1.0625rem; font-weight: 700; letter-spacing: .01em; cursor: pointer;
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / .35),
-    0 5px 0 var(--red-dark),
-    0 10px 22px rgb(156 15 20 / .45);
-  transition: transform .12s, box-shadow .12s, filter .15s;
+  position: absolute; top: 1rem; right: 1.25rem; z-index: 3;
+  display: grid; place-items: center; min-width: 3rem; min-height: 3rem; padding: .25rem .5rem;
+  border: 0; border-radius: var(--radius); background: none; color: #c98f0e;
+  font: inherit; cursor: pointer; perspective: 420px; -webkit-tap-highlight-color: transparent;
 }
-.model3d-toggle:hover { filter: brightness(1.08); transform: translateY(-1px); }
-.model3d-toggle:active {
-  transform: translateY(4px);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / .25), 0 1px 0 var(--red-dark), 0 4px 10px rgb(156 15 20 / .35);
+.model3d-toggle::after {
+  content: ""; position: absolute; left: 12%; right: 12%; bottom: -.5rem; height: .75rem; border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgb(201 143 14 / .45), transparent 70%); filter: blur(3px); pointer-events: none;
 }
-.model3d-toggle:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
-.model3d-toggle .icon { width: 1.5rem; height: 1.5rem; color: var(--white); }
-[data-model3d]:not(.is-3d) .model3d-toggle:not([aria-busy="true"]) { animation: model3d-call 2.4s ease-out infinite; }
-@keyframes model3d-call {
-  0% { box-shadow: inset 0 1px 0 rgb(255 255 255 / .35), 0 5px 0 var(--red-dark), 0 10px 22px rgb(156 15 20 / .45), 0 0 0 0 rgb(196 22 28 / .55); }
-  70%, 100% { box-shadow: inset 0 1px 0 rgb(255 255 255 / .35), 0 5px 0 var(--red-dark), 0 10px 22px rgb(156 15 20 / .45), 0 0 0 16px rgb(196 22 28 / 0); }
+.model3d-toggle:focus-visible { outline: 3px solid var(--red); outline-offset: 4px; }
+.model3d-toggle__tilt { display: grid; place-items: center; transform-style: preserve-3d; will-change: transform; }
+.model3d-toggle__word {
+  display: grid; transform-style: preserve-3d;
+  font-family: var(--font-cond); font-size: 3.75rem; font-weight: 900; line-height: 1; letter-spacing: .02em;
 }
+.model3d-toggle__word > span { grid-area: 1 / 1; display: block; user-select: none; }
+.model3d-toggle__face {
+  background:
+    linear-gradient(105deg, transparent 35%, rgb(255 255 255 / .85) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat,
+    linear-gradient(180deg, #fff2b8 0%, #f7cf4f 38%, #d39b12 62%, #f3c74a 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: model3d-shine 3.8s ease-in-out infinite;
+}
+@keyframes model3d-shine { 0%, 55% { background-position: -150% 0, 0 0; } 85%, 100% { background-position: 250% 0, 0 0; } }
+.model3d-toggle:hover .model3d-toggle__word { filter: brightness(1.1); }
+/* The words stay for screen readers only while the letters show. */
+[data-model3d]:not(.is-3d) .model3d-toggle__label {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+.model3d-toggle.is-turning .model3d-toggle__word,
+.model3d-toggle[aria-busy="true"] .model3d-toggle__word { animation: model3d-turn .7s cubic-bezier(.3, .7, .3, 1); }
+.model3d-toggle[aria-busy="true"] .model3d-toggle__word { animation-duration: 1.2s; animation-iteration-count: infinite; animation-timing-function: linear; }
+.model3d-toggle[aria-busy="true"] { cursor: progress; }
+@keyframes model3d-turn { from { rotate: y 0deg; } to { rotate: y 360deg; } }
 [data-model3d].is-3d .model3d-toggle {
-  min-height: 2.75rem; padding: .55rem 1rem; border-radius: var(--radius);
+  display: inline-flex; min-height: 2.75rem; padding: .55rem 1rem; border-radius: var(--radius); perspective: none;
   background: rgb(255 255 255 / .94); color: var(--ink); font-size: .9375rem; font-weight: 600;
   box-shadow: 0 4px 14px rgb(0 0 0 / .18);
 }
-[data-model3d].is-3d .model3d-toggle:hover { color: var(--red); transform: none; }
-[data-model3d].is-3d .model3d-toggle .icon { color: var(--red); }
+[data-model3d].is-3d .model3d-toggle::after, [data-model3d].is-3d .model3d-toggle__tilt { display: none; }
+[data-model3d].is-3d .model3d-toggle:hover { color: var(--red); }
 @media (prefers-reduced-motion: reduce) {
-  [data-model3d]:not(.is-3d) .model3d-toggle:not([aria-busy="true"]) { animation: none; }
-  .model3d-toggle, .model3d-toggle:hover, .model3d-toggle:active { transform: none; }
+  .model3d-toggle.is-turning .model3d-toggle__word, .model3d-toggle[aria-busy="true"] .model3d-toggle__word, .model3d-toggle__face { animation: none; }
 }
-.model3d-toggle[aria-busy="true"] { cursor: progress; }
-.model3d-toggle[aria-busy="true"] .icon { animation: model3d-spin 1s linear infinite; }
-@keyframes model3d-spin { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) { .model3d-toggle[aria-busy="true"] .icon { animation: none; } }
 .model-about__uses { padding: 1.75rem; border-radius: var(--radius); background: var(--white); }
 .model-about__uses h3 { margin-bottom: 1rem; font-family: var(--font-cond); font-size: 1.5rem; font-weight: 700; }
 .checklist { display: grid; gap: .65rem; }
@@ -1583,6 +1584,33 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
     radial-gradient(ellipse 70% 90% at 50% 60%, #850e14 0%, #6a090e 40%, #420509 78%, #210204 100%);
 }
 .line-hero__text { display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: clamp(1.5rem, 5vw, 4rem); }
+/* With a backdrop (scissor line): on a wide screen the text on the left and the models in a row large on
+   the right, standing on the stage's floor with a soft light behind them; on a phone the models
+   under the text. */
+.line-hero--backdrop { position: relative; isolation: isolate; overflow: hidden; display: flex; flex-direction: column; padding-bottom: 0; }
+.line-hero--backdrop .line-hero__backdrop { order: 2; }
+.line-hero--backdrop .line-hero__text { position: relative; z-index: 1; }
+.line-hero__backdrop { position: relative; z-index: 0; display: flex; justify-content: center; margin-top: clamp(1.5rem, 3vw, 2.5rem); pointer-events: none; }
+.line-hero__backdrop img { width: min(100%, 40rem); height: auto; filter: drop-shadow(0 1.25rem 1.5rem rgb(0 0 0 / .45)); }
+.line-hero__backdrop::before {
+  content: ""; position: absolute; inset: 10% 5% 0; z-index: -1; border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgb(255 255 255 / .16), transparent 68%);
+}
+@media (min-width: 60rem) {
+  .eq-hero.line-hero--backdrop { min-height: 80svh; }
+  .eq-hero.line-hero--backdrop > .line-hero__text { margin-block: auto; padding-block: 0 3rem; align-items: flex-start; text-align: left; }
+  .line-hero--backdrop .line-hero__text > * { max-width: min(38rem, 44%); }
+  .line-hero--backdrop h1.hero__title { text-wrap: balance; }
+  .line-hero.line-hero--backdrop .hero__lead { margin-inline: 0; }
+  .line-hero.line-hero--backdrop .hero__actions { justify-content: flex-start; }
+  .line-hero__backdrop {
+    position: absolute; top: calc(var(--chrome) + 1rem); bottom: 1.5rem; margin: 0;
+    right: max(var(--gutter), calc((100% - var(--container)) / 2 + var(--gutter))); width: 48%;
+    align-items: flex-end; justify-content: flex-end;
+  }
+  .line-hero__backdrop picture { display: flex; align-items: flex-end; justify-content: flex-end; width: 100%; height: 100%; }
+  .line-hero__backdrop img { width: auto; height: auto; max-width: 100%; max-height: 100%; }
+}
 /* Text as on the home hero: white title with a soft shadow, light lead, red button, white phone. */
 .line-hero { color: #e6eaec; }
 .line-hero h1.hero__title { color: var(--white); }

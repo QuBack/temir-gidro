@@ -57,6 +57,9 @@ SCISSOR_2X = img("catalog/nozhnichnyj-podemnik-2x", (800, 1080))
 SCISSOR_3X = img("catalog/nozhnichnyj-podemnik-3x", (800, 1289))
 # Montage of the 3X render with a fourth pair (tools/make_4x_montage.py) until a real render arrives.
 SCISSOR_4X = img("catalog/nozhnichnyj-podemnik-4x", (800, 1692))
+# Three models in a row (1X in front, 3X at the back; 4X left out for now), composed from the renders
+# above, the 3X paint matched to 1X and 2X: the scissor series card and the scissor line's first screen.
+SCISSOR_LINEUP = img("catalog/nozhnichnye-podemniki-1x-3x", (1733, 1211), widths=(640, 1280, 1733))
 PAINT_1X = img("catalog/podemnik-dlya-okrasochnoj-kamery", (800, 490))
 PAINT_2D = img("catalog/podemnik-dlya-okrasochnoj-kamery-2d", (800, 503))
 PAINT_3D = img("catalog/podemnik-dlya-okrasochnoj-kamery-3d", (800, 705))
@@ -175,7 +178,7 @@ _STEP_PHOTOS = [
     ("raschet", _("Инженерный расчёт нагрузок подъёмника")),
     ("proekt", _("3D-модель ножничного подъёмника в САПР и чертёж")),
     ("proizvodstvo", _("Сварщик приваривает платформу ножничного подъёмника в цехе ТЕМИР ГИДРО")),
-    ("montazh", _("Готовый ножничный подъёмник ТЕМИР ГИДРО в цехе перед отгрузкой")),
+    ("montazh", _("Ножничный подъёмник ТЕМИР ГИДРО, смонтированный в приямке на объекте")),
 ]
 STEPS_TIMELINE = [
     {
@@ -305,6 +308,7 @@ _PAINT_URL = "/podemniki/dlya-okrasochnyh-kamer/"
 EQUIPMENT = {
     "nozhnichnye": {
         "title": _("Ножничные подъёмники"),
+        "hero_backdrop": SCISSOR_LINEUP,  # the models in a row beside the first screen's text
         "seo_title": _("Ножничные подъёмники от производителя — ТЕМИР ГИДРО"),
         "seo_description": _(
             "Гидравлические ножничные подъёмники 1X–4X от производителя: до 10 000 кг, высота до 20 м. "
@@ -672,17 +676,6 @@ EQUIPMENT = {
                     "Основа — усиленная платформа под выбранные контейнеры. Её поднимают гидроцилиндры "
                     "от маслостанции; станция и электрошкаф стоят в аппаратной части приямка. Пульт ставят "
                     "так, чтобы оператор видел всю рабочую зону; дополнительно — проводной или радиопульт."
-                ),
-            },
-            {
-                "image": img("catalog/podemnik-dlya-musornyh-kontejnerov", (576, 629), widths=(400, 576)),
-                "render": True,
-                "alt": _("Подъёмник для мусорных контейнеров ТЕМИР ГИДРО с четырьмя контейнерами"),
-                "title": _("Безопасность"),
-                "text": _(
-                    "Концевые выключатели контролируют верхнее и нижнее положение платформы. Защита от "
-                    "перегрузки не даст начать подъём сверх нормы, а клапаны гидросистемы не допустят "
-                    "самопроизвольного опускания при потере давления."
                 ),
             },
         ],
@@ -1067,8 +1060,7 @@ SCISSOR_SERIES = {"title": _("Ножничные подъёмники"), "url": 
 _PAINT = "/podemniki/dlya-okrasochnyh-kamer/"
 EQUIPMENT_GROUPS = [
     {
-        "slug": "nozhnichnye", "title": _("Ножничные подъёмники"), "url": _SCISSORS, "image": SCISSOR_1X,
-        "badge": _("4 модели"),
+        "slug": "nozhnichnye", "title": _("Ножничные подъёмники"), "url": _SCISSORS, "image": SCISSOR_LINEUP,
         "models": [
             {"code": "1X", "title": _("Ножничный подъёмник 1X"), "url": _SCISSORS + "1x/", "image": SCISSOR_1X},
             {"code": "2X", "title": _("Ножничный подъёмник 2X"), "url": _SCISSORS + "2x/", "image": SCISSOR_2X},
@@ -1078,7 +1070,6 @@ EQUIPMENT_GROUPS = [
     },
     {
         "slug": "okrasochnye", "title": _("Окрасочные платформы"), "url": _PAINT, "image": PAINT_1X,
-        "badge": _("3 модели"),
         "models": [
             {"code": "1X", "title": _("Окрасочная платформа 1X"), "url": _PAINT + "1x/", "image": PAINT_1X},
             {"code": "2D", "title": _("Окрасочная платформа 2D"), "url": _PAINT + "2d/", "image": PAINT_2D},
@@ -1088,7 +1079,6 @@ EQUIPMENT_GROUPS = [
     {
         # The four-post render covers the stack: the car lift's own one is only 220 px wide.
         "slug": "avtomobilnye", "title": _("Автомобильные подъёмники"), "url": _CARS, "image": CATEGORIES[1]["image"],
-        "badge": _("2 модели"),
         "models": [
             {"code": _("Автомобильный"), "title": _("Автомобильный подъёмник"), "url": _CARS,
              "image": CATEGORIES[4]["image"]},

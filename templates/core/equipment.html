@@ -30,8 +30,9 @@
 </section>
 {% elif showcase %}
 {# A line with a model showcase: the red stage without a render, the title in the middle; the models follow. #}
-<section class="eq-hero model-hero line-hero" aria-labelledby="eq-title">
+<section class="eq-hero model-hero line-hero{% if item.hero_backdrop %} line-hero--backdrop{% endif %}" aria-labelledby="eq-title">
   {% include "includes/breadcrumbs.html" %}
+  {% if item.hero_backdrop %}<div class="line-hero__backdrop" aria-hidden="true">{% picture item.hero_backdrop "" sizes="(min-width: 60rem) 60vw, 100vw" priority=True %}</div>{% endif %}
   <div class="container line-hero__text">
     <h1 class="hero__title" id="eq-title">{{ item.title }}</h1>
     <p class="hero__lead">{{ item.lead }}</p>
@@ -252,7 +253,7 @@
 </section>
 
 {% if item.scenes %}
-<section class="section section--grey" aria-labelledby="scenes-title">
+<section class="section section--grey section--flat" aria-labelledby="scenes-title">
   <div class="container">
     <div class="section-head">
       <h2 id="scenes-title">{{ item.scenes_title }}</h2>

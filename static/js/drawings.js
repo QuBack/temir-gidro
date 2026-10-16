@@ -272,14 +272,20 @@
     var hy = (platTop + foldTop) / 2;
     node(svg, "text", { x: dx - 8, y: hy, transform: "rotate(-90 " + (dx - 8) + " " + hy + ")", "text-anchor": "middle" },
       "H = " + Math.round(v.H / 10) * 10);
-    // Hmin: floor to the folded platform. Labelled only when there is room; the stamp always shows it.
+    // Hmin: floor to the folded platform, always labelled. With room, along the line like H; a low
+    // folded lift leaves too short a span, so then the label runs up from the floor on the line's
+    // other side, clear of the H label.
     line(svg, dx, foldTop + 2, dx, FLOOR - 2, "s-dim");
     arrow(svg, dx, foldTop + 1, "up");
     arrow(svg, dx, FLOOR - 1, "down");
-    if (hFolded >= 120) {
+    var hminText = "Hmin = " + c.hmin;
+    if (hFolded >= 150) {
       var my2 = (foldTop + FLOOR) / 2;
       node(svg, "text", { x: dx - 8, y: my2, transform: "rotate(-90 " + (dx - 8) + " " + my2 + ")", "text-anchor": "middle" },
-        "Hmin = " + c.hmin);
+        hminText);
+    } else {
+      var hx = dx + 28, hy2 = FLOOR - 4;
+      node(svg, "text", { x: hx, y: hy2, transform: "rotate(-90 " + hx + " " + hy2 + ")", "text-anchor": "start" }, hminText);
     }
 
     // L: under the floor.
