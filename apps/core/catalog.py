@@ -1060,7 +1060,8 @@ SCISSOR_SERIES = {"title": _("Ножничные подъёмники"), "url": 
 _PAINT = "/podemniki/dlya-okrasochnyh-kamer/"
 EQUIPMENT_GROUPS = [
     {
-        "slug": "nozhnichnye", "title": _("Ножничные подъёмники"), "url": _SCISSORS, "image": SCISSOR_LINEUP,
+        "slug": "nozhnichnye", "title": _("Ножничные подъёмники"), "url": _SCISSORS,
+        "image": img("catalog/nozhnichnye-podemniki-seriya", (1200, 838), widths=(400, 800, 1200)),
         "models": [
             {"code": "1X", "title": _("Ножничный подъёмник 1X"), "url": _SCISSORS + "1x/", "image": SCISSOR_1X},
             {"code": "2X", "title": _("Ножничный подъёмник 2X"), "url": _SCISSORS + "2x/", "image": SCISSOR_2X},
@@ -1077,8 +1078,9 @@ EQUIPMENT_GROUPS = [
         ],
     },
     {
-        # The four-post render covers the stack: the car lift's own one is only 220 px wide.
-        "slug": "avtomobilnye", "title": _("Автомобильные подъёмники"), "url": _CARS, "image": CATEGORIES[1]["image"],
+        # Both models in one shot: the four-post lift and the scissor lift in its pit.
+        "slug": "avtomobilnye", "title": _("Автомобильные подъёмники"), "url": _CARS,
+        "image": img("catalog/avtomobilnye-podemniki", (1200, 800), widths=(400, 800, 1200)),
         "models": [
             {"code": _("Автомобильный"), "title": _("Автомобильный подъёмник"), "url": _CARS,
              "image": CATEGORIES[4]["image"]},
