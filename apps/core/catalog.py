@@ -1070,7 +1070,8 @@ EQUIPMENT_GROUPS = [
         ],
     },
     {
-        "slug": "okrasochnye", "title": _("Окрасочные платформы"), "url": _PAINT, "image": PAINT_1X,
+        "slug": "okrasochnye", "title": _("Окрасочные платформы"), "url": _PAINT,
+        "image": img("catalog/okrasochnye-platformy", (1200, 800), widths=(400, 800, 1200)), "photo": True,
         "models": [
             {"code": "1X", "title": _("Окрасочная платформа 1X"), "url": _PAINT + "1x/", "image": PAINT_1X},
             {"code": "2D", "title": _("Окрасочная платформа 2D"), "url": _PAINT + "2d/", "image": PAINT_2D},
