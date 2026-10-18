@@ -58,7 +58,7 @@ SCISSOR_3X = img("catalog/nozhnichnyj-podemnik-3x", (800, 1289))
 # Montage of the 3X render with a fourth pair (tools/make_4x_montage.py) until a real render arrives.
 SCISSOR_4X = img("catalog/nozhnichnyj-podemnik-4x", (800, 1692))
 # Three models in a row (1X in front, 3X at the back; 4X left out for now), composed from the renders
-# above, the 3X paint matched to 1X and 2X: the scissor series card and the scissor line's first screen.
+# above, the 3X paint matched to 1X and 2X: the scissor line's first screen.
 SCISSOR_LINEUP = img("catalog/nozhnichnye-podemniki-1x-3x", (1733, 1211), widths=(640, 1280, 1733))
 PAINT_1X = img("catalog/podemnik-dlya-okrasochnoj-kamery", (800, 490))
 PAINT_2D = img("catalog/podemnik-dlya-okrasochnoj-kamery-2d", (800, 503))
@@ -1061,7 +1061,7 @@ _PAINT = "/podemniki/dlya-okrasochnyh-kamer/"
 EQUIPMENT_GROUPS = [
     {
         "slug": "nozhnichnye", "title": _("Ножничные подъёмники"), "url": _SCISSORS,
-        "image": img("catalog/nozhnichnye-podemniki-seriya", (1200, 838), widths=(400, 800, 1200)),
+        "image": img("catalog/nozhnichnye-podemniki-seriya", (1200, 838), widths=(400, 800, 1200)), "photo": True,
         "models": [
             {"code": "1X", "title": _("Ножничный подъёмник 1X"), "url": _SCISSORS + "1x/", "image": SCISSOR_1X},
             {"code": "2X", "title": _("Ножничный подъёмник 2X"), "url": _SCISSORS + "2x/", "image": SCISSOR_2X},
@@ -1080,7 +1080,7 @@ EQUIPMENT_GROUPS = [
     {
         # Both models in one shot: the four-post lift and the scissor lift in its pit.
         "slug": "avtomobilnye", "title": _("Автомобильные подъёмники"), "url": _CARS,
-        "image": img("catalog/avtomobilnye-podemniki", (1200, 800), widths=(400, 800, 1200)),
+        "image": img("catalog/avtomobilnye-podemniki", (1200, 800), widths=(400, 800, 1200)), "photo": True,
         "models": [
             {"code": _("Автомобильный"), "title": _("Автомобильный подъёмник"), "url": _CARS,
              "image": CATEGORIES[4]["image"]},
