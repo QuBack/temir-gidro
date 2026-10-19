@@ -137,7 +137,7 @@
   </div>
 </section>
 
-{% include "includes/model_lead.html" %}
+{% if config_stroke %}{% include "includes/lift_config.html" with flat=True %}{% endif %}
 
 <section class="section" id="voprosy" aria-labelledby="faq-title">
   <div class="container faq">
@@ -152,6 +152,9 @@
     </div>
   </div>
 </section>
+
+{# After the questions: the request form, where the configurator's button also leads. #}
+{% include "includes/model_lead.html" %}
 
 <section class="section section--grey" aria-labelledby="siblings-title">
   <div class="container">
@@ -177,5 +180,5 @@
 
 {% endblock %}
 
-{% block extra_js %}<script src="{% static 'js/tabs.js' %}" defer></script><script src="{% static 'js/model.js' %}" defer></script>
+{% block extra_js %}<script src="{% static 'js/tabs.js' %}" defer></script><script src="{% static 'js/model.js' %}" defer></script>{% if config_stroke %}<script src="{% static 'js/drawings.js' %}" defer></script>{% endif %}
 {% if model.scenes_3d %}<script src="{% static 'js/model3d.js' %}" data-viewer="{% static 'vendor/model-viewer/model-viewer.min.js' %}" data-draco="{% get_static_prefix %}vendor/draco/" defer></script>{% endif %}{% endblock %}

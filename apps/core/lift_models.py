@@ -172,6 +172,11 @@ def _faq(price_question, extra):
     ]
 
 
+# The configurator's starting stroke, mm, on a scissor model's page: at the default L 2000 and
+# Q 2 t it picks that model (static/js/drawings.js), so the scheme opens on the page's lift.
+CONFIG_STROKE = {"1X": 1000, "2X": 2000, "3X": 3500, "4X": 5000}
+
+
 SCISSOR_MODELS = {
     "1x": {
         "name": "1X",

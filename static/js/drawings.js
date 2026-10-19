@@ -24,7 +24,17 @@
     }
     function tons(q) { return String(q).replace(".", ","); }
 
-    var note = root.querySelector("[data-config-note]");
+    // The stroke slider stops at what the largest model reaches on this platform and load:
+    // a lift the series can't build is never offered.
+    var strokeInput = root.querySelector('input[name="H"]');
+    var strokeMax = parseFloat(strokeInput.max);
+    function keepStroke() {
+      var limit = Math.min(strokeMax, calc(target).limit);
+      strokeInput.max = limit;
+      if (target.H <= limit) return;
+      target.H = limit;
+      strokeInput.value = limit;
+    }
 
     function sync() {
       inputs.forEach(function (input) {
@@ -37,6 +47,8 @@
       out("H", target.H + " мм");
       out("Q", tons(target.Q) + " т");
       out("LB", target.L + " × " + target.B);
+      out("Ls", String(target.L));
+      out("Bs", String(target.B));
       out("Hs", String(target.H));
       out("Qs", String(Math.round(target.Q * 1000))); // kg: in ГОСТ lettering "т" reads like "m"
       out("N", String(c.n));
@@ -45,8 +57,6 @@
       out("Hmax", String(c.hmin + target.H));
       out("T", String(c.time));
       out("D", String(c.days));
-      out("Hreach", String(c.reach));
-      note.hidden = c.ok;
     }
 
     var frame = 0;
@@ -86,11 +96,13 @@
       input.addEventListener("input", function () {
         target[input.name] = parseFloat(input.value);
         keepWidth();
+        keepStroke();
         sync();
         kick();
       });
     });
 
+    keepStroke();
     sync();
     draw(svg, current);
     if (!reduceMotion && "IntersectionObserver" in window) {
@@ -105,7 +117,7 @@
     // Hand the chosen parameters to the lead form; the link itself scrolls there.
     var send = root.querySelector("[data-config-send]");
     send.addEventListener("click", function () {
-      var field = document.getElementById("lead-message");
+      var field = document.getElementById("lead-message"); // the home, line or model form
       if (!field) return;
       var c = calc(target);
       var line = "Параметры подъёмника: платформа " + target.L + " × " + target.B + " мм, ход " +
@@ -125,14 +137,15 @@
   // has short platforms only, longer ones are taken from the next class.
   var LENGTHS_LIGHT = [1500, 2000, 3000];
   var LENGTHS = [2200, 4400, 5500];
-  // Height folded, mm: [load class][length class][pairs − 1].
+  // Height folded, mm: [load class][length class][pairs − 1]. The table stops at 5X for
+  // 4,4–5,5 t: the client has no 6X in that class.
   var HMIN = [
-    [[250, 300, 350, 410], [300, 350, 400, 450], [350, 400, 450, 550]],
-    [[300, 400, 450, 550], [450, 500, 650, 750], [500, 600, 750, 850]],
-    [[450, 500, 650, 750], [500, 550, 700, 850], [600, 700, 900, 1050]],
-    [[500, 550, 700, 850], [550, 650, 800, 950], [600, 750, 900, 1100]],
-    [[550, 650, 1000, 1300], [600, 700, 1100, 1400], [650, 800, 1200, 1550]],
-    [[600, 700, 1050, 1400], [650, 800, 1150, 1550], [750, 900, 1350, 1800]],
+    [[250, 300, 350, 410, 600, 700], [300, 350, 400, 450, 600, 700], [350, 400, 450, 550, 600, 700]],
+    [[300, 400, 450, 550, 750, 900], [450, 500, 650, 750, 750, 900], [500, 600, 750, 850, 750, 900]],
+    [[450, 500, 650, 750, 850, 1000], [500, 550, 700, 850, 950, 1100], [600, 700, 900, 1050, 1150, 1300]],
+    [[500, 550, 700, 850, 950, 1100], [550, 650, 800, 950, 1050, 1200], [600, 750, 900, 1100, 1200, 1350]],
+    [[550, 650, 1000, 1300, 1400, 1550], [600, 700, 1100, 1400, 1500, 1650], [650, 800, 1200, 1550, 1650, 1800]],
+    [[600, 700, 1050, 1400, 1500], [650, 800, 1150, 1550, 1650], [750, 900, 1350, 1800, 1900]],
   ];
   // Lead time, working days: [load class][length class][1 pair, 2 pairs, 3+ pairs].
   var DAYS = [
@@ -149,10 +162,10 @@
     return bounds.length - 1;
   }
 
-  // Pairs of scissors, folded height, reach, lift time and lead time for L, H (stroke), Q.
-  // 1X rises to (L − 150) × 0,866 (arms at 60°) and each next model doubles it (client's rule,
-  // 2026-10): 2X × 2, 3X × 4, 4X × 8. The stroke is that minus the folded height. 5X waits for
-  // its folded heights from the client, so above 4X the form asks for an individual quote.
+  // Pairs of scissors, folded height, stroke limit, lift time and lead time for L, H (stroke), Q.
+  // Each pair rises (L − 150) × 0,866 (arms at 60°), so a model rises that times its pairs
+  // (client's rule, 2026-10): 3X is × 3. The stroke is that minus the folded height. The largest
+  // model in the table (6X, or 5X for the heaviest class) sets the limit of the stroke slider.
   function calc(v) {
     var kg = v.Q * 1000;
     var q = classOf(LOADS, kg);
@@ -160,14 +173,17 @@
     if (q === 0 && v.L > LENGTHS_LIGHT[2]) { q = 1; }
     l = q === 0 ? classOf(LENGTHS_LIGHT, v.L) : classOf(LENGTHS, v.L);
     var perPair = (v.L - 150) * 0.866;
-    var top = function (n) { return perPair * Math.pow(2, n - 1); };
-    var n = 1;
-    while (n < 4 && top(n) - HMIN[q][l][n - 1] < v.H) n++;
-    var hmin = HMIN[q][l][n - 1];
-    var reach = Math.floor((top(n) - hmin) / 10) * 10;
+    var top = function (n) { return perPair * n; };
+    var row = HMIN[q][l], n = 1;
+    // A model fits only when its stroke strictly exceeds H: an exact match leaves no margin.
+    while (n < row.length && top(n) - row[n - 1] <= v.H) n++;
+    var hmin = row[n - 1];
+    // The longest stroke on offer, in the slider's 100 mm steps, strictly below the largest model's.
+    var last = row.length;
+    var limit = Math.ceil((top(last) - row[last - 1]) / 100) * 100 - 100;
     var speed = kg <= 1000 ? 70 : kg <= 2000 ? 60 : kg <= 4000 ? 50 : 40; // mm/s
     return {
-      n: n, hmin: hmin, reach: reach, ok: reach >= v.H,
+      n: n, hmin: hmin, limit: limit,
       time: Math.round(v.H / speed), days: DAYS[q][l][Math.min(n, 3) - 1],
     };
   }
@@ -227,7 +243,9 @@
 
     // Hydraulic cylinders sit between the arms, as on the 1X–3X renders: the barrel's
     // pivot low on a "\" or "/" arm, the rod's pivot higher up. A 4X is two 2X stacked,
-    // so it gets two cylinders. A point is [pair from the top, arm, share of the pair height].
+    // so it gets two cylinders; a 5X and a 6X get two long ones that share the third pair from
+    // the top, on a 6X the upper one reaching the platform corner (client's sketch).
+    // A point is [pair from the top, arm, share of the pair height].
     function onArm(p) {
       var t = p[2], y = platBottom + (p[0] + t) * h;
       return [p[1] === "\\" ? xa + t * (xb - xa) : xb - t * (xb - xa), y];
@@ -237,6 +255,8 @@
       2: [[[1, "\\", 0.74], [0, "/", 0.72]]],
       3: [[[2, "/", 0.14], [0, "/", 0.81]]],
       4: [[[3, "\\", 0.74], [2, "/", 0.72]], [[1, "\\", 0.74], [0, "/", 0.72]]],
+      5: [[[4, "/", 0.3], [2, "/", 0.75]], [[2, "/", 0.25], [0, "/", 0.7]]],
+      6: [[[5, "/", 0.14], [2, "/", 0.81]], [[2, "/", 0.14], [0, "\\", 0.19]]],
     }[n];
     CYLINDERS.forEach(function (cyl) {
       var a = onArm(cyl[0]), b = onArm(cyl[1]);

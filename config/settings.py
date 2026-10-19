@@ -117,7 +117,8 @@ STORAGES = {
     # Hashed file names + gzip/brotli → static can be cached "forever".
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
 }
-WHITENOISE_MAX_AGE = 31536000
+# In development the names aren't hashed, so a year-long cache would keep stale JS and CSS.
+WHITENOISE_MAX_AGE = 0 if DEBUG else 31536000
 WHITENOISE_MIMETYPES = {".glb": "model/gltf-binary"}  # 3D models of the lifts
 
 # --- Security -------------------------------------------------------------------

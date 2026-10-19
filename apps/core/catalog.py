@@ -52,8 +52,8 @@ HERO_LIFT = img("catalog/nozhnichnyj-podemnik-3x", (800, 1289))
 HERO_VIDEO = None  # e.g. "video/hero.mp4"
 
 # Renders of the models (transparent background), shared by the catalog, the menu and the tiles.
-SCISSOR_1X = img("catalog/nozhnichnyj-podemnik", (800, 486))
-SCISSOR_2X = img("catalog/nozhnichnyj-podemnik-2x", (800, 1080))
+SCISSOR_1X = img("catalog/nozhnichnyj-podemnik", (800, 523))
+SCISSOR_2X = img("catalog/nozhnichnyj-podemnik-2x", (800, 1124))
 SCISSOR_3X = img("catalog/nozhnichnyj-podemnik-3x", (800, 1289))
 # Montage of the 3X render with a fourth pair (tools/make_4x_montage.py) until a real render arrives.
 SCISSOR_4X = img("catalog/nozhnichnyj-podemnik-4x", (800, 1692))
@@ -70,7 +70,7 @@ CATEGORIES = [
         "url": "/podemniki/nozhnichnye/",
         "text": _("Серия 1X–4X: от одной до четырёх пар ножниц. Грузовые платформы для складов, цехов и погрузки."),
         # The 3X render is the configurator fallback; the catalog shows the single-pair 1X.
-        "image": img("catalog/nozhnichnyj-podemnik", (800, 486)),
+        "image": img("catalog/nozhnichnyj-podemnik", (800, 523)),
         "featured": True,
     },
     {
@@ -318,7 +318,7 @@ EQUIPMENT = {
             "Грузовые платформы для складов, цехов и погрузки. Размер платформы, высоту подъёма "
             "и грузоподъёмность подбираем под объект."
         ),
-        "image": img("catalog/nozhnichnyj-podemnik", (800, 486)),
+        "image": img("catalog/nozhnichnyj-podemnik", (800, 523)),
         # Set in ГОСТ lettering, where "т" reads like "m": kg and mm, as on drawings.
         "facts": [
             (_("до 10 000 кг"), _("Грузоподъёмность")),

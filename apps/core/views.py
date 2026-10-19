@@ -214,6 +214,11 @@ class ModelView(SeoMixin, BreadcrumbsMixin, TemplateView):
             siblings=[m for m in lift_models.MODELS.values() if m["line"] == model["line"]],
             lead_form=LeadForm.for_request(self.request),
         )
+        # Scissor models get the configurator, started at a stroke that picks this very model
+        # (L 2000, Q 2 t); its button hands the parameters to the model's own request form.
+        stroke = lift_models.CONFIG_STROKE.get(model["name"]) if model["line"] == "nozhnichnye" else None
+        if stroke:
+            context.update(config_stroke=stroke, config_send="#zayavka", hero_lift=catalog.HERO_LIFT)
         return context
 
 

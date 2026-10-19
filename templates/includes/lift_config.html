@@ -21,7 +21,7 @@
         <div class="range">
           <label for="cfg-h">{% translate "Ход платформы" %} <b>H</b></label>
           <output for="cfg-h" data-out="H">1500 мм</output>
-          <input type="range" id="cfg-h" name="H" min="500" max="12000" step="100" value="1500" data-unit="мм">
+          <input type="range" id="cfg-h" name="H" min="500" max="12000" step="100" value="{{ config_stroke|default:1500 }}" data-unit="мм">
         </div>
         <div class="range">
           <label for="cfg-q">{% translate "Грузоподъёмность" %} <b>Q</b></label>
@@ -29,11 +29,7 @@
           <input type="range" id="cfg-q" name="Q" min="0.5" max="5.5" step="0.1" value="2" data-unit="т">
         </div>
       </div>
-      <p class="config__note" data-config-note hidden>{% blocktranslate trimmed %}
-        Модель 4X на такой платформе даёт ход только <b data-out="Hreach"></b> мм — нужна 5X.
-        Отправьте параметры — рассчитаем её индивидуально, или удлините платформу.
-      {% endblocktranslate %}</p>
-      <a class="btn btn--primary" href="#raschet" data-config-send>{% translate "Отправить параметры на расчёт" %}</a>
+      <a class="btn btn--primary" href="{{ config_send|default:'#raschet' }}" data-config-send>{% translate "Отправить параметры на расчёт" %}</a>
     </div>
 
     <figure class="sheet">
@@ -47,10 +43,11 @@
       </div>
       <figcaption class="stamp">
         {# The model follows the number of scissor pairs the scheme picks: 2 pairs → 2X. #}
-        {# On the right: the platform and the load in words; the numbers follow the sliders. #}
+        {# On the right: the sliders' letters and values, in mm and kg, as on the scheme. #}
         <span class="stamp__name stamp__name--split"><span>{% translate "Ножничный подъёмник" %} <b class="stamp__model" data-out="M">2X</b></span>
-          <span class="stamp__size">{% translate "Платформа" %} <span data-out="LB">2000 × 1200</span> {% translate "мм" %}, {% translate "нагрузка" %} <span data-out="Qs">2000</span> {% translate "кг" %}</span></span>
+          <span class="stamp__size"><span>L-<span data-out="Ls">2000</span></span> <span>B-<span data-out="Bs">1200</span></span> <span>Q-<span data-out="Qs">2000</span></span> <span>H-<span data-out="Hs">1500</span></span></span></span>
         {# Defaults match drawings.js for L 2000, H 1500, Q 2 t; without JS the stamp stays as is. #}
+        {# A model page starts at its own stroke: there the script fills the stamp in. #}
         <dl class="stamp__facts stamp__facts--wide">
           <div><dt>{% translate "Платформа, мм" %}</dt><dd data-out="LB">2000 × 1200</dd></div>
           <div><dt>{% translate "Ход, мм" %}</dt><dd data-out="Hs">1500</dd></div>

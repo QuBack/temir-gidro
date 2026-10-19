@@ -97,4 +97,6 @@ def test_configurator_uses_client_tables(client):
     html = client.get(URL).content.decode()
     # Sliders stop where the client's tables end: 5.5 m and 5.5 t.
     assert 'name="L" min="1200" max="5500"' in html and 'name="Q" min="0.5" max="5.5"' in html
-    assert 'data-out="Hmin"' in html and 'data-out="D"' in html and "data-config-note" in html
+    assert 'data-out="Hmin"' in html and 'data-out="D"' in html
+    # No "the stroke is too long" note: the script stops the stroke slider at the largest model.
+    assert "data-config-note" not in html
