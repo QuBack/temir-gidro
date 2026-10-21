@@ -1,0 +1,127 @@
+{% load i18n static images %}
+{% comment %}
+Power unit calculator: the lift configurator's look. The hydraulic circuit is drawn here and works
+without JS; static/js/power_unit_config.js recalculates the figures on it and in the title block
+from apps/core/power_units.py (CONFIG). Defaults: 8 t on a Ø80 cylinder, stroke 1200 in 25 s, 380 V.
+{% endcomment %}
+<section class="section section--drawing config pu-config" id="podbor" aria-labelledby="pu-config-title" data-pu-config>
+  <div class="container config__grid">
+    <div class="config__head">
+      <h2 id="pu-config-title">{% translate "Подберите станцию — увидите схему" %}</h2>
+      <p class="config__lead">{% translate "Задайте нагрузку, цилиндр и скорость: посчитаем давление, подачу насоса, мощность мотора и объём бака. Параметры можно сразу отправить на расчёт." %}</p>
+    </div>
+    <div class="config__form">
+      <div class="config__controls">
+        <fieldset class="choice">
+          <legend>{% translate "Питание" %}</legend>
+          <div class="choice__options">
+            <label class="choice__option"><input type="radio" name="voltage" value="220"><span>220 В</span></label>
+            <label class="choice__option"><input type="radio" name="voltage" value="380" checked><span>380 В</span></label>
+          </div>
+        </fieldset>
+        <div class="range">
+          <label for="pu-f">{% translate "Нагрузка" %} <b>F</b></label>
+          <output for="pu-f" data-out="F">{{ pu_config.load.value }} т</output>
+          <input type="range" id="pu-f" name="load" min="{{ pu_config.load.min }}" max="{{ pu_config.load.max }}" step="{{ pu_config.load.step }}" value="{{ pu_config.load.value }}">
+        </div>
+        <div class="range">
+          <label for="pu-d">{% translate "Диаметр цилиндра" %} <b>D</b></label>
+          <output for="pu-d" data-out="D">80 мм</output>
+          <input type="range" id="pu-d" name="bore" min="0" max="{{ pu_config.bores|length|add:'-1' }}" step="1" value="{{ pu_config.bore }}">
+        </div>
+        <div class="range">
+          <label for="pu-s">{% translate "Ход" %} <b>S</b></label>
+          <output for="pu-s" data-out="S">{{ pu_config.stroke.value }} мм</output>
+          <input type="range" id="pu-s" name="stroke" min="{{ pu_config.stroke.min }}" max="{{ pu_config.stroke.max }}" step="{{ pu_config.stroke.step }}" value="{{ pu_config.stroke.value }}">
+        </div>
+        <div class="range">
+          <label for="pu-t">{% translate "Время подъёма" %} <b>t</b></label>
+          <output for="pu-t" data-out="T">{{ pu_config.time.value }} с</output>
+          <input type="range" id="pu-t" name="time" min="{{ pu_config.time.min }}" max="{{ pu_config.time.max }}" step="{{ pu_config.time.step }}" value="{{ pu_config.time.value }}">
+        </div>
+      </div>
+      <p class="pu-config__warn" data-pu-warn hidden></p>
+      <div class="cyl-config__actions">
+        <a class="btn btn--primary" href="#raschet" data-config-send>{% translate "Отправить параметры на расчёт" %}</a>
+        <a class="cyl-config__pdf" href="{% static page.questionnaire_pdf %}" download>{% icon "file-down" %}<span>{% translate "Опросный лист" %} <small>PDF</small></span></a>
+      </div>
+    </div>
+
+    <figure class="sheet">
+      <div class="sheet__drawing pu-config__drawing">
+        {# Hydraulic circuit in ISO 1219 symbols; the pressure line runs unless motion is reduced. #}
+        <svg class="scheme pu-scheme" viewBox="0 0 640 320" role="img" aria-labelledby="pu-config-title">
+          {# Tank: open at the top, with the oil level. #}
+          <path class="pu-line" d="M30 252 V292 H190 V252"/>
+          <line class="pu-thin" x1="36" y1="266" x2="184" y2="266"/>
+          <text class="pu-small" x="110" y="286" text-anchor="middle">V <tspan data-out="Vs">63</tspan> л</text>
+          {# Suction through the filter to the pump. #}
+          <line class="pu-line" x1="110" y1="266" x2="110" y2="226"/>
+          <path class="pu-sym" d="M110 196 L124 211 L110 226 L96 211 Z"/>
+          <line class="pu-thin" x1="96" y1="211" x2="124" y2="211" stroke-dasharray="3 3"/>
+          <line class="pu-line" x1="110" y1="196" x2="110" y2="172"/>
+          {# Pump (triangle out) and motor (M) on one shaft. #}
+          <circle class="pu-sym" cx="110" cy="148" r="24"/>
+          <path class="pu-fill" d="M110 126 L101 140 L119 140 Z"/>
+          <line class="pu-line pu-shaft" x1="56" y1="146" x2="86" y2="146"/>
+          <line class="pu-line pu-shaft" x1="56" y1="151" x2="86" y2="151"/>
+          <circle class="pu-sym" cx="36" cy="148" r="22"/>
+          <text x="36" y="157" text-anchor="middle">M</text>
+          <text class="pu-small" x="36" y="194" text-anchor="middle"><tspan data-out="Ns">5,5</tspan> кВт</text>
+          <text class="pu-small" x="118" y="50">Q <tspan data-out="Qs">14,5</tspan> л/мин</text>
+          {# Pressure line up and across to the valve block. #}
+          <path class="pu-line pu-flow" d="M110 124 V60 H340 V178"/>
+          {# Relief valve back to the tank. #}
+          <line class="pu-line" x1="190" y1="60" x2="190" y2="92"/>
+          <rect class="pu-sym" x="174" y="92" width="32" height="44"/>
+          <path class="pu-thin" d="M190 98 V128 M184 122 L190 130 L196 122"/>
+          <path class="pu-thin" d="M206 102 l10 4 -10 4 10 4 -10 4 10 4"/>
+          <path class="pu-line pu-return" d="M190 136 V252"/>
+          {# Gauge. #}
+          <line class="pu-line" x1="280" y1="60" x2="280" y2="44"/>
+          <circle class="pu-sym" cx="280" cy="30" r="14"/>
+          <line class="pu-thin" x1="272" y1="38" x2="288" y2="22"/>
+          <text x="302" y="38">P <tspan data-out="Ps">15,6</tspan> МПа</text>
+          {# Check valve on the line. #}
+          <circle class="pu-sym" cx="316" cy="60" r="7"/>
+          <path class="pu-thin" d="M306 50 L316 53 M306 70 L316 67"/>
+          {# 4/3 directional valve with two solenoids. #}
+          <rect class="pu-sym" x="300" y="178" width="50" height="44"/>
+          <rect class="pu-sym" x="350" y="178" width="50" height="44"/>
+          <rect class="pu-sym" x="400" y="178" width="50" height="44"/>
+          <path class="pu-thin" d="M312 222 L338 178 M338 222 L312 178"/>
+          <path class="pu-thin" d="M362 186 V214 M388 186 V214 M375 200 h0"/>
+          <path class="pu-thin" d="M412 222 V178 M438 222 V178"/>
+          <path class="pu-sym" d="M300 188 h-22 v24 h22 M278 188 l22 24"/>
+          <path class="pu-sym" d="M450 188 h22 v24 h-22 M472 188 l-22 24"/>
+          <path class="pu-line pu-return" d="M362 222 V252 H190"/>
+          {# To the cylinder: A to the cap end, B to the rod end. #}
+          <path class="pu-line" d="M412 178 V150 H470 V132"/>
+          <path class="pu-line" d="M438 178 V160 H592 V132"/>
+          <rect class="pu-sym pu-cyl" x="460" y="96" width="140" height="36"/>
+          <line class="pu-line" x1="520" y1="96" x2="520" y2="132"/>
+          <rect class="pu-rod" x="524" y="108" width="100" height="12"/>
+          <text class="pu-small" x="530" y="88" text-anchor="middle">Ø<tspan data-out="Dd">80</tspan> × <tspan data-out="Sd">1200</tspan></text>
+          <line class="pu-line" x1="628" y1="114" x2="628" y2="66"/>
+          <path class="pu-fill" d="M628 58 L622 70 L634 70 Z"/>
+          <text x="612" y="54" text-anchor="end">F <tspan data-out="Fs">8</tspan> т</text>
+        </svg>
+      </div>
+      <figcaption class="stamp">
+        {# Marking: brand, the unit's voltage, then pressure.flow.motor.tank. #}
+        <span class="stamp__name stamp__name--code">ТЕМИР ГИДРО <span data-out="M">ГС-380</span> <span data-out="Code">16.14.5,5.63</span></span>
+        <dl class="stamp__facts stamp__facts--wide">
+          <div><dt>{% translate "Давление, МПа" %}</dt><dd data-out="P">15,6</dd></div>
+          <div><dt>{% translate "Подача, л/мин" %}</dt><dd data-out="Q">14,5</dd></div>
+          <div><dt>{% translate "Мотор, кВт" %}</dt><dd data-out="N">5,5</dd></div>
+          <div><dt>{% translate "Бак, л" %}</dt><dd data-out="V">63</dd></div>
+          <div><dt>{% translate "Скорость, мм/с" %}</dt><dd data-out="Speed">48</dd></div>
+          <div><dt>{% translate "Масла на ход, л" %}</dt><dd data-out="Oil">6,0</dd></div>
+          <div><dt>{% translate "Насос" %}</dt><dd data-out="Pump">{% translate "шестерённый" %}</dd></div>
+          <div><dt>{% translate "Срок, раб. дней" %}</dt><dd data-out="Days">15</dd></div>
+        </dl>
+      </figcaption>
+    </figure>
+  </div>
+  {{ pu_config|json_script:"pu-config-data" }}
+</section>

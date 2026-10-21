@@ -54,6 +54,7 @@ class StaticViewSitemap(CanonicalSitemap):
             "core:home",
             "core:catalog",
             "core:cylinders",
+            "core:power_units",
             "core:articles",
             "core:about",
             "core:contacts",

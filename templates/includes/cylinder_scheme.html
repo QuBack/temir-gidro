@@ -1,0 +1,46 @@
+{% load i18n %}
+{# A welded cylinder in side view with the dimensions from the table: bore D, rod d, stroke S, pressure P at the port. #}
+<svg class="scheme cyl-scheme" viewBox="0 0 640 300" role="img" aria-label="{% translate 'Схема гидроцилиндра: диаметр поршня D, диаметр штока d, ход S, давление P' %}">
+  <line class="c-axis" x1="30" y1="150" x2="625" y2="150"/>
+  {# Ports on the barrel; the oil comes in at P. #}
+  <rect class="c-port" x="140" y="88" width="18" height="12"/>
+  <rect class="c-port" x="370" y="88" width="18" height="12"/>
+  {# Body: rear eye, cap, barrel, gland. #}
+  <rect class="c-cap" x="88" y="114" width="32" height="72"/>
+  <circle class="c-eye" cx="66" cy="150" r="24"/>
+  <circle class="c-hole" cx="66" cy="150" r="9"/>
+  <rect class="c-body" x="120" y="100" width="280" height="100"/>
+  <rect class="c-cap" x="400" y="108" width="34" height="84"/>
+  {# Piston and the rod inside the barrel, as hidden lines. #}
+  <rect class="s-ghost" x="252" y="103" width="24" height="94"/>
+  <line class="s-ghost" x1="276" y1="128" x2="400" y2="128"/>
+  <line class="s-ghost" x1="276" y1="172" x2="400" y2="172"/>
+  {# Rod out of the gland, with its eye. #}
+  <rect class="c-rod" x="434" y="128" width="126" height="44"/>
+  <rect class="c-cap" x="560" y="132" width="12" height="36"/>
+  <circle class="c-eye" cx="594" cy="150" r="22"/>
+  <circle class="c-hole" cx="594" cy="150" r="8"/>
+
+  {# D: the bore, across the barrel. #}
+  <line class="s-dim" x1="196" y1="112" x2="196" y2="188"/>
+  <polygon class="s-arrow" points="196,101 191,113 201,113"/>
+  <polygon class="s-arrow" points="196,199 191,187 201,187"/>
+  <text x="206" y="160">D</text>
+  {# d: the rod, arrows from outside. #}
+  <line class="s-dim" x1="497" y1="92" x2="497" y2="116"/>
+  <line class="s-dim" x1="497" y1="184" x2="497" y2="208"/>
+  <polygon class="s-arrow" points="497,127 492,115 502,115"/>
+  <polygon class="s-arrow" points="497,173 492,185 502,185"/>
+  <text x="507" y="106">d</text>
+  {# S: the stroke, how far the rod comes out. #}
+  <line class="s-dim" x1="434" y1="196" x2="434" y2="262"/>
+  <line class="s-dim" x1="560" y1="174" x2="560" y2="262"/>
+  <line class="s-dim" x1="446" y1="252" x2="548" y2="252"/>
+  <polygon class="s-arrow" points="435,252 447,247 447,257"/>
+  <polygon class="s-arrow" points="559,252 547,247 547,257"/>
+  <text x="497" y="242" text-anchor="middle">S</text>
+  {# P: oil pressure at the port. #}
+  <line class="s-dim" x1="149" y1="34" x2="149" y2="74"/>
+  <polygon class="s-arrow" points="149,86 144,73 154,73"/>
+  <text x="160" y="58">P</text>
+</svg>

@@ -1,0 +1,77 @@
+{% load i18n static images %}
+{% comment %}
+Cylinder configurator: the lift configurator's look (includes/lift_config.html), driven by
+static/js/cylinder_config.js from the catalog tables in apps/core/cylinders.py (CONFIG).
+Without JS: the dimensioned scheme and the catalog link stay, the controls do nothing.
+{% endcomment %}
+<section class="section section--drawing config cyl-config" id="podbor" aria-labelledby="cyl-config-title" data-cyl-config>
+  <div class="config-bg" aria-hidden="true">{% picture cyl_config_bg "" sizes="100vw" %}</div>
+  <div class="container config__grid">
+    <div class="config__head">
+      <h2 id="cyl-config-title">{% translate "Соберите гидроцилиндр — увидите чертёж" %}</h2>
+      <p class="config__lead">{% translate "Выберите крепление, диаметры и ход: покажем схему с размерами из каталога, посчитаем усилие и объём масла. Параметры можно сразу отправить на расчёт." %}</p>
+    </div>
+    <div class="config__form">
+      <div class="config__controls">
+        <fieldset class="choice">
+          <legend>{% translate "Крепление" %} <output data-out="mountName">{% translate "Передний круглый фланец" %}</output></legend>
+          <div class="choice__options">
+            {% for code, mount in cyl_config.mounts.items %}
+            <label class="choice__option"><input type="radio" name="mount" value="{{ code }}"{% if forloop.first %} checked{% endif %}><span>{{ code }}</span></label>
+            {% endfor %}
+          </div>
+        </fieldset>
+        <div class="range">
+          <label for="cyl-d">{% translate "Диаметр поршня" %} <b>D</b></label>
+          <output for="cyl-d" data-out="D">80 мм</output>
+          <input type="range" id="cyl-d" name="bore" min="0" max="{{ cyl_config.bores|length|add:'-1' }}" step="1" value="4">
+        </div>
+        <fieldset class="choice">
+          <legend>{% translate "Диаметр штока" %} <b>d</b></legend>
+          <div class="choice__options" data-cyl-rods>
+            <label class="choice__option"><input type="radio" name="rod" value="45" checked><span>45 мм</span></label>
+            <label class="choice__option"><input type="radio" name="rod" value="56"><span>56 мм</span></label>
+          </div>
+        </fieldset>
+        <div class="range">
+          <label for="cyl-s">{% translate "Ход поршня" %} <b>S</b></label>
+          <output for="cyl-s" data-out="S">{{ cyl_config.stroke.value }} мм</output>
+          <input type="range" id="cyl-s" name="stroke" min="{{ cyl_config.stroke.min }}" max="{{ cyl_config.stroke.max }}" step="{{ cyl_config.stroke.step }}" value="{{ cyl_config.stroke.value }}">
+        </div>
+        <div class="range">
+          <label for="cyl-p">{% translate "Рабочее давление" %} <b>P</b></label>
+          <output for="cyl-p" data-out="P">{{ cyl_config.pressure_max }} МПа</output>
+          <input type="range" id="cyl-p" name="pressure" min="2" max="{{ cyl_config.pressure_max }}" step="1" value="{{ cyl_config.pressure_max }}">
+        </div>
+      </div>
+      <div class="cyl-config__actions">
+        <a class="btn btn--primary" href="#raschet" data-config-send>{% translate "Отправить параметры на расчёт" %}</a>
+        <a class="cyl-config__pdf" href="{% static catalog_pdf %}" download>{% icon "file-down" %}<span>{% translate "Каталог типовых исполнений" %} <small>PDF, 4,9 МБ</small></span></a>
+      </div>
+    </div>
+
+    <figure class="sheet">
+      <div class="sheet__drawing cyl-config__drawing">
+        {# The live scheme replaces the static one; the static one stays for no-JS. #}
+        <div data-config-fallback>{% include "includes/cylinder_scheme.html" %}</div>
+        <svg class="scheme cyl-scheme" data-config-svg viewBox="0 0 640 290" role="img" aria-labelledby="cyl-config-title" hidden></svg>
+      </div>
+      <figcaption class="stamp">
+        {# Marking as on the lifts: brand, mounting, then D.d.S.P in mm and MPa. #}
+        <span class="stamp__name stamp__name--code">ТЕМИР ГИДРО <span data-out="M">MF3</span> <span data-out="Code">80.45.400.16</span></span>
+        {# Defaults for MF3 80/45, stroke 400, 16 MPa; the script recalculates them. #}
+        <dl class="stamp__facts stamp__facts--wide">
+          <div><dt>{% translate "Толкающее усилие, кН" %}</dt><dd data-out="Fpush">80,4</dd></div>
+          <div><dt>{% translate "Тянущее усилие, кН" %}</dt><dd data-out="Fpull">55,0</dd></div>
+          <div><dt>{% translate "В сложенном виде, мм" %}</dt><dd data-out="Lmin">568</dd></div>
+          <div><dt>{% translate "В выдвинутом, мм" %}</dt><dd data-out="Lmax">968</dd></div>
+          <div><dt>{% translate "Площадь поршня, см²" %}</dt><dd data-out="Area">50,3</dd></div>
+          <div><dt>{% translate "Масла на ход, л" %}</dt><dd data-out="Oil">2,0</dd></div>
+          <div><dt>{% translate "Порты" %}</dt><dd data-out="X">G 1/2</dd></div>
+          <div><dt>{% translate "Резьба штока" %}</dt><dd data-out="Y">M33×2</dd></div>
+        </dl>
+      </figcaption>
+    </figure>
+  </div>
+  {{ cyl_config|json_script:"cyl-config-data" }}
+</section>

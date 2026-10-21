@@ -6,11 +6,15 @@
     <div class="lead__text">
       <h2 id="lead-heading">{% translate "Рассчитаем стоимость за 24 часа" %}</h2>
       <p>{% translate "Цена зависит от конструкции, поэтому мы считаем её под задачу. Для расчёта напишите:" %}</p>
-      <dl class="params">
+      <dl class="params{% if lead_params %} params--wide{% endif %}">
+        {% if lead_params %}
+        {% for key, text in lead_params %}<div><dt>{{ key }}</dt><dd>{{ text }}</dd></div>{% endfor %}
+        {% else %}
         <div><dt>L × B</dt><dd>{% translate "длину и ширину платформы" %}</dd></div>
         <div><dt>H</dt><dd>{% translate "высоту подъёма" %}</dd></div>
         <div><dt>Q</dt><dd>{% translate "грузоподъёмность" %}</dd></div>
         <div><dt>{% translate "Где" %}</dt><dd>{% translate "место установки и условия работы" %}</dd></div>
+        {% endif %}
       </dl>
       <p class="lead__phone">{% translate "Или позвоните:" %} <a href="tel:{{ company.phone_href }}">{{ company.phone }}</a></p>
     </div>

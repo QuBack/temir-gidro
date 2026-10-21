@@ -15,6 +15,38 @@ def test_cylinders_page(client):
     assert {"Product", "FAQPage", "BreadcrumbList"} <= types
 
 
+def test_cylinder_configurator(client):
+    """The configurator gets the catalog tables as JSON and links the catalog PDF that is in static/."""
+    import json
+    import re
+
+    from django.contrib.staticfiles import finders
+
+    html = client.get("/gidrocilindry/").content.decode()
+    assert "data-cyl-config" in html
+    found = re.search(r'<script id="cyl-config-data" type="application/json">(.*?)</script>', html, re.S)
+    data = json.loads(found.group(1))
+    assert set(data["mounts"]) == {"MF3", "MF4", "MP3", "MP5", "MT4", "MS2"}
+    for mount in data["mounts"].values():
+        assert len(mount["A"]) == len(data["bores"])
+    assert finders.find("docs/katalog-gidrocilindrov-temir-gidro.pdf")
+    assert "katalog-gidrocilindrov-temir-gidro.pdf" in html
+
+
+def test_power_units_page(client):
+    """The page renders with its calculator data, links the questionnaire PDF and is in the menu."""
+    from django.contrib.staticfiles import finders
+
+    html = client.get("/gidrostancii/").content.decode()
+    assert html.count("<h1") == 1
+    types = {b["@type"] for b in jsonld_blocks(html)}
+    assert {"Product", "FAQPage", "BreadcrumbList"} <= types
+    assert 'id="pu-config-data"' in html
+    assert finders.find("docs/oprosnyj-list-gidrostanciya-temir-gidro.pdf")
+    assert "oprosnyj-list-gidrostanciya-temir-gidro.pdf" in html
+    assert 'href="/gidrostancii/"' in client.get("/").content.decode()
+
+
 def test_article_list(client):
     html = client.get("/stati/").content.decode()
     assert html.count("<h1") == 1

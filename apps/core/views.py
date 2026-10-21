@@ -11,7 +11,7 @@ from django.views.generic import TemplateView
 
 from apps.leads.forms import LeadForm
 
-from . import articles, catalog, cylinders, lift_models
+from . import articles, catalog, cylinders, lift_models, power_units
 from .company import COMPANY
 from .mixins import BreadcrumbsMixin, SeoMixin
 from .seo import (
@@ -242,11 +242,49 @@ class CylindersView(SeoMixin, BreadcrumbsMixin, TemplateView):
             *context.get("jsonld", []),
             product_schema(
                 page["title"], page["seo_description"], _image_url(page["image"]), self.request.path,
-                properties=page["specs"],
+                properties=[(label, value) for label, value, _key in page["specs"]],
             ),
             faq_schema(page["faq"]),
         ]
-        context.update(page=page, lead_form=LeadForm.for_request(self.request))
+        context.update(
+            page=page,
+            cyl_config=cylinders.CONFIG,
+            catalog_pdf=cylinders.CATALOG_PDF,
+            catalog_cover=cylinders.CATALOG_COVER,
+            cyl_config_bg=cylinders.CONFIG_BG,
+            lead_bg=cylinders.LEAD_BG,
+            lead_params=page["lead_params"],
+            lead_form=LeadForm.for_request(self.request),
+        )
+        return context
+
+
+class PowerUnitsView(SeoMixin, BreadcrumbsMixin, TemplateView):
+    template_name = "core/power_units.html"
+    seo_title = power_units.PAGE["seo_title"]
+    seo_description = power_units.PAGE["seo_description"]
+
+    def get_breadcrumbs(self):
+        return [(_("Гидростанции"), reverse("core:power_units"))]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        page = power_units.PAGE
+        context["jsonld"] = [
+            organization_schema(),
+            *context.get("jsonld", []),
+            product_schema(page["title"], page["seo_description"], _image_url(page["image"]), self.request.path),
+            faq_schema(page["faq"]),
+        ]
+        context.update(
+            page=page,
+            kit_points=lift_models.kit_points(page),
+            kit_overlay=lift_models.kit_overlay(page),
+            pu_config=power_units.CONFIG,
+            lead_bg=power_units.LEAD_BG,
+            lead_params=page["lead_params"],
+            lead_form=LeadForm.for_request(self.request),
+        )
         return context
 
 

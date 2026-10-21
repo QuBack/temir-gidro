@@ -12,12 +12,12 @@
       <p class="eq-hero__lead">{{ model.lead }}</p>
     </div>
 
-    {# One picture on the first screen; the model's other views are under its description. #}
+    {# One picture on the first screen, not a zoom link; the model's other views are under its description. #}
     {% with g=model.images.0 %}
     <div class="model-gallery">
       <div class="model-gallery__main">
         <div class="model-gallery__slide{% if g.photo %} model-gallery__slide--photo{% elif g.image.size.0 > g.image.size.1 %} model-gallery__slide--wide{% endif %}">
-          <a class="zoom" href="{% image_url g.image %}" data-zoom="views">{% picture g.image g.alt sizes="(min-width: 60rem) 42rem, 90vw" priority=True %}</a>
+          {% picture g.image g.alt sizes="(min-width: 60rem) 42rem, 90vw" priority=True %}
         </div>
       </div>
     </div>

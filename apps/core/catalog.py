@@ -101,7 +101,7 @@ CATEGORIES = [
         "title": _("Консольные подъёмники"),
         "url": "/podemniki/konsolnye/",
         "text": _("Модель 1L для подъёма грузов между этажами вдоль стены."),
-        "image": img("catalog/konsolnyj-podemnik", (292, 584), widths=(124, 292)),
+        "image": img("catalog/konsolnyj-podemnik-1l", (800, 1834), widths=(160, 400, 800)),
     },
 ]
 
@@ -881,6 +881,20 @@ EQUIPMENT = {
                 "под ваш объект, управление — с настенного пульта, по запросу добавляем пульты на этажах."
             ),
         ],
+        # Other views beside the render on the first screen; a click puts one on the stage.
+        # The render's mast stands left of its middle (the platform sticks out right): pictures are
+        # lined up by the mast, so it stays put when the views are switched.
+        "mast_left": True,
+        "views": [
+            (
+                img("catalog/konsolnyj-podemnik-1l-vid-speredi", (636, 1971), widths=(200, 636)),
+                _("Консольный подъёмник 1L — вид спереди"),
+            ),
+            (
+                img("catalog/konsolnyj-podemnik-1l-vid-szadi", (596, 1966), widths=(200, 596)),
+                _("Консольный подъёмник 1L — вид сзади: гидроцилиндр и цепи"),
+            ),
+        ],
         "about_image": img("photos/konsolnyj-podemnik-na-sklade", (1536, 1024), widths=(600, 1024, 1536)),
         "about_alt": _("Консольный подъёмник 1L у стены склада: платформа с паллетой между полом и антресолью"),
         "scenes_3d": [
@@ -1034,7 +1048,7 @@ _MODELS = {
             "1L",
             _("Подъём грузов между этажами"),
             "/podemniki/konsolnye/",
-            image=img("catalog/konsolnyj-podemnik", (292, 584), widths=(124, 292)),
+            image=img("catalog/konsolnyj-podemnik-1l", (800, 1834), widths=(160, 400, 800)),
         ),
     ],
 }

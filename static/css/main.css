@@ -223,12 +223,12 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   .mega .more-link { color: var(--red); font-weight: 600; text-decoration: underline; text-underline-offset: .2em; }
   .site-header__logo { margin-right: 1.5rem; }
   .site-header__logo img { height: 1.1rem; }
+  /* No room for the phone beside the full menu: it stays in the top bar. */
   .site-header__phone { display: none; }
   .site-header__cta { display: flex; }
   .site-header__cta .btn { white-space: nowrap; }
 }
 @media (min-width: 82rem) { .site-header__logo img { height: 1.25rem; } }
-@media (min-width: 90rem) { .site-header__phone { display: inline; } }
 
 /* ---------- Transparent header over the first section (body.overlay) ----------
    One number, --solid (0…1), drives the background, border, text colour and the
@@ -472,11 +472,8 @@ body:not(.page-white) .config .sheet { color: var(--ink); }
 
 .stamp { border: 1px solid var(--ink); }
 .stamp__name { display: block; padding: .5rem .75rem; border-bottom: 1px solid var(--ink); font-family: var(--font-draw); font-size: 1.125rem; }
-/* The configurator's serial model (1X–4X) right in the title block, in the lifts' red. */
-.stamp__model { margin-left: .25rem; color: var(--red); font-size: 1.375rem; font-weight: 700; }
-/* Title on the left, the platform size and the load on the right; on a narrow sheet they wrap under it. */
-.stamp__name--split { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .15rem 1rem; }
-.stamp__size { display: flex; flex-wrap: wrap; gap: 0 1rem; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* Nameplate marking «ТЕМИР ГИДРО 2X 2000.1200.2000.1500», all in one plain line. */
+.stamp__name--code { font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .stamp__facts { display: grid; grid-template-columns: repeat(2, 1fr); margin: 0; }
 .stamp__facts > div { display: flex; flex-direction: column-reverse; padding: .5rem .75rem; }
 .stamp__facts > div:nth-child(odd) { border-right: 1px solid var(--ink); }
@@ -717,13 +714,12 @@ main .reveal--photo.is-visible { clip-path: inset(-3rem); }
 /* ---------- Lead ---------- */
 .lead { display: grid; gap: 2.5rem; align-items: start; }
 @media (min-width: 60rem) { .lead { grid-template-columns: 1fr 1fr; gap: 4rem; } }
-/* Model page: the white form on the left, the text on the right (on phones the heading stays first). */
-@media (min-width: 60rem) { .lead--form-first .lead__form { order: -1; } }
 .lead__text { display: grid; gap: 1.25rem; }
 .params { margin: 0; border-top: 1px solid rgb(255 255 255 / .25); }
 .params > div { display: grid; grid-template-columns: 4.5rem 1fr; gap: 1rem; align-items: baseline; padding: .75rem 0; border-bottom: 1px solid rgb(255 255 255 / .25); }
 .params dt { font-family: var(--font-cond); font-size: 1.625rem; font-weight: 700; color: var(--white); }
 .params dd { margin: 0; }
+.params--wide > div { grid-template-columns: 5.5rem 1fr; }  /* «D × S» needs a little more room than «L × B» */
 .lead__phone a { color: var(--white); font-family: var(--font-cond); font-weight: 700; font-size: 1.75rem; text-decoration: none; white-space: nowrap; }
 .lead__phone a:hover { text-decoration: underline; }
 .lead__form { background: var(--white); color: var(--ink); border-radius: var(--radius); padding: clamp(1.5rem, 4vw, 2.5rem); }
@@ -827,7 +823,7 @@ main .reveal--photo.is-visible { clip-path: inset(-3rem); }
 .lineup__drawing { display: grid; place-items: center; min-height: 20rem; padding: clamp(1.5rem, 4vw, 2.5rem); }
 /* Graph paper: 5 mm cells with a stronger line every fifth, as on drawing paper.
    Also the backdrop of the 3D model on the model pages. */
-.lineup__drawing, .model-3d__stage {
+.lineup__drawing, .model-3d__stage, .cyl-type__drawing {
   background:
     linear-gradient(rgb(34 40 43 / .09) 1px, transparent 1px) 0 0 / 3rem 3rem,
     linear-gradient(90deg, rgb(34 40 43 / .09) 1px, transparent 1px) 0 0 / 3rem 3rem,
@@ -1584,6 +1580,33 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
   }
   .model-hero { overflow-x: clip; }  /* a render reaching past the container never adds a sideways scroll */
 }
+/* Other views of the product beside the render (the console lift): a narrow column of small
+   cut-outs on the red stage, no frames; the one on the stage is lit, a click swaps it in. */
+.model-gallery--views { display: grid; grid-template-columns: minmax(0, 1fr) 5.25rem; gap: .75rem; align-items: center; }
+.model-gallery__slide[hidden] { display: none; }
+.hero-views { display: grid; gap: .5rem; margin: 0; padding: 0; list-style: none; }
+.hero-views__item {
+  display: grid; justify-items: center; width: 100%; padding: .25rem; border: 0; background: none; cursor: pointer;
+  opacity: .55; transition: opacity .2s;
+}
+.hero-views__item:hover, .hero-views__item.is-active { opacity: 1; }
+.hero-views__item picture { display: flex; justify-content: center; width: 100%; height: 6rem; }
+.hero-views__item img { flex: none; width: auto; height: 100%; filter: drop-shadow(0 .3rem .4rem rgb(0 0 0 / .3)); }
+/* Every view stands on one line through its mast, small or on the stage: the console lift's general
+   view has its mast at a quarter of the picture, so it moves right by the other quarter. */
+.model-gallery--views .model-gallery__slide picture { display: flex; justify-content: center; }
+.model-gallery--views .model-gallery__slide img { flex: none; width: auto; height: 100%; }
+.model-gallery--views .mast-left img { transform: translateX(26%); }
+@media (min-width: 60rem) {
+  /* The column of views takes the room the render would leave free on the right, so the render keeps its size. */
+  .model-hero .model-gallery--views { width: 100%; grid-template-columns: minmax(0, 1fr) 6rem; gap: 1.5rem; }
+  .hero-views__item picture { height: 8rem; }
+  /* Beside a column of views the render keeps to its own box: no shift to the right into them. */
+  .model-hero .model-gallery--views .model-gallery__slide:not(.model-gallery__slide--photo) picture {
+    left: 30%; right: 0;
+  }
+}
+
 /* Line page hero (scissor lifts): the same red stage, no render, the title centred. */
 .line-hero {
   padding-bottom: clamp(3.5rem, 8vw, 6rem);
@@ -1624,8 +1647,8 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
 .line-hero h1.hero__title { color: var(--white); }
 .line-hero .hero__lead { margin-inline: auto; }
 .line-hero .hero__actions { justify-content: center; }
-.line-hero .hero__phone { color: var(--white); }
-.line-hero .hero__phone:hover { color: #ff8a80; }
+.line-hero .hero__phone, .cyl-hero .hero__phone { color: var(--white); }
+.line-hero .hero__phone:hover, .cyl-hero .hero__phone:hover { color: #ff8a80; }
 .line-hero .eq-hero__link { color: rgb(236 220 217 / .85); }
 .line-hero .eq-hero__link:hover { color: var(--white); }
 
@@ -1766,8 +1789,55 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
 .article-related:hover { border-color: var(--red); color: var(--red); }
 
 /* Cylinders page. */
-/* The render as a cut-out on the grey of the first screen, no drawing sheet around it. */
-.cyl-hero__media img { width: 100%; height: auto; filter: drop-shadow(0 1rem 1.25rem rgb(34 40 43 / .18)); }
+/* The render as a cut-out on the red stage, with a soft shadow under it as on the model pages. */
+.cyl-hero__media img { width: 100%; height: auto; filter: drop-shadow(0 1.25rem 1.5rem rgb(0 0 0 / .35)); }
+/* The ranges we make in, a row of figures under the first screen. */
+.cyl-facts { display: grid; grid-template-columns: repeat(2, 1fr); margin: clamp(2rem, 4vw, 3rem) 0 0; border-top: 1px solid rgb(255 255 255 / .25); }
+.cyl-facts > div { display: flex; flex-direction: column-reverse; gap: .2rem; padding: 1rem 1rem 0 0; }
+.cyl-facts dt { color: rgb(255 255 255 / .75); font-size: .9375rem; }
+.cyl-facts dd { margin: 0; color: var(--white); font-family: var(--font-cond); font-size: clamp(1.75rem, 3vw, 2.25rem); font-weight: 700; line-height: 1.05; white-space: nowrap; }
+.cyl-facts dd span { font-family: var(--font); font-size: 1rem; font-weight: 400; color: rgb(255 255 255 / .75); }
+@media (min-width: 48rem) {
+  .cyl-facts { grid-template-columns: repeat(4, 1fr); }
+  .cyl-facts > div + div { padding-left: 1.5rem; border-left: 1px solid rgb(255 255 255 / .25); }
+}
+@media (max-width: 47.99rem) { .cyl-facts > div:nth-child(even) { padding-left: 1rem; border-left: 1px solid rgb(255 255 255 / .25); } }
+
+/* Types: each on a sheet of graph paper with its side view, the text under it. */
+.cyl-types { display: grid; gap: 1.25rem; }
+@media (min-width: 48rem) { .cyl-types { grid-template-columns: repeat(3, 1fr); } }
+.cyl-type { display: flex; flex-direction: column; border: 1px solid var(--line); background: var(--white); box-shadow: var(--shadow-card); }
+.cyl-type__drawing { display: grid; place-items: center; padding: 1.5rem 1rem; border-bottom: 1px solid var(--line); }
+.cyl-type__svg { display: block; width: 100%; max-width: 20rem; height: auto; }
+.cyl-type__copy { display: flex; flex: 1; flex-direction: column; padding: 1.25rem 1.5rem 1.5rem; }
+.cyl-type h3 { font-family: var(--font-cond); font-size: 1.625rem; font-weight: 700; line-height: 1.1; }
+.cyl-type p { margin-top: .5rem; color: var(--muted); font-size: .9375rem; }
+.cyl-type__use { margin-top: auto !important; padding-top: 1rem; color: var(--ink) !important; font-weight: 600; }
+.cyl-type__use::before { content: ""; display: block; width: 2rem; height: 2px; margin-bottom: .75rem; background: var(--red); }
+
+/* Lines of a cylinder drawing, shared by the type views and the dimensioned scheme. */
+:is(.cyl-type__svg, .cyl-scheme) .c-body { fill: rgb(196 22 28 / .14); stroke: var(--ink); stroke-width: 1.5; }
+:is(.cyl-type__svg, .cyl-scheme) .c-cap { fill: rgb(196 22 28 / .32); stroke: var(--ink); stroke-width: 1.5; }
+:is(.cyl-type__svg, .cyl-scheme) .c-rod { fill: #e3e7e8; stroke: var(--ink); stroke-width: 1.5; }
+:is(.cyl-type__svg, .cyl-scheme) .c-eye { fill: rgb(196 22 28 / .32); stroke: var(--ink); stroke-width: 1.5; }
+:is(.cyl-type__svg, .cyl-scheme) .c-hole { fill: var(--white); stroke: var(--ink); stroke-width: 1.5; }
+:is(.cyl-type__svg, .cyl-scheme) .c-port { fill: var(--white); stroke: var(--ink); stroke-width: 1.5; }
+:is(.cyl-type__svg, .cyl-scheme) .c-nut { fill: var(--anthracite); }
+:is(.cyl-type__svg, .cyl-scheme) .c-thin { stroke: var(--ink); stroke-width: 2.5; }
+:is(.cyl-type__svg, .cyl-scheme) .c-axis { stroke: var(--ink); stroke-width: 1; stroke-dasharray: 18 4 3 4; opacity: .5; }
+
+/* Specs: the dimensioned sheet beside the table; the table's letters match the drawing. */
+/* Specs: the table beside the catalog of standard designs. */
+.cyl-specs { display: grid; gap: 2rem; align-items: start; }
+@media (min-width: 60rem) { .cyl-specs { grid-template-columns: 1.4fr 1fr; gap: clamp(2.5rem, 5vw, 4rem); } }
+.cyl-specs__table { max-width: none; }
+.cyl-specs__table th { width: 52%; }
+/* The letter sits in a box left of the label; rows without a letter keep the same indent. */
+.cyl-specs__table th { position: relative; padding-left: 2.75rem; }
+.cyl-specs__key {
+  position: absolute; left: 0; top: .7rem; display: grid; place-items: center; width: 1.75rem; height: 1.75rem;
+  border: 1px solid var(--ink); background: var(--white); color: var(--ink); font-family: var(--font-draw); font-size: 1rem; line-height: 1;
+}
 /* Our cylinders: a strip of photos scrolled sideways (a swipe, the trackpad or the arrows). */
 .carousel { position: relative; }
 .carousel__track {
@@ -1795,3 +1865,110 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
 .order-lead { font-size: 1.125rem; }
 .order-list { margin-block: 1.25rem; }
 .order-more { color: var(--muted); max-width: 40rem; }
+
+/* The catalog as a card: its cover, what is inside, the download. */
+.cyl-catalog {
+  display: grid; grid-template-columns: 7rem 1fr; gap: 1.25rem; align-items: center; padding: 1.25rem;
+  border: 1px solid var(--line); background: var(--white); box-shadow: var(--shadow-card); color: var(--ink); text-decoration: none;
+  transition: transform .2s, box-shadow .2s;
+}
+.cyl-catalog:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgb(34 40 43 / .12); }
+.cyl-catalog__cover img { display: block; width: 100%; height: auto; box-shadow: 0 4px 12px rgb(34 40 43 / .2); }
+.cyl-catalog__text { display: grid; gap: .4rem; }
+.cyl-catalog__text b { font-family: var(--font-cond); font-size: 1.375rem; line-height: 1.15; }
+.cyl-catalog__text > span { color: var(--muted); font-size: .9375rem; }
+.cyl-catalog .cyl-catalog__link { display: inline-flex; align-items: center; gap: .4rem; margin-top: .25rem; color: var(--red); font-weight: 600; }
+.cyl-catalog__link .icon { width: 1.125rem; height: 1.125rem; }
+
+/* Cylinder configurator: the lift configurator's sheet and sliders, plus choices as chips. */
+.choice { display: grid; gap: .6rem; margin: 0; padding: 0; border: 0; min-width: 0; }
+.choice legend { display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem .75rem; padding: 0; font-weight: 600; }
+.choice legend b { font-family: var(--font-cond); color: var(--muted); }
+.choice legend output { font-weight: 400; color: var(--muted); font-size: .9375rem; }
+.choice__options { display: flex; flex-wrap: wrap; gap: .4rem; }
+.choice__option { position: relative; cursor: pointer; }
+.choice__option input { position: absolute; opacity: 0; pointer-events: none; }
+.choice__option span {
+  display: block; min-width: 3.5rem; padding: .45rem .75rem; border: 1px solid var(--ink); border-radius: var(--radius);
+  font-family: var(--font-cond); font-size: 1.125rem; font-weight: 700; text-align: center; transition: background .15s, color .15s;
+}
+.choice__option:hover span { background: rgb(34 40 43 / .06); }
+.choice__option input:checked + span { background: var(--ink); color: var(--white); }
+.choice__option input:focus-visible + span { outline: 3px solid var(--red); outline-offset: 2px; }
+/* On the burgundy stage: white outlines, the chosen one white with red lettering. */
+body:not(.page-white) .config .choice legend { color: var(--white); }
+body:not(.page-white) .config .choice legend b, body:not(.page-white) .config .choice legend output { color: rgb(255 255 255 / .6); }
+body:not(.page-white) .config .choice__option span { border-color: rgb(255 255 255 / .45); color: var(--white); }
+body:not(.page-white) .config .choice__option:hover span { background: rgb(255 255 255 / .1); }
+body:not(.page-white) .config .choice__option input:checked + span { background: var(--white); border-color: var(--white); color: var(--red); }
+body:not(.page-white) .config .choice__option input:focus-visible + span { outline-color: var(--white); }
+.cyl-config__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.75rem; }
+.cyl-config__pdf { display: inline-flex; align-items: center; gap: .6rem; color: var(--white); font-weight: 600; text-decoration: none; }
+.cyl-config__pdf:hover span { text-decoration: underline; text-underline-offset: .2em; }
+.cyl-config__pdf .icon { flex: none; width: 1.5rem; height: 1.5rem; }
+.cyl-config__pdf small { display: block; color: rgb(255 255 255 / .6); font-weight: 400; font-size: .8125rem; }
+.cyl-config__drawing { padding: .5rem; }
+
+/* ---------- Power units page (/gidrostancii/) ---------- */
+@media (min-width: 48rem) { .cyl-facts--five { grid-template-columns: repeat(5, 1fr); } }
+/* Purposes as chips over the types: the chosen one dark. */
+.pu-chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 2rem; }
+.pu-chip {
+  padding: .55rem 1rem; border: 1px solid var(--ink); border-radius: 999px; background: none; color: var(--ink);
+  font: inherit; font-size: .9375rem; font-weight: 600; cursor: pointer; transition: background .15s, color .15s;
+}
+.pu-chip:hover { background: var(--grey-soft); }
+.pu-chip.is-active { background: var(--ink); color: var(--white); }
+/* Types: a product picture on white, the text, two figures as a title block. */
+.pu-types { display: grid; gap: 1.25rem; }
+@media (min-width: 40rem) { .pu-types { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 64rem) { .pu-types { grid-template-columns: repeat(3, 1fr); } }
+.pu-type { display: flex; flex-direction: column; border: 1px solid var(--line); background: var(--white); box-shadow: var(--shadow-card); }
+.pu-type[hidden] { display: none; }
+.pu-type__media { aspect-ratio: 4 / 3; overflow: hidden; border-bottom: 1px solid var(--line); background: var(--white); }
+.pu-type__media img { width: 100%; height: 100%; object-fit: contain; transition: transform .5s cubic-bezier(.4, .7, .04, .88); }
+.pu-type:hover .pu-type__media img { transform: scale(1.05); }
+.pu-type__copy { display: flex; flex: 1; flex-direction: column; gap: .5rem; padding: 1.25rem 1.5rem 1.5rem; }
+.pu-type h3 { font-family: var(--font-cond); font-size: 1.625rem; font-weight: 700; line-height: 1.1; }
+.pu-type p { color: var(--muted); font-size: .9375rem; }
+.pu-type__specs { display: grid; grid-template-columns: 1fr 1fr; margin: auto 0 0; padding-top: .75rem; }
+.pu-type__specs > div { padding: .45rem .7rem; border: 1px solid var(--ink); }
+.pu-type__specs > div + div { border-left: 0; }
+.pu-type__specs dt { color: var(--muted); font-size: .8125rem; }
+.pu-type__specs dd { margin: 0; font-family: var(--font-cond); font-size: 1.1875rem; font-weight: 700; }
+
+/* Calculator circuit: ISO 1219 symbols in ink, the cylinder in the lifts' red, the pressure line running. */
+.pu-config__drawing { padding: .5rem; }
+.pu-scheme .pu-line { fill: none; stroke: var(--ink); stroke-width: 2; }
+.pu-scheme .pu-thin { fill: none; stroke: var(--ink); stroke-width: 1.25; }
+.pu-scheme .pu-sym { fill: var(--white); stroke: var(--ink); stroke-width: 2; }
+.pu-scheme .pu-fill { fill: var(--ink); }
+.pu-scheme .pu-return { stroke-dasharray: 8 5; }
+.pu-scheme .pu-flow { stroke: var(--red); stroke-width: 2.5; stroke-dasharray: 10 6; }
+.pu-scheme .pu-cyl { fill: rgb(196 22 28 / .14); }
+.pu-scheme .pu-rod { fill: #e3e7e8; stroke: var(--ink); stroke-width: 1.5; }
+.pu-scheme .pu-small { font-size: 20px; }
+@media (prefers-reduced-motion: no-preference) {
+  .pu-scheme .pu-flow { animation: pu-flow 1s linear infinite; }
+  @keyframes pu-flow { to { stroke-dashoffset: -16; } }
+}
+.pu-config__warn { margin: -.5rem 0 1.5rem; padding: .75rem 1rem; border-left: 3px solid #ffd27a; background: rgb(0 0 0 / .2); color: var(--white); font-size: .9375rem; }
+
+/* Questionnaire: the list on the left, the PDF as a card with a small sheet for a cover. */
+.pu-quest { display: grid; gap: 2rem; align-items: center; }
+@media (min-width: 60rem) { .pu-quest { grid-template-columns: 1fr 1fr; gap: 4rem; } }
+.pu-quest__lead { margin-block: 1rem 1.25rem; color: var(--muted); font-size: 1.0625rem; max-width: 34rem; }
+.pu-quest__sheet {
+  display: grid; align-content: start; gap: .55rem; aspect-ratio: 1 / 1.41; padding: .8rem .7rem;
+  border: 1px solid var(--line); background: var(--white); box-shadow: 0 4px 12px rgb(34 40 43 / .2);
+}
+.pu-quest__sheet b { font-family: var(--font-cond); font-size: .8125rem; color: var(--red); }
+.pu-quest__sheet i { display: block; height: .4rem; border-bottom: 1px solid var(--line); }
+
+/* Our units: 4:3 photos, wider than the cylinders' square ones. */
+.carousel__track--wide { grid-auto-columns: min(80%, 24rem); }
+.carousel__track--wide .carousel__item img { aspect-ratio: 4 / 3; }
+/* The calculator's title block keeps four equal columns, whatever the figures; a figure past the
+   series' limits turns red with the note under the sliders. */
+@media (min-width: 30rem) { .pu-config .stamp__facts { grid-template-columns: repeat(4, 1fr); } }
+.pu-config.is-over .stamp__facts dd { color: var(--red); }

@@ -87,9 +87,10 @@ def test_model_page_tabs_and_full_name_in_crumbs(client):
 
 def test_model_has_one_picture_on_first_screen(client):
     html = client.get("/podemniki/dlya-okrasochnyh-kamer/2d/").content.decode()
-    hero = html[: html.index('class="tabs"')]
-    assert hero.count('data-zoom="views"') == 1
-    # The other two views sit under the description, in the same viewer group.
+    hero = html[html.index('class="model-gallery"') : html.index('class="tabs"')]
+    # One picture on the first screen, and it does not open full size.
+    assert hero.count("<picture") == 1 and "data-zoom" not in hero
+    # The other two views sit under the description and open in the viewer.
     assert html.count('class="model-views__item zoom"') == 2
 
 

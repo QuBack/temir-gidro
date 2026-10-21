@@ -275,4 +275,20 @@
     window.addEventListener("resize", sync, { passive: true });
     sync();
   });
+
+  // Other views on a product's first screen: a small picture puts its view on the stage in place
+  // of the render. Nothing opens full size there.
+  document.querySelectorAll("[data-hero-views]").forEach(function (list) {
+    var slides = list.parentElement.querySelectorAll("[data-hero-slide]");
+    var items = list.querySelectorAll(".hero-views__item");
+    items.forEach(function (item, i) {
+      item.addEventListener("click", function () {
+        slides.forEach(function (slide, j) { slide.hidden = j !== i; });
+        items.forEach(function (other, j) {
+          other.classList.toggle("is-active", j === i);
+          other.setAttribute("aria-pressed", j === i ? "true" : "false");
+        });
+      });
+    });
+  });
 })();

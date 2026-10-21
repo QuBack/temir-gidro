@@ -13,18 +13,32 @@
       <h1 id="eq-title">{{ item.title }}</h1>
       <p class="eq-hero__lead">{{ item.lead }}</p>
     </div>
-    <div class="model-gallery">
+    <div class="model-gallery{% if item.views and not hero_photo %} model-gallery--views{% endif %}">
       <div class="model-gallery__main">
         {% if hero_photo %}
         <div class="model-gallery__slide model-gallery__slide--photo">
-          <a class="zoom" href="{% image_url item.about_image %}" data-zoom="views">{% picture item.about_image item.about_alt sizes="(min-width: 60rem) 42rem, 90vw" priority=True %}</a>
+          {% picture item.about_image item.about_alt sizes="(min-width: 60rem) 42rem, 90vw" priority=True %}
         </div>
         {% else %}
-        <div class="model-gallery__slide{% if item.image.size.0 > item.image.size.1 %} model-gallery__slide--wide model-gallery__slide--wide-lg{% endif %}">
-          <a class="zoom" href="{% image_url item.image %}" data-zoom="views">{% picture item.image item.title sizes="(min-width: 60rem) 42rem, 90vw" priority=True %}</a>
+        <div class="model-gallery__slide{% if item.image.size.0 > item.image.size.1 %} model-gallery__slide--wide model-gallery__slide--wide-lg{% endif %}{% if item.mast_left %} mast-left{% endif %}" data-hero-slide>
+          {% picture item.image item.title sizes="(min-width: 60rem) 42rem, 90vw" priority=True %}
         </div>
+        {% for image, alt in item.views %}
+        <div class="model-gallery__slide" data-hero-slide hidden>
+          {% picture image alt sizes="(min-width: 60rem) 42rem, 90vw" %}
+        </div>
+        {% endfor %}
         {% endif %}
       </div>
+      {% if item.views and not hero_photo %}
+      {# The views as small cut-outs beside the render: a click puts that view on the stage (site.js). #}
+      <ul class="hero-views" data-hero-views>
+        <li><button class="hero-views__item is-active{% if item.mast_left %} mast-left{% endif %}" type="button" aria-pressed="true">{% picture item.image item.title sizes="6rem" %}</button></li>
+        {% for image, alt in item.views %}
+        <li><button class="hero-views__item" type="button" aria-pressed="false">{% picture image alt sizes="6rem" %}</button></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
     </div>
   </div>
 </section>

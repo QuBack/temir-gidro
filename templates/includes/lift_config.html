@@ -42,10 +42,8 @@
         <svg class="scheme" data-config-svg viewBox="0 0 640 620" role="img" aria-labelledby="config-title" hidden></svg>
       </div>
       <figcaption class="stamp">
-        {# The model follows the number of scissor pairs the scheme picks: 2 pairs → 2X. #}
-        {# On the right: the sliders' letters and values, in mm and kg, as on the scheme. #}
-        <span class="stamp__name stamp__name--split"><span>{% translate "Ножничный подъёмник" %} <b class="stamp__model" data-out="M">2X</b></span>
-          <span class="stamp__size"><span>L-<span data-out="Ls">2000</span></span> <span>B-<span data-out="Bs">1200</span></span> <span>Q-<span data-out="Qs">2000</span></span> <span>H-<span data-out="Hs">1500</span></span></span></span>
+        {# Marking as on the nameplate: brand, model by scissor pairs (2 pairs → 2X), then L.B.Q.H in mm and kg. #}
+        <span class="stamp__name stamp__name--code">ТЕМИР ГИДРО <span data-out="M">2X</span> <span data-out="Code">2000.1200.2000.1500</span></span>
         {# Defaults match drawings.js for L 2000, H 1500, Q 2 t; without JS the stamp stays as is. #}
         {# A model page starts at its own stroke: there the script fills the stamp in. #}
         <dl class="stamp__facts stamp__facts--wide">
