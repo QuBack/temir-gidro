@@ -12,7 +12,7 @@ from django.views.generic import TemplateView
 from apps.leads.forms import LeadForm
 
 from . import articles, catalog, cylinders, lift_models, power_units
-from .company import COMPANY
+from .company import COMPANY, HYDRAULICS_CONTACT
 from .mixins import BreadcrumbsMixin, SeoMixin
 from .seo import (
     about_page_schema,
@@ -258,6 +258,7 @@ class CylindersView(SeoMixin, BreadcrumbsMixin, TemplateView):
             catalog_cover=cylinders.CATALOG_COVER,
             cyl_config_bg=cylinders.CONFIG_BG,
             lead_bg=cylinders.LEAD_BG,
+            contact=HYDRAULICS_CONTACT,
             lead_params=page["lead_params"],
             lead_form=LeadForm.for_request(self.request),
         )
@@ -288,6 +289,7 @@ class PowerUnitsView(SeoMixin, BreadcrumbsMixin, TemplateView):
             pu_config=power_units.CONFIG,
             pu_config_bg=power_units.CONFIG_BG,
             lead_bg=power_units.LEAD_BG,
+            contact=HYDRAULICS_CONTACT,
             lead_params=page["lead_params"],
             lead_form=LeadForm.for_request(self.request),
         )

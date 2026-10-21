@@ -722,6 +722,7 @@ main .reveal--photo.is-visible { clip-path: inset(-3rem); }
 .params--wide > div { grid-template-columns: 5.5rem 1fr; }  /* «D × S» needs a little more room than «L × B» */
 .lead__phone a { color: var(--white); font-family: var(--font-cond); font-weight: 700; font-size: 1.75rem; text-decoration: none; white-space: nowrap; }
 .lead__phone a:hover { text-decoration: underline; }
+.lead__phone + .lead__phone { margin-top: .5rem; }
 .lead__form { background: var(--white); color: var(--ink); border-radius: var(--radius); padding: clamp(1.5rem, 4vw, 2.5rem); }
 
 /* ---------- Lead form ---------- */

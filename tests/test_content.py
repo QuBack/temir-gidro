@@ -87,3 +87,13 @@ def test_waste_container_page(client):
     html = client.get("/podemniki/dlya-musornyh-kontejnerov/").content.decode()
     assert html.count("<h1") == 1
     assert "Технические характеристики" in html and "Стандартная комплектация" in html
+
+
+@pytest.mark.parametrize("path", ["/gidrocilindry/", "/gidrostancii/"])
+def test_hydraulics_pages_give_the_engineers_contact(client, path):
+    html = client.get(path).content.decode()
+    hero = html[html.index("<body") : html.index("</section>")]
+    assert hero.count('href="tel:+79205522002"') == 2 and 'href="mailto:vk@temir.ru"' in hero  # top bar and hero
+    assert "gidro@temir.ru" not in hero and "+79300129592" not in hero
+    lead = html[html.index('id="raschet"'):]
+    assert "Валерию Косолапову" in lead and 'href="mailto:vk@temir.ru"' in lead
