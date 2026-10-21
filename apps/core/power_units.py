@@ -16,7 +16,6 @@ def _photo(name):
 
 # The client's own unit (photo, background cut out): the first screen and the kit.
 HERO = img("power-units/gidrostanciya-temir-gidro", (978, 1400), widths=(200, 400, 978))
-HERO_SIDE = img("power-units/gidrostanciya-temir-gidro-vtoroj-rakurs", (800, 1119), widths=(200, 800))
 
 PAGE = {
     "title": _("Гидростанции на заказ"),
@@ -31,8 +30,6 @@ PAGE = {
     ),
     "image": HERO,
     "image_alt": _("Гидростанция ТЕМИР ГИДРО: бак, электродвигатель, клапанный блок с распределителем"),
-    # Other views beside the render on the first screen (as on the console lift).
-    "views": [(HERO_SIDE, _("Гидростанция ТЕМИР ГИДРО — вид с другой стороны"))],
     # Key figures under the first screen: (value, unit, label).
     "facts": [
         (_("до 32"), _("МПа"), _("давление")),

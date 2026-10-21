@@ -4,7 +4,7 @@
 {% block breadcrumbs %}{% endblock %}
 {% block content %}
 
-{# The red stage with the unit and its other views on the right, the figures under it (as on the cylinders page). #}
+{# The red stage with the unit on the right, the figures under it (as on the cylinders page). #}
 <section class="eq-hero model-hero cyl-hero" aria-labelledby="pu-title">
   {% include "includes/breadcrumbs.html" %}
   <div class="container model-hero__grid">
@@ -16,23 +16,12 @@
         <a class="hero__phone" href="tel:{{ company.phone_href }}">{{ company.phone }}</a>
       </div>
     </div>
-    <div class="model-gallery model-gallery--views">
+    <div class="model-gallery">
       <div class="model-gallery__main">
-        <div class="model-gallery__slide" data-hero-slide>
+        <div class="model-gallery__slide">
           {% picture page.image page.image_alt sizes="(min-width: 60rem) 42rem, 90vw" priority=True %}
         </div>
-        {% for image, alt in page.views %}
-        <div class="model-gallery__slide" data-hero-slide hidden>
-          {% picture image alt sizes="(min-width: 60rem) 42rem, 90vw" %}
-        </div>
-        {% endfor %}
       </div>
-      <ul class="hero-views" data-hero-views>
-        <li><button class="hero-views__item is-active" type="button" aria-pressed="true">{% picture page.image page.image_alt sizes="6rem" %}</button></li>
-        {% for image, alt in page.views %}
-        <li><button class="hero-views__item" type="button" aria-pressed="false">{% picture image alt sizes="6rem" %}</button></li>
-        {% endfor %}
-      </ul>
     </div>
   </div>
   <div class="container">
