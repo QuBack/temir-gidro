@@ -1,8 +1,8 @@
 """Hydraulic power units page: /gidrostancii/ (mockup docs/mockups/gidrostancii-maket.html).
 
 TODO: every figure here is a placeholder until the client sends real data (2026-10): the ranges,
-the types and their specs, the motor and tank series, the lead times. Pictures are generated
-(Codex, 2026) until real photos come.
+the types and their specs, the motor and tank series, the lead times. The first-screen unit is the
+client's photo; the other pictures are generated after it (Codex, 2026) until real photos come.
 """
 
 from django.utils.translation import gettext_lazy as _
@@ -14,8 +14,9 @@ def _photo(name):
     return img(f"power-units/{name}", (1200, 900), widths=(400, 800, 1200))
 
 
-HERO = img("power-units/gidrostanciya-380v", (1254, 1254), widths=(200, 400, 800, 1254))
-HERO_SIDE = img("power-units/gidrostanciya-380v-sboku", (1254, 1254), widths=(200, 800, 1254))
+# The client's own unit (photo, background cut out): the first screen and the kit.
+HERO = img("power-units/gidrostanciya-temir-gidro", (978, 1400), widths=(200, 400, 978))
+HERO_SIDE = img("power-units/gidrostanciya-temir-gidro-vtoroj-rakurs", (800, 1119), widths=(200, 800))
 
 PAGE = {
     "title": _("Гидростанции на заказ"),
@@ -29,9 +30,9 @@ PAGE = {
         "по давлению и скорости, испытываем на стенде."
     ),
     "image": HERO,
-    "image_alt": _("Гидростанция ТЕМИР ГИДРО на 380 В: бак, электродвигатель, клапанный блок"),
+    "image_alt": _("Гидростанция ТЕМИР ГИДРО: бак, электродвигатель, клапанный блок с распределителем"),
     # Other views beside the render on the first screen (as on the console lift).
-    "views": [(HERO_SIDE, _("Гидростанция ТЕМИР ГИДРО — вид сбоку"))],
+    "views": [(HERO_SIDE, _("Гидростанция ТЕМИР ГИДРО — вид с другой стороны"))],
     # Key figures under the first screen: (value, unit, label).
     "facts": [
         (_("до 32"), _("МПа"), _("давление")),
@@ -89,7 +90,7 @@ PAGE = {
         (
             _("С автоматикой"),
             _("Шкаф управления, датчики давления и уровня, пульт или управление от вашего ПЛК."),
-            img("power-units/promyshlennaya", (800, 600), widths=(400, 800)),
+            img("power-units/so-shkafom-upravleniya", (800, 600), widths=(400, 800)),
             [(_("Управление"), _("пульт / ПЛК")), (_("Датчики"), _("по ТЗ"))],
             ["machine", "press", "stand"],
         ),
@@ -97,7 +98,7 @@ PAGE = {
     # The kit on the industrial unit with callouts, as on the lift model pages:
     # (kit item index, x %, y %) on the picture.
     "kit_image": HERO,
-    "kit_markers": [(0, 25, 76), (1, 30, 24), (2, 30, 47), (3, 55, 44), (4, 86, 42), (5, 74, 33)],
+    "kit_markers": [(0, 38, 70), (1, 30, 22), (2, 30, 41), (3, 60, 44), (4, 80, 43), (5, 62, 23)],
     "kit": [
         (
             _("Бак"),
@@ -129,7 +130,7 @@ PAGE = {
     "photos": [
         (_photo("sborka"), _("Сборка гидростанции на участке")),
         (_photo("ispytaniya"), _("Испытания гидростанции на стенде")),
-        (_photo("u-podemnika"), _("Гидростанция у ножничного подъёмника")),
+        (_photo("v-mashinnom-zale"), _("Гидростанция в машинном зале")),
         (_photo("klapannyj-blok"), _("Клапанный блок гидростанции")),
         (_photo("gotovye-k-otgruzke"), _("Гидростанции перед отгрузкой")),
     ],
