@@ -959,6 +959,9 @@ main .reveal--photo.is-visible { clip-path: inset(-3rem); }
 @media (max-width: 59.99rem) {
   .eq-item:nth-child(odd of .eq-item):nth-last-child(1 of .eq-item) { grid-column: 1 / -1; }
 }
+/* Cylinders and power units under the lifts: two wide cards, the same gap as between the rows. */
+.eq-grid--hydraulics { margin-top: 1.5rem; }
+@media (min-width: 60rem) { .eq-grid--hydraulics { margin-top: 2rem; } }
 /* Every card keeps room for the sheet edges, so a row lines up and the panel finds its row. */
 .eq-item { position: relative; isolation: isolate; min-width: 0; margin: .75rem .75rem 0 0; }
 .eq-item--group::before, .eq-item--group::after {

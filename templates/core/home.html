@@ -67,6 +67,20 @@
       {% endif %}
       {% endfor %}
     </ul>
+    {# Cylinders and power units: a row of their own under the lifts, the same cards. #}
+    <ul class="eq-grid eq-grid--hydraulics">
+      {% for g in hydraulics %}
+      <li class="eq-item">
+        <a class="eq-card" href="{{ g.url }}">
+          <span class="eq-card__media">{% picture g.image g.title sizes="(min-width: 60rem) 45vw, 45vw" %}</span>
+          <span class="eq-card__cap">
+            <h3>{{ g.title }}</h3>
+            <span class="eq-card__meta">{% translate "Подробнее" %}{% icon "chevron-right" %}</span>
+          </span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
     <div class="tiles-cta">
       <p><strong>{% translate "Нет подходящей модели?" %}</strong> {% translate "Спроектируем подъёмник по вашему ТЗ, чертежу или образцу." %}</p>
       <a class="btn btn--outline" href="#raschet">{% translate "Отправить задачу" %}</a>

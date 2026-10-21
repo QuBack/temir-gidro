@@ -42,6 +42,11 @@ class HomeView(SeoMixin, TemplateView):
             hero_image=catalog.HERO_IMAGE,
             hero_video=catalog.HERO_VIDEO,
             equipment_groups=catalog.EQUIPMENT_GROUPS,
+            # Cylinders and power units: their own row of two under the lifts.
+            hydraulics=[
+                {k: catalog.CYLINDERS[k] for k in ("title", "url", "image")},
+                {"title": _("Гидростанции"), "url": reverse("core:power_units"), "image": power_units.HERO},
+            ],
             cylinders=catalog.CYLINDERS,
             stats=catalog.STATS,
             advantages=catalog.ADVANTAGES,

@@ -82,9 +82,10 @@ def test_home_steps_timeline(client):
 
 def test_home_catalog_groups(client):
     html = client.get("/").content.decode()
-    # Five cards; the three groups link to their sections and carry their models in a hidden
-    # panel, so every model page stays linked from the home page without JS.
-    assert html.count('<a class="eq-card') == 5
+    # Five lift cards and a row of two for cylinders and power units; the three groups link to their
+    # sections and carry their models in a hidden panel, so every model page stays linked without JS.
+    assert html.count('<a class="eq-card') == 7
+    assert 'href="/gidrocilindry/"' in html and 'href="/gidrostancii/"' in html
     assert html.count("data-eq-toggle") == 3
     for slug in ("nozhnichnye", "okrasochnye", "avtomobilnye"):
         assert f'id="eq-{slug}" hidden' in html
