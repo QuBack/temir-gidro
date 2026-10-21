@@ -286,6 +286,7 @@ class PowerUnitsView(SeoMixin, BreadcrumbsMixin, TemplateView):
             kit_points=lift_models.kit_points(page),
             kit_overlay=lift_models.kit_overlay(page),
             pu_config=power_units.CONFIG,
+            pu_config_bg=power_units.CONFIG_BG,
             lead_bg=power_units.LEAD_BG,
             lead_params=page["lead_params"],
             lead_form=LeadForm.for_request(self.request),

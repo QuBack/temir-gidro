@@ -199,5 +199,7 @@ CONFIG = {
     "time": {"min": 5, "max": 120, "step": 1, "value": 25},  # s
 }
 
-# Behind the calculator and the request form (generated, Codex, 2026).
+# Behind the calculator: burgundy, power unit drawings at the edges (generated, Codex, 2026).
+CONFIG_BG = img("backgrounds/chertezh-gidrostancij-bordo", (1672, 941), widths=(768, 1280, 1672))
+# Behind the request form (generated, Codex, 2026).
 LEAD_BG = img("backgrounds/chertezh-gidrostancii-zayavka", (1920, 1080), widths=(768, 1280, 1920))
