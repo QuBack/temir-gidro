@@ -105,7 +105,7 @@
     <div class="carousel" data-carousel>
       {% translate "Гидроцилиндр производства ТЕМИР ГИДРО" as ph_alt %}
       <ul class="carousel__track" data-carousel-track>
-        {% for p in page.photos %}<li class="carousel__item">{% picture p ph_alt sizes="(min-width: 60rem) 18rem, 70vw" %}</li>{% endfor %}
+        {% for p in page.photos %}<li class="carousel__item"><a class="zoom" href="{% image_url p %}" data-zoom="cylinders" draggable="false">{% picture p ph_alt sizes="(min-width: 60rem) 18rem, 70vw" %}</a></li>{% endfor %}
       </ul>
       <button class="carousel__btn carousel__btn--prev" type="button" data-carousel-prev aria-label="{% translate 'Предыдущие фото' %}" hidden>{% icon "chevron-left" %}</button>
       <button class="carousel__btn carousel__btn--next" type="button" data-carousel-next aria-label="{% translate 'Следующие фото' %}" hidden>{% icon "chevron-right" %}</button>
