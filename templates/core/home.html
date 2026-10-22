@@ -125,7 +125,8 @@
     <div class="split__media">
       <div class="split__main">{% picture cylinders.image cylinders.title sizes="(min-width: 60rem) 45vw, 90vw" %}</div>
       <ul class="thumbs">
-        {% for p in cylinders.photos %}<li>{% translate "Производство гидроцилиндров" as ph_alt %}{% picture p ph_alt sizes="10rem" %}</li>{% endfor %}
+        {% translate "Производство гидроцилиндров" as ph_alt %}
+        {% for p in cylinders.photos %}<li><a class="zoom" href="{% image_url p %}" data-zoom="cylinders">{% picture p ph_alt sizes="10rem" %}</a></li>{% endfor %}
       </ul>
     </div>
   </div>
