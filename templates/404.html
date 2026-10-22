@@ -1,10 +1,44 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n images %}
+{% block body_attrs %} class="overlay overlay--dark"{% endblock %}
 {% block content %}
-<section class="container">
-  <h1>{% translate "Страница не найдена" %}</h1>
-  <p>{% translate "Возможно, адрес изменился или в нём опечатка." %}</p>
-  <p><a href="{% url 'core:home' %}">{% translate "Перейти на главную" %}</a> ·
-     <a href="{% url 'leads:create' %}">{% translate "Оставить заявку" %}</a></p>
+{# The model page's red stage with a large 404, then the sections people usually look for. #}
+<section class="eq-hero model-hero notfound" aria-labelledby="nf-title">
+  <div class="container notfound__grid">
+    <div>
+      <p class="notfound__code" aria-hidden="true">404</p>
+      <h1 id="nf-title">{% translate "Страница не найдена" %}</h1>
+      <p class="eq-hero__lead">{% translate "Возможно, адрес изменился или в нём опечатка. Начните с главной или выберите раздел ниже — а если ищете что-то конкретное, позвоните или оставьте заявку." %}</p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="{% url 'leads:create' %}">{% translate "Оставить заявку" %}</a>
+        <a class="notfound__home" href="{% url 'core:home' %}">{% translate "На главную" %}</a>
+        <a class="hero__phone" href="tel:{{ company.phone_href }}">{{ company.phone }}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--grey" aria-labelledby="nf-sections">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="nf-sections">{% translate "Разделы сайта" %}</h2>
+    </div>
+    <ul class="lift-tiles lift-tiles--fit">
+      {% for cat in nav_categories %}
+      <li>
+        <a class="lift-tile" href="{{ cat.url }}">
+          <div class="lift-tile__media">{% picture cat.image cat.title sizes="(min-width: 60rem) 18vw, 45vw" %}</div>
+          <div class="lift-tile__desc"><h3>{{ cat.title }}</h3></div>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    <p class="notfound__more">
+      <a href="{% url 'core:cylinders' %}">{% translate "Гидроцилиндры" %}</a> ·
+      <a href="{% url 'core:power_units' %}">{% translate "Гидростанции" %}</a> ·
+      <a href="{% url 'core:articles' %}">{% translate "Статьи" %}</a> ·
+      <a href="{% url 'core:contacts' %}">{% translate "Контакты" %}</a>
+    </p>
+  </div>
 </section>
 {% endblock %}

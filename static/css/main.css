@@ -2034,3 +2034,18 @@ body:not(.page-white) .config .choice__option input:focus-visible + span { outli
    series' limits turns red with the note under the sliders. */
 @media (min-width: 30rem) { .pu-config .stamp__facts { grid-template-columns: repeat(4, 1fr); } }
 .pu-config.is-over .stamp__facts dd { color: var(--red); }
+
+/* 404: the red stage with a large outlined code, the site's sections below. */
+.notfound { min-height: 0 !important; padding-block: clamp(7rem, 12vw, 9rem) clamp(3rem, 6vw, 4.5rem); }
+.notfound__code {
+  font-family: var(--font-cond); font-size: clamp(6rem, 16vw, 11rem); font-weight: 900; line-height: .85;
+  color: transparent; -webkit-text-stroke: 2px rgb(255 255 255 / .35); margin-bottom: 1rem;
+}
+.notfound h1 { font-family: var(--font-cond); font-size: clamp(2.25rem, 5vw, 3.5rem); font-weight: 700; line-height: 1.05; }
+.notfound .eq-hero__lead { max-width: 38rem; }
+.notfound .btn--primary { background: var(--white); color: var(--red); }
+.notfound .btn--primary:hover { background: #f1dcdc; color: var(--red-dark); }
+.notfound__home, .notfound .hero__phone { color: var(--white); font-weight: 600; text-underline-offset: .2em; }
+.notfound__more { margin-top: 1.75rem; color: var(--muted); }
+.notfound__more a { color: var(--ink); font-weight: 600; text-underline-offset: .2em; }
+.notfound__more a:hover { color: var(--red); }
