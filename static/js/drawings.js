@@ -332,13 +332,14 @@
     return { n: 1, hmin: low ? 150 : 200, limit: 12000 };
   }
 
-  // Side view: the mast on the left, the platform on its carriage sticking out to the right.
+  // Side view: the mast on the left, the platform on its carriage sticking out to the right. Seen
+  // from the side, the platform's run from the mast is its width B (the length L goes into the sheet).
   function drawConsole(svg, v) {
     svg.textContent = "";
     var c = calcConsole(v);
     var CARRIAGE = 900, MAST = 260; // mm: carriage height above the deck, mast depth
-    var s = Math.min(0.16, 400 / (v.L + MAST), 430 / (c.hmin + v.H + CARRIAGE + 300));
-    var lw = v.L * s, mw = Math.max(MAST * s, 16);
+    var s = Math.min(0.16, 400 / (v.B + MAST), 430 / (c.hmin + v.H + CARRIAGE + 300));
+    var lw = v.B * s, mw = Math.max(MAST * s, 16);
     var x0 = 30 + (470 - mw - lw) / 2, mx1 = x0 + mw, x1 = mx1 + lw, cx = mx1 + lw / 2;
     var hp = Math.max((c.hmin + v.H) * s, 10);
     var platTop = FLOOR - hp - 10, platBottom = FLOOR - hp;
@@ -349,8 +350,9 @@
     for (var hx = 14; hx < 640; hx += 16) line(svg, hx, FLOOR + 1, hx - 9, FLOOR + 10, "s-hatch");
 
     // Mast: two columns from the floor up, the cylinder between them.
-    node(svg, "rect", { x: x0, y: mastTop, width: mw * 0.3, height: FLOOR - mastTop, "class": "s-frame" });
-    node(svg, "rect", { x: x0 + mw * 0.7, y: mastTop, width: mw * 0.3, height: FLOOR - mastTop, "class": "s-frame" });
+    // The mast's two columns in the lifts' red, the cylinder between them dark.
+    node(svg, "rect", { x: x0, y: mastTop, width: mw * 0.3, height: FLOOR - mastTop, "class": "s-mast" });
+    node(svg, "rect", { x: x0 + mw * 0.7, y: mastTop, width: mw * 0.3, height: FLOOR - mastTop, "class": "s-mast" });
     var mc = x0 + mw / 2, rodTop = carTop + (platBottom - carTop) * 0.3;
     var barrelTop = FLOOR - Math.max((FLOOR - rodTop) * 0.52, 20);
     line(svg, mc, barrelTop, mc, FLOOR - 6, "s-cyl");
@@ -359,7 +361,6 @@
     // Carriage on the mast, the platform and its brace.
     node(svg, "rect", { x: mx1, y: carTop, width: 8, height: platBottom - carTop, "class": "s-frame" });
     node(svg, "rect", { x: mx1, y: platTop, width: lw, height: platBottom - platTop, "class": "s-frame" });
-    line(svg, mx1 + 8, carTop + (platBottom - carTop) * 0.2, mx1 + Math.min(lw * 0.45, (platBottom - carTop) * 1.2), platTop, "s-arm");
     [[mx1 + 4, carTop + 6], [mx1 + 4, platBottom - 6], [mc, rodTop]].forEach(function (p) {
       node(svg, "circle", { cx: p[0], cy: p[1], r: 4, "class": "s-pin" });
     });
@@ -390,14 +391,14 @@
     var hxm = dx + 28, hym = FLOOR - 4;
     node(svg, "text", { x: hxm, y: hym, transform: "rotate(-90 " + hxm + " " + hym + ")", "text-anchor": "start" }, "Hmin = " + c.hmin);
 
-    // L: under the floor, along the platform.
+    // B: under the floor, along the platform.
     var ly = FLOOR + 38;
     line(svg, mx1, FLOOR + 14, mx1, ly + 8, "s-dim");
     line(svg, x1, FLOOR + 14, x1, ly + 8, "s-dim");
     line(svg, mx1 + 2, ly, x1 - 2, ly, "s-dim");
     arrow(svg, mx1 + 1, ly, "left");
     arrow(svg, x1 - 1, ly, "right");
-    node(svg, "text", { x: cx, y: ly + 28, "text-anchor": "middle" }, "L = " + Math.round(v.L / 10) * 10);
+    node(svg, "text", { x: cx, y: ly + 28, "text-anchor": "middle" }, "B = " + Math.round(v.B / 10) * 10);
   }
 
   var SCISSOR = { calc: calc, draw: draw, model: function (c) { return c.n + "X"; } };
