@@ -79,9 +79,9 @@ def product_schema(name, description, image_path: str, path: str, properties=(),
     return data
 
 
-def collection_schema(name, path: str, items: list[tuple[str, str]]) -> dict:
-    """A section page listing catalog lines: items are [(name, path), …]."""
-    return {
+def collection_schema(name, path: str, items: list[tuple[str, str]], description="") -> dict:
+    """A section page listing catalog lines or models: items are [(name, path), …]."""
+    data = {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
         "name": str(name),
@@ -94,6 +94,9 @@ def collection_schema(name, path: str, items: list[tuple[str, str]]) -> dict:
             ],
         },
     }
+    if description:
+        data["description"] = str(description)
+    return data
 
 
 def about_page_schema(name, path: str) -> dict:

@@ -4,8 +4,13 @@
   <div class="container topbar__inner">
     <span>{{ company.opening_hours_display }}</span>
     <span class="topbar__addr">{{ company.address.city }}, {{ company.address.street }}</span>
+    {% if contact %}
+    <a href="mailto:{{ contact.email }}">{{ contact.email }}</a>
+    <a href="tel:{{ contact.phone_href }}">{{ contact.phone }}</a>
+    {% else %}
     <a href="mailto:{{ company.email }}">{{ company.email }}</a>
     <a href="tel:{{ company.phone_extra_href }}">{{ company.phone_extra }}</a>
+    {% endif %}
     {% include "includes/social.html" with variant="topbar" %}
   </div>
 </div>
@@ -51,6 +56,7 @@
           </div>
         </li>
         <li class="site-nav__item"><a href="/gidrocilindry/">{% translate "Гидроцилиндры" %}</a></li>
+        <li class="site-nav__item"><a href="{% url 'core:power_units' %}">{% translate "Гидростанции" %}</a></li>
         <li class="site-nav__item"><a href="/stati/">{% translate "Статьи" %}</a></li>
         <li class="site-nav__item"><a href="{% url 'core:about' %}">{% translate "О компании" %}</a></li>
         <li class="site-nav__item"><a href="{% url 'core:contacts' %}">{% translate "Контакты" %}</a></li>

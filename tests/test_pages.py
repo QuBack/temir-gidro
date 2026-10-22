@@ -80,8 +80,59 @@ def test_home_steps_timeline(client):
     assert "img/steps/etap-montazh-1536.webp" in html
 
 
+def test_home_catalog_groups(client):
+    html = client.get("/").content.decode()
+    # Five lift cards and a row of two for cylinders and power units; the three groups link to their
+    # sections and carry their models in a hidden panel, so every model page stays linked without JS.
+    assert html.count('<a class="eq-card') == 7
+    assert 'href="/gidrocilindry/"' in html and 'href="/gidrostancii/"' in html
+    assert html.count("data-eq-toggle") == 3
+    for slug in ("nozhnichnye", "okrasochnye", "avtomobilnye"):
+        assert f'id="eq-{slug}" hidden' in html
+    for url in ("/podemniki/nozhnichnye/4x/", "/podemniki/dlya-okrasochnyh-kamer/2d/", "/podemniki/chetyrehstoechnye/",
+                "/podemniki/konsolnye/"):
+        assert f'href="{url}"' in html
+
+
+def test_four_post_lifts_are_under_car_lifts_in_menus(client):
+    html = client.get("/kontakty/").content.decode()
+    # No section of their own in the mega-menu and the footer, a model under car lifts instead.
+    assert "Четырёхстоечные подъёмники" not in html
+    cars = html.split('href="/podemniki/avtomobilnye/">Автомобильные подъёмники</a>')[1].split("mega__cat-link")[0]
+    assert 'href="/podemniki/chetyrehstoechnye/"' in cars
+    # The page itself stays.
+    assert client.get("/podemniki/chetyrehstoechnye/").status_code == 200
+
+
 def test_moved_article_has_author_and_photos(client):
     html = client.get("/stati/nozhnichnyj-podemnik-konstrukciya-i-bezopasnost/").content.decode()
     assert html.count("<h1") == 1 and "Владимир Теплов" in html
     assert '"author":{"@type":"Person"' in html
     assert "nozhnichnyj-podemnik-3x-ispytanie" in html and 'data-zoom="article"' in html
+
+
+def test_steps_have_no_step_numbers(client):
+    html = client.get("/").content.decode()
+    assert "timeline__num" not in html and "scene__num" not in html
+
+
+def test_single_product_lines_get_tabs(client):
+    html = client.get("/podemniki/konsolnye/").content.decode()
+    assert "Как устроен консольный подъёмник 1L" in html
+    assert html.count("data-tab-panel") == 4 and "js/tabs.js" in html
+    # Looks like a model page: the red stage, delivery as the last tab.
+    assert 'class="eq-hero model-hero"' in html and 'href="#postavka" data-tab' in html
+    # Lines with a list of models stay one long page.
+    assert "data-tab-panel" not in client.get("/podemniki/nozhnichnye/").content.decode()
+
+
+@pytest.mark.parametrize(
+    "path",
+    ["/podemniki/", "/podemniki/nozhnichnye/", "/podemniki/konsolnye/", "/podemniki/nozhnichnye/1x/",
+     "/gidrocilindry/", "/stati/", "/o-kompanii/", "/kontakty/"],
+)
+def test_crumbs_open_the_first_section(client, path):
+    html = client.get(path).content.decode()
+    main = html[html.index("<main"):]
+    first = main[main.index("<section"):]
+    assert first.index('class="breadcrumbs') < first.index("</section>")

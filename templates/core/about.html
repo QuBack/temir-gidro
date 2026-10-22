@@ -1,35 +1,64 @@
 {% extends "base.html" %}
 {% load i18n images %}
-{% block body_attrs %} class="overlay"{% endblock %}
+{% block body_attrs %} class="overlay overlay--dark"{% endblock %}
 {% block breadcrumbs %}{% endblock %}
 {% block content %}
 
 <section class="eq-hero about-hero page-hero--bg" aria-labelledby="about-title">
-  <div class="page-hero-bg" aria-hidden="true">{% picture page_bg "" sizes="100vw" %}</div>
+  {% include "includes/breadcrumbs.html" %}
+  <div class="page-hero-bg" aria-hidden="true">{% picture page_bg "" sizes="100vw" priority=True %}</div>
   <div class="container eq-hero__grid">
     <div class="eq-hero__text">
       <h1 id="about-title">{% translate "О компании" %}</h1>
-      <p class="eq-hero__lead">{% blocktranslate with name=company.name %}{{ name }} — производитель гидравлических подъёмников и гидроцилиндров. Проектируем оборудование под задачу заказчика, изготавливаем, испытываем и монтируем на объекте.{% endblocktranslate %}</p>
-      <p class="about-hero__legal">{% blocktranslate with name=company.name legal=company.legal_name city=company.address.city %}{{ name }} — торговая марка {{ legal }}. Офис в городе {{ city }}, оборудование отгружаем в любой регион России.{% endblocktranslate %}</p>
-      <dl class="stats about-hero__plate">
-        {% for value, label in stats %}<div><dt>{{ label }}</dt><dd data-count>{{ value }}</dd></div>{% endfor %}
-      </dl>
-    </div>
-    <div class="about-hero__photos">
-      <div class="about-hero__main">
-        {% translate "Гидравлические ножничные подъёмники ТЕМИР ГИДРО в цехе" as photo_alt %}
-        {% picture hero_image photo_alt sizes="(min-width: 60rem) 45vw, 100vw" priority=True %}
-      </div>
-      {% for p in cylinders.photos %}
-      <div>{% translate "Производство гидроцилиндров ТЕМИР ГИДРО" as ph_alt %}{% picture p ph_alt sizes="(min-width: 60rem) 15vw, 33vw" %}</div>
-      {% endfor %}
     </div>
   </div>
 </section>
-{# Crumbs go under the first section, so the page opens with its heading. #}
-{% include "includes/breadcrumbs.html" %}
 
-<section class="section" aria-labelledby="make-title">
+{# Company text and the director's words, from the client (old site, 2026). #}
+<section class="section section--shade" aria-labelledby="who-title">
+  <div class="container about-intro">
+    <div class="about-intro__text">
+      <h2 id="who-title">{{ company.legal_name }}</h2>
+      <p class="about-intro__address">{{ company.address.city }}, {{ company.address.street }}</p>
+      <p>{% blocktranslate trimmed %}
+        Специализированная компания в области производства, поставки и технического сопровождения гидравлического
+        оборудования. Основным направлением нашей деятельности являются гидроцилиндры и гидравлическое подъёмное
+        оборудование для промышленной, строительной, коммунальной и специальной техники.
+      {% endblocktranslate %}</p>
+      <p>{% blocktranslate trimmed %}
+        Мы создаём решения, в основе которых — надёжность, инженерная точность и высокий ресурс эксплуатации.
+        Современное производство, профессиональная команда и глубокое понимание отраслевых задач позволяют нам
+        реализовывать проекты любой сложности — от стандартных изделий до индивидуальных технических решений
+        под требования заказчика.
+      {% endblocktranslate %}</p>
+      <h3>{% translate "Наша специализация" %}</h3>
+      <ul class="about-intro__list">
+        <li>{% translate "производство гидроцилиндров различного назначения" %}</li>
+        <li>{% translate "изготовление гидроподъёмников" %}</li>
+        <li>{% translate "ремонт и восстановление гидравлического оборудования" %}</li>
+        <li>{% translate "проектирование нестандартных гидравлических решений" %}</li>
+        <li>{% translate "поставка комплектующих и узлов гидросистем" %}</li>
+        <li>{% translate "техническое сопровождение и сервис" %}</li>
+      </ul>
+    </div>
+    <div class="about-intro__aside">
+      <figure class="about-quote">
+        <blockquote>
+          <p>{% blocktranslate trimmed %}
+            Мы помогаем предприятиям обеспечивать стабильную и эффективную работу техники, предлагая качественные
+            гидравлические решения, соответствующие высоким требованиям современной промышленности.
+          {% endblocktranslate %}</p>
+        </blockquote>
+        <figcaption><b>{% translate "Михаил Горожанкин" %}</b> {% translate "Генеральный директор" %}</figcaption>
+      </figure>
+      <dl class="stats about-intro__stats">
+        {% for value, label in stats %}<div><dt>{{ label }}</dt><dd data-count>{{ value }}</dd></div>{% endfor %}
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section class="section section--rule" aria-labelledby="make-title">
   <div class="container">
     <div class="section-head">
       <h2 id="make-title">{% translate "Что мы производим" %}</h2>
@@ -40,7 +69,6 @@
         <a class="cat-card" href="{{ cat.url }}">
           <div class="cat-card__media">{% picture cat.image cat.title sizes="(min-width: 60rem) 30vw, (min-width: 40rem) 45vw, 90vw" %}</div>
           <h3>{{ cat.title }}</h3>
-          {% if cat.facts %}<ul class="facts cat-card__meta">{% for f in cat.facts %}<li>{{ f }}</li>{% endfor %}</ul>{% endif %}
         </a>
       </li>
       {% endfor %}
@@ -73,7 +101,7 @@
   </div>
 </section>
 
-<section class="section section--grey" aria-labelledby="how-title">
+<section class="section section--grey section--shade-bottom" aria-labelledby="how-title">
   <div class="container">
     <div class="section-head">
       <h2 id="how-title">{% translate "Как мы работаем" %}</h2>

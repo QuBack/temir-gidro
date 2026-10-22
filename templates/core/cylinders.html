@@ -1,33 +1,31 @@
 {% extends "base.html" %}
 {% load i18n static images %}
-{% block body_attrs %} class="overlay"{% endblock %}
+{% block body_attrs %} class="overlay overlay--dark"{% endblock %}
 {% block breadcrumbs %}{% endblock %}
 {% block content %}
 
-<section class="eq-hero" aria-labelledby="cyl-title">
+{# The model pages' deep red stage with the render; under it, the ranges we make in. #}
+<section class="eq-hero model-hero cyl-hero" aria-labelledby="cyl-title">
+  {% include "includes/breadcrumbs.html" %}
   <div class="container eq-hero__grid">
     <div class="eq-hero__text">
       <h1 id="cyl-title">{{ page.title }}</h1>
       <p class="eq-hero__lead">{{ page.lead }}</p>
       <div class="hero__actions">
         <a class="btn btn--primary" href="#raschet">{% translate "Отправить чертёж" %}</a>
-        <a class="hero__phone" href="tel:{{ company.phone_href }}">{{ company.phone }}</a>
+        <a class="hero__phone" href="tel:{{ contact.phone_href }}">{{ contact.phone }}</a>
       </div>
     </div>
-    <figure class="sheet">
-      <div class="sheet__drawing eq-hero__drawing">
-        {% picture page.image page.title sizes="(min-width: 60rem) 34rem, 90vw" priority=True %}
-      </div>
-      <figcaption class="stamp">
-        <span class="stamp__name">{% translate "Гидроцилиндры" %}</span>
-        <dl class="stamp__facts">
-          {% for value, label in page.facts %}<div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>{% endfor %}
-        </dl>
-      </figcaption>
-    </figure>
+    <div class="cyl-hero__media">
+      {% picture page.image page.title sizes="(min-width: 60rem) 40rem, 90vw" priority=True %}
+    </div>
+  </div>
+  <div class="container">
+    <dl class="cyl-facts">
+      {% for value, unit, label in page.facts %}<div><dt>{{ label }}</dt><dd>{{ value }} <span>{{ unit }}</span></dd></div>{% endfor %}
+    </dl>
   </div>
 </section>
-{% include "includes/breadcrumbs.html" %}
 
 <section class="section" aria-labelledby="types-title">
   <div class="container">
@@ -35,19 +33,51 @@
       <h2 id="types-title">{% translate "Какие гидроцилиндры мы делаем" %}</h2>
       <p class="section-head__lead">{% translate "Три типа конструкции — подберём под нагрузку, условия работы и обслуживание." %}</p>
     </div>
-    <ul class="features">
-      {% for title, text, icon_name in page.types %}
-      <li class="feature">
-        <span class="feature__icon">{% icon icon_name %}</span>
-        <h3>{{ title }}</h3>
-        <p>{{ text }}</p>
+    <ul class="cyl-types">
+      {% for title, text, use, kind in page.types %}
+      <li class="cyl-type">
+        <div class="cyl-type__drawing">{% include "includes/cylinder_type.html" %}</div>
+        <div class="cyl-type__copy">
+          <h3>{{ title }}</h3>
+          <p>{{ text }}</p>
+          <p class="cyl-type__use">{{ use }}</p>
+        </div>
       </li>
       {% endfor %}
     </ul>
   </div>
 </section>
 
-<section class="section section--grey" aria-labelledby="cycle-title">
+{% include "includes/cylinder_config.html" %}
+
+{# The ranges beside the catalog of standard designs, which the configurator draws from. #}
+<section class="section section--grey" aria-labelledby="specs-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="specs-title">{% translate "Технические характеристики" %}</h2>
+      <p class="section-head__lead">{% translate "Диапазоны, в которых мы проектируем гидроцилиндры. Нестандартные размеры — по вашему чертежу." %}</p>
+    </div>
+    <div class="cyl-specs">
+      <table class="spec-table cyl-specs__table">
+        <caption class="visually-hidden">{% translate "Технические характеристики гидроцилиндров" %}</caption>
+        <tbody>
+          {% for label, value, key in page.specs %}<tr><th scope="row">{% if key %}<span class="cyl-specs__key">{{ key }}</span>{% endif %}{{ label }}</th><td>{{ value }}</td></tr>{% endfor %}
+        </tbody>
+      </table>
+      <a class="cyl-catalog" href="{% static catalog_pdf %}" download>
+        {% translate "Обложка каталога гидроцилиндров ТЕМИР ГИДРО" as cover_alt %}
+        <span class="cyl-catalog__cover">{% picture catalog_cover cover_alt sizes="10rem" %}</span>
+        <span class="cyl-catalog__text">
+          <b>{% translate "Каталог типовых исполнений" %}</b>
+          <span>{% translate "Гидроцилиндры по ISO 3320 и ISO 6020: крепления, размеры, усилия на 16, 25 и 35 МПа, лист заказа." %}</span>
+          <span class="cyl-catalog__link">{% icon "file-down" %} {% translate "Скачать PDF, 4,9 МБ" %}</span>
+        </span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="cycle-title">
   <div class="container">
     <div class="section-head">
       <h2 id="cycle-title">{% translate "Полный цикл производства" %}</h2>
@@ -65,22 +95,20 @@
   </div>
 </section>
 
-<section class="section" aria-labelledby="specs-title">
-  <div class="container split">
-    <div class="split__text">
-      <h2 id="specs-title">{% translate "Технические характеристики" %}</h2>
-      <p>{% translate "Диапазоны, в которых мы проектируем гидроцилиндры. Нестандартные размеры — по вашему чертежу." %}</p>
-      <table class="spec-table">
-        <caption class="visually-hidden">{% translate "Технические характеристики гидроцилиндров" %}</caption>
-        <tbody>
-          {% for label, value in page.specs %}<tr><th scope="row">{{ label }}</th><td>{{ value }}</td></tr>{% endfor %}
-        </tbody>
-      </table>
+{# Our cylinders from the shop floor: a strip that scrolls sideways, arrows from site.js. #}
+<section class="section section--dark" aria-labelledby="works-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="works-title">{% translate "Наши гидроцилиндры" %}</h2>
+      <p class="section-head__lead">{% translate "Гидроцилиндры нашего производства для промышленного и подъёмного оборудования." %}</p>
     </div>
-    <div class="split__media">
-      <ul class="cyl-photos">
-        {% for p in page.photos %}<li>{% translate "Производство гидроцилиндров ТЕМИР ГИДРО" as ph_alt %}{% picture p ph_alt sizes="(min-width: 60rem) 15vw, 30vw" %}</li>{% endfor %}
+    <div class="carousel" data-carousel>
+      {% translate "Гидроцилиндр производства ТЕМИР ГИДРО" as ph_alt %}
+      <ul class="carousel__track" data-carousel-track>
+        {% for p in page.photos %}<li class="carousel__item">{% picture p ph_alt sizes="(min-width: 60rem) 18rem, 70vw" %}</li>{% endfor %}
       </ul>
+      <button class="carousel__btn carousel__btn--prev" type="button" data-carousel-prev aria-label="{% translate 'Предыдущие фото' %}" hidden>{% icon "chevron-left" %}</button>
+      <button class="carousel__btn carousel__btn--next" type="button" data-carousel-next aria-label="{% translate 'Следующие фото' %}" hidden>{% icon "chevron-right" %}</button>
     </div>
   </div>
 </section>
@@ -113,3 +141,4 @@
 {% include "includes/lead_section.html" %}
 
 {% endblock %}
+{% block extra_js %}<script src="{% static 'js/cylinder_config.js' %}" defer></script>{% endblock %}

@@ -39,3 +39,13 @@ COMPANY = {
         {"name": "Instagram", "url": "https://www.instagram.com/temirgidro/", "icon": "instagram"},
     ],
 }
+
+# The engineer for cylinders and power units: his phone and e-mail on those two pages
+# and in their PDFs (catalog, questionnaire) instead of the main line.
+HYDRAULICS_CONTACT = {
+    "name": _("Валерий Косолапов"),
+    "name_dative": _("Валерию Косолапову"),  # «позвоните Валерию Косолапову»
+    "phone": "+7 (920) 552-20-02",
+    "phone_href": "+79205522002",
+    "email": "vk@temir.ru",
+}

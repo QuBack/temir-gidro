@@ -12,3 +12,6 @@ venv/
 # Raw server responses and KillBot cookies from the SEO audit
 /temir-gidro.ru-audit/raw/
 /backups/
+
+# Local working files: generated images, exports for other sites
+output/

@@ -6,13 +6,22 @@
     <div class="lead__text">
       <h2 id="lead-heading">{% translate "Рассчитаем стоимость за 24 часа" %}</h2>
       <p>{% translate "Цена зависит от конструкции, поэтому мы считаем её под задачу. Для расчёта напишите:" %}</p>
-      <dl class="params">
+      <dl class="params{% if lead_params %} params--wide{% endif %}">
+        {% if lead_params %}
+        {% for key, text in lead_params %}<div><dt>{{ key }}</dt><dd>{{ text }}</dd></div>{% endfor %}
+        {% else %}
         <div><dt>L × B</dt><dd>{% translate "длину и ширину платформы" %}</dd></div>
         <div><dt>H</dt><dd>{% translate "высоту подъёма" %}</dd></div>
         <div><dt>Q</dt><dd>{% translate "грузоподъёмность" %}</dd></div>
         <div><dt>{% translate "Где" %}</dt><dd>{% translate "место установки и условия работы" %}</dd></div>
+        {% endif %}
       </dl>
+      {% if contact %}
+      <p class="lead__phone">{% blocktranslate with name=contact.name_dative %}Или позвоните {{ name }}:{% endblocktranslate %} <a href="tel:{{ contact.phone_href }}">{{ contact.phone }}</a></p>
+      <p class="lead__phone">{% translate "Или напишите:" %} <a href="mailto:{{ contact.email }}">{{ contact.email }}</a></p>
+      {% else %}
       <p class="lead__phone">{% translate "Или позвоните:" %} <a href="tel:{{ company.phone_href }}">{{ company.phone }}</a></p>
+      {% endif %}
     </div>
     <div class="lead__form">
       {% include "includes/lead_form.html" %}

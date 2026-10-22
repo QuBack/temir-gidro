@@ -117,7 +117,9 @@ STORAGES = {
     # Hashed file names + gzip/brotli → static can be cached "forever".
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
 }
-WHITENOISE_MAX_AGE = 31536000
+# In development the names aren't hashed, so a year-long cache would keep stale JS and CSS.
+WHITENOISE_MAX_AGE = 0 if DEBUG else 31536000
+WHITENOISE_MIMETYPES = {".glb": "model/gltf-binary"}  # 3D models of the lifts
 
 # --- Security -------------------------------------------------------------------
 SESSION_COOKIE_HTTPONLY = True
@@ -138,13 +140,19 @@ if not DEBUG:
 
 # Yandex.Metrika needs its script host, its pixel/collect endpoints and webvisor
 # frames; everything else is first-party. No inline scripts at all.
+# The 3D viewer (static/vendor/model-viewer) decodes Draco meshes with WebAssembly in a
+# worker started from a blob: URL, hands the model's textures over as blob: URLs and
+# styles its shadow DOM with one fixed <style> block, allowed by its hash
+# (tests/test_models.py recomputes it from the vendored file: update both on upgrade).
 _METRIKA = ["https://mc.yandex.ru", "https://mc.yandex.com", "https://yastatic.net"]
+MODEL_VIEWER_STYLE_HASH = "'sha256-F7kvx28zBT3UUQL/hTOYst+55RSmqyCY3muSCYmt6A4='"
 SECURE_CSP = {
     "default-src": [CSP.SELF],
-    "script-src": [CSP.SELF, *_METRIKA],
-    "style-src": [CSP.SELF],
-    "img-src": [CSP.SELF, "data:", *_METRIKA],
-    "connect-src": [CSP.SELF, *_METRIKA],
+    "script-src": [CSP.SELF, CSP.WASM_UNSAFE_EVAL, *_METRIKA],
+    "worker-src": [CSP.SELF, "blob:"],
+    "style-src": [CSP.SELF, MODEL_VIEWER_STYLE_HASH],
+    "img-src": [CSP.SELF, "data:", "blob:", *_METRIKA],
+    "connect-src": [CSP.SELF, "blob:", *_METRIKA],
     "frame-src": [*_METRIKA, "https://yandex.ru"],  # Yandex Maps widget on the contacts page
     "font-src": [CSP.SELF],
     "form-action": [CSP.SELF],
@@ -177,6 +185,19 @@ INDEXNOW_KEY = env("INDEXNOW_KEY", default="")
 # --- Leads -------------------------------------------------------------------------
 TELEGRAM_BOT_TOKEN = env("TELEGRAM_BOT_TOKEN", default="")
 TELEGRAM_CHAT_ID = env("TELEGRAM_CHAT_ID", default="")
+# Every lead is in the admin; with a mail server and recipients it is also mailed to them.
+# temir.ru is on Mail.ru: smtp.mail.ru, port 465 (SSL), the mailbox and its app password. No password — no mail.
+EMAIL_HOST = env("EMAIL_HOST", default="")
+EMAIL_PORT = env.int("EMAIL_PORT", default=465)
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
+EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL", default=EMAIL_PORT == 465)
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=EMAIL_PORT == 587)
+EMAIL_TIMEOUT = 15
+# Most servers only send from the mailbox you log in with.
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default=EMAIL_HOST_USER or "webmaster@localhost")
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+LEAD_NOTIFY_EMAILS = env.list("LEAD_NOTIFY_EMAILS", default=[])
 # Behind Caddy/nginx the client IP comes from X-Forwarded-For.
 USE_X_FORWARDED_FOR = env.bool("USE_X_FORWARDED_FOR", default=False)
 LEAD_MIN_FILL_SECONDS = env.int("LEAD_MIN_FILL_SECONDS", default=3)

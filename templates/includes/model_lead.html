@@ -10,7 +10,12 @@ are just a hint and the visitor types the values.
   <div class="container lead">
     <div class="lead__text" data-model-params data-model-name="{{ model.title }}">
       <h2 id="lead-heading">{% blocktranslate with name=model.name %}Рассчитаем {{ name }} под ваш объект{% endblocktranslate %}</h2>
+      {% if config_stroke %}
+      <p>{% translate "Параметры из схемы выше попадут в заявку. Пришлём цену, чертёж и сроки в течение суток." %}</p>
+      {% else %}
       <p>{% translate "Задайте параметры — они попадут в заявку. Пришлём цену, чертёж и сроки в течение суток." %}</p>
+      {% endif %}
+      {% if not config_stroke %}
       <div class="model-params">
         {% for name, label, letter, min, max, step, value, unit in model.sliders %}
         <div class="range">
@@ -20,6 +25,7 @@ are just a hint and the visitor types the values.
         </div>
         {% endfor %}
       </div>
+      {% endif %}
       <p class="lead__phone">{% translate "Или позвоните:" %} <a href="tel:{{ company.phone_href }}">{{ company.phone }}</a></p>
     </div>
     <div class="lead__form">

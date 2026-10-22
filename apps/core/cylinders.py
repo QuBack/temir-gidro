@@ -2,7 +2,7 @@
 
 from django.utils.translation import gettext_lazy as _
 
-from .catalog import CYLINDERS, FAQ
+from .catalog import CYLINDERS, FAQ, img
 
 PAGE = {
     "title": _("Гидроцилиндры на заказ"),
@@ -16,14 +16,14 @@ PAGE = {
         "от расчёта нагрузок до испытаний и покраски."
     ),
     "image": CYLINDERS["image"],
-    # Set in ГОСТ lettering, as on the equipment pages.
+    # Key figures on the red first screen: (value, unit, label).
     "facts": [
-        (_("40–250 мм"), _("Диаметр поршня")),
-        (_("до 3000 мм"), _("Ход поршня")),
-        (_("до 32 МПа"), _("Давление")),
-        (_("24 ч"), _("Расчёт")),
+        ("40–250", _("мм"), _("диаметр поршня")),
+        (_("до 3000"), _("мм"), _("ход поршня")),
+        (_("до 32"), _("МПа"), _("рабочее давление")),
+        ("24", _("ч"), _("на расчёт стоимости")),
     ],
-    # (title, text, icon)
+    # (title, text, where used, scheme) — the scheme is a line drawing from includes/cylinder_type.html.
     "types": [
         (
             _("Разборные"),
@@ -31,7 +31,8 @@ PAGE = {
                 "Корпус стянут соединительными шпильками: цилиндр легко разобрать, заменить уплотнения "
                 "и обслужить без резки и сварки."
             ),
-            "wrench",
+            _("Станки, прессы, стационарное оборудование"),
+            "tie-rod",
         ),
         (
             _("Сварные"),
@@ -39,7 +40,8 @@ PAGE = {
                 "Цельная сварная конструкция для тяжёлых условий: промышленное оборудование, спецтехника, "
                 "высокие нагрузки и удары."
             ),
-            "factory",
+            _("Спецтехника, подъёмники, тяжёлые нагрузки"),
+            "welded",
         ),
         (
             _("Телескопические"),
@@ -47,7 +49,8 @@ PAGE = {
                 "Многоступенчатые цилиндры с увеличенным рабочим ходом при малой длине в сложенном виде: "
                 "строительная и складская техника, сельское хозяйство."
             ),
-            "layers",
+            _("Самосвалы, платформы, сельхозтехника"),
+            "telescopic",
         ),
     ],
     # (title, text, icon) — the production route.
@@ -59,19 +62,27 @@ PAGE = {
         (_("Испытания"), _("100% контроль: гидравлические испытания каждого цилиндра."), "gauge"),
         (_("Покраска и отгрузка"), _("Окрашиваем и отправляем в любой регион России."), "truck"),
     ],
+    # (label, value, letter on the drawing or "").
     "specs": [
-        (_("Диаметр поршня, мм"), "40–250"),
-        (_("Диаметр штока, мм"), "20–180"),
-        (_("Полный ход поршня, мм"), "50–3000"),
-        (_("Рабочее давление, МПа"), "16–32"),
-        (_("Тип конструкции"), _("сварные, разборные, телескопические")),
-        (_("Тип присоединения"), _("цапфа, фланец, гайка")),
+        (_("Диаметр поршня, мм"), "40–250", "D"),
+        (_("Диаметр штока, мм"), "20–180", "d"),
+        (_("Полный ход поршня, мм"), "50–3000", "S"),
+        (_("Рабочее давление, МПа"), "16–32", "P"),
+        (_("Тип конструкции"), _("сварные, разборные, телескопические"), ""),
+        (_("Тип присоединения"), _("цапфа, фланец, гайка"), ""),
     ],
     "photos": CYLINDERS["photos"],
     "order": [
         _("Чертёж в DWG или PDF"),
         _("Фото образца с размерами"),
         _("Техническое задание: усилие, ход, давление, присоединение"),
+    ],
+    # What to write in the lead form, instead of the lifts' L × B, H, Q.
+    "lead_params": [
+        ("D × S", _("диаметр поршня и ход")),
+        ("P", _("рабочее давление или усилие")),
+        (_("Тип"), _("конструкцию и крепление: цапфа, фланец, проушина")),
+        (_("Шт."), _("количество и где будет работать")),
     ],
     "faq": [
         (
@@ -98,4 +109,67 @@ PAGE = {
         FAQ[2],
         FAQ[4],
     ],
+}
+
+# The client's catalog of standard cylinders (2026-10), offered for download from the configurator.
+CATALOG_PDF = "docs/katalog-gidrocilindrov-temir-gidro.pdf"
+CATALOG_COVER = img("catalog/katalog-gidrocilindrov", (560, 792), widths=(280, 560))
+# Behind the configurator: burgundy, light-red cylinder drawings at the edges (generated, Codex, 2026).
+CONFIG_BG = img("backgrounds/chertezh-gidrocilindrov-bordo", (1672, 941), widths=(768, 1280, 1672))
+# Behind the request form: a cylinder drawn in isometric on the right (generated, Codex, 2026);
+# it replaces the lift drawing of the other pages.
+LEAD_BG = img("backgrounds/chertezh-gidrocilindra-zayavka", (1672, 941), widths=(768, 1280, 1672))
+
+# Configurator data: ISO 3320 piston cylinders, nominal 16 MPa, from the catalog's dimension tables
+# (pp. 2–13). One column per bore; None where the mounting has no such size. Forces are computed
+# from the areas (static/js/cylinder_config.js): the catalog's force table has misprints.
+CONFIG = {
+    "bores": [32, 40, 50, 63, 80, 100, 125, 160, 200, 250],
+    "rods": [[16], [22, 28], [28, 36], [36, 45], [45, 56], [56, 70], [70, 90], [90, 110], [110, 140], [140, 180]],
+    "W": [40, 50, 60, 75, 95, 115, 145, 185, 230, 298],  # tube outer diameter, mm
+    "X": ["G 1/4", "G 3/8", "G 3/8", "G 1/2", "G 1/2", "G 3/4", "G 3/4", "G 1", "G 1 1/4", "G 1 1/4"],  # ports
+    "Y": ["M12×1,25", "M16×1,5", "M20×1,5", "M27×2", "M33×2", "M42×2", "M52×2", "M68×3", "M90×3", "M110×3"],
+    "B": [30, 35, 41, 48, 59, 70, 80, 100, 125, 150],  # rod out of the head when retracted, mm
+    "pressure_max": 16,
+    "stroke": {"min": 50, "max": 3000, "step": 10, "value": 400},
+    # code: name, A (retracted length minus the stroke), the mounting's own sizes, rods for the 250 bore.
+    "mounts": {
+        "MF3": {
+            "name": _("Передний круглый фланец"),
+            "A": [106, 126, 136, 149, 168, 189, 203, 255, 297, None],
+            "O": [80, 100, 125, 145, 170, 202, 250, 320, 330, None],  # flange diameter
+            "C": [15, 17, 20, 24, 28, 34, 40, 54, 65, None],  # flange thickness
+        },
+        "MF4": {
+            "name": _("Задний круглый фланец"),
+            "A": [108, 133, 142, 155, 178, 197, 211, 263, 306, 345],
+            "O": [80, 100, 125, 145, 170, 202, 250, 320, 385, 440],
+            "C": [10, 13, 15, 18, 22, 25, 30, 38, 42, 55],
+        },
+        "MP3": {
+            "name": _("Задняя проушина"),
+            "A": [106, 126, 136, 149, 168, 189, 203, 255, 297, 338],
+            "C": [16, 20, 25, 32, 40, 50, 60, 80, 100, 120],  # pin diameter
+            "rods250": [140],
+        },
+        "MP5": {
+            "name": _("Задняя проушина с шарнирным подшипником"),
+            "A": [106, 126, 136, 149, 168, 189, 203, 255, 297, 338],
+            "C": [19, 23, 28, 30, 35, 40, 50, 60, 70, 80],
+        },
+        "MT4": {
+            "name": _("Промежуточные цапфы"),
+            "A": [106, 126, 136, 149, 168, 189, 203, 255, 297, 338],
+            "C": [20, 24, 30, 36, 36, 45, 55, 68, 90, 110],  # trunnion diameter
+            "O": [80, 102, 125, 155, 175, 220, 270, 350, 426, 520],  # across the trunnions
+            "rods250": [140],
+        },
+        "MS2": {
+            "name": _("Опоры на лапах"),
+            "A": [106, 126, 136, 149, 168, 189, 203, 255, 297, 338],
+            "R": [31, 39, 44, 54, 65, 77, 90, 118, 145, 175],  # axis above the feet
+            "C": [20, 25, 25, 30, 35, 40, 44, 58, 68, 78],  # foot width along the axis
+            "rods250": [140],
+        },
+    },
 }

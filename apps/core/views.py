@@ -11,8 +11,8 @@ from django.views.generic import TemplateView
 
 from apps.leads.forms import LeadForm
 
-from . import articles, catalog, cylinders, lift_models
-from .company import COMPANY
+from . import articles, catalog, cylinders, lift_models, power_units
+from .company import COMPANY, HYDRAULICS_CONTACT
 from .mixins import BreadcrumbsMixin, SeoMixin
 from .seo import (
     about_page_schema,
@@ -41,7 +41,15 @@ class HomeView(SeoMixin, TemplateView):
             hero_lift=catalog.HERO_LIFT,
             hero_image=catalog.HERO_IMAGE,
             hero_video=catalog.HERO_VIDEO,
-            equipment_tiles=catalog.EQUIPMENT_TILES,
+            equipment_groups=catalog.EQUIPMENT_GROUPS,
+            # Cylinders and power units: their own row of two under the lifts.
+            # Photo cards: the product in the same workshop as the lift series above.
+            hydraulics=[
+                {"title": catalog.CYLINDERS["title"], "url": catalog.CYLINDERS["url"], "photo": True,
+                 "image": catalog.img("catalog/gidrocilindry-v-cehu", (1200, 550), widths=(600, 1200))},
+                {"title": _("Гидростанции"), "url": reverse("core:power_units"), "photo": True,
+                 "image": catalog.img("power-units/gidrostanciya-v-cehu", (1200, 550), widths=(600, 1200))},
+            ],
             cylinders=catalog.CYLINDERS,
             stats=catalog.STATS,
             advantages=catalog.ADVANTAGES,
@@ -106,10 +114,24 @@ class EquipmentView(SeoMixin, BreadcrumbsMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         item = self.item
         image = item["image"]
+        # A showcase line lists its models with their specs: the page is a collection of
+        # products (each described on its own page), not a product itself.
+        showcase = (
+            [{**m, **lift_models.MODELS[(self.kwargs["slug"], m["slug"])]} for m in item["models"]]
+            if item.get("showcase")
+            else []
+        )
         context["jsonld"] = [
             organization_schema(),
             *context.get("jsonld", []),
-            product_schema(
+            collection_schema(
+                item["seo_title"],
+                self.request.path,
+                [(m["title"], m["url"]) for m in showcase],
+                description=item["seo_description"],
+            )
+            if showcase
+            else product_schema(
                 item["title"],
                 item["seo_description"],
                 static(f"img/{image['src']}-{image['widths'][-1]}.webp"),
@@ -117,8 +139,24 @@ class EquipmentView(SeoMixin, BreadcrumbsMixin, TemplateView):
             ),
             faq_schema(item["faq"]),
         ]
+        # A line without serial models is a product page itself: its sections become tabs.
+        sections = [("opisanie", _("Описание"), "about"), ("harakteristiki", _("Характеристики"), "specs"),
+                    ("komplektaciya", _("Комплектация"), "kit")]
+        tabs = [] if item["models"] else [(id_, title) for id_, title, key in sections if item.get(key)]
+        if len(tabs) > 1:
+            tabs.append(("postavka", _("Поставка")))
+        else:
+            tabs = []
         context.update(
             item=item,
+            showcase=showcase,
+            tabs=tabs,
+            delivery=lift_models.DELIVERY,
+            documents=lift_models.DOCUMENTS,
+            # A render too small for the stage gives way to the line's photo. Height is what counts:
+            # the stage fits a render by height, so the narrow car and console renders (300 px tall)
+            # still stand on it.
+            hero_photo=item["image"]["size"][1] < 280 and bool(item.get("about_image")),
             lead_form=LeadForm.for_request(self.request),
             hero_lift=catalog.HERO_LIFT,
             related=[c for c in catalog.CATEGORIES if c["url"] != self.request.path],
@@ -147,7 +185,7 @@ class ModelView(SeoMixin, BreadcrumbsMixin, TemplateView):
         return [
             (_("Подъёмники"), reverse("core:catalog")),
             (self.line["title"], line_url),
-            (self.model["name"], self.request.path),
+            (self.model["title"], self.request.path),
         ]
 
     def get_context_data(self, **kwargs):
@@ -170,6 +208,12 @@ class ModelView(SeoMixin, BreadcrumbsMixin, TemplateView):
         context.update(
             model=model,
             line=self.line,
+            tabs=[
+                ("opisanie", _("Описание")),
+                ("harakteristiki", _("Характеристики")),
+                ("komplektaciya", _("Комплектация")),
+                ("postavka", _("Поставка")),
+            ],
             kit_points=lift_models.kit_points(model),
             kit_overlay=lift_models.kit_overlay(model),
             delivery=lift_models.DELIVERY,
@@ -178,6 +222,11 @@ class ModelView(SeoMixin, BreadcrumbsMixin, TemplateView):
             siblings=[m for m in lift_models.MODELS.values() if m["line"] == model["line"]],
             lead_form=LeadForm.for_request(self.request),
         )
+        # Scissor models get the configurator, started at a stroke that picks this very model
+        # (L 2000, Q 2 t); its button hands the parameters to the model's own request form.
+        stroke = lift_models.CONFIG_STROKE.get(model["name"]) if model["line"] == "nozhnichnye" else None
+        if stroke:
+            context.update(config_stroke=stroke, config_send="#zayavka", hero_lift=catalog.HERO_LIFT)
         return context
 
 
@@ -201,11 +250,52 @@ class CylindersView(SeoMixin, BreadcrumbsMixin, TemplateView):
             *context.get("jsonld", []),
             product_schema(
                 page["title"], page["seo_description"], _image_url(page["image"]), self.request.path,
-                properties=page["specs"],
+                properties=[(label, value) for label, value, _key in page["specs"]],
             ),
             faq_schema(page["faq"]),
         ]
-        context.update(page=page, lead_form=LeadForm.for_request(self.request))
+        context.update(
+            page=page,
+            cyl_config=cylinders.CONFIG,
+            catalog_pdf=cylinders.CATALOG_PDF,
+            catalog_cover=cylinders.CATALOG_COVER,
+            cyl_config_bg=cylinders.CONFIG_BG,
+            lead_bg=cylinders.LEAD_BG,
+            contact=HYDRAULICS_CONTACT,
+            lead_params=page["lead_params"],
+            lead_form=LeadForm.for_request(self.request),
+        )
+        return context
+
+
+class PowerUnitsView(SeoMixin, BreadcrumbsMixin, TemplateView):
+    template_name = "core/power_units.html"
+    seo_title = power_units.PAGE["seo_title"]
+    seo_description = power_units.PAGE["seo_description"]
+
+    def get_breadcrumbs(self):
+        return [(_("Гидростанции"), reverse("core:power_units"))]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        page = power_units.PAGE
+        context["jsonld"] = [
+            organization_schema(),
+            *context.get("jsonld", []),
+            product_schema(page["title"], page["seo_description"], _image_url(page["image"]), self.request.path),
+            faq_schema(page["faq"]),
+        ]
+        context.update(
+            page=page,
+            kit_points=lift_models.kit_points(page),
+            kit_overlay=lift_models.kit_overlay(page),
+            pu_config=power_units.CONFIG,
+            pu_config_bg=power_units.CONFIG_BG,
+            lead_bg=power_units.LEAD_BG,
+            contact=HYDRAULICS_CONTACT,
+            lead_params=page["lead_params"],
+            lead_form=LeadForm.for_request(self.request),
+        )
         return context
 
 
@@ -286,7 +376,6 @@ class AboutView(SeoMixin, BreadcrumbsMixin, TemplateView):
         ]
         context.update(
             lead_form=LeadForm.for_request(self.request),
-            hero_image=catalog.HERO_IMAGE,
             about_bg=catalog.ABOUT_BG,
             page_bg=catalog.ABOUT_HERO_BG,
             stats=catalog.STATS,

@@ -1,10 +1,65 @@
 {% extends "base.html" %}
 {% load i18n static images %}
-{% block body_attrs %} class="overlay"{% endblock %}
+{% block body_attrs %} class="overlay{% if tabs or showcase %} overlay--dark{% endif %}{% if showcase %} page-white{% endif %}"{% endblock %}
 {% block breadcrumbs %}{% endblock %}
 {% block content %}
 
+{% if tabs %}
+{# A product page (one lift, no series): the model page's deep red stage with the render. #}
+<section class="eq-hero model-hero" aria-labelledby="eq-title">
+  {% include "includes/breadcrumbs.html" %}
+  <div class="container model-hero__grid">
+    <div class="model-hero__info">
+      <h1 id="eq-title">{{ item.title }}</h1>
+      <p class="eq-hero__lead">{{ item.lead }}</p>
+    </div>
+    <div class="model-gallery{% if item.views and not hero_photo %} model-gallery--views{% endif %}">
+      <div class="model-gallery__main">
+        {% if hero_photo %}
+        <div class="model-gallery__slide model-gallery__slide--photo">
+          {% picture item.about_image item.about_alt sizes="(min-width: 60rem) 42rem, 90vw" priority=True %}
+        </div>
+        {% else %}
+        <div class="model-gallery__slide{% if item.image.size.0 > item.image.size.1 %} model-gallery__slide--wide model-gallery__slide--wide-lg{% endif %}{% if item.mast_left %} mast-left{% endif %}" data-hero-slide>
+          {% picture item.image item.title sizes="(min-width: 60rem) 42rem, 90vw" priority=True %}
+        </div>
+        {% for image, alt in item.views %}
+        <div class="model-gallery__slide" data-hero-slide hidden>
+          {% picture image alt sizes="(min-width: 60rem) 42rem, 90vw" %}
+        </div>
+        {% endfor %}
+        {% endif %}
+      </div>
+      {% if item.views and not hero_photo %}
+      {# The views as small cut-outs beside the render: a click puts that view on the stage (site.js). #}
+      <ul class="hero-views" data-hero-views>
+        <li><button class="hero-views__item is-active{% if item.mast_left %} mast-left{% endif %}" type="button" aria-pressed="true">{% picture item.image item.title sizes="6rem" %}</button></li>
+        {% for image, alt in item.views %}
+        <li><button class="hero-views__item" type="button" aria-pressed="false">{% picture image alt sizes="6rem" %}</button></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% elif showcase %}
+{# A line with a model showcase: the red stage without a render, the title in the middle; the models follow. #}
+<section class="eq-hero model-hero line-hero{% if item.hero_backdrop %} line-hero--backdrop{% endif %}" aria-labelledby="eq-title">
+  {% include "includes/breadcrumbs.html" %}
+  {% if item.hero_backdrop %}<div class="line-hero__backdrop" aria-hidden="true">{% picture item.hero_backdrop "" sizes="(min-width: 60rem) 60vw, 100vw" priority=True %}</div>{% endif %}
+  <div class="container line-hero__text">
+    <h1 class="hero__title" id="eq-title">{{ item.title }}</h1>
+    <p class="hero__lead">{{ item.lead }}</p>
+    <div class="hero__actions">
+      <a class="btn btn--primary" href="#raschet">{% translate "Оставить заявку" %}</a>
+      <a class="hero__phone" href="tel:{{ company.phone_href }}">{{ company.phone }}</a>
+    </div>
+    {% if item.configurator %}<a class="eq-hero__link" href="#podbor">{% translate "Подобрать размеры на схеме" %}</a>{% endif %}
+  </div>
+</section>
+{% else %}
 <section class="eq-hero" aria-labelledby="eq-title">
+  {% include "includes/breadcrumbs.html" %}
   <div class="container eq-hero__grid">
     <div class="eq-hero__text">
       <h1 id="eq-title">{{ item.title }}</h1>
@@ -28,24 +83,28 @@
     </figure>
   </div>
 </section>
-{# Crumbs go under the first section, so the page opens with its heading. #}
-{% include "includes/breadcrumbs.html" %}
+{% endif %}
+
+{% if tabs %}<div class="tabs" data-tabs>
+{% include "includes/tabs_bar.html" with bar_title=item.title bar_image=item.image bar_cta="#raschet" %}
+<div class="tabs__panels" data-tabs-panels>{% endif %}
 
 {% if item.about %}
-<section class="section" aria-labelledby="about-title">
+<section class="section" id="opisanie" aria-labelledby="about-title"{% if tabs %} data-tab-panel{% endif %}>
   <div class="container eq-about">
     <div class="prose">
       <h2 id="about-title">{{ item.about_title }}</h2>
       {% for p in item.about %}<p>{{ p }}</p>{% endfor %}
       <a class="btn btn--primary" href="#raschet">{% translate "Рассчитать под мой объект" %}</a>
     </div>
-    <figure class="eq-about__photo"><a class="zoom" href="{% image_url item.about_image %}" data-zoom="scenes">{% picture item.about_image item.about_alt sizes="(min-width: 60rem) 45vw, 100vw" %}</a></figure>
+    <figure class="eq-about__photo{% if item.about_plain %} eq-about__photo--plain{% endif %}"><a class="zoom" href="{% image_url item.about_image %}" data-zoom="scenes">{% picture item.about_image item.about_alt sizes="(min-width: 60rem) 55vw, 100vw" %}</a></figure>
   </div>
+  {% if item.scenes_3d %}{% include "includes/model3d.html" with scenes=item.scenes_3d %}{% endif %}
 </section>
 {% endif %}
 
 {% if item.specs %}
-<section class="section section--grey section--drawing" aria-labelledby="specs-title">
+<section class="section section--grey section--drawing" id="harakteristiki" aria-labelledby="specs-title"{% if tabs %} data-tab-panel{% endif %}>
   <div class="section-bg" aria-hidden="true">{% picture specs_bg "" sizes="100vw" %}</div>
   <div class="container eq-specs">
     <div class="section-head">
@@ -63,7 +122,7 @@
 {% endif %}
 
 {% if item.kit %}
-<section class="section" aria-labelledby="kit-title">
+<section class="section" id="komplektaciya" aria-labelledby="kit-title"{% if tabs %} data-tab-panel{% endif %}>
   <div class="container">
     <div class="section-head">
       <h2 id="kit-title">{% translate "Стандартная комплектация" %}</h2>
@@ -83,7 +142,91 @@
 </section>
 {% endif %}
 
-{% if item.models %}
+{% if tabs %}
+{% include "includes/delivery_tab.html" %}
+</div>
+</div>{% endif %}
+
+{% if showcase %}
+{# One block per model, render and specs side by side, alternating; each model's H2 carries its search query. #}
+{% for m in showcase %}
+<article class="lineup{% if forloop.counter|divisibleby:2 %} section--grey lineup--alt{% endif %}" id="seriya-{{ m.slug }}" aria-labelledby="model-{{ m.slug }}">
+  <div class="container lineup__grid">
+    <figure class="sheet lineup__sheet">
+      <div class="lineup__drawing">
+        {% picture m.image m.images.0.alt sizes="(min-width: 60rem) 34rem, 90vw" %}
+      </div>
+    </figure>
+    <div class="lineup__copy">
+      <h2 id="model-{{ m.slug }}">{{ m.title }}</h2>
+      <p class="lineup__text">{{ m.text }}</p>
+      <dl class="lineup__specs">
+        {% for icon_name, label, value, unit in m.summary %}
+        <div><dt>{% icon icon_name %}{{ label }}</dt><dd>{{ value }} <span>{{ unit }}</span></dd></div>
+        {% endfor %}
+      </dl>
+      <div class="lineup__actions">
+        <a class="btn btn--primary" href="{{ m.url }}">{% blocktranslate with name=m.name %}Подробнее о модели {{ name }}{% endblocktranslate %}</a>
+        <a class="lineup__link" href="#raschet">{% translate "Запросить расчёт" %}</a>
+      </div>
+    </div>
+  </div>
+</article>
+{% endfor %}
+
+<section class="section" id="sravnenie" aria-labelledby="compare-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="compare-title">{{ item.compare_title }}</h2>
+      <p class="section-head__lead">{{ item.models_lead }}</p>
+    </div>
+    <div class="compare-scroll">
+      <table class="compare">
+        <caption class="visually-hidden">{% blocktranslate with name=item.title %}{{ name }}: сравнение характеристик моделей{% endblocktranslate %}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{% translate "Модель" %}</th>
+            <th scope="col">{% translate "Пар ножниц" %}</th>
+            {% for icon_name, label, value, unit in showcase.0.summary %}<th scope="col">{{ label }}, {{ unit }}</th>{% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for m in showcase %}
+          <tr>
+            <th scope="row"><a href="{{ m.url }}">{{ m.name }}</a></th>
+            <td>{{ m.pairs }}</td>
+            {% for icon_name, label, value, unit in m.summary %}<td>{{ value }}</td>{% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="compare__note">{% translate "Диапазоны серийного исполнения. Максимумы разных параметров относятся к разным исполнениям: высоту, нагрузку и платформу рассчитываем вместе под ваш объект." %}</p>
+  </div>
+</section>
+
+<section class="section section--grey" id="dlya-rascheta" aria-labelledby="brief-title">
+  <div class="container brief">
+    <div class="brief__head">
+      <h2 id="brief-title">{{ item.brief_title }}</h2>
+      <p>{{ item.brief_text }}</p>
+      <div class="lineup__actions">
+        <a class="btn btn--primary" href="#raschet">{% translate "Отправить параметры" %}</a>
+        {% if item.configurator %}<a class="lineup__link" href="#podbor">{% translate "Подобрать размеры на схеме" %}</a>{% endif %}
+      </div>
+    </div>
+    <ul class="brief__list">
+      {% for title, text, icon_name in item.brief %}
+      <li>
+        <span class="reasons__icon">{% icon icon_name %}</span>
+        <h3>{{ title }}</h3>
+        <p>{{ text }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% elif item.models %}
 <section class="section" id="serii" aria-labelledby="series-title">
   <div class="container">
     <div class="section-head">
@@ -108,8 +251,6 @@
 </section>
 {% endif %}
 
-{% if item.configurator %}{% include "includes/lift_config.html" %}{% endif %}
-
 <section class="section" aria-labelledby="apps-title">
   <div class="container reasons">
     <h2 id="apps-title">{% translate "Где применяют" %}</h2>
@@ -125,8 +266,11 @@
   </div>
 </section>
 
+{# The console lift's configurator follows its uses; the scissor one closes the page (below). #}
+{% if item.configurator == "console" %}{% include "includes/console_config.html" with fallback=item.image %}{% endif %}
+
 {% if item.scenes %}
-<section class="section section--grey" aria-labelledby="scenes-title">
+<section class="section section--grey section--flat" aria-labelledby="scenes-title">
   <div class="container">
     <div class="section-head">
       <h2 id="scenes-title">{{ item.scenes_title }}</h2>
@@ -150,7 +294,7 @@
   </div>
 </section>
 
-{% include "includes/lead_section.html" %}
+{% if not item.configurator %}{% include "includes/lead_section.html" %}{% endif %}
 
 <section class="section section--grey" aria-labelledby="related-title">
   <div class="container">
@@ -170,6 +314,15 @@
   </div>
 </section>
 
+{# The configurator closes the page, right above the form it fills in. #}
+{% if item.configurator == "console" %}
+{% include "includes/lead_section.html" %}
+{% elif item.configurator %}
+{% include "includes/lift_config.html" %}
+{% include "includes/lead_section.html" %}
+{% endif %}
+
 {% endblock %}
 
-{% block extra_js %}<script src="{% static 'js/drawings.js' %}" defer></script>{% endblock %}
+{% block extra_js %}{% if tabs %}<script src="{% static 'js/tabs.js' %}" defer></script>{% endif %}<script src="{% static 'js/drawings.js' %}" defer></script>
+{% if item.scenes_3d %}<script src="{% static 'js/model3d.js' %}" data-viewer="{% static 'vendor/model-viewer/model-viewer.min.js' %}" data-draco="{% get_static_prefix %}vendor/draco/" defer></script>{% endif %}{% endblock %}

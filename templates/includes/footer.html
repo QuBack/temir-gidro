@@ -16,6 +16,7 @@
         <p class="site-footer__title">{% translate "Компания" %}</p>
         <ul>
           <li><a href="/gidrocilindry/">{% translate "Гидроцилиндры" %}</a></li>
+          <li><a href="{% url 'core:power_units' %}">{% translate "Гидростанции" %}</a></li>
           <li><a href="/stati/">{% translate "Статьи" %}</a></li>
           <li><a href="{% url 'core:about' %}">{% translate "О компании" %}</a></li>
           {# «Доставка и оплата» returns once the client sends the terms (see todo.md). #}

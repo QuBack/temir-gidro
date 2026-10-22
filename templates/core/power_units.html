@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% load i18n static images %}
+{% block body_attrs %} class="overlay overlay--dark"{% endblock %}
+{% block breadcrumbs %}{% endblock %}
+{% block content %}
+
+{# The red stage with the unit on the right, the figures under it (as on the cylinders page). #}
+<section class="eq-hero model-hero cyl-hero" aria-labelledby="pu-title">
+  {% include "includes/breadcrumbs.html" %}
+  <div class="container model-hero__grid">
+    <div class="model-hero__info">
+      <h1 id="pu-title">{{ page.title }}</h1>
+      <p class="eq-hero__lead">{{ page.lead }}</p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="#podbor">{% translate "Подобрать станцию" %}</a>
+        <a class="hero__phone" href="tel:{{ contact.phone_href }}">{{ contact.phone }}</a>
+      </div>
+    </div>
+    <div class="model-gallery">
+      <div class="model-gallery__main">
+        <div class="model-gallery__slide">
+          {% picture page.image page.image_alt sizes="(min-width: 60rem) 42rem, 90vw" priority=True %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <dl class="cyl-facts cyl-facts--five">
+      {% for value, unit, label in page.facts %}<div><dt>{{ label }}</dt><dd>{{ value }} <span>{{ unit }}</span></dd></div>{% endfor %}
+    </dl>
+  </div>
+</section>
+
+{# Purposes as chips: a click leaves the types for that purpose (power_unit_config.js); without JS all show. #}
+<section class="section" aria-labelledby="types-title" data-pu-filter>
+  <div class="container">
+    <div class="section-head">
+      <h2 id="types-title">{% translate "Какие станции делаем" %}</h2>
+      <p class="section-head__lead">{% translate "Исполнение подбираем по давлению, расходу и месту установки. Выберите, для чего нужна станция:" %}</p>
+    </div>
+    <div class="pu-chips" role="group" aria-label="{% translate 'Для какого оборудования' %}">
+      <button class="pu-chip is-active" type="button" data-purpose="" aria-pressed="true">{% translate "Все" %}</button>
+      {% for key, label in page.purposes %}<button class="pu-chip" type="button" data-purpose="{{ key }}" aria-pressed="false">{{ label }}</button>{% endfor %}
+    </div>
+    <ul class="pu-types">
+      {% for title, text, image, specs, purposes in page.types %}
+      <li class="pu-type" data-purposes="{{ purposes|join:' ' }}">
+        <div class="pu-type__media">{% picture image title sizes="(min-width: 60rem) 24rem, (min-width: 40rem) 45vw, 90vw" %}</div>
+        <div class="pu-type__copy">
+          <h3>{{ title }}</h3>
+          <p>{{ text }}</p>
+          <dl class="pu-type__specs">{% for label, value in specs %}<div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>{% endfor %}</dl>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+{# The kit on the unit with callouts: the model pages' block (model.js lights a marker and its line together). #}
+<section class="section section--grey" aria-labelledby="kit-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="kit-title">{% translate "Из чего состоит гидростанция" %}</h2>
+      <p class="section-head__lead">{% translate "Наведите на пункт списка — покажем узел на станции." %}</p>
+    </div>
+    <div class="kit">
+      <figure class="kit__figure">
+        <div class="kit__canvas">
+          {% picture page.kit_image page.image_alt sizes="(min-width: 60rem) 40rem, 90vw" %}
+          <svg class="kit__overlay" viewBox="0 0 {{ kit_overlay.w }} {{ kit_overlay.h }}" aria-hidden="true">
+            {% for p in kit_points %}{% if p.pos %}
+            <g class="kit__marker" data-kit-marker="{{ forloop.counter }}">
+              <circle cx="{{ p.pos.0 }}" cy="{{ p.pos.1 }}" r="{{ kit_overlay.r }}"></circle>
+              <use href="{% static 'img/icons.svg' %}#{{ p.icon }}" x="{{ p.pos.0|add:kit_overlay.ix }}" y="{{ p.pos.1|add:kit_overlay.ix }}" width="{{ kit_overlay.is }}" height="{{ kit_overlay.is }}"></use>
+            </g>
+            {% endif %}{% endfor %}
+          </svg>
+        </div>
+      </figure>
+      <ol class="kit__list">
+        {% for p in kit_points %}
+        <li class="kit__item" data-kit-item="{{ forloop.counter }}">
+          <span class="kit__icon" aria-hidden="true">{% icon p.icon %}</span>
+          <h3>{{ p.title }}</h3>
+          <p>{{ p.text }}</p>
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+</section>
+
+{% include "includes/power_unit_config.html" %}
+
+{# No spec yet: the questionnaire, online through the form or as a PDF to fill in. #}
+<section class="section" aria-labelledby="quest-title">
+  <div class="container pu-quest">
+    <div>
+      <h2 id="quest-title">{% translate "Нет ТЗ? Заполните опросный лист" %}</h2>
+      <p class="pu-quest__lead">{% translate "Ответьте на несколько вопросов — соберём станцию под задачу. Можно прямо в форме внизу страницы или скачать лист и прислать на почту." %}</p>
+      <ul class="checklist">{% for q in page.questionnaire %}<li>{{ q }}</li>{% endfor %}</ul>
+    </div>
+    <a class="cyl-catalog pu-quest__card" href="{% static page.questionnaire_pdf %}" download>
+      <span class="pu-quest__sheet" aria-hidden="true">
+        <b>{% translate "Опросный лист" %}</b>
+        {% for q in page.questionnaire %}<i></i>{% endfor %}
+      </span>
+      <span class="cyl-catalog__text">
+        <b>{% translate "Опросный лист на гидростанцию" %}</b>
+        <span>{% translate "PDF, одна страница. Заполните и пришлите — посчитаем за 24 часа." %}</span>
+        <span class="cyl-catalog__link">{% icon "file-down" %} {% translate "Скачать PDF" %}</span>
+      </span>
+    </a>
+  </div>
+</section>
+
+{# The same units work in our lifts: the whole system from one maker. #}
+<section class="section section--grey" aria-labelledby="uses-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="uses-title">{% translate "Работают в нашем оборудовании" %}</h2>
+      <p class="section-head__lead">{% translate "Такие станции стоят в наших подъёмниках и приводят наши гидроцилиндры — систему можно заказать целиком." %}</p>
+    </div>
+    <ul class="lift-tiles lift-tiles--fit">
+      {% for title, url, image in page.uses %}
+      <li>
+        <a class="lift-tile" href="{{ url }}">
+          <div class="lift-tile__media">{% picture image title sizes="(min-width: 60rem) 22vw, 45vw" %}</div>
+          <div class="lift-tile__desc"><h3>{{ title }}</h3></div>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="cycle-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="cycle-title">{% translate "Как делаем" %}</h2>
+      <p class="section-head__lead">{% translate "От опросного листа до испытаний и отгрузки — на нашем производстве." %}</p>
+    </div>
+    <ol class="route">
+      {% for title, text, icon_name in page.steps %}
+      <li class="route__stop">
+        <span class="route__icon">{% icon icon_name %}</span>
+        <h3>{{ title }}</h3>
+        <p>{{ text }}</p>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+{# Our units from the shop floor: a strip that scrolls sideways, arrows from site.js. #}
+<section class="section section--dark" aria-labelledby="works-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="works-title">{% translate "Наши гидростанции" %}</h2>
+      <p class="section-head__lead">{% translate "Сборка, испытания и установка на объектах." %}</p>
+    </div>
+    <div class="carousel" data-carousel>
+      <ul class="carousel__track carousel__track--wide" data-carousel-track>
+        {% for p, alt in page.photos %}<li class="carousel__item"><a class="zoom" href="{% image_url p %}" data-zoom="works">{% picture p alt sizes="(min-width: 60rem) 24rem, 80vw" %}</a></li>{% endfor %}
+      </ul>
+      <button class="carousel__btn carousel__btn--prev" type="button" data-carousel-prev aria-label="{% translate 'Предыдущие фото' %}" hidden>{% icon "chevron-left" %}</button>
+      <button class="carousel__btn carousel__btn--next" type="button" data-carousel-next aria-label="{% translate 'Следующие фото' %}" hidden>{% icon "chevron-right" %}</button>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="faq-title">
+  <div class="container faq">
+    <h2 id="faq-title">{% translate "Частые вопросы" %}</h2>
+    <div class="faq__list">
+      {% for q, a in page.faq %}
+      <details class="faq__item"{% if forloop.first %} open{% endif %}>
+        <summary><h3>{{ q }}</h3></summary>
+        <p>{{ a }}</p>
+      </details>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% include "includes/lead_section.html" %}
+
+{% endblock %}
+{% block extra_js %}<script src="{% static 'js/model.js' %}" defer></script><script src="{% static 'js/power_unit_config.js' %}" defer></script>{% endblock %}

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>«Как устроен подъёмник» — варианты</title>
+<style>
+  @font-face { font-family: "Sofia Sans Condensed"; font-weight: 400 900; font-display: swap;
+    src: url("../../static/fonts/sofia-sans-condensed-latin.woff2") format("woff2"); }
+  @font-face { font-family: "Onest"; font-weight: 400 700; font-display: swap;
+    src: url("../../static/fonts/onest-cyrillic.woff2") format("woff2"); unicode-range: U+0400-04FF; }
+  @font-face { font-family: "Onest"; font-weight: 400 700; font-display: swap;
+    src: url("../../static/fonts/onest-latin.woff2") format("woff2"); }
+  :root { --red: #c4161c; --ink: #22282b; --muted: #5d6669; --grey: #eef0ef; --line: #dfe3e2;
+    --shadow: 0 1px 3px rgb(34 40 43 / .1), 0 18px 40px -20px rgb(34 40 43 / .45); }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--grey); color: var(--ink); font: 16px/1.6 "Onest", system-ui, sans-serif; }
+  .intro { max-width: 72rem; margin: 0 auto; padding: 2.5rem 1rem 1rem; }
+  .intro h1 { margin: 0 0 .5rem; font: 700 2.5rem/1.1 "Sofia Sans Condensed", sans-serif; }
+  .intro p { margin: 0; max-width: 48rem; color: var(--muted); }
+  .variant { padding: 3.5rem 1rem 4rem; border-top: 1px dashed #c9cecd; }
+  .variant > .wrap { max-width: 72rem; margin: 0 auto; }
+  .tag { display: inline-block; margin-bottom: .75rem; padding: .15rem .6rem; border-radius: 99px; background: var(--ink); color: #fff; font-size: .8125rem; }
+  .note { margin: -.25rem 0 2rem; max-width: 46rem; color: var(--muted); font-size: .9375rem; }
+  h2 { margin: 0 0 1.75rem; font: 700 clamp(1.75rem, 3vw, 2.5rem)/1.1 "Sofia Sans Condensed", sans-serif; }
+  h3 { margin: 0; font: 700 1.5rem/1.15 "Sofia Sans Condensed", sans-serif; }
+  p.t { margin: .6rem 0 0; color: var(--muted); }
+  figure { margin: 0; }
+  .frame { position: relative; overflow: hidden; background: #fff; box-shadow: var(--shadow); }
+  .frame img { display: block; width: 100%; height: 100%; object-fit: contain; }
+  a.zoom { position: absolute; right: .75rem; bottom: .75rem; padding: .3rem .6rem; border-radius: 4px; background: rgb(34 40 43 / .75); color: #fff; font-size: .8125rem; text-decoration: none; }
+
+  /* A: one row, the same height — each picture keeps its shape. */
+  .a-row { display: grid; gap: 1.5rem; }
+  @media (min-width: 60rem) { .a-row { grid-template-columns: .72fr 1.41fr; align-items: start; } }
+  .a-row .frame { aspect-ratio: auto; height: clamp(18rem, 32vw, 30rem); padding: 1rem; }
+  .a-row figure > div:last-child { margin-top: 1.25rem; }
+
+  /* B: two equal cards, a common frame. */
+  .b-row { display: grid; gap: 1.5rem; }
+  @media (min-width: 48rem) { .b-row { grid-template-columns: 1fr 1fr; } }
+  .b-row .frame { aspect-ratio: 4 / 3; padding: 1.25rem; }
+  .b-row figure > div:last-child { margin-top: 1.25rem; }
+
+  /* C: one stage, two tabs. */
+  .c-box { display: grid; gap: 2rem; }
+  @media (min-width: 60rem) { .c-box { grid-template-columns: 1fr 1.6fr; align-items: center; } }
+  .c-tabs { display: flex; gap: .5rem; margin: 1.5rem 0 0; }
+  .c-tabs button { padding: .55rem 1rem; border: 1px solid var(--ink); border-radius: 4px; background: #fff; color: var(--ink); font: 600 .9375rem "Onest", sans-serif; cursor: pointer; }
+  .c-tabs button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+  .c-box .frame { aspect-ratio: 1.41; padding: 1rem; }
+  .c-box .frame img[hidden] { display: none; }
+
+  /* D: the scheme large, the cutaway as a narrow column beside it, one text under both. */
+  .d-grid { display: grid; gap: 1.5rem; }
+  @media (min-width: 60rem) { .d-grid { grid-template-columns: 1fr 2.2fr; } }
+  .d-grid .frame { height: 100%; min-height: 18rem; padding: 1rem; }
+  .d-text { display: grid; gap: 1.5rem; margin-top: 1.75rem; }
+  @media (min-width: 60rem) { .d-text { grid-template-columns: 1fr 2.2fr; } }
+</style>
+</head>
+<body>
+<div class="intro">
+  <h1>Блок «Как устроен подъёмник» — варианты</h1>
+  <p>Страница подъёмника для мусорных контейнеров. Сейчас разрез стоит в квадрате, а схема — во всю ширину, и картинки получаются очень разного размера. Ниже четыре варианта, где они смотрятся как пара. Ширину окна можно менять: на телефоне всё встаёт в колонку.</p>
+</div>
+
+<section class="variant">
+  <div class="wrap">
+    <span class="tag">Вариант A</span>
+    <p class="note">Одна строка, одна высота. Каждая картинка сохраняет свою форму: узкий разрез и широкая схема стоят рядом одной высоты, текст под каждой.</p>
+    <h2>Как устроен подъёмник</h2>
+    <div class="a-row">
+      <figure>
+        <div class="frame"><img src="../../static/img/photos/podemnik-dlya-kontejnerov-v-shahte-800.webp" alt="Шахта в разрезе"></div>
+        <div><h3>Шахта в разрезе</h3><p class="t">Наверху — настил с мусороприёмниками, под ним — платформа с контейнерами. Всё опускается в бетонную шахту; мачта с гидроцилиндром поднимает платформу к приезду мусоровоза.</p></div>
+      </figure>
+      <figure>
+        <div class="frame"><img src="../../static/img/photos/shema-podemnika-dlya-kontejnerov-1200.webp" alt="Схема элементов"><a class="zoom" href="../../static/img/photos/shema-podemnika-dlya-kontejnerov-1200.webp">Увеличить</a></div>
+        <div><h3>Конструкция и управление</h3><p class="t">Усиленная платформа под выбранные контейнеры, гидроцилиндры от маслостанции, электрошкаф в аппаратной части приямка, пульт с обзором рабочей зоны.</p></div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="variant">
+  <div class="wrap">
+    <span class="tag">Вариант B</span>
+    <p class="note">Две одинаковые карточки 4:3. Рамки ровные, но разрез внутри своей рамки выглядит меньше, а легенда схемы — мельче; для схемы есть «Увеличить».</p>
+    <h2>Как устроен подъёмник</h2>
+    <div class="b-row">
+      <figure>
+        <div class="frame"><img src="../../static/img/photos/podemnik-dlya-kontejnerov-v-shahte-800.webp" alt="Шахта в разрезе"></div>
+        <div><h3>Шахта в разрезе</h3><p class="t">Наверху — настил с мусороприёмниками, под ним — платформа с контейнерами. Всё опускается в бетонную шахту.</p></div>
+      </figure>
+      <figure>
+        <div class="frame"><img src="../../static/img/photos/shema-podemnika-dlya-kontejnerov-1200.webp" alt="Схема элементов"><a class="zoom" href="../../static/img/photos/shema-podemnika-dlya-kontejnerov-1200.webp">Увеличить</a></div>
+        <div><h3>Конструкция и управление</h3><p class="t">Платформа, гидроцилиндры, маслостанция и электрошкаф в аппаратной части приямка, пульт с обзором рабочей зоны.</p></div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="variant">
+  <div class="wrap">
+    <span class="tag">Вариант C</span>
+    <p class="note">Одна большая рамка и переключатель «В разрезе / Схема элементов». Обе картинки показываются одного размера и крупно, текст слева меняется вместе с картинкой.</p>
+    <div class="c-box" data-c>
+      <div>
+        <h2>Как устроен подъёмник</h2>
+        <div data-c-text="0"><h3>Шахта в разрезе</h3><p class="t">Наверху — настил с мусороприёмниками, под ним — платформа со стандартными контейнерами. Всё опускается в бетонную шахту, на поверхности остаётся только настил. Мачта с гидроцилиндром поднимает платформу к приезду мусоровоза.</p></div>
+        <div data-c-text="1" hidden><h3>Конструкция и управление</h3><p class="t">Основа — усиленная платформа под выбранные контейнеры. Её поднимают гидроцилиндры от маслостанции; станция и электрошкаф стоят в аппаратной части приямка. Пульт ставят так, чтобы оператор видел всю рабочую зону.</p></div>
+        <div class="c-tabs"><button type="button" aria-pressed="true" data-c-tab="0">В разрезе</button><button type="button" aria-pressed="false" data-c-tab="1">Схема элементов</button></div>
+      </div>
+      <div class="frame">
+        <img data-c-img="0" src="../../static/img/photos/podemnik-dlya-kontejnerov-v-shahte-800.webp" alt="Шахта в разрезе">
+        <img data-c-img="1" src="../../static/img/photos/shema-podemnika-dlya-kontejnerov-1200.webp" alt="Схема элементов" hidden>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="variant">
+  <div class="wrap">
+    <span class="tag">Вариант D</span>
+    <p class="note">Схема — главная и крупная, разрез — узкой колонкой той же высоты слева, как пояснение к ней. Тексты — под своими картинками.</p>
+    <h2>Как устроен подъёмник</h2>
+    <div class="d-grid">
+      <div class="frame"><img src="../../static/img/photos/podemnik-dlya-kontejnerov-v-shahte-800.webp" alt="Шахта в разрезе"></div>
+      <div class="frame"><img src="../../static/img/photos/shema-podemnika-dlya-kontejnerov-1200.webp" alt="Схема элементов"><a class="zoom" href="../../static/img/photos/shema-podemnika-dlya-kontejnerov-1200.webp">Увеличить</a></div>
+    </div>
+    <div class="d-text">
+      <div><h3>Шахта в разрезе</h3><p class="t">Настил с мусороприёмниками сверху, платформа с контейнерами — в шахте.</p></div>
+      <div><h3>Конструкция и управление</h3><p class="t">Платформа, гидроцилиндры, маслостанция и электрошкаф в аппаратной части приямка; пульт с обзором рабочей зоны, по запросу — проводной или радиопульт.</p></div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll("[data-c]").forEach(function (box) {
+    box.querySelectorAll("[data-c-tab]").forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        var i = tab.getAttribute("data-c-tab");
+        box.querySelectorAll("[data-c-tab]").forEach(function (t) { t.setAttribute("aria-pressed", t === tab ? "true" : "false"); });
+        box.querySelectorAll("[data-c-img]").forEach(function (im) { im.hidden = im.getAttribute("data-c-img") !== i; });
+        box.querySelectorAll("[data-c-text]").forEach(function (tx) { tx.hidden = tx.getAttribute("data-c-text") !== i; });
+      });
+    });
+  });
+</script>
+</body>
+</html>
