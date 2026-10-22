@@ -136,3 +136,42 @@ def test_replayed_token_is_spam_but_one_link_is_fine(client, lead_data):
     first, second = Lead.objects.order_by("pk")
     assert first.status == Lead.Status.NEW and first.spam_reason == ""
     assert (second.status, second.spam_reason) == (Lead.Status.SPAM, "token_reused")
+
+
+def test_lead_is_mailed_with_a_link_to_the_admin(settings, mailoutbox):
+    """With a mail server and recipients set, a new lead is mailed; «Ответить» goes to the visitor."""
+    from apps.leads import notifications
+
+    settings.EMAIL_HOST = "smtp.example.com"
+    settings.EMAIL_HOST_PASSWORD = "app-password"
+    settings.LEAD_NOTIFY_EMAILS = ["sales@example.com", "boss@example.com"]
+    settings.DEFAULT_FROM_EMAIL = "site@example.com"
+    settings.SITE_URL = "https://temir.example"
+    lead = Lead.objects.create(name="Иван", phone="+77001234567", email="ivan@example.com",
+                               message="Подъёмник 2X, ход 3 м", source_page="/podemniki/nozhnichnye/")
+    with mock.patch("threading.Thread") as thread:
+        notifications.notify_new_lead(lead)
+    kwargs = thread.call_args.kwargs
+    kwargs["target"](*kwargs["args"])  # run the send in this thread
+
+    (mail,) = mailoutbox
+    assert mail.subject == "Заявка с сайта: Иван, +77001234567"
+    assert mail.to == ["sales@example.com", "boss@example.com"]
+    assert mail.from_email == "site@example.com"
+    assert mail.reply_to == ["ivan@example.com"]
+    assert "Подъёмник 2X, ход 3 м" in mail.body
+    assert f"https://temir.example/{settings.ADMIN_URL}leads/lead/{lead.pk}/change/" in mail.body
+
+
+def test_no_mail_without_a_mail_password(settings, mailoutbox):
+    """The mailbox is set at install, its password by hand: until then the lead stays in the admin only."""
+    from apps.leads import notifications
+
+    settings.EMAIL_HOST = "smtp.mail.ru"
+    settings.EMAIL_HOST_PASSWORD = ""
+    settings.LEAD_NOTIFY_EMAILS = ["sales@example.com"]
+    settings.TELEGRAM_BOT_TOKEN = ""
+    lead = Lead.objects.create(name="Иван", phone="+77001234567")
+    with mock.patch("threading.Thread") as thread:
+        notifications.notify_new_lead(lead)
+    thread.assert_not_called()

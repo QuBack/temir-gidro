@@ -28,6 +28,8 @@
   var data = JSON.parse(document.getElementById("pu-config-data").textContent);
   var ranges = root.querySelectorAll("input[type=range]");
   var warn = root.querySelector("[data-pu-warn]");
+  var okText = warn.textContent;
+  var svg = root.querySelector("[data-pu-svg]");
 
   function out(name, text) {
     root.querySelectorAll('[data-out="' + name + '"]').forEach(function (el) { el.textContent = text; });
@@ -44,6 +46,7 @@
   function read() {
     return {
       voltage: parseInt(root.querySelector('input[name="voltage"]:checked').value, 10),
+      cylinders: parseInt(root.querySelector('input[name="cylinders"]:checked').value, 10),
       load: parseFloat(root.querySelector('input[name="load"]').value),
       bore: parseInt(root.querySelector('input[name="bore"]').value, 10),
       stroke: parseFloat(root.querySelector('input[name="stroke"]').value),
@@ -51,11 +54,12 @@
     };
   }
 
-  // Pressure from the load on the piston, flow from the area and the speed, power from both
+  // Pressure from the load on the pistons, flow from their area and the speed, power from both
   // (N = p × Q / η), the tank about three minutes of flow and never less than the stroke's oil.
+  // Two cylinders (the client's circuit) share the load and take twice the oil.
   function calc(v) {
     var D = data.bores[v.bore];
-    var area = Math.PI * D * D / 4; // mm²
+    var area = v.cylinders * Math.PI * D * D / 4; // mm², all pistons
     var p = v.load * 9810 / area; // MPa
     var speed = v.stroke / v.time; // mm/s
     var q = area * speed * 60 / 1e6; // l/min
@@ -86,6 +90,8 @@
     out("Dd", String(c.D));
     out("S", v.stroke + " мм");
     out("Sd", String(v.stroke));
+    out("Nc", v.cylinders > 1 ? " · " + v.cylinders + " шт" : "");
+    svg.classList.toggle("one-cyl", v.cylinders === 1);
     out("T", v.time + " с");
     out("P", num(c.p)); out("Ps", num(c.p));
     out("Q", num(c.q)); out("Qs", num(c.q));
@@ -99,13 +105,45 @@
     out("Code", [Math.round(c.p), Math.round(c.q), kw(c.motor), c.tank].join("."));
     // What the series can't do yet: said plainly, the figures stay to show how far off it is.
     var notes = [];
-    if (c.over) notes.push("Давление выше " + data.pressure_max + " МПа — возьмите цилиндр большего диаметра.");
-    if (c.tooBig) notes.push("Мощность больше " + kw(data.motors[data.motors.length - 1]) + " кВт — увеличьте время подъёма или рассчитаем индивидуально.");
-    if (c.single) notes.push("От 220 В — моторы до " + kw(data.motor_max_220) + " кВт; для этой станции нужно 380 В.");
-    warn.textContent = notes.join(" ");
-    warn.hidden = !notes.length;
+    if (c.over) notes.push("Давление выше " + data.pressure_max + " МПа — нужен цилиндр большего диаметра.");
+    if (c.tooBig) notes.push("Мощность больше " + kw(data.motors[data.motors.length - 1]) + " кВт — увеличьте время подъёма.");
+    if (c.single) notes.push("От 220 В — моторы до " + kw(data.motor_max_220) + " кВт, здесь нужно 380 В.");
+    // The box stays in place with a hint when all is well: the section keeps its height and the
+    // background behind it does not jump while the sliders move.
+    warn.textContent = notes.length ? notes.join(" ") : okText;
+    warn.classList.toggle("is-warn", notes.length > 0);
     root.classList.toggle("is-over", notes.length > 0);
   }
+
+  // ---------- The circuit: modes and what each element does ----------
+  // Lifting runs the pump and lights the path to the cylinders, the rods go out; lowering opens Р1
+  // and lights the way back to the tank, the rods go in; stop holds them where they are.
+  var modes = root.querySelectorAll("[data-pu-mode]");
+  modes.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var mode = btn.getAttribute("data-pu-mode");
+      svg.setAttribute("data-mode", mode);
+      if (mode !== "stop") svg.classList.toggle("is-out", mode === "up");
+      modes.forEach(function (b) { b.setAttribute("aria-pressed", b === btn ? "true" : "false"); });
+    });
+  });
+  var legend = root.querySelector("[data-pu-legend]");
+  var legendText = legend.textContent;
+  root.querySelectorAll(".pu-el").forEach(function (el) {
+    function show() {
+      legend.textContent = "";
+      var b = document.createElement("b");
+      b.textContent = el.getAttribute("data-name") + ". ";
+      legend.appendChild(b);
+      legend.appendChild(document.createTextNode(el.getAttribute("data-desc")));
+      el.classList.add("is-on");
+    }
+    function hide() { legend.textContent = legendText; el.classList.remove("is-on"); }
+    el.addEventListener("mouseenter", show);
+    el.addEventListener("focus", show);
+    el.addEventListener("mouseleave", hide);
+    el.addEventListener("blur", hide);
+  });
 
   root.addEventListener("input", sync);
   root.addEventListener("change", sync);
@@ -117,7 +155,7 @@
     if (!field) return;
     var v = read(), c = calc(v);
     var line = "Параметры гидростанции: нагрузка " + fixed(v.load, v.load % 1 ? 1 : 0) + " т, цилиндр Ø" + c.D +
-      " мм, ход " + v.stroke + " мм за " + v.time + " с, питание " + v.voltage + " В — давление " + num(c.p) +
+      " мм" + (v.cylinders > 1 ? " × " + v.cylinders : "") + ", ход " + v.stroke + " мм за " + v.time + " с, питание " + v.voltage + " В — давление " + num(c.p) +
       " МПа, подача " + num(c.q) + " л/мин, мотор " + kw(c.motor) + " кВт, бак " + c.tank + " л.";
     var rest = field.value.replace(/^Параметры гидростанции:.*\n?/, "");
     field.value = line + (rest ? "\n" + rest : "");

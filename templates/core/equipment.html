@@ -266,6 +266,9 @@
   </div>
 </section>
 
+{# The console lift's configurator follows its uses; the scissor one closes the page (below). #}
+{% if item.configurator == "console" %}{% include "includes/console_config.html" with fallback=item.image %}{% endif %}
+
 {% if item.scenes %}
 <section class="section section--grey section--flat" aria-labelledby="scenes-title">
   <div class="container">
@@ -312,7 +315,9 @@
 </section>
 
 {# The configurator closes the page, right above the form it fills in. #}
-{% if item.configurator %}
+{% if item.configurator == "console" %}
+{% include "includes/lead_section.html" %}
+{% elif item.configurator %}
 {% include "includes/lift_config.html" %}
 {% include "includes/lead_section.html" %}
 {% endif %}

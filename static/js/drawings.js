@@ -8,6 +8,9 @@
   // ---------- Configurator: sliders redraw a side-view scheme of a scissor lift ----------
 
   function initConfig(root) {
+    // Scissor lifts by default; data-config="console" draws the console lift 1L instead.
+    var kind = root.getAttribute("data-config") === "console" ? CONSOLE : SCISSOR;
+    var calc = kind.calc, draw = kind.draw;
     var svg = root.querySelector("[data-config-svg]");
     var inputs = root.querySelectorAll("input[type=range]");
     var target = {};
@@ -52,7 +55,7 @@
       out("Hs", String(target.H));
       out("Qs", String(Math.round(target.Q * 1000))); // kg: in ГОСТ lettering "т" reads like "m"
       out("N", String(c.n));
-      out("M", c.n + "X"); // the serial model: one pair is 1X, two are 2X…
+      out("M", kind.model(c)); // a scissor model by its pairs (2 pairs → 2X); the console lift is 1L
       out("Code", [target.L, target.B, Math.round(target.Q * 1000), target.H].join("."));
       out("Hmin", String(c.hmin));
       out("Hmax", String(c.hmin + target.H));
@@ -88,7 +91,7 @@
     // and the width slider stops at the length.
     var widthInput = root.querySelector('input[name="B"]');
     function keepWidth() {
-      if (target.B <= target.L) return;
+      if (kind !== SCISSOR || target.B <= target.L) return;
       target.B = target.L;
       widthInput.value = target.L;
     }
@@ -121,9 +124,10 @@
       var field = document.getElementById("lead-message"); // the home, line or model form
       if (!field) return;
       var c = calc(target);
+      var code = [target.L, target.B, Math.round(target.Q * 1000), target.H].join(".");
       var line = "Параметры подъёмника: платформа " + target.L + " × " + target.B + " мм, ход " +
-        target.H + " мм, грузоподъёмность " + tons(target.Q) + " т, модель ТЕМИР ГИДРО " + c.n + "X " +
-        [target.L, target.B, Math.round(target.Q * 1000), target.H].join(".") + " (пар ножниц: " + c.n + ").";
+        target.H + " мм, грузоподъёмность " + tons(target.Q) + " т, модель ТЕМИР ГИДРО " + kind.model(c) + " " +
+        code + (kind === SCISSOR ? " (пар ножниц: " + c.n + ")." : ", в сложенном виде " + c.hmin + " мм.");
       var rest = field.value.replace(/^Параметры подъёмника:.*\n?/, "");
       field.value = line + (rest ? "\n" + rest : "");
       var name = document.getElementById("lead-name");
@@ -319,6 +323,85 @@
     arrow(svg, x1 - 1, ly, "right");
     node(svg, "text", { x: cx, y: ly + 28, "text-anchor": "middle" }, "L = " + Math.round(v.L / 10) * 10);
   }
+
+  // ---------- Console lift 1L (client's ranges, 2026-10) ----------
+  // L 800–2800, B 800–2000, stroke to 12 m, up to 2 t. Folded 200 mm; 150 mm when the load is up
+  // to 600 kg, the platform up to 2200 mm long and up to 1300 mm wide.
+  function calcConsole(v) {
+    var low = v.Q * 1000 <= 600 && v.L <= 2200 && v.B <= 1300;
+    return { n: 1, hmin: low ? 150 : 200, limit: 12000 };
+  }
+
+  // Side view: the mast on the left, the platform on its carriage sticking out to the right.
+  function drawConsole(svg, v) {
+    svg.textContent = "";
+    var c = calcConsole(v);
+    var CARRIAGE = 900, MAST = 260; // mm: carriage height above the deck, mast depth
+    var s = Math.min(0.16, 400 / (v.L + MAST), 430 / (c.hmin + v.H + CARRIAGE + 300));
+    var lw = v.L * s, mw = Math.max(MAST * s, 16);
+    var x0 = 30 + (470 - mw - lw) / 2, mx1 = x0 + mw, x1 = mx1 + lw, cx = mx1 + lw / 2;
+    var hp = Math.max((c.hmin + v.H) * s, 10);
+    var platTop = FLOOR - hp - 10, platBottom = FLOOR - hp;
+    var carTop = platTop - Math.max(CARRIAGE * s, 34);
+    var mastTop = Math.min(carTop - Math.max(300 * s, 14), FLOOR - (c.hmin + v.H + CARRIAGE + 300) * s);
+
+    line(svg, 0, FLOOR, 640, FLOOR, "s-floor");
+    for (var hx = 14; hx < 640; hx += 16) line(svg, hx, FLOOR + 1, hx - 9, FLOOR + 10, "s-hatch");
+
+    // Mast: two columns from the floor up, the cylinder between them.
+    node(svg, "rect", { x: x0, y: mastTop, width: mw * 0.3, height: FLOOR - mastTop, "class": "s-frame" });
+    node(svg, "rect", { x: x0 + mw * 0.7, y: mastTop, width: mw * 0.3, height: FLOOR - mastTop, "class": "s-frame" });
+    var mc = x0 + mw / 2, rodTop = carTop + (platBottom - carTop) * 0.3;
+    var barrelTop = FLOOR - Math.max((FLOOR - rodTop) * 0.52, 20);
+    line(svg, mc, barrelTop, mc, FLOOR - 6, "s-cyl");
+    line(svg, mc, rodTop, mc, barrelTop, "s-rod");
+
+    // Carriage on the mast, the platform and its brace.
+    node(svg, "rect", { x: mx1, y: carTop, width: 8, height: platBottom - carTop, "class": "s-frame" });
+    node(svg, "rect", { x: mx1, y: platTop, width: lw, height: platBottom - platTop, "class": "s-frame" });
+    line(svg, mx1 + 8, carTop + (platBottom - carTop) * 0.2, mx1 + Math.min(lw * 0.45, (platBottom - carTop) * 1.2), platTop, "s-arm");
+    [[mx1 + 4, carTop + 6], [mx1 + 4, platBottom - 6], [mc, rodTop]].forEach(function (p) {
+      node(svg, "circle", { cx: p[0], cy: p[1], r: 4, "class": "s-pin" });
+    });
+
+    // Load on the platform and the Q arrow.
+    var bw = Math.min(lw * 0.55, 30 + v.Q * 20), bh = 14 + v.Q * 8, by = platTop - bh, lx = mx1 + lw * 0.58;
+    node(svg, "rect", { x: lx - bw / 2, y: by, width: bw, height: bh, "class": "s-load" });
+    line(svg, lx, by - 58, lx, by - 4, "s-dim");
+    arrow(svg, lx, by - 3, "down");
+    node(svg, "text", { x: lx + 10, y: by - 38 }, "Q = " + Math.round(v.Q * 10) * 100 + " кг");
+
+    // Folded platform: a dashed outline at the folded height.
+    var hFolded = Math.max(c.hmin * s, 8), foldTop = FLOOR - hFolded;
+    node(svg, "rect", { x: mx1, y: foldTop - 8, width: lw, height: 8, "class": "s-ghost" });
+
+    // H from the folded deck up, Hmin from the floor, as on the scissor scheme.
+    var dx = x1 + 40, deck = platTop, fold = foldTop - 8;
+    line(svg, x1 + 6, deck, dx + 8, deck, "s-dim");
+    line(svg, x1 + 6, fold, dx + 8, fold, "s-dim");
+    line(svg, x1 + 6, FLOOR, dx + 8, FLOOR, "s-dim");
+    line(svg, dx, deck + 2, dx, fold - 2, "s-dim");
+    arrow(svg, dx, deck + 1, "up");
+    arrow(svg, dx, fold - 1, "down");
+    var hy = (deck + fold) / 2;
+    node(svg, "text", { x: dx - 8, y: hy, transform: "rotate(-90 " + (dx - 8) + " " + hy + ")", "text-anchor": "middle" },
+      "H = " + Math.round(v.H / 10) * 10);
+    line(svg, dx, fold + 2, dx, FLOOR - 2, "s-dim");
+    var hxm = dx + 28, hym = FLOOR - 4;
+    node(svg, "text", { x: hxm, y: hym, transform: "rotate(-90 " + hxm + " " + hym + ")", "text-anchor": "start" }, "Hmin = " + c.hmin);
+
+    // L: under the floor, along the platform.
+    var ly = FLOOR + 38;
+    line(svg, mx1, FLOOR + 14, mx1, ly + 8, "s-dim");
+    line(svg, x1, FLOOR + 14, x1, ly + 8, "s-dim");
+    line(svg, mx1 + 2, ly, x1 - 2, ly, "s-dim");
+    arrow(svg, mx1 + 1, ly, "left");
+    arrow(svg, x1 - 1, ly, "right");
+    node(svg, "text", { x: cx, y: ly + 28, "text-anchor": "middle" }, "L = " + Math.round(v.L / 10) * 10);
+  }
+
+  var SCISSOR = { calc: calc, draw: draw, model: function (c) { return c.n + "X"; } };
+  var CONSOLE = { calc: calcConsole, draw: drawConsole, model: function () { return "1L"; } };
 
   // Started last: the tables and constants above must be set first.
   var config = document.querySelector("[data-config]");

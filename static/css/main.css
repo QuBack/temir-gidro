@@ -216,7 +216,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   .mega__img { display: grid; place-items: center; height: 9rem; margin-bottom: .5rem; padding: .75rem; background: var(--grey-soft); }
   .mega__img img { max-height: 7.5rem; width: auto; }
   .mega__img .scissor-icon { width: auto; height: 6.5rem; }
-  .mega__name { font-family: var(--font-draw); font-size: 1.25rem; font-weight: 400; color: var(--ink); }
+  .mega__name { font-size: 1rem; font-weight: 600; color: var(--ink); }
   .mega__label { font-size: .875rem; font-weight: 400; color: var(--muted); }
   .mega__model:hover .mega__name { color: var(--red); }
   .mega__model--stub .mega__img { filter: grayscale(1); opacity: .5; }
@@ -1601,6 +1601,10 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
 .model-gallery--views .model-gallery__slide picture { display: flex; justify-content: center; }
 .model-gallery--views .model-gallery__slide img { flex: none; width: auto; height: 100%; }
 .model-gallery--views .mast-left img { transform: translateX(26%); }
+/* Views of different shapes (the painting lift 3D: wide renders on rails): each fits the stage whole
+   and stands in its middle, not on its floor; the small ones fit their cell too. */
+.model-hero .model-gallery--fit .model-gallery__slide img { width: 100%; height: 100%; object-fit: contain; object-position: 50% 50%; }
+.model-gallery--fit .hero-views__item img { width: 100%; height: 100%; object-fit: contain; }
 @media (min-width: 60rem) {
   /* The column of views takes the room the render would leave free on the right, so the render keeps its size. */
   .model-hero .model-gallery--views { width: 100%; grid-template-columns: minmax(0, 1fr) 6rem; gap: 1.5rem; }
@@ -1608,6 +1612,9 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
   /* Beside a column of views the render keeps to its own box: no shift to the right into them. */
   .model-hero .model-gallery--views .model-gallery__slide:not(.model-gallery__slide--photo) picture {
     left: 30%; right: 0;
+  }
+  .model-hero .model-gallery--views.model-gallery--fit .model-gallery__slide:not(.model-gallery__slide--photo) picture {
+    top: 0; bottom: 0; left: 0; right: 0;
   }
 }
 
@@ -1672,6 +1679,8 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
 @media (min-width: 60rem) {
   .scene { grid-template-columns: 1.45fr 1fr; gap: 4rem; }
   .scene--flip .scene__photo { order: 2; }
+  /* The wide column follows the photo, so a flipped row's photo is as large as the others. */
+  .scene--flip { grid-template-columns: 1fr 1.45fr; }
 }
 .scene__photo { position: relative; margin: 0; overflow: hidden; background: var(--grey); box-shadow: var(--shadow-photo); }
 .scene__photo img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; transition: transform .6s cubic-bezier(.4, .7, .04, .88); }
@@ -1682,6 +1691,9 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
 .scene__photo--render { aspect-ratio: 16 / 9; background: var(--white); }
 .scene__photo--render picture { position: absolute; inset: clamp(1rem, 3vw, 2rem); }
 .scene__photo--render img { width: 100%; height: 100%; aspect-ratio: auto; object-fit: contain; }
+/* Pictures of different shapes in one section (a portrait cutaway, a landscape scheme): one 4:3 frame
+   for all, each fitted whole, so they read as the same size. */
+.scene__photo--render.scene__photo--boxed { aspect-ratio: 4 / 3; }
 .scene__text .more-link { display: inline-block; margin-top: 1.25rem; }
 /* A scheme with its legend: the whole row, centred and uncropped (its labels sit at the edges),
    the title and text centred under it. */
@@ -1941,22 +1953,45 @@ body:not(.page-white) .config .choice__option input:focus-visible + span { outli
 .pu-type__specs dt { color: var(--muted); font-size: .8125rem; }
 .pu-type__specs dd { margin: 0; font-family: var(--font-cond); font-size: 1.1875rem; font-weight: 700; }
 
-/* Calculator circuit: ISO 1219 symbols in ink, the cylinder in the lifts' red, the pressure line running. */
+/* Calculator circuit (the client's, ISO 1219): symbols in ink; the mode buttons light the oil's path in
+   red and move the rods. Hovering an element puts its name and job in the line under the circuit. */
 .pu-config__drawing { padding: .5rem; }
-.pu-scheme .pu-line { fill: none; stroke: var(--ink); stroke-width: 2; }
+.pu-modes { display: flex; gap: .4rem; margin: .25rem .25rem .5rem; }
+.pu-modes button { padding: .35rem .8rem; border: 1px solid var(--ink); border-radius: 4px; background: var(--white); color: var(--ink); font: 600 .875rem var(--font); cursor: pointer; }
+.pu-modes button[aria-pressed="true"] { background: var(--ink); color: var(--white); }
+.pu-scheme .pu-line, .pu-scheme .pu-path { fill: none; stroke: var(--ink); stroke-width: 2; }
 .pu-scheme .pu-thin { fill: none; stroke: var(--ink); stroke-width: 1.25; }
 .pu-scheme .pu-sym { fill: var(--white); stroke: var(--ink); stroke-width: 2; }
-.pu-scheme .pu-fill { fill: var(--ink); }
-.pu-scheme .pu-return { stroke-dasharray: 8 5; }
-.pu-scheme .pu-flow { stroke: var(--red); stroke-width: 2.5; stroke-dasharray: 10 6; }
+.pu-scheme .pu-fill, .pu-scheme .pu-node { fill: var(--ink); }
+.pu-scheme .pu-frame { fill: none; stroke: #b9c0c2; stroke-width: 1.25; stroke-dasharray: 6 4; }
+.pu-scheme .pu-box { fill: none; stroke: #b9c0c2; stroke-width: 1.25; }
 .pu-scheme .pu-cyl { fill: rgb(196 22 28 / .14); }
 .pu-scheme .pu-rod { fill: #e3e7e8; stroke: var(--ink); stroke-width: 1.5; }
-.pu-scheme .pu-small { font-size: 20px; }
+.pu-scheme .pu-lab { font-size: 21px; }
+.pu-scheme .pu-piston { transition: transform 2.4s cubic-bezier(.4, 0, .2, 1); }
+.pu-scheme.is-out .pu-piston { transform: translateX(30px); }
+.pu-scheme.one-cyl [data-cyl2] { display: none; }
+/* The path of the oil in this mode; lowering runs the shared lines the other way. */
+.pu-scheme[data-mode="up"] .f-up, .pu-scheme[data-mode="down"] .f-down { stroke: var(--red); stroke-width: 3; stroke-dasharray: 10 6; }
+.pu-scheme[data-mode="up"] .pu-motor circle, .pu-scheme[data-mode="up"] .pu-pump circle { stroke: var(--red); }
+.pu-scheme[data-mode="down"] .pu-coil { fill: var(--red); }
+.pu-scheme[data-mode="stop"] .pu-hold .pu-sym, .pu-scheme[data-mode="stop"] .pu-hold circle { stroke: var(--red); }
+.pu-scheme .pu-el { cursor: help; outline: none; }
+.pu-scheme .pu-el.is-on .pu-sym, .pu-scheme .pu-el.is-on .pu-line, .pu-scheme .pu-el.is-on .pu-thin { stroke-width: 3; }
+.pu-scheme .pu-el.is-on text { fill: var(--red); }
 @media (prefers-reduced-motion: no-preference) {
-  .pu-scheme .pu-flow { animation: pu-flow 1s linear infinite; }
+  .pu-scheme[data-mode="up"] .f-up, .pu-scheme[data-mode="down"] .f-down { animation: pu-flow 1s linear infinite; }
+  .pu-scheme[data-mode="down"] .f-down.rev { animation-direction: reverse; }
   @keyframes pu-flow { to { stroke-dashoffset: -16; } }
 }
-.pu-config__warn { margin: -.5rem 0 1.5rem; padding: .75rem 1rem; border-left: 3px solid #ffd27a; background: rgb(0 0 0 / .2); color: var(--white); font-size: .9375rem; }
+@media (prefers-reduced-motion: reduce) { .pu-scheme .pu-piston { transition: none; } }
+/* Three lines' room, whatever the element: the sheet keeps its height while the pointer moves. */
+.pu-legend { min-height: 4.5em; margin: .25rem .5rem .5rem; color: var(--muted); font-size: .875rem; line-height: 1.5; }
+.pu-legend b { color: var(--ink); }
+/* Always shown (a hint, or what is out of the series), with room for the longest note: the section's
+   height, and so its background, stay put while the sliders move. */
+.pu-config__warn { min-height: 6.4em; margin: -.5rem 0 1.5rem; padding: .75rem 1rem; border-left: 3px solid rgb(255 255 255 / .35); background: rgb(0 0 0 / .2); color: rgb(255 255 255 / .8); font-size: .9375rem; }
+.pu-config__warn.is-warn { border-left-color: #ffd27a; color: var(--white); }
 
 /* Questionnaire: the list on the left, the PDF as a card with a small sheet for a cover. */
 .pu-quest { display: grid; gap: 2rem; align-items: center; }

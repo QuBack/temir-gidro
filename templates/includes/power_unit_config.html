@@ -2,7 +2,7 @@
 {% comment %}
 Power unit calculator: the lift configurator's look. The hydraulic circuit is drawn here and works
 without JS; static/js/power_unit_config.js recalculates the figures on it and in the title block
-from apps/core/power_units.py (CONFIG). Defaults: 8 t on a Ø80 cylinder, stroke 1200 in 25 s, 380 V.
+from apps/core/power_units.py (CONFIG). Defaults: 8 t on two Ø80 cylinders, stroke 1200 in 25 s, 380 V.
 {% endcomment %}
 <section class="section section--drawing config pu-config" id="podbor" aria-labelledby="pu-config-title" data-pu-config>
   <div class="config-bg" aria-hidden="true">{% picture pu_config_bg "" sizes="100vw" %}</div>
@@ -18,6 +18,13 @@ from apps/core/power_units.py (CONFIG). Defaults: 8 t on a Ø80 cylinder, stroke
           <div class="choice__options">
             <label class="choice__option"><input type="radio" name="voltage" value="220"><span>220 В</span></label>
             <label class="choice__option"><input type="radio" name="voltage" value="380" checked><span>380 В</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="choice">
+          <legend>{% translate "Цилиндров" %}</legend>
+          <div class="choice__options">
+            <label class="choice__option"><input type="radio" name="cylinders" value="1"><span>1</span></label>
+            <label class="choice__option"><input type="radio" name="cylinders" value="2" checked><span>2</span></label>
           </div>
         </fieldset>
         <div class="range">
@@ -41,7 +48,8 @@ from apps/core/power_units.py (CONFIG). Defaults: 8 t on a Ø80 cylinder, stroke
           <input type="range" id="pu-t" name="time" min="{{ pu_config.time.min }}" max="{{ pu_config.time.max }}" step="{{ pu_config.time.step }}" value="{{ pu_config.time.value }}">
         </div>
       </div>
-      <p class="pu-config__warn" data-pu-warn hidden></p>
+      {# Always in place, so the section never changes its height: a hint while the unit fits the series. #}
+      <p class="pu-config__warn" data-pu-warn>{% translate "Станция в пределах серии: до 32 МПа и до 30 кВт." %}</p>
       <div class="cyl-config__actions">
         <a class="btn btn--primary" href="#raschet" data-config-send>{% translate "Отправить параметры на расчёт" %}</a>
         <a class="cyl-config__pdf" href="{% static page.questionnaire_pdf %}" download>{% icon "file-down" %}<span>{% translate "Опросный лист" %} <small>PDF</small></span></a>
@@ -50,74 +58,130 @@ from apps/core/power_units.py (CONFIG). Defaults: 8 t on a Ø80 cylinder, stroke
 
     <figure class="sheet">
       <div class="sheet__drawing pu-config__drawing">
-        {# Hydraulic circuit in ISO 1219 symbols; the pressure line runs unless motion is reduced. #}
-        <svg class="scheme pu-scheme" viewBox="0 0 640 320" role="img" aria-labelledby="pu-config-title">
-          {# Tank: open at the top, with the oil level. #}
-          <path class="pu-line" d="M30 252 V292 H190 V252"/>
-          <line class="pu-thin" x1="36" y1="266" x2="184" y2="266"/>
-          <text class="pu-small" x="110" y="286" text-anchor="middle">V <tspan data-out="Vs">63</tspan> л</text>
-          {# Suction through the filter to the pump. #}
-          <line class="pu-line" x1="110" y1="266" x2="110" y2="226"/>
-          <path class="pu-sym" d="M110 196 L124 211 L110 226 L96 211 Z"/>
-          <line class="pu-thin" x1="96" y1="211" x2="124" y2="211" stroke-dasharray="3 3"/>
-          <line class="pu-line" x1="110" y1="196" x2="110" y2="172"/>
-          {# Pump (triangle out) and motor (M) on one shaft. #}
-          <circle class="pu-sym" cx="110" cy="148" r="24"/>
-          <path class="pu-fill" d="M110 126 L101 140 L119 140 Z"/>
-          <line class="pu-line pu-shaft" x1="56" y1="146" x2="86" y2="146"/>
-          <line class="pu-line pu-shaft" x1="56" y1="151" x2="86" y2="151"/>
-          <circle class="pu-sym" cx="36" cy="148" r="22"/>
-          <text x="36" y="157" text-anchor="middle">M</text>
-          <text class="pu-small" x="36" y="194" text-anchor="middle"><tspan data-out="Ns">5,5</tspan> кВт</text>
-          <text class="pu-small" x="118" y="50">Q <tspan data-out="Qs">14,5</tspan> л/мин</text>
-          {# Pressure line up and across to the valve block. #}
-          <path class="pu-line pu-flow" d="M110 124 V60 H340 V178"/>
-          {# Relief valve back to the tank. #}
-          <line class="pu-line" x1="190" y1="60" x2="190" y2="92"/>
-          <rect class="pu-sym" x="174" y="92" width="32" height="44"/>
-          <path class="pu-thin" d="M190 98 V128 M184 122 L190 130 L196 122"/>
-          <path class="pu-thin" d="M206 102 l10 4 -10 4 10 4 -10 4 10 4"/>
-          <path class="pu-line pu-return" d="M190 136 V252"/>
-          {# Gauge. #}
-          <line class="pu-line" x1="280" y1="60" x2="280" y2="44"/>
-          <circle class="pu-sym" cx="280" cy="30" r="14"/>
-          <line class="pu-thin" x1="272" y1="38" x2="288" y2="22"/>
-          <text x="302" y="38">P <tspan data-out="Ps">15,6</tspan> МПа</text>
-          {# Check valve on the line. #}
-          <circle class="pu-sym" cx="316" cy="60" r="7"/>
-          <path class="pu-thin" d="M306 50 L316 53 M306 70 L316 67"/>
-          {# 4/3 directional valve with two solenoids. #}
-          <rect class="pu-sym" x="300" y="178" width="50" height="44"/>
-          <rect class="pu-sym" x="350" y="178" width="50" height="44"/>
-          <rect class="pu-sym" x="400" y="178" width="50" height="44"/>
-          <path class="pu-thin" d="M312 222 L338 178 M338 222 L312 178"/>
-          <path class="pu-thin" d="M362 186 V214 M388 186 V214 M375 200 h0"/>
-          <path class="pu-thin" d="M412 222 V178 M438 222 V178"/>
-          <path class="pu-sym" d="M300 188 h-22 v24 h22 M278 188 l22 24"/>
-          <path class="pu-sym" d="M450 188 h22 v24 h-22 M472 188 l-22 24"/>
-          <path class="pu-line pu-return" d="M362 222 V252 H190"/>
-          {# To the cylinder: A to the cap end, B to the rod end. #}
-          <path class="pu-line" d="M412 178 V150 H470 V132"/>
-          <path class="pu-line" d="M438 178 V160 H592 V132"/>
-          <rect class="pu-sym pu-cyl" x="460" y="96" width="140" height="36"/>
-          <line class="pu-line" x1="520" y1="96" x2="520" y2="132"/>
-          <rect class="pu-rod" x="524" y="108" width="100" height="12"/>
-          <text class="pu-small" x="530" y="88" text-anchor="middle">Ø<tspan data-out="Dd">80</tspan> × <tspan data-out="Sd">1200</tspan></text>
-          <line class="pu-line" x1="628" y1="114" x2="628" y2="66"/>
-          <path class="pu-fill" d="M628 58 L622 70 L634 70 Z"/>
-          <text x="612" y="54" text-anchor="end">F <tspan data-out="Fs">8</tspan> т</text>
+        {% comment %}The client's circuit (2026-10), ISO 1219 symbols. The modes light the oil's path: lifting — pump,
+           КО1, line P, the check of ДР2, КБ to the cylinders; lowering — back through КБ, the throttle of ДР2,
+           the open Р1 and ДР1 to the tank. Without JS the lifting path shows.{% endcomment %}
+        <div class="pu-modes" role="group" aria-label="{% translate "Режим работы" %}" data-pu-modes>
+          <button type="button" data-pu-mode="up" aria-pressed="true">{% translate "Подъём" %}</button>
+          <button type="button" data-pu-mode="stop" aria-pressed="false">{% translate "Стоп" %}</button>
+          <button type="button" data-pu-mode="down" aria-pressed="false">{% translate "Опускание" %}</button>
+        </div>
+        <svg class="scheme pu-scheme is-out" data-mode="up" data-pu-svg viewBox="0 0 760 450" role="img" aria-labelledby="pu-config-title">
+          {# The station: what is inside the dashed frame is delivered as one unit. #}
+          <rect class="pu-frame" x="10" y="20" width="380" height="420"/>
+          {# Flow lines first, symbols on top. #}
+          <path class="pu-path f-up" d="M160 378 V322"/>
+          <path class="pu-path f-up" d="M160 290 V218 M160 187 V142"/>
+          <path class="pu-path f-up f-down rev" d="M160 142 V70 H456"/>
+          <path class="pu-path f-up" d="M456 70 V48 H504 V70"/>
+          <path class="pu-path f-down rev" d="M456 70 H504"/>
+          <path class="pu-path f-up f-down rev" d="M504 70 H580 M616 70 H630"/>
+          <path class="pu-path f-up f-down rev" data-cyl2 d="M560 70 V168 H580 M616 168 H630"/>
+          <path class="pu-path f-down" d="M160 142 H210 M250 142 H340 V380"/>
+          <path class="pu-path" d="M340 142 H400 M400 132 V152"/>
+          <path class="pu-path" d="M160 250 H210 M246 251 H340"/>
+          <circle class="pu-node" cx="160" cy="142" r="4"/><circle class="pu-node" cx="160" cy="250" r="4"/>
+          <circle class="pu-node" cx="340" cy="142" r="4"/><circle class="pu-node" cx="340" cy="251" r="4"/>
+          <circle class="pu-node" cx="560" cy="70" r="4" data-cyl2/>
+          <text class="pu-lab" x="300" y="60">P</text>
+          <text class="pu-lab" x="410" y="148">T</text>
+
+          <g class="pu-el" tabindex="0" data-name="Б1 — бак" data-desc="Бак с рабочей жидкостью (РЖ). Объём — по подаче насоса и маслу на ход цилиндров.">
+            <path class="pu-line" d="M20 350 H44 V420 H356 V350 H380"/>
+            <line class="pu-thin" x1="50" y1="362" x2="350" y2="362" stroke-dasharray="14 4 2 4"/>
+            <path class="pu-thin" d="M60 384 H120 M200 384 H330 M90 404 H150 M220 404 H300" stroke-dasharray="10 6"/>
+            <path class="pu-thin" d="M200 420 V430 M194 424 L206 436 M206 424 L194 436"/>
+            <text class="pu-lab" x="70" y="402">РЖ</text>
+            <text class="pu-lab" x="236" y="402">Б1 · <tspan data-out="Vs">100</tspan> л</text>
+          </g>
+          <g class="pu-el" tabindex="0" data-name="ЗГ1 — заливная горловина" data-desc="Через неё заливают масло; сапун выравнивает давление воздуха в баке.">
+            <rect class="pu-sym" x="62" y="316" width="16" height="16"/>
+            <line class="pu-line" x1="70" y1="332" x2="70" y2="380"/>
+            <text class="pu-lab" x="28" y="306">ЗГ1</text>
+          </g>
+          <g class="pu-el" tabindex="0" data-name="Ф1 — фильтр" data-desc="Всасывающий фильтр: насос берёт масло из бака уже очищенным.">
+            <path class="pu-sym" d="M160 378 L174 392 L160 406 L146 392 Z"/>
+            <line class="pu-thin" x1="146" y1="392" x2="174" y2="392" stroke-dasharray="3 3"/>
+            <text class="pu-lab" x="182" y="400">Ф1</text>
+          </g>
+          <g class="pu-el pu-motor" tabindex="0" data-name="М — электродвигатель" data-desc="Крутит насос. Мощность считаем по давлению и подаче с запасом на КПД.">
+            <line class="pu-line" x1="108" y1="303" x2="144" y2="303"/><line class="pu-line" x1="108" y1="309" x2="144" y2="309"/>
+            <circle class="pu-sym" cx="92" cy="306" r="16"/>
+            <text class="pu-lab" x="92" y="313" text-anchor="middle">M</text>
+            <text class="pu-lab" x="92" y="276" text-anchor="middle"><tspan data-out="Ns">5,5</tspan> кВт</text>
+          </g>
+          <g class="pu-el pu-pump" tabindex="0" data-name="Н1 — насос" data-desc="Подаёт масло под давлением в линию P. Подача задаёт скорость подъёма.">
+            <circle class="pu-sym" cx="160" cy="306" r="16"/>
+            <path class="pu-fill" d="M160 291 L152 304 L168 304 Z"/>
+            <text class="pu-lab" x="184" y="314">Н1</text>
+            <text class="pu-lab" x="184" y="338">Q <tspan data-out="Qs">29,0</tspan> л/мин</text>
+          </g>
+          <g class="pu-el pu-hold" tabindex="0" data-name="КО1 — обратный клапан" data-desc="Пропускает масло от насоса и не даёт ему уйти обратно: при остановке платформа стоит.">
+            <circle class="pu-sym" cx="160" cy="196" r="9"/>
+            <path class="pu-line" d="M148 207 L160 219 L172 207"/>
+            <text class="pu-lab" x="140" y="203" text-anchor="end">КО1</text>
+          </g>
+          <g class="pu-el" tabindex="0" data-name="КП1 — предохранительный клапан" data-desc="Сбрасывает масло в бак, если давление выше настройки: защищает станцию и цилиндры от перегрузки.">
+            <rect class="pu-sym" x="210" y="238" width="36" height="26"/>
+            <path class="pu-thin" d="M216 251 H238 M232 246 L240 251 L232 256"/>
+            <path class="pu-thin" d="M228 264 l-6 4 12 4 -12 4 12 4"/>
+            <path class="pu-thin" d="M214 238 V228 H196 V250" stroke-dasharray="4 3"/>
+            <text class="pu-lab" x="228" y="222" text-anchor="middle">КП1</text>
+          </g>
+          <g class="pu-el pu-hold pu-valve" tabindex="0" data-name="Р1 — клапан опускания" data-desc="Электромагнитный клапан: закрыт — платформа стоит, открыт — масло из цилиндров уходит в бак.">
+            <rect class="pu-sym" x="210" y="126" width="40" height="48"/>
+            <line class="pu-thin" x1="210" y1="150" x2="250" y2="150"/>
+            <circle class="pu-thin" cx="230" cy="136" r="5"/><path class="pu-thin" d="M222 142 L230 147 L238 142"/>
+            <path class="pu-thin" d="M214 162 H244 M238 158 L245 162 L238 166"/>
+            <path class="pu-thin" d="M224 126 l-4 -3 8 -3 -8 -3 8 -3"/>
+            <rect class="pu-sym pu-coil" x="222" y="174" width="16" height="14"/><line class="pu-thin" x1="222" y1="188" x2="238" y2="174"/>
+            <text class="pu-lab" x="258" y="196">Р1</text>
+          </g>
+          <g class="pu-el" tabindex="0" data-name="ДР1 — дроссель" data-desc="Регулируемый дроссель на сливе: задаёт скорость опускания.">
+            <path class="pu-thin" d="M272 132 Q288 142 304 132 M272 152 Q288 142 304 152 M278 156 L300 128 M294 128 H300 V134"/>
+            <text class="pu-lab" x="288" y="118" text-anchor="middle">ДР1</text>
+          </g>
+          <g class="pu-el" tabindex="0" data-name="ДР2 — дроссель с обратным клапаном" data-desc="К цилиндрам масло идёт свободно через обратный клапан, обратно — через дроссель: опускание плавное.">
+            <rect class="pu-box" x="446" y="34" width="68" height="56"/>
+            <path class="pu-thin" d="M462 60 Q480 70 498 60 M462 80 Q480 70 498 80 M466 84 L492 56"/>
+            <circle class="pu-thin" cx="480" cy="48" r="6"/><path class="pu-thin" d="M472 54 L480 48 M472 42 L480 48"/>
+            <text class="pu-lab" x="480" y="24" text-anchor="middle">ДР2</text>
+          </g>
+          <g class="pu-el" tabindex="0" data-name="КБ1, КБ2 — клапаны безопасности" data-desc="Стоят у каждого цилиндра: если лопнет шланг, клапан закроется и платформа не упадёт.">
+            <rect class="pu-sym" x="580" y="54" width="36" height="32"/>
+            <circle class="pu-thin" cx="598" cy="64" r="5"/><path class="pu-thin" d="M590 76 H606 M600 72 L607 76 L600 80"/>
+            <path class="pu-thin" d="M588 54 V44 H624 V70" stroke-dasharray="4 3"/>
+            <text class="pu-lab" x="598" y="110" text-anchor="middle">КБ1</text>
+            <g data-cyl2>
+              <rect class="pu-sym" x="580" y="152" width="36" height="32"/>
+              <circle class="pu-thin" cx="598" cy="162" r="5"/><path class="pu-thin" d="M590 174 H606 M600 170 L607 174 L600 178"/>
+              <path class="pu-thin" d="M588 152 V142 H624 V168" stroke-dasharray="4 3"/>
+              <text class="pu-lab" x="598" y="208" text-anchor="middle">КБ2</text>
+            </g>
+          </g>
+          <g class="pu-el" tabindex="0" data-name="Гидроцилиндры" data-desc="Одностороннего действия: поднимает давление масла, опускается платформа под своим весом.">
+            <rect class="pu-sym pu-cyl" x="630" y="54" width="96" height="32"/>
+            <g class="pu-piston"><line class="pu-line" x1="642" y1="54" x2="642" y2="86"/><rect class="pu-rod" x="644" y="65" width="78" height="10"/></g>
+            <g data-cyl2>
+              <rect class="pu-sym pu-cyl" x="630" y="152" width="96" height="32"/>
+              <g class="pu-piston"><line class="pu-line" x1="642" y1="152" x2="642" y2="184"/><rect class="pu-rod" x="644" y="163" width="78" height="10"/></g>
+            </g>
+            <text class="pu-lab" x="680" y="128" text-anchor="middle">Ø<tspan data-out="Dd">80</tspan> × <tspan data-out="Sd">1200</tspan><tspan data-out="Nc"> · 2 шт</tspan></text>
+            <text class="pu-lab" x="680" y="240" text-anchor="middle">F <tspan data-out="Fs">8</tspan> т · P <tspan data-out="Ps">7,8</tspan> МПа</text>
+          </g>
         </svg>
+        <p class="pu-legend" data-pu-legend>{% translate "Наведите на элемент схемы — подскажем, что он делает." %}</p>
       </div>
       <figcaption class="stamp">
         {# Marking: brand, the unit's voltage, then pressure.flow.motor.tank. #}
-        <span class="stamp__name stamp__name--code">ТЕМИР ГИДРО <span data-out="M">ГС-380</span> <span data-out="Code">16.14.5,5.63</span></span>
+        <span class="stamp__name stamp__name--code">ТЕМИР ГИДРО <span data-out="M">ГС-380</span> <span data-out="Code">8.29.5,5.100</span></span>
         <dl class="stamp__facts stamp__facts--wide">
-          <div><dt>{% translate "Давление, МПа" %}</dt><dd data-out="P">15,6</dd></div>
-          <div><dt>{% translate "Подача, л/мин" %}</dt><dd data-out="Q">14,5</dd></div>
+          <div><dt>{% translate "Давление, МПа" %}</dt><dd data-out="P">7,8</dd></div>
+          <div><dt>{% translate "Подача, л/мин" %}</dt><dd data-out="Q">29,0</dd></div>
           <div><dt>{% translate "Мотор, кВт" %}</dt><dd data-out="N">5,5</dd></div>
-          <div><dt>{% translate "Бак, л" %}</dt><dd data-out="V">63</dd></div>
+          <div><dt>{% translate "Бак, л" %}</dt><dd data-out="V">100</dd></div>
           <div><dt>{% translate "Скорость, мм/с" %}</dt><dd data-out="Speed">48</dd></div>
-          <div><dt>{% translate "Масла на ход, л" %}</dt><dd data-out="Oil">6,0</dd></div>
+          <div><dt>{% translate "Масла на ход, л" %}</dt><dd data-out="Oil">12,1</dd></div>
           <div><dt>{% translate "Насос" %}</dt><dd data-out="Pump">{% translate "шестерённый" %}</dd></div>
           <div><dt>{% translate "Срок, раб. дней" %}</dt><dd data-out="Days">15</dd></div>
         </dl>

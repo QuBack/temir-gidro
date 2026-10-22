@@ -110,6 +110,12 @@ GOOGLE_VERIFICATION=
 YANDEX_METRIKA_ID=
 TELEGRAM_BOT_TOKEN=
 TELEGRAM_CHAT_ID=
+# Leads by mail: temir.ru is on Mail.ru; the password is an app password of seo@temir.ru (mailbox settings).
+EMAIL_HOST=smtp.mail.ru
+EMAIL_PORT=465
+EMAIL_HOST_USER=seo@temir.ru
+EMAIL_HOST_PASSWORD=
+LEAD_NOTIFY_EMAILS=seo@temir.ru
 EOF
   chmod 600 .env
 else

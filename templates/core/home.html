@@ -71,7 +71,7 @@
     <ul class="eq-grid eq-grid--hydraulics">
       {% for g in hydraulics %}
       <li class="eq-item">
-        <a class="eq-card" href="{{ g.url }}">
+        <a class="eq-card{% if g.photo %} eq-card--photo{% endif %}" href="{{ g.url }}">
           <span class="eq-card__media">{% picture g.image g.title sizes="(min-width: 60rem) 45vw, 45vw" %}</span>
           <span class="eq-card__cap">
             <h3>{{ g.title }}</h3>

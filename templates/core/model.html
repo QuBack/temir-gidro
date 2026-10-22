@@ -12,6 +12,23 @@
       <p class="eq-hero__lead">{{ model.lead }}</p>
     </div>
 
+    {% if model.hero_views %}
+    {# Cut-out views beside the render, as on the console lift: a click puts that view on the stage (site.js). #}
+    <div class="model-gallery model-gallery--views model-gallery--fit">
+      <div class="model-gallery__main">
+        {% for g in model.images %}
+        <div class="model-gallery__slide" data-hero-slide{% if not forloop.first %} hidden{% endif %}>
+          {% if forloop.first %}{% picture g.image g.alt sizes="(min-width: 60rem) 42rem, 90vw" priority=True %}{% else %}{% picture g.image g.alt sizes="(min-width: 60rem) 42rem, 90vw" %}{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      <ul class="hero-views" data-hero-views>
+        {% for g in model.images %}
+        <li><button class="hero-views__item{% if forloop.first %} is-active{% endif %}" type="button" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">{% picture g.image g.alt sizes="6rem" %}</button></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% else %}
     {# One picture on the first screen, not a zoom link; the model's other views are under its description. #}
     {% with g=model.images.0 %}
     <div class="model-gallery">
@@ -22,6 +39,7 @@
       </div>
     </div>
     {% endwith %}
+    {% endif %}
   </div>
 </section>
 
@@ -43,7 +61,7 @@
     </aside>
   </div>
   {% if model.scenes_3d %}{% include "includes/model3d.html" with scenes=model.scenes_3d %}{% endif %}
-  {% if model.images|length > 1 %}
+  {% if model.images|length > 1 and not model.hero_views %}
   <div class="container model-views">
     <h3>{% translate "Другие виды" %}</h3>
     <ul class="model-views__list">

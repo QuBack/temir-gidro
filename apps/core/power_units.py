@@ -15,7 +15,7 @@ def _photo(name):
 
 
 # The client's own unit (photo, background cut out): the first screen and the kit.
-HERO = img("power-units/gidrostanciya-temir-gidro", (978, 1400), widths=(200, 400, 978))
+HERO = img("power-units/gidrostanciya-temir-gidro", (998, 1423), widths=(200, 400, 998))
 
 PAGE = {
     "title": _("Гидростанции на заказ"),

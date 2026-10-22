@@ -55,14 +55,13 @@ HERO_VIDEO = None  # e.g. "video/hero.mp4"
 SCISSOR_1X = img("catalog/nozhnichnyj-podemnik", (800, 523))
 SCISSOR_2X = img("catalog/nozhnichnyj-podemnik-2x", (800, 1124))
 SCISSOR_3X = img("catalog/nozhnichnyj-podemnik-3x", (800, 1289))
-# Montage of the 3X render with a fourth pair (tools/make_4x_montage.py) until a real render arrives.
-SCISSOR_4X = img("catalog/nozhnichnyj-podemnik-4x", (800, 1692))
+SCISSOR_4X = img("catalog/nozhnichnyj-podemnik-4x", (800, 1807))
 # Three models in a row (1X in front, 3X at the back; 4X left out for now), composed from the renders
 # above, the 3X paint matched to 1X and 2X: the scissor line's first screen.
 SCISSOR_LINEUP = img("catalog/nozhnichnye-podemniki-1x-3x", (1733, 1211), widths=(640, 1280, 1733))
 PAINT_1X = img("catalog/podemnik-dlya-okrasochnoj-kamery", (800, 490))
 PAINT_2D = img("catalog/podemnik-dlya-okrasochnoj-kamery-2d", (800, 503))
-PAINT_3D = img("catalog/podemnik-dlya-okrasochnoj-kamery-3d", (800, 705))
+PAINT_3D = img("catalog/podemnik-dlya-okrasochnoj-kamery-3d", (786, 698), widths=(400, 786))
 
 CATEGORIES = [
     {
@@ -668,8 +667,21 @@ EQUIPMENT = {
         "scenes_title": _("Как устроен подъёмник"),
         "scenes": [
             {
+                "image": img("photos/podemnik-dlya-kontejnerov-v-shahte", (800, 1144), widths=(400, 800)),
+                "render": True,
+                "boxed": True,  # the same 4:3 frame as the scheme below: the pair reads as one size
+                "alt": _("Подъёмник для мусорных контейнеров в разрезе шахты: мусороприёмники, контейнеры, мачта"),
+                "title": _("Шахта в разрезе"),
+                "text": _(
+                    "Наверху — настил с мусороприёмниками, под ним — платформа со стандартными контейнерами. "
+                    "Всё это опускается в бетонную шахту, и на поверхности остаётся только настил. Мачта "
+                    "с гидроцилиндром поднимает платформу к приезду мусоровоза, маслостанция стоит в шахте."
+                ),
+            },
+            {
                 "image": img("photos/shema-podemnika-dlya-kontejnerov", (1200, 848), widths=(600, 1200)),
-                "wide": True,  # the scheme with its 21-item legend: full width, uncropped, text below
+                "render": True,
+                "boxed": True,  # beside its text like the cutaway, uncropped; the legend opens full size on click
                 "alt": _("Схема подъёмника для мусорных контейнеров с обозначением узлов"),
                 "title": _("Конструкция и управление"),
                 "text": _(
@@ -962,7 +974,7 @@ EQUIPMENT = {
             FAQ[3],
             FAQ[4],
         ],
-        "configurator": False,
+        "configurator": "console",  # its own configurator: includes/console_config.html
     },
 }
 
@@ -1075,7 +1087,7 @@ _PAINT = "/podemniki/dlya-okrasochnyh-kamer/"
 EQUIPMENT_GROUPS = [
     {
         "slug": "nozhnichnye", "title": _("Ножничные подъёмники"), "url": _SCISSORS,
-        "image": img("catalog/nozhnichnye-podemniki-seriya", (1200, 838), widths=(400, 800, 1200)), "photo": True,
+        "image": img("catalog/nozhnichnye-podemniki-seriya", (1200, 760), widths=(400, 800, 1200)), "photo": True,
         "models": [
             {"code": "1X", "title": _("Ножничный подъёмник 1X"), "url": _SCISSORS + "1x/", "image": SCISSOR_1X},
             {"code": "2X", "title": _("Ножничный подъёмник 2X"), "url": _SCISSORS + "2x/", "image": SCISSOR_2X},
@@ -1103,7 +1115,9 @@ EQUIPMENT_GROUPS = [
              "image": CATEGORIES[1]["image"]},
         ],
     },
-    {"title": _("Консольный подъёмник 1L"), "url": "/podemniki/konsolnye/", "image": CATEGORIES[5]["image"]},
+    # The last cards: the render in the same bright workshop as the series photos above (photo cards).
+    {"title": _("Консольный подъёмник 1L"), "url": "/podemniki/konsolnye/",
+     "image": img("catalog/konsolnyj-podemnik-v-cehu", (1200, 550), widths=(600, 1200)), "photo": True},
     {"title": _("Подъёмник для мусорных контейнеров"), "url": "/podemniki/dlya-musornyh-kontejnerov/",
-     "image": CATEGORIES[2]["image"]},
+     "image": img("catalog/podemnik-dlya-kontejnerov-v-cehu", (1200, 550), widths=(600, 1200)), "photo": True},
 ]

@@ -175,7 +175,9 @@ def test_paint_3d_model_page(client):
     html = client.get("/podemniki/dlya-okrasochnyh-kamer/3d/").content.decode()
     assert "Подъёмник для окрасочной камеры 3D" in html
     assert "по высоте, вдоль рельсов и к изделию" in html  # the third direction is the point of the model
-    assert html.count('class="model-views__item zoom"') == 2  # the side and right views from the old site
+    # The render and the side and right views from the old site sit on the first screen, as on the console lift.
+    assert html.count('class="hero-views__item') == 3
+    assert 'class="model-views__item zoom"' not in html
     assert 'data-kit-marker="4"' in html  # the cab is marked on the render
     # The other painting models link to it as a sibling.
     sibling = client.get("/podemniki/dlya-okrasochnyh-kamer/2d/").content.decode()

@@ -544,7 +544,7 @@ PAINT_OPTIONS = [
 _PAINT_1X_IMG = img("catalog/podemnik-dlya-okrasochnoj-kamery", (800, 490))
 _PAINT_2D_IMG = img("catalog/podemnik-dlya-okrasochnoj-kamery-2d", (800, 503))
 # Renders from the client's old site (temir-gidro.ru, the 3D page): the cut-out one, then two views at a wall.
-_PAINT_3D_IMG = img("catalog/podemnik-dlya-okrasochnoj-kamery-3d", (800, 705))
+_PAINT_3D_IMG = img("catalog/podemnik-dlya-okrasochnoj-kamery-3d", (786, 698), widths=(400, 786))
 
 PAINT_MODELS = {
     "1x": {
@@ -771,17 +771,30 @@ PAINT_MODELS = {
             "Рабочая кабина движется в трёх направлениях: вверх-вниз, вдоль изделия по рельсам и к его "
             "поверхности. Маляр выбирает положение у цистерны или резервуара, не покидая кабину."
         ),
+        # Cut-outs of all three views: the other two sit beside the render on the first screen, as on
+        # the console lift, and a click puts one on the stage.
+        "hero_views": True,
         "images": [
             {"image": _PAINT_3D_IMG, "alt": _("Подъёмник для окрасочной камеры 3D с выдвижной кабиной на рельсах")},
             {
-                "image": img("catalog/podemnik-dlya-okrasochnoj-kamery-3d-sboku", (800, 533)),
+                "image": img("catalog/podemnik-dlya-okrasochnoj-kamery-3d-sboku", (356, 496), widths=(356,)),
                 "alt": _("Подъёмник 3D сбоку: мачта, привод и выдвинутая рабочая кабина"),
-                "photo": True,  # on white, not a cut-out render
             },
             {
-                "image": img("catalog/podemnik-dlya-okrasochnoj-kamery-3d-sprava", (800, 533)),
+                "image": img("catalog/podemnik-dlya-okrasochnoj-kamery-3d-sprava", (570, 503), widths=(400, 570)),
                 "alt": _("Подъёмник 3D в правом ракурсе: кабина, направляющие и гидроцилиндр"),
-                "photo": True,
+            },
+        ],
+        "scenes": [
+            {
+                "image": img("photos/podemnik-3d-okraska-vagona", (1200, 822), widths=(600, 1200)),
+                "alt": _("Подъёмник 3D у стены окрасочной камеры: маляр в выдвинутой кабине окрашивает вагон"),
+                "title": _("Окраска вагонов: кабина выдвигается к борту"),
+                "text": _(
+                    "Мачта идёт по рельсам вдоль стены камеры, кабина поднимается на нужную высоту и выдвигается "
+                    "к борту вагона. Маляр держит одно расстояние распыления по всей поверхности, а проход между "
+                    "вагоном и стеной остаётся свободным."
+                ),
             },
         ],
         "kit_image": _PAINT_3D_IMG,

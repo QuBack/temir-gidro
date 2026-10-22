@@ -43,9 +43,12 @@ class HomeView(SeoMixin, TemplateView):
             hero_video=catalog.HERO_VIDEO,
             equipment_groups=catalog.EQUIPMENT_GROUPS,
             # Cylinders and power units: their own row of two under the lifts.
+            # Photo cards: the product in the same workshop as the lift series above.
             hydraulics=[
-                {k: catalog.CYLINDERS[k] for k in ("title", "url", "image")},
-                {"title": _("Гидростанции"), "url": reverse("core:power_units"), "image": power_units.HERO},
+                {"title": catalog.CYLINDERS["title"], "url": catalog.CYLINDERS["url"], "photo": True,
+                 "image": catalog.img("catalog/gidrocilindry-v-cehu", (1200, 550), widths=(600, 1200))},
+                {"title": _("Гидростанции"), "url": reverse("core:power_units"), "photo": True,
+                 "image": catalog.img("power-units/gidrostanciya-v-cehu", (1200, 550), widths=(600, 1200))},
             ],
             cylinders=catalog.CYLINDERS,
             stats=catalog.STATS,
