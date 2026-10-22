@@ -134,7 +134,7 @@
 <section class="section section--grey" aria-labelledby="proj-title">
   <div class="container">
     <div class="section-head">
-      <h2 id="proj-title">{% translate "Решения под объект" %}</h2>
+      <h2 id="proj-title">{% translate "Наши подъёмники на объектах" %}</h2>
     </div>
     <ul class="projects">
       {% for p in projects %}
@@ -142,6 +142,7 @@
         <a class="project" href="{{ p.url }}">
           {% picture p.image p.title sizes="(min-width: 48rem) 30vw, 90vw" %}
           <h3>{{ p.title }}</h3>
+          <p>{{ p.text }}</p>
         </a>
       </li>
       {% endfor %}

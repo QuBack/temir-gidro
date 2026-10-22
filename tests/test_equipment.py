@@ -86,11 +86,19 @@ def test_catalog_section(client):
     assert f"<loc>{SITE}/podemniki/</loc>" in client.get("/sitemap.xml").content.decode()
 
 
-def test_console_lift_page(client):
+def test_console_lift_line_with_1l_and_2l(client):
+    """A line of two models (2026-10): the line page lists them, each has its own page."""
     html = client.get("/podemniki/konsolnye/").content.decode()
-    assert "Консольные подъёмники" in html
-    assert "1500–12 000" in html
-    assert f"<loc>{SITE}/podemniki/konsolnye/</loc>" in client.get("/sitemap.xml").content.decode()
+    assert "Консольные подъёмники" in html and html.count('class="series__item') == 2
+    assert 'href="/podemniki/konsolnye/1l/"' in html and 'href="/podemniki/konsolnye/2l/"' in html
+    one = client.get("/podemniki/konsolnye/1l/").content.decode()
+    assert "800–2800" in one and 'data-config="console"' in one  # the client's 1L ranges and its configurator
+    two = client.get("/podemniki/konsolnye/2l/").content.decode()
+    assert "2000–6000" in two and "200–400" in two and "до 6000" in two
+    assert 'data-config' not in two
+    sitemap = client.get("/sitemap.xml").content.decode()
+    for path in ("", "1l/", "2l/"):
+        assert f"<loc>{SITE}/podemniki/konsolnye/{path}</loc>" in sitemap
 
 
 def test_configurator_uses_client_tables(client):

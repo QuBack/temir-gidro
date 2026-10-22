@@ -17,7 +17,7 @@
     <div class="model-gallery model-gallery--views model-gallery--fit">
       <div class="model-gallery__main">
         {% for g in model.images %}
-        <div class="model-gallery__slide" data-hero-slide{% if not forloop.first %} hidden{% endif %}>
+        <div class="model-gallery__slide{% if g.image.size.1 > g.image.size.0 %} model-gallery__slide--tall{% endif %}" data-hero-slide{% if not forloop.first %} hidden{% endif %}>
           {% if forloop.first %}{% picture g.image g.alt sizes="(min-width: 60rem) 42rem, 90vw" priority=True %}{% else %}{% picture g.image g.alt sizes="(min-width: 60rem) 42rem, 90vw" %}{% endif %}
         </div>
         {% endfor %}
@@ -67,6 +67,17 @@
     <ul class="model-views__list">
       {% for g in model.images|slice:"1:" %}
       <li><a class="model-views__item zoom" href="{% image_url g.image %}" data-zoom="views">{% picture g.image g.alt sizes="(min-width: 60rem) 24rem, 45vw" %}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+  {% if model.objects %}
+  {# The model at the client's sites: a row of photos, each opens full size. #}
+  <div class="container model-objects">
+    <h3>{% translate "На объектах" %}</h3>
+    <ul class="model-objects__list">
+      {% for o in model.objects %}
+      <li><a class="model-objects__item zoom" href="{% image_url o.image %}" data-zoom="objects">{% picture o.image o.alt sizes="(min-width: 60rem) 18rem, 45vw" %}</a></li>
       {% endfor %}
     </ul>
   </div>
@@ -156,6 +167,7 @@
 </section>
 
 {% if config_stroke %}{% include "includes/lift_config.html" with flat=True %}{% endif %}
+{% if model.console_config %}{% include "includes/console_config.html" with flat=True fallback=model.images.0.image config_send="#zayavka" %}{% endif %}
 
 <section class="section" id="voprosy" aria-labelledby="faq-title">
   <div class="container faq">
@@ -198,5 +210,5 @@
 
 {% endblock %}
 
-{% block extra_js %}<script src="{% static 'js/tabs.js' %}" defer></script><script src="{% static 'js/model.js' %}" defer></script>{% if config_stroke %}<script src="{% static 'js/drawings.js' %}" defer></script>{% endif %}
+{% block extra_js %}<script src="{% static 'js/tabs.js' %}" defer></script><script src="{% static 'js/model.js' %}" defer></script>{% if config_stroke or model.console_config %}<script src="{% static 'js/drawings.js' %}" defer></script>{% endif %}
 {% if model.scenes_3d %}<script src="{% static 'js/model3d.js' %}" data-viewer="{% static 'vendor/model-viewer/model-viewer.min.js' %}" data-draco="{% get_static_prefix %}vendor/draco/" defer></script>{% endif %}{% endblock %}

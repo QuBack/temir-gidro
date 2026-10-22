@@ -694,7 +694,7 @@ main .reveal--photo.is-visible { clip-path: inset(-3rem); }
 @media (min-width: 48rem) { .projects { grid-template-columns: repeat(3, 1fr); } }
 .project { display: grid; gap: .4rem; color: inherit; text-decoration: none; }
 .project picture { margin-bottom: .6rem; background: var(--grey-soft); }
-.project img { aspect-ratio: 4 / 3; object-fit: cover; width: 100%; }
+.project img { aspect-ratio: 4 / 5; object-fit: cover; width: 100%; }  /* photos from sites are portrait */
 .project:hover h3 { color: var(--red); }
 .project p { color: var(--muted); font-size: .9375rem; }
 
@@ -1356,6 +1356,15 @@ html.lightbox-open body { padding-right: var(--scrollbar, 0); }
 .model-views__item:hover { box-shadow: var(--shadow-photo); }
 .model-views__item picture { display: contents; }
 .model-views__item img { width: 100%; height: 100%; object-fit: contain; }
+/* Photos from the client's sites: portrait frames filled edge to edge. */
+.model-objects { margin-top: clamp(2.5rem, 5vw, 3.5rem); }
+.model-objects h3 { margin-bottom: 1rem; font-family: var(--font-cond); font-size: 1.5rem; font-weight: 700; }
+.model-objects__list { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: 1.25rem; }
+.model-objects__item { display: block; aspect-ratio: 3 / 4; overflow: hidden; background: var(--grey); box-shadow: var(--shadow-card); transition: box-shadow .3s; }
+.model-objects__item:hover { box-shadow: var(--shadow-photo); }
+.model-objects__item picture { display: contents; }
+.model-objects__item img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s cubic-bezier(.4, .7, .04, .88); }
+.model-objects__item:hover img { transform: scale(1.04); }
 
 /* ---------- 3D model (static/js/model3d.js) ----------
    The render stays until the visitor asks for 3D; then <model-viewer> takes its place
@@ -1613,8 +1622,13 @@ html:has(.page-nav) { scroll-padding-top: 7.5rem; }
   .model-hero .model-gallery--views .model-gallery__slide:not(.model-gallery__slide--photo) picture {
     left: 30%; right: 0;
   }
+  /* The whole stage across; a tall render (console 1L, 2L) also reaches up into the band under the
+     crumbs and a little down, at least by a fifth even on a short window, so it is not fitted small. */
   .model-hero .model-gallery--views.model-gallery--fit .model-gallery__slide:not(.model-gallery__slide--photo) picture {
     top: 0; bottom: 0; left: 0; right: 0;
+  }
+  .model-hero .model-gallery--views.model-gallery--fit .model-gallery__slide--tall:not(.model-gallery__slide--photo) picture {
+    top: min(-18%, var(--rise)); bottom: min(-4%, var(--drop));
   }
 }
 

@@ -86,11 +86,11 @@ def test_home_catalog_groups(client):
     # sections and carry their models in a hidden panel, so every model page stays linked without JS.
     assert html.count('<a class="eq-card') == 7
     assert 'href="/gidrocilindry/"' in html and 'href="/gidrostancii/"' in html
-    assert html.count("data-eq-toggle") == 3
-    for slug in ("nozhnichnye", "okrasochnye", "avtomobilnye"):
+    assert html.count("data-eq-toggle") == 4
+    for slug in ("nozhnichnye", "okrasochnye", "avtomobilnye", "konsolnye"):
         assert f'id="eq-{slug}" hidden' in html
     for url in ("/podemniki/nozhnichnye/4x/", "/podemniki/dlya-okrasochnyh-kamer/2d/", "/podemniki/chetyrehstoechnye/",
-                "/podemniki/konsolnye/"):
+                "/podemniki/konsolnye/2l/"):
         assert f'href="{url}"' in html
 
 
@@ -117,8 +117,8 @@ def test_steps_have_no_step_numbers(client):
 
 
 def test_single_product_lines_get_tabs(client):
-    html = client.get("/podemniki/konsolnye/").content.decode()
-    assert "Как устроен консольный подъёмник 1L" in html
+    html = client.get("/podemniki/dlya-musornyh-kontejnerov/").content.decode()
+    assert "Двор без контейнерной площадки" in html
     assert html.count("data-tab-panel") == 4 and "js/tabs.js" in html
     # Looks like a model page: the red stage, delivery as the last tab.
     assert 'class="eq-hero model-hero"' in html and 'href="#postavka" data-tab' in html
