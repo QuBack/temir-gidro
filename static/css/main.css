@@ -460,6 +460,7 @@ body:not(.page-white) .config .sheet { color: var(--ink); }
 .scheme .s-floor { stroke: var(--ink); stroke-width: 1.5; }
 .scheme .s-hatch { stroke: var(--ink); stroke-width: 1; }
 .scheme .s-frame { fill: var(--anthracite); }
+.scheme .s-mast { fill: var(--red); }
 .scheme .s-arm { stroke: var(--red); stroke-width: 9; stroke-linecap: round; }
 .scheme .s-pin { fill: var(--white); stroke: var(--ink); stroke-width: 1.5; }
 .scheme .s-cyl { stroke: var(--ink); stroke-width: 8; stroke-linecap: round; }

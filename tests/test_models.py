@@ -186,7 +186,7 @@ def test_paint_3d_model_page(client):
 
 def test_model_pages_show_photos_from_sites(client):
     """The client's site photos: a gallery on the model's page, opening full size."""
-    for url, count in (("/podemniki/konsolnye/1l/", 4), ("/podemniki/nozhnichnye/2x/", 3), ("/podemniki/nozhnichnye/1x/", 1)):
+    for url, count in (("/podemniki/konsolnye/1l/", 4), ("/podemniki/nozhnichnye/2x/", 5), ("/podemniki/nozhnichnye/1x/", 1)):
         html = client.get(url).content.decode()
         assert html.count('class="model-objects__item zoom"') == count, url
     assert "model-objects" not in client.get("/podemniki/nozhnichnye/3x/").content.decode()
