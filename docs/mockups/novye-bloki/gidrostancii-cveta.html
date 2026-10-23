@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Цвет гидростанции — макет</title>
+<!-- Mockup: "we paint it in your equipment's colour". Real photos of the colours already made,
+     then a drawn station the visitor recolours (tank and motor separately) and sends with the request.
+     The drawing, not a recoloured photo: a tinted photo would show a station that was never made. -->
+<link rel="stylesheet" href="obshchee.css">
+<style>
+.made { display: grid; gap: 1rem; grid-template-columns: 1fr 1fr; }
+@media (min-width: 60rem) { .made { grid-template-columns: 1.2fr 1fr 1fr; } }
+.made figure { margin: 0; position: relative; border-radius: var(--radius); overflow: hidden; background: var(--grey); }
+.made figure:first-child { grid-column: 1 / -1; }
+@media (min-width: 60rem) { .made figure:first-child { grid-column: auto; grid-row: span 2; } }
+.made img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 3 / 4; }
+.made figure:first-child img { aspect-ratio: auto; }
+.made figcaption { position: absolute; left: .75rem; bottom: .75rem; display: flex; align-items: center; gap: .5rem; padding: .375rem .75rem .375rem .375rem; border-radius: 999px; background: rgb(255 255 255 / .94); font-size: .8125rem; font-weight: 600; box-shadow: var(--shadow-card); }
+.made figcaption i { width: 1.25rem; height: 1.25rem; border-radius: 50%; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .15); }
+
+.pick { display: grid; gap: 2rem; margin-top: 4rem; padding: clamp(1.25rem, 4vw, 2.5rem); background: #fff; border-radius: 8px; box-shadow: var(--shadow-card); align-items: center; }
+@media (min-width: 60rem) { .pick { grid-template-columns: 1fr 1.1fr; gap: 3rem; } }
+.pick__stage { background: radial-gradient(circle at 50% 40%, #fff, var(--grey-soft) 70%); border-radius: 6px; padding: 1rem; }
+.pick__stage svg { display: block; width: 100%; max-width: 26rem; margin: 0 auto; height: auto; }
+.pick h3 { font-size: clamp(1.75rem, 3vw, 2.25rem); }
+.pick__lead { color: var(--muted); margin-top: .5rem; }
+.grp { margin-top: 1.5rem; }
+.grp > span { display: block; font-family: var(--font-draw); text-transform: uppercase; letter-spacing: .06em; font-size: .8125rem; color: var(--muted); margin-bottom: .625rem; }
+.sw { display: flex; flex-wrap: wrap; gap: .625rem; }
+.sw button { width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 0; cursor: pointer; background: var(--c); box-shadow: inset 0 0 0 1px rgb(0 0 0 / .15); transition: transform .15s; }
+.sw button:hover { transform: scale(1.08); }
+.sw button[aria-pressed="true"] { box-shadow: inset 0 0 0 1px rgb(0 0 0 / .15), 0 0 0 3px #fff, 0 0 0 5px var(--ink); }
+.sw label { display: inline-flex; align-items: center; gap: .5rem; padding: 0 .875rem; height: 2.75rem; border: 1px dashed var(--line); border-radius: 999px; font-size: .875rem; color: var(--muted); }
+.sw input { width: 5.5rem; border: 0; border-bottom: 1px solid var(--line); font: inherit; padding: .125rem 0; background: none; }
+.result { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
+.result p { font-family: var(--font-draw); font-size: 1.0625rem; }
+#tank, #lid { transition: fill .35s; }
+#motor path, #motor rect { transition: fill .35s; }
+</style>
+</head>
+<body>
+<div class="mock-bar"><div class="container"><b>Макет 6 · Красим в цвет вашего оборудования</b><span>Реальные фото цветов + рисунок, который можно перекрасить</span><a href="index.html">← Все макеты</a></div></div>
+
+<section class="section section--grey">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Под ваш цех</span>
+      <h2>Красим в цвет вашего оборудования</h2>
+      <p class="section-head__lead">Бак, рама и кожухи в любом цвете по RAL: под фирменный стиль или под линию, к которой станция встанет. Мотор подбираем в тон.</p>
+    </div>
+
+    <div class="made">
+      <figure><img src="foto/gidrostancii-partiya.webp" alt="Партия красных гидростанций с синими моторами перед отгрузкой"><figcaption><i style="background:#c4161c"></i>RAL 3020 · мотор синий</figcaption></figure>
+      <figure><img src="foto/gidrostanciya-s-raspredelitelem.webp" alt="Гидростанция с баком цвета антрацит и синим мотором"><figcaption><i style="background:#383e42"></i>RAL 7016 · мотор синий</figcaption></figure>
+      <figure><img src="foto/gidrostanciya-dva-motora.webp" alt="Красная гидростанция с двумя серыми моторами"><figcaption><i style="background:#c4161c"></i>RAL 3020 · моторы серые</figcaption></figure>
+      <figure><img src="foto/gidrostanciya-kompaktnaya.webp" alt="Компактная красная гидростанция с серебристым мотором"><figcaption><i style="background:#c4161c"></i>RAL 3020 · мотор серебристый</figcaption></figure>
+      <figure><img src="foto/gidrostanciya-s-pultom.webp" alt="Компактная гидростанция с пультом управления"><figcaption><i style="background:#c4161c"></i>RAL 3020 · с пультом</figcaption></figure>
+    </div>
+
+    <div class="pick">
+      <div class="pick__stage">
+        <svg viewBox="0 0 400 420" role="img" aria-label="Гидростанция выбранного цвета">
+          <defs>
+            <linearGradient id="shade" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".18"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".22"/></linearGradient>
+            <linearGradient id="mshade" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></linearGradient>
+          </defs>
+          <ellipse cx="200" cy="402" rx="170" ry="10" fill="#000" opacity=".12"/>
+          <!-- Tank -->
+          <rect id="tank" x="50" y="196" width="300" height="196" rx="3" fill="#c4161c"/>
+          <rect x="50" y="196" width="300" height="196" rx="3" fill="url(#shade)"/>
+          <rect id="lid" x="42" y="184" width="316" height="14" rx="2" fill="#c4161c"/>
+          <rect x="42" y="184" width="316" height="14" rx="2" fill="#000" opacity=".12"/>
+          <g fill="#d6dadc"><circle cx="56" cy="191" r="3"/><circle cx="344" cy="191" r="3"/><circle cx="200" cy="191" r="3"/></g>
+          <!-- Level gauge, drain -->
+          <rect x="262" y="236" width="18" height="96" rx="3" fill="#1d2124"/><rect x="267" y="250" width="8" height="68" fill="#e9eef0"/><rect x="267" y="290" width="8" height="28" fill="#d8a531"/>
+          <circle cx="300" cy="380" r="6" fill="#9aa2a6"/>
+          <!-- Filler cap, valve block -->
+          <rect x="78" y="166" width="34" height="18" rx="4" fill="#b7bec2"/><rect x="74" y="160" width="42" height="8" rx="3" fill="#cfd5d8"/>
+          <rect x="282" y="146" width="54" height="38" rx="2" fill="#aeb5b9"/><rect x="294" y="128" width="20" height="20" rx="2" fill="#2a2f32"/><circle cx="330" cy="164" r="5" fill="#d23" />
+          <!-- Motor -->
+          <g id="motor">
+            <rect x="146" y="166" width="108" height="18" rx="2" fill="#2756a8"/>
+            <rect x="158" y="70" width="84" height="98" rx="4" fill="#2756a8"/>
+            <path d="M158 70 Q158 26 200 24 Q242 26 242 70 Z" fill="#2756a8"/>
+            <rect x="242" y="104" width="24" height="34" rx="3" fill="#2756a8"/>
+          </g>
+          <rect x="146" y="166" width="108" height="18" rx="2" fill="url(#mshade)"/>
+          <rect x="158" y="70" width="84" height="98" rx="4" fill="url(#mshade)"/>
+          <path d="M158 70 Q158 26 200 24 Q242 26 242 70 Z" fill="url(#mshade)"/>
+          <g stroke="#000" stroke-opacity=".22" stroke-width="2">
+            <line x1="170" y1="76" x2="170" y2="162"/><line x1="182" y1="76" x2="182" y2="162"/><line x1="194" y1="76" x2="194" y2="162"/><line x1="206" y1="76" x2="206" y2="162"/><line x1="218" y1="76" x2="218" y2="162"/><line x1="230" y1="76" x2="230" y2="162"/>
+          </g>
+          <rect x="176" y="118" width="26" height="14" fill="#e6e9ea" opacity=".85"/>
+        </svg>
+      </div>
+      <div>
+        <h3>Подберите цвет станции</h3>
+        <p class="pick__lead">Выберите цвет бака и мотора: сохраним выбор и приложим его к заявке.</p>
+        <div class="grp"><span>Бак и рама</span>
+          <div class="sw" data-target="tank">
+            <button type="button" style="--c:#c4161c" data-c="#c4161c" data-n="RAL 3020" aria-pressed="true" aria-label="RAL 3020 красный"></button>
+            <button type="button" style="--c:#383e42" data-c="#383e42" data-n="RAL 7016" aria-pressed="false" aria-label="RAL 7016 антрацит"></button>
+            <button type="button" style="--c:#d7d7d7" data-c="#d7d7d7" data-n="RAL 7035" aria-pressed="false" aria-label="RAL 7035 светло-серый"></button>
+            <button type="button" style="--c:#1e3f74" data-c="#1e3f74" data-n="RAL 5010" aria-pressed="false" aria-label="RAL 5010 синий"></button>
+            <button type="button" style="--c:#f2b400" data-c="#f2b400" data-n="RAL 1023" aria-pressed="false" aria-label="RAL 1023 жёлтый"></button>
+            <button type="button" style="--c:#2f7d3b" data-c="#2f7d3b" data-n="RAL 6001" aria-pressed="false" aria-label="RAL 6001 зелёный"></button>
+            <label>Свой RAL <input type="text" placeholder="напр. 5015" id="ral-own"></label>
+          </div>
+        </div>
+        <div class="grp"><span>Мотор</span>
+          <div class="sw" data-target="motor">
+            <button type="button" style="--c:#2756a8" data-c="#2756a8" data-n="синий" aria-pressed="true" aria-label="Синий"></button>
+            <button type="button" style="--c:#7e878c" data-c="#7e878c" data-n="серый" aria-pressed="false" aria-label="Серый"></button>
+            <button type="button" style="--c:#c3c8cb" data-c="#c3c8cb" data-n="серебристый" aria-pressed="false" aria-label="Серебристый"></button>
+            <button type="button" style="--c:#2b3033" data-c="#2b3033" data-n="чёрный" aria-pressed="false" aria-label="Чёрный"></button>
+          </div>
+        </div>
+        <div class="result">
+          <p id="result">Бак RAL 3020 · мотор синий</p>
+          <a class="btn btn--primary" href="#">Добавить в заявку</a>
+        </div>
+      </div>
+    </div>
+    <p class="note"><b>Уточнить:</b> красите ли вы в любой RAL и есть ли доплата. От этого зависит, оставлять поле «Свой RAL» или только готовые цвета. Цвет мотора тоже зависит от поставщика: какие реально доступны?</p>
+  </div>
+</section>
+<script src="obshchee.js"></script>
+<script>
+// Swatches recolour the drawing and fill the line that goes into the request.
+const state = { tank: "RAL 3020", motor: "синий" };
+const show = () => (document.getElementById("result").textContent = `Бак ${state.tank} · мотор ${state.motor}`);
+document.querySelectorAll(".sw[data-target]").forEach((g) => {
+  g.querySelectorAll("button").forEach((b) => b.addEventListener("click", () => {
+    g.querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b));
+    if (g.dataset.target === "tank") {
+      ["tank", "lid"].forEach((id) => document.getElementById(id).setAttribute("fill", b.dataset.c));
+    } else {
+      document.querySelectorAll("#motor > *").forEach((n) => n.setAttribute("fill", b.dataset.c));
+    }
+    state[g.dataset.target] = b.dataset.n;
+    show();
+  }));
+});
+document.getElementById("ral-own").addEventListener("input", (e) => {
+  if (!e.target.value.trim()) return;
+  document.querySelectorAll('[data-target="tank"] button').forEach((x) => x.setAttribute("aria-pressed", false));
+  state.tank = "RAL " + e.target.value.trim();
+  show();
+});
+</script>
+</body>
+</html>

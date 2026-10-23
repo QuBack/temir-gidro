@@ -78,6 +78,9 @@ def test_home_steps_timeline(client):
     # Five steps, each with a photo; the content is in the HTML, JS only animates it.
     assert html.count('class="timeline__item" data-reveal') == 5
     assert "img/steps/etap-montazh-1536.webp" in html
+    # Installation: four photos in one frame, opened together in the viewer, picked by thumbnails.
+    assert html.count('data-zoom="montazh"') == 4 and html.count('<a class="timeline__thumb') == 4
+    assert "img/steps/montazh-machta-v-priyamke-1086.webp" in html
 
 
 def test_home_catalog_groups(client):

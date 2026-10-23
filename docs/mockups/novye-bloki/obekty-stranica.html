@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Страница «Объекты» — макет</title>
+<!-- Mockup of a new /obekty/ page: every site photo in one place, filtered by equipment type,
+     each photo linked to its model. The home page block and the last mosaic tile lead here. -->
+<link rel="stylesheet" href="obshchee.css">
+<style>
+.ohero { background: radial-gradient(ellipse 90% 110% at 70% 40%, #850e14 0%, #6a090e 40%, #420509 78%, #210204 100%); color: #fff; padding: 3rem 0 2.5rem; }
+.crumbs { font-size: .8125rem; opacity: .8; margin-bottom: 1.5rem; }
+.ohero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); }
+.ohero p { margin-top: .875rem; max-width: 40rem; font-size: 1.125rem; color: rgb(255 255 255 / .85); }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: 1.5rem; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgb(255 255 255 / .25); max-width: 48rem; }
+.stats b { display: block; font-family: var(--font-cond); font-size: 2.75rem; line-height: 1; }
+.stats span { font-size: .875rem; color: rgb(255 255 255 / .75); }
+
+.filters { position: sticky; top: 2.3rem; z-index: 5; background: rgb(255 255 255 / .94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.filters .container { display: flex; gap: .5rem; overflow-x: auto; padding-block: .875rem; scrollbar-width: none; }
+.chip { flex: none; display: inline-flex; align-items: center; gap: .5rem; padding: .5rem 1rem; border-radius: 999px; border: 1px solid var(--line); background: #fff; font: 600 .9375rem var(--font); color: var(--ink); cursor: pointer; }
+.chip span { font-weight: 400; color: var(--muted); font-size: .8125rem; }
+.chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+.chip[aria-pressed="true"] span { color: rgb(255 255 255 / .7); }
+
+.wall { columns: 2 12rem; column-gap: .75rem; padding-top: 1.5rem; }
+@media (min-width: 60rem) { .wall { columns: 4; column-gap: 1rem; } }
+.item { break-inside: avoid; margin: 0 0 .75rem; position: relative; border-radius: var(--radius); overflow: hidden; background: var(--grey); animation: rise .4s both; }
+@media (min-width: 60rem) { .item { margin-bottom: 1rem; } }
+.item[hidden] { display: none; }
+@keyframes rise { from { opacity: 0; translate: 0 12px; } }
+.item > a:first-child img { width: 100%; transition: transform .6s cubic-bezier(.2, .7, .2, 1); }
+.item:hover > a:first-child img { transform: scale(1.04); }
+.item figcaption { position: absolute; inset: auto 0 0; display: grid; gap: .25rem; padding: 3rem .875rem .75rem; color: #fff; background: linear-gradient(transparent, rgb(20 24 26 / .88)); font-size: .875rem; line-height: 1.35; }
+.item .t { justify-self: start; font-family: var(--font-draw); text-transform: uppercase; letter-spacing: .06em; font-size: .75rem; padding: .125rem .4rem; background: var(--red); border-radius: 2px; }
+.item figcaption a { font-weight: 600; color: #ffb3b5; text-decoration: none; }
+.item .t.todo { background: #ffe27a; color: #3d3200; }
+.ohero .todo { background: rgb(226 176 7 / .3); color: #ffe27a; }
+.item figcaption a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="mock-bar"><div class="container"><b>Макет 4 · Отдельная страница «Объекты»</b><span>Все фото с объектов, фильтр по типу, переход к модели</span><a href="index.html">← Все макеты</a></div></div>
+
+<header class="ohero">
+  <div class="container">
+    <p class="crumbs">Главная / Объекты</p>
+    <h1>Объекты</h1>
+    <p>Подъёмники и гидростанции ТЕМИР ГИДРО у заказчиков: склады, цеха, пищевые производства, автосервисы.</p>
+    <div class="stats">
+      <div><b><span class="todo">40+</span></b><span>объектов</span></div>
+      <div><b><span class="todo">25</span></b><span>городов</span></div>
+      <div><b><span class="todo">с 2012</span></b><span>делаем подъёмники</span></div>
+    </div>
+  </div>
+</header>
+
+<nav class="filters" aria-label="Тип оборудования">
+  <div class="container" id="chips">
+    <button class="chip" type="button" data-f="all" aria-pressed="true">Все <span></span></button>
+    <button class="chip" type="button" data-f="nozh" aria-pressed="false">Ножничные <span></span></button>
+    <button class="chip" type="button" data-f="kons" aria-pressed="false">Консольные <span></span></button>
+    <button class="chip" type="button" data-f="gidro" aria-pressed="false">Гидростанции <span></span></button>
+  </div>
+</nav>
+
+<main class="container" style="padding-bottom:4rem">
+  <div class="wall" id="wall">
+    <figure class="item" data-t="nozh"><a href="../../../static/img/objects/nozhnichnyj-2x-u-fasada-1200.webp" data-zoom><img src="../../../static/img/objects/nozhnichnyj-2x-u-fasada-600.webp" alt="Ножничный подъёмник 2X в приямке у фасада" loading="lazy"></a><figcaption><span class="t">2X</span>Подача грузов к проёму второго этажа<a href="#">Ножничный 2X →</a></figcaption></figure>
+    <figure class="item" data-t="kons"><a href="../../../static/img/objects/konsolnyj-1l-paleta-v-cehu-917.webp" data-zoom><img src="../../../static/img/objects/konsolnyj-1l-paleta-v-cehu-600.webp" alt="Консольный подъёмник 1L с паллетой в цехе" loading="lazy"></a><figcaption><span class="t">1L</span>Паллета коробок в цехе<a href="#">Консольный 1L →</a></figcaption></figure>
+    <figure class="item" data-t="nozh"><a href="foto/nozhnichnyj-s-ploshchadkoj.webp" data-zoom><img src="foto/nozhnichnyj-s-ploshchadkoj.webp" alt="Ножничный подъёмник с площадкой обслуживания в приямке" loading="lazy"></a><figcaption><span class="t todo">модель?</span>Площадка обслуживания на производстве<a href="#">Ножничные подъёмники →</a></figcaption></figure>
+    <figure class="item" data-t="gidro"><a href="foto/gidrostanciya-s-pultom.webp" data-zoom><img src="foto/gidrostanciya-s-pultom.webp" alt="Гидростанция с пультом управления на объекте" loading="lazy"></a><figcaption><span class="t">Гидростанция</span>Компактная станция с пультом у подъёмника<a href="#">Гидростанции →</a></figcaption></figure>
+    <figure class="item" data-t="nozh"><a href="../../../static/img/objects/nozhnichnyj-podemnik-v-ograzhdenii-1200.webp" data-zoom><img src="../../../static/img/objects/nozhnichnyj-podemnik-v-ograzhdenii-600.webp" alt="Ножничный подъёмник в ограждённой шахте" loading="lazy"></a><figcaption><span class="t">2X</span>Ограждённая шахта с воротами<a href="#">Ножничный 2X →</a></figcaption></figure>
+    <figure class="item" data-t="kons"><a href="foto/gruzovoj-v-karkasnoj-shahte.webp" data-zoom><img src="foto/gruzovoj-v-karkasnoj-shahte.webp" alt="Грузовой подъёмник в каркасной шахте" loading="lazy"></a><figcaption><span class="t todo">модель?</span>Каркасная шахта, подача на антресоль<a href="#">Консольные подъёмники →</a></figcaption></figure>
+    <figure class="item" data-t="nozh"><a href="../../../static/img/objects/nozhnichnyj-1x-u-rampy-885.webp" data-zoom><img src="../../../static/img/objects/nozhnichnyj-1x-u-rampy-600.webp" alt="Ножничный подъёмник 1X у погрузочных ворот" loading="lazy"></a><figcaption><span class="t">1X</span>У погрузочных ворот склада<a href="#">Ножничный 1X →</a></figcaption></figure>
+    <figure class="item" data-t="kons"><a href="../../../static/img/objects/konsolnyj-1l-naruzhnaya-shahta-929.webp" data-zoom><img src="../../../static/img/objects/konsolnyj-1l-naruzhnaya-shahta-600.webp" alt="Консольный подъёмник 1L в наружной шахте" loading="lazy"></a><figcaption><span class="t">1L</span>Наружная шахта-каркас у фасада<a href="#">Консольный 1L →</a></figcaption></figure>
+    <figure class="item" data-t="nozh"><a href="../../../static/img/objects/nozhnichnyj-2x-v-cehu-1038.webp" data-zoom><img src="../../../static/img/objects/nozhnichnyj-2x-v-cehu-600.webp" alt="Ножничный подъёмник 2X в цехе" loading="lazy"></a><figcaption><span class="t">2X</span>В цехе с листовым грузом<a href="#">Ножничный 2X →</a></figcaption></figure>
+    <figure class="item" data-t="gidro"><a href="../../../static/img/power-units/v-mashinnom-zale-1200.webp" data-zoom><img src="../../../static/img/power-units/v-mashinnom-zale-800.webp" alt="Гидростанция в машинном зале" loading="lazy"></a><figcaption><span class="t">Гидростанция</span>В машинном зале<a href="#">Гидростанции →</a></figcaption></figure>
+    <figure class="item" data-t="kons"><a href="../../../static/img/objects/konsolnyj-1l-v-shahte-1086.webp" data-zoom><img src="../../../static/img/objects/konsolnyj-1l-v-shahte-600.webp" alt="Консольный подъёмник 1L во внутренней шахте" loading="lazy"></a><figcaption><span class="t">1L</span>Внутренняя бетонная шахта<a href="#">Консольный 1L →</a></figcaption></figure>
+    <figure class="item" data-t="nozh"><a href="../../../static/img/objects/nozhnichnyj-2x-na-ploshchadke-1086.webp" data-zoom><img src="../../../static/img/objects/nozhnichnyj-2x-na-ploshchadke-600.webp" alt="Ножничный подъёмник 2X на площадке у склада" loading="lazy"></a><figcaption><span class="t">2X</span>На площадке у склада<a href="#">Ножничный 2X →</a></figcaption></figure>
+    <figure class="item" data-t="nozh"><a href="foto/nozhnichnyj-v-cehu.webp" data-zoom><img src="foto/nozhnichnyj-v-cehu.webp" alt="Ножничный подъёмник в цеху" loading="lazy"></a><figcaption><span class="t todo">модель?</span>Перед отгрузкой<a href="#">Ножничные подъёмники →</a></figcaption></figure>
+    <figure class="item" data-t="kons"><a href="../../../static/img/objects/konsolnyj-1l-na-sklade-951.webp" data-zoom><img src="../../../static/img/objects/konsolnyj-1l-na-sklade-600.webp" alt="Консольный подъёмник 1L на складе" loading="lazy"></a><figcaption><span class="t">1L</span>На складе: мачта, цепи, платформа<a href="#">Консольный 1L →</a></figcaption></figure>
+    <figure class="item" data-t="nozh"><a href="../../../static/img/objects/nozhnichnyj-2x-u-fasada-sboku-1200.webp" data-zoom><img src="../../../static/img/objects/nozhnichnyj-2x-u-fasada-sboku-600.webp" alt="Ножничный подъёмник 2X у здания, вид сбоку" loading="lazy"></a><figcaption><span class="t">2X</span>Вид сбоку: две пары ножниц<a href="#">Ножничный 2X →</a></figcaption></figure>
+  </div>
+  <p class="note"><b>Как растёт:</b> когда появятся города, добавится второй ряд фильтров «по региону» и карта. Каждое фото ведёт на свою модель, а модель ссылается сюда: для поисковиков это связка страниц. Цифры в шапке для примера.</p>
+</main>
+<script src="obshchee.js"></script>
+<script>
+// Filter by equipment type; the chips show how many photos each type has.
+const items = [...document.querySelectorAll(".item")];
+const chips = [...document.querySelectorAll(".chip")];
+chips.forEach((c) => {
+  const f = c.dataset.f;
+  c.querySelector("span").textContent = f === "all" ? items.length : items.filter((i) => i.dataset.t === f).length;
+  c.addEventListener("click", () => {
+    chips.forEach((x) => x.setAttribute("aria-pressed", x === c));
+    items.forEach((i) => (i.hidden = f !== "all" && i.dataset.t !== f));
+  });
+});
+</script>
+</body>
+</html>

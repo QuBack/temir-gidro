@@ -12,7 +12,20 @@ without JS, or with reduced motion, everything is simply shown.{% endcomment %}
       <ol class="timeline__list">
         {% for s in steps %}
         <li class="timeline__item" data-reveal>
+          {% if s.gallery %}
+          {% comment %}Several photos: one in the frame, thumbnails under it pick another (site.js);
+          the frame opens the viewer. Without JS the first photo shows and a thumbnail opens its picture.{% endcomment %}
+          <div class="timeline__photo timeline__photo--gallery" data-step-gallery>
+            <div class="timeline__frame">
+              {% for g in s.gallery %}<a class="timeline__shot zoom{% if g.top %} is-top{% endif %}{% if forloop.first %} is-active{% endif %}" href="{% image_url g.image %}" data-zoom="montazh"{% if not forloop.first %} tabindex="-1"{% endif %}>{% picture g.image g.alt sizes="(min-width: 60rem) 34rem, 90vw" %}</a>{% endfor %}
+            </div>
+            <div class="timeline__thumbs">
+              {% for g in s.gallery %}<a class="timeline__thumb{% if g.top %} is-top{% endif %}" href="{% image_url g.image %}" aria-label="{{ g.alt }}"{% if forloop.first %} aria-current="true"{% endif %}>{% picture g.image "" sizes="8rem" %}</a>{% endfor %}
+            </div>
+          </div>
+          {% else %}
           <figure class="timeline__photo">{% picture s.image s.alt sizes="(min-width: 60rem) 34rem, 90vw" %}</figure>
+          {% endif %}
           <span class="timeline__dot" aria-hidden="true">{% icon s.icon %}</span>
           <div class="timeline__text">
             <h3>{{ s.title }}</h3>

@@ -60,6 +60,10 @@
       </ul>
     </aside>
   </div>
+  {# The model at work, right after its description. #}
+  {% if model.scenes %}
+  <div class="container model-scenes">{% include "includes/scenes.html" with scenes=model.scenes %}</div>
+  {% endif %}
   {% if model.scenes_3d %}{% include "includes/model3d.html" with scenes=model.scenes_3d %}{% endif %}
   {% if model.images|length > 1 and not model.hero_views %}
   <div class="container model-views">
@@ -72,18 +76,16 @@
   </div>
   {% endif %}
   {% if model.objects %}
-  {# The model at the client's sites: a row of photos, each opens full size. #}
+  {# The model at the client's sites: a mosaic laid out in lift_models.mosaic(); the gap at the end is a request tile. #}
   <div class="container model-objects">
     <h3>{% translate "На объектах" %}</h3>
-    <ul class="model-objects__list">
-      {% for o in model.objects %}
-      <li><a class="model-objects__item zoom" href="{% image_url o.image %}" data-zoom="objects">{% picture o.image o.alt sizes="(min-width: 60rem) 18rem, 45vw" %}</a></li>
+    <ul class="mosaic">
+      {% for o in model.objects.items %}
+      <li class="{{ o.cls }}"><a class="model-objects__item zoom" href="{% image_url o.image %}" data-zoom="objects">{% if forloop.first %}{% picture o.image o.alt sizes="(min-width: 48rem) 36rem, 92vw" %}{% else %}{% picture o.image o.alt sizes="(min-width: 48rem) 18rem, 46vw" %}{% endif %}<span class="mosaic__caption" aria-hidden="true">{{ o.alt }}</span></a></li>
       {% endfor %}
+      <li class="{{ model.objects.tile }}"><a class="mosaic__tile" href="#zayavka"><b>{% translate "Ваш объект — следующий" %}</b><span>{% translate "Рассчитаем подъёмник под ваш проём, груз и высоту" %}</span><em>{% translate "Оставить заявку" %} →</em></a></li>
     </ul>
   </div>
-  {% endif %}
-  {% if model.scenes %}
-  <div class="container model-scenes">{% include "includes/scenes.html" with scenes=model.scenes %}</div>
   {% endif %}
 </section>
 
@@ -105,7 +107,20 @@
   </div>
 </section>
 
-<section class="section section--grey" id="komplektaciya" aria-labelledby="kit-title" data-tab-panel>
+<section class="section section--grey{% if model.chains %} section--chains{% endif %}" id="komplektaciya" aria-labelledby="kit-title" data-tab-panel>
+  {% if model.chains %}
+  {# The console lifts' chains open the kit tab: the photo across the full width (opens once, static/js/model.js), heading and four points on it. #}
+  <div class="chains" data-chains>
+    <div class="chains__photo">{% picture model.chains.image model.chains.alt sizes="100vw" %}</div>
+    <div class="container chains__text">
+      <h2 class="chains__title">{{ model.chains.title }}</h2>
+      <ul class="chains__points">
+        {% for title, text in model.chains.points %}<li><b>{{ title }}</b><span>{{ text }}</span></li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% include "includes/chains_more.html" with title=model.chains.title %}
+  {% endif %}
   <div class="container">
     <div class="section-head">
       <h2 id="kit-title">{% translate "Стандартная комплектация" %}</h2>

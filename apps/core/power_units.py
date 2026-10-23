@@ -9,11 +9,6 @@ from django.utils.translation import gettext_lazy as _
 
 from .catalog import CATEGORIES, CYLINDERS, FAQ, img
 
-
-def _photo(name):
-    return img(f"power-units/{name}", (1200, 900), widths=(400, 800, 1200))
-
-
 # The client's own unit (photo, background cut out): the first screen and the kit.
 HERO = img("power-units/gidrostanciya-temir-gidro", (998, 1423), widths=(200, 400, 998))
 
@@ -124,12 +119,18 @@ PAGE = {
         (_("Испытания"), _("Стенд, настройка предохранительного клапана, проверка герметичности."), "gauge"),
         (_("Отгрузка"), _("С паспортом и гидросхемой, в любой регион."), "truck"),
     ],
+    # The client's own units (photos, 2026-10), portrait frames.
     "photos": [
-        (_photo("sborka"), _("Сборка гидростанции на участке")),
-        (_photo("ispytaniya"), _("Испытания гидростанции на стенде")),
-        (_photo("v-mashinnom-zale"), _("Гидростанция в машинном зале")),
-        (_photo("klapannyj-blok"), _("Клапанный блок гидростанции")),
-        (_photo("gotovye-k-otgruzke"), _("Гидростанции перед отгрузкой")),
+        (img("power-units/gidrostancii-partiya-pered-otgruzkoj", (1086, 1448), widths=(400, 800, 1086)),
+         _("Партия красных гидростанций с синими двигателями перед отгрузкой")),
+        (img("power-units/gidrostanciya-s-dvumya-dvigatelyami", (1122, 1402), widths=(400, 800, 1122)),
+         _("Гидростанция с двумя двигателями на красном баке")),
+        (img("power-units/gidrostanciya-s-ruchnym-raspredelitelem", (1086, 1448), widths=(400, 800, 1086)),
+         _("Гидростанция с ручным распределителем на баке цвета антрацит")),
+        (img("power-units/gidrostanciya-kompaktnaya-na-oporah", (1086, 1448), widths=(400, 800, 1086)),
+         _("Компактная гидростанция на опорах с рукавом высокого давления")),
+        (img("power-units/gidrostanciya-s-pultom-upravleniya", (941, 1672), widths=(400, 800, 941)),
+         _("Компактная гидростанция с пультом управления на объекте")),
     ],
     # What the questionnaire asks; the PDF is in static/docs/.
     "questionnaire": [

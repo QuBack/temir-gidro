@@ -189,6 +189,25 @@ STEPS_TIMELINE = [
     }
     for (title, text, icon), (slug, alt) in zip(STEPS, _STEP_PHOTOS, strict=True)
 ]
+# Installation: real photos from sites, picked by thumbnails under the step's photo.
+# "top": a portrait photo whose subject is in its upper part, framed from above in the 3:2 frame.
+STEPS_TIMELINE[-1]["gallery"] = [
+    {"image": STEPS_TIMELINE[-1]["image"], "alt": STEPS_TIMELINE[-1]["alt"]},
+    {
+        "image": img("steps/montazh-razgruzka-kranom", (1448, 1086), widths=(300, 600, 1024, 1448)),
+        "alt": _("Разгрузка ножничного подъёмника краном на объекте заказчика"),
+    },
+    {
+        "image": img("steps/montazh-machta-v-priyamke", (1086, 1448), widths=(300, 600, 1086)),
+        "alt": _("Монтажники ставят мачту консольного подъёмника в приямке"),
+        "top": True,
+    },
+    {
+        "image": img("steps/montazh-shahta-snizu", (1086, 1448), widths=(300, 600, 1086)),
+        "alt": _("Смонтированный консольный подъёмник в шахте, вид снизу"),
+        "top": True,
+    },
+]
 
 # (title, text, url, icon)
 INDUSTRIES = [

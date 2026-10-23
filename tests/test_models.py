@@ -94,7 +94,7 @@ def test_model_has_one_picture_on_first_screen(client):
     assert html.count('class="model-views__item zoom"') == 2
 
 
-@pytest.mark.parametrize("slug", ["1x", "2x", "3x"])
+@pytest.mark.parametrize("slug", ["1x", "2x", "3x", "4x"])
 def test_scissor_model_has_3d_viewer(client, slug):
     html = client.get(f"/podemniki/nozhnichnye/{slug}/").content.decode()
     glb = f'data-model3d="/static/models/nozhnichnyj-podemnik-{slug}.glb"'
@@ -113,8 +113,19 @@ def test_3d_light_per_model(client):
 
 
 def test_model_without_3d_has_no_viewer(client):
-    html = client.get("/podemniki/nozhnichnye/4x/").content.decode()
+    html = client.get("/podemniki/dlya-okrasochnyh-kamer/1x/").content.decode()
     assert "data-model3d" not in html and "model3d.js" not in html
+
+
+def test_new_3d_models_use_neutral_light(client):
+    """4X and 2L (2026-10) were tuned to the viewer's neutral light and have their own camera angle."""
+    for url, glb, orbit in (
+        ("/podemniki/nozhnichnye/4x/", "nozhnichnyj-podemnik-4x.glb", "30deg 78deg auto"),
+        ("/podemniki/konsolnye/2l/", "konsolnyj-podemnik-2l.glb", "40deg 78deg auto"),
+    ):
+        html = client.get(url).content.decode()
+        assert html.count(f'data-model3d="/static/models/{glb}"') == 1, url
+        assert "data-model3d-env" not in html and f'data-model3d-orbit="{orbit}"' in html
 
 
 def test_console_lift_page_has_3d_viewer(client):
@@ -190,3 +201,33 @@ def test_model_pages_show_photos_from_sites(client):
         html = client.get(url).content.decode()
         assert html.count('class="model-objects__item zoom"') == count, url
     assert "model-objects" not in client.get("/podemniki/nozhnichnye/3x/").content.decode()
+
+
+def test_objects_mosaic_fills_the_grid():
+    """Every cell of the mosaic is taken by a photo or the request tile, on both grids."""
+    from apps.core.lift_models import OBJECTS, _pack
+
+    for photos in OBJECTS.values():
+        for cols in (4, 2):
+            spots, tile = _pack(photos, cols)
+            boxes = spots + ([tile] if tile else [])
+            cells = [(c + x, r + y) for c, r, w, h in boxes for x in range(w) for y in range(h)]
+            rows = max(r + h for _, r, _, h in boxes)
+            assert len(cells) == len(set(cells)) == cols * rows
+            assert spots[0][2:] == [2, 2]  # the first photo is the large one
+
+
+def test_objects_mosaic_on_the_page(client):
+    html = client.get("/podemniki/nozhnichnye/2x/").content.decode()
+    assert 'class="mo-c1 mo-r1 mo-w2 mo-h2 ms-c1 ms-r1 ms-w2 ms-h2"' in html
+    assert 'class="mosaic__tile" href="#zayavka"' in html
+
+
+def test_console_pages_show_the_chains_block(client):
+    """1L and 2L carry the chains photo, heading and four points; other lines do not."""
+    for url in ("/podemniki/konsolnye/1l/", "/podemniki/konsolnye/2l/"):
+        html = client.get(url).content.decode()
+        block = html[html.index("data-chains"):]
+        assert "dvuhryadnye-cepi-konsolnogo-podemnika" in block
+        assert "Двухрядные цепи и звёздочки" in block and block.count("<li><b>") >= 4
+    assert "data-chains" not in client.get("/podemniki/nozhnichnye/2x/").content.decode()

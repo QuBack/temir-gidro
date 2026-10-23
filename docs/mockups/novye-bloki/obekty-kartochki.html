@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Объекты с историей — макет</title>
+<!-- Mockup: each site as a short case — the task, what was made and the figures — instead of a bare
+     photo. One case large, the rest as cards. Works on the home page ("Наши подъёмники на объектах")
+     and on the objects page. The yellow figures are placeholders until the client sends the real ones. -->
+<link rel="stylesheet" href="obshchee.css">
+<style>
+.case { display: grid; gap: 0; background: #fff; border-radius: 6px; overflow: hidden; box-shadow: var(--shadow-card); }
+@media (min-width: 60rem) { .case { grid-template-columns: 1.05fr 1fr; } }
+.case__media { position: relative; background: var(--ink); min-height: 22rem; }
+.case__media > a > img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+.case__thumbs { position: absolute; left: 1rem; bottom: 1rem; display: flex; gap: .5rem; }
+.case__thumbs button { width: 3.5rem; height: 4.5rem; padding: 0; border: 2px solid rgb(255 255 255 / .6); border-radius: 3px; overflow: hidden; cursor: pointer; background: none; }
+.case__thumbs button.is-on { border-color: #fff; box-shadow: 0 0 0 2px var(--red); }
+.case__thumbs img { width: 100%; height: 100%; object-fit: cover; }
+.case__body { padding: clamp(1.5rem, 4vw, 3rem); display: grid; gap: 1.25rem; align-content: start; }
+.tag { justify-self: start; display: inline-flex; gap: .5rem; align-items: center; font-family: var(--font-draw); text-transform: uppercase; letter-spacing: .06em; font-size: .8125rem; padding: .25rem .625rem; background: var(--grey); border-radius: 2px; }
+.tag i { width: .5rem; height: .5rem; border-radius: 50%; background: var(--red); }
+.case h3 { font-size: clamp(1.75rem, 3.4vw, 2.5rem); }
+.place { display: flex; align-items: center; gap: .375rem; color: var(--muted); font-size: .9375rem; margin-top: .5rem; }
+.facts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin: 0; }
+@media (min-width: 30rem) { .facts { grid-template-columns: repeat(4, 1fr); } }
+.facts div { background: #fff; padding: .75rem; }
+.facts dt { font-size: .75rem; color: var(--muted); }
+.facts dd { margin: .125rem 0 0; font-family: var(--font-cond); font-weight: 700; font-size: 1.375rem; line-height: 1.1; }
+.story { display: grid; gap: .875rem; }
+.story h4 { margin: 0; font-family: var(--font-draw); font-weight: 400; text-transform: uppercase; letter-spacing: .06em; font-size: .8125rem; color: var(--red); }
+.story p { color: var(--ink); }
+.case__link { justify-self: start; font-weight: 600; color: var(--red); text-decoration: none; }
+.case__link:hover { text-decoration: underline; text-underline-offset: .25em; }
+
+.mini { display: grid; gap: 1.25rem; margin-top: 1.5rem; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); }
+.mcard { display: grid; grid-template-rows: auto 1fr; background: #fff; border-radius: 6px; overflow: hidden; box-shadow: var(--shadow-card); text-decoration: none; transition: translate .25s, box-shadow .25s; }
+.mcard:hover { translate: 0 -4px; box-shadow: 0 1px 3px rgb(34 40 43 / .08), 0 22px 40px -18px rgb(34 40 43 / .4); }
+.mcard__img { aspect-ratio: 4 / 3; overflow: hidden; }
+.mcard__img img { width: 100%; height: 100%; object-fit: cover; }
+.mcard__body { padding: 1.125rem 1.25rem 1.25rem; display: grid; gap: .625rem; align-content: start; }
+.mcard h3 { font-size: 1.375rem; }
+.mcard ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .375rem; }
+.mcard li { font-size: .8125rem; padding: .125rem .5rem; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="mock-bar"><div class="container"><b>Макет 3 · Объект как история</b><span>Задача → что сделали → цифры. Подходит для главной и страницы объектов</span><a href="index.html">← Все макеты</a></div></div>
+
+<section class="section section--grey">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Объекты</span>
+      <h2>Наши подъёмники на объектах</h2>
+      <p class="section-head__lead">Каждый подъёмник считаем и делаем под задачу. Вот несколько из них.</p>
+    </div>
+
+    <article class="case">
+      <div class="case__media">
+        <a href="../../../static/img/objects/nozhnichnyj-2x-u-fasada-1200.webp" data-zoom data-case-main><img src="../../../static/img/objects/nozhnichnyj-2x-u-fasada-1200.webp" alt="Ножничный подъёмник 2X в приямке у фасада склада"></a>
+        <div class="case__thumbs">
+          <button class="is-on" type="button" data-src="../../../static/img/objects/nozhnichnyj-2x-u-fasada-1200.webp" aria-label="Фото 1"><img src="../../../static/img/objects/nozhnichnyj-2x-u-fasada-600.webp" alt=""></button>
+          <button type="button" data-src="../../../static/img/objects/nozhnichnyj-2x-u-fasada-sboku-1200.webp" aria-label="Фото 2"><img src="../../../static/img/objects/nozhnichnyj-2x-u-fasada-sboku-600.webp" alt=""></button>
+        </div>
+      </div>
+      <div class="case__body">
+        <span class="tag"><i></i>Ножничный 2X</span>
+        <div>
+          <h3>Подача грузов на второй этаж склада без шахты</h3>
+          <p class="place">📍 <span class="todo">Город, компания или отрасль</span></p>
+        </div>
+        <dl class="facts">
+          <div><dt>Грузоподъёмность</dt><dd><span class="todo">2000 кг</span></dd></div>
+          <div><dt>Высота подъёма</dt><dd><span class="todo">4,2 м</span></dd></div>
+          <div><dt>Платформа</dt><dd><span class="todo">3×2 м</span></dd></div>
+          <div><dt>Срок</dt><dd><span class="todo">30 дней</span></dd></div>
+        </dl>
+        <div class="story">
+          <div><h4>Задача</h4><p>Склад на два этажа, грузового лифта нет. Паллеты поднимали вручную через проём в стене.</p></div>
+          <div><h4>Решение</h4><p>Ножничный подъёмник 2X в приямке у фасада: платформа поднимается ровно к проёму второго этажа. Шахта и машинное помещение не понадобились.</p></div>
+        </div>
+        <a class="case__link" href="#">Ножничный подъёмник 2X →</a>
+      </div>
+    </article>
+
+    <div class="mini">
+      <a class="mcard" href="#"><div class="mcard__img"><img src="../../../static/img/objects/konsolnyj-1l-paleta-v-cehu-600.webp" alt="Консольный подъёмник 1L с паллетой в цехе" loading="lazy"></div>
+        <div class="mcard__body"><span class="tag"><i></i>Консольный 1L</span><h3>Паллеты между этажами цеха</h3><ul><li><span class="todo">1500 кг</span></li><li><span class="todo">ход 6 м</span></li><li><span class="todo">Казань</span></li></ul></div></a>
+      <a class="mcard" href="#"><div class="mcard__img"><img src="foto/gruzovoj-v-karkasnoj-shahte.webp" alt="Грузовой подъёмник в каркасной шахте" loading="lazy"></div>
+        <div class="mcard__body"><span class="tag"><i></i><span class="todo">Модель?</span></span><h3>Подъёмник в каркасной шахте на антресоль</h3><ul><li><span class="todo">1000 кг</span></li><li><span class="todo">2 остановки</span></li><li><span class="todo">город</span></li></ul></div></a>
+      <a class="mcard" href="#"><div class="mcard__img"><img src="foto/nozhnichnyj-s-ploshchadkoj.webp" alt="Ножничный подъёмник с площадкой обслуживания" loading="lazy"></div>
+        <div class="mcard__body"><span class="tag"><i></i><span class="todo">Модель?</span></span><h3>Площадка обслуживания для пищевого производства</h3><ul><li><span class="todo">500 кг</span></li><li><span class="todo">подъём 3 м</span></li><li><span class="todo">город</span></li></ul></div></a>
+      <a class="mcard" href="#"><div class="mcard__img"><img src="../../../static/img/objects/nozhnichnyj-1x-u-rampy-600.webp" alt="Ножничный подъёмник 1X у погрузочных ворот" loading="lazy"></div>
+        <div class="mcard__body"><span class="tag"><i></i>Ножничный 1X</span><h3>Погрузка у ворот склада без рампы</h3><ul><li><span class="todo">3000 кг</span></li><li><span class="todo">1,2 м</span></li><li><span class="todo">город</span></li></ul></div></a>
+    </div>
+    <p class="note"><b>Что нужно на каждый объект:</b> город (или отрасль, если заказчик не хочет огласки), грузоподъёмность, высота, размер платформы, срок и одна-две фразы «что было до». Всё жёлтое придумано для примера. Тексты «Задача» и «Решение» я составлю сам, если пришлёте эти данные хотя бы голосовым.</p>
+  </div>
+</section>
+<script src="obshchee.js"></script>
+<script>
+// Thumbnails switch the large photo of the case.
+document.querySelectorAll(".case").forEach((c) => {
+  const main = c.querySelector("[data-case-main]");
+  c.querySelectorAll(".case__thumbs button").forEach((b) => b.addEventListener("click", () => {
+    main.href = b.dataset.src;
+    main.querySelector("img").src = b.dataset.src;
+    c.querySelectorAll(".case__thumbs button").forEach((x) => x.classList.toggle("is-on", x === b));
+  }));
+});
+</script>
+</body>
+</html>

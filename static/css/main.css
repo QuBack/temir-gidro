@@ -651,6 +651,19 @@ main .reveal--photo.is-visible { clip-path: inset(-3rem); }
 .timeline__dot .icon { width: 1.4rem; height: 1.4rem; }
 .timeline__photo { grid-column: 2; grid-row: 2; margin: 0; overflow: hidden; background: var(--grey); aspect-ratio: 3 / 2; box-shadow: var(--shadow-photo); }
 .timeline__photo img { width: 100%; height: 100%; object-fit: cover; }
+/* A step with several photos: the frame takes the photo's look, thumbnails sit under it. */
+.timeline__photo--gallery { aspect-ratio: auto; overflow: visible; background: none; box-shadow: none; }
+.timeline__frame { position: relative; aspect-ratio: 3 / 2; overflow: hidden; background: var(--grey); box-shadow: var(--shadow-photo); }
+/* Hidden photos stay focusable: the viewer focuses the one it was closed on. */
+.timeline__shot { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity .35s ease; }
+.timeline__shot.is-active { opacity: 1; pointer-events: auto; }
+.timeline__shot picture, .timeline__thumb picture { display: contents; }
+.timeline__shot img, .timeline__thumb img { width: 100%; height: 100%; object-fit: cover; }
+.timeline__shot.is-top img, .timeline__thumb.is-top img { object-position: 50% 35%; }
+.timeline__thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; margin-top: .5rem; }
+.timeline__thumb { position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden; background: var(--grey); opacity: .6; transition: opacity .2s; }
+.timeline__thumb:hover, .timeline__thumb[aria-current="true"] { opacity: 1; }
+.timeline__thumb[aria-current="true"]::after { content: ""; position: absolute; inset: auto 0 0; height: 3px; background: var(--red); }
 .timeline__text { grid-column: 2; grid-row: 1; align-self: center; }
 .timeline__text h3 { font-family: var(--font-cond); font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 700; line-height: 1.05; }
 .timeline__text p { margin-top: .5rem; max-width: 26rem; color: var(--muted); }
@@ -1364,15 +1377,132 @@ html.lightbox-open body { padding-right: var(--scrollbar, 0); }
 .model-views__item:hover { box-shadow: var(--shadow-photo); }
 .model-views__item picture { display: contents; }
 .model-views__item img { width: 100%; height: 100%; object-fit: contain; }
-/* Photos from the client's sites: portrait frames filled edge to edge. */
+/* Photos from the client's sites: a mosaic placed by lift_models.mosaic() — the first photo large,
+   explicit cells per breakpoint (ms-* phones, 2 columns; mo-* from 48rem, 4 columns). */
 .model-objects { margin-top: clamp(2.5rem, 5vw, 3.5rem); }
 .model-objects h3 { margin-bottom: 1rem; font-family: var(--font-cond); font-size: 1.5rem; font-weight: 700; }
-.model-objects__list { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: 1.25rem; }
-.model-objects__item { display: block; aspect-ratio: 3 / 4; overflow: hidden; background: var(--grey); box-shadow: var(--shadow-card); transition: box-shadow .3s; }
+.mosaic { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 14rem; gap: .5rem; margin: 0; padding: 0; list-style: none; }
+.ms-c1 { grid-column-start: 1; } .ms-c2 { grid-column-start: 2; } .ms-w1 { grid-column-end: span 1; }
+.ms-w2 { grid-column-end: span 2; } .ms-r1 { grid-row-start: 1; } .ms-r2 { grid-row-start: 2; }
+.ms-r3 { grid-row-start: 3; } .ms-r4 { grid-row-start: 4; } .ms-r5 { grid-row-start: 5; }
+.ms-r6 { grid-row-start: 6; } .ms-r7 { grid-row-start: 7; } .ms-r8 { grid-row-start: 8; }
+.ms-r9 { grid-row-start: 9; } .ms-r10 { grid-row-start: 10; } .ms-r11 { grid-row-start: 11; }
+.ms-r12 { grid-row-start: 12; } .ms-h1 { grid-row-end: span 1; } .ms-h2 { grid-row-end: span 2; }
+.ms-none { display: none; }
+@media (min-width: 48rem) {
+  .mosaic { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 21rem; gap: .75rem; }
+  .ms-none:not(.mo-none) { display: block; }
+  .mo-c1 { grid-column-start: 1; } .mo-c2 { grid-column-start: 2; } .mo-c3 { grid-column-start: 3; }
+  .mo-c4 { grid-column-start: 4; } .mo-w1 { grid-column-end: span 1; } .mo-w2 { grid-column-end: span 2; }
+  .mo-w3 { grid-column-end: span 3; } .mo-w4 { grid-column-end: span 4; } .mo-r1 { grid-row-start: 1; }
+  .mo-r2 { grid-row-start: 2; } .mo-r3 { grid-row-start: 3; } .mo-r4 { grid-row-start: 4; }
+  .mo-r5 { grid-row-start: 5; } .mo-r6 { grid-row-start: 6; } .mo-r7 { grid-row-start: 7; }
+  .mo-r8 { grid-row-start: 8; } .mo-h1 { grid-row-end: span 1; } .mo-h2 { grid-row-end: span 2; }
+  .mo-none { display: none; }
+}
+.model-objects__item { position: relative; display: block; height: 100%; overflow: hidden; border-radius: var(--radius); background: var(--grey); color: var(--white); box-shadow: var(--shadow-card); transition: box-shadow .3s; }
 .model-objects__item:hover { box-shadow: var(--shadow-photo); }
 .model-objects__item picture { display: contents; }
-.model-objects__item img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s cubic-bezier(.4, .7, .04, .88); }
-.model-objects__item:hover img { transform: scale(1.04); }
+.model-objects__item img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s cubic-bezier(.2, .7, .2, 1); }
+.model-objects__item:hover img { transform: scale(1.05); }
+/* The caption shows on hover; on the large photo it stays (touch screens: only there). */
+.mosaic__caption { position: absolute; inset: auto 0 0; padding: 2.5rem .875rem .75rem; font-size: .875rem; line-height: 1.35;
+  background: linear-gradient(transparent, rgb(20 24 26 / .85)); opacity: 0; translate: 0 .5rem; transition: opacity .3s, translate .3s; }
+.model-objects__item:hover .mosaic__caption, .model-objects__item:focus-visible .mosaic__caption,
+.mosaic > li:first-child .mosaic__caption { opacity: 1; translate: 0; }
+.mosaic > li:first-child .mosaic__caption { padding: 4rem 1.25rem 1.125rem; font-size: 1rem; }
+.mosaic__tile { display: grid; align-content: end; gap: .5rem; height: 100%; padding: 1rem; border-radius: var(--radius); color: var(--white); text-decoration: none; transition: background-color .3s;
+  background: linear-gradient(rgb(255 255 255 / .05) 1px, transparent 1px) 0 0 / 2rem 2rem, linear-gradient(90deg, rgb(255 255 255 / .05) 1px, transparent 1px) 0 0 / 2rem 2rem, var(--anthracite); }
+.mosaic__tile:hover { background-color: var(--ink); }
+.mosaic__tile b { font-family: var(--font-cond); font-size: 1.375rem; line-height: 1.05; }
+.mosaic__tile span { display: none; color: rgb(255 255 255 / .75); font-size: .9375rem; }
+@media (min-width: 48rem) { .mosaic__tile { padding: 1.25rem; } .mosaic__tile b { font-size: clamp(1.5rem, 2.4vw, 2rem); } .mosaic__tile span { display: block; } }
+.mosaic__tile em { font-style: normal; font-weight: 600; color: #ff7b7f; }
+
+/* Console lifts' chains: the photo edge to edge. Once it scrolls in it opens from the middle while
+   the photo comes from close up and settles (.is-pending until then, model.js); after that it drifts a
+   little against the scroll (--drift). Without JS or with reduced motion it simply stays open. */
+/* It opens the kit tab: the photo starts right under the tabs bar (beats the panels' own top padding). */
+.tabs__panels > .section--chains { padding-top: 0; }
+.chains { position: relative; }
+.chains__photo { position: relative; height: min(100svh, 75vw); overflow: hidden; background: var(--ink); }
+.chains__photo picture { display: contents; }
+.chains__photo img { position: absolute; left: 0; top: -8%; width: 100%; height: 116%; object-fit: cover; object-position: 50% 30%; }
+@media (prefers-reduced-motion: no-preference) {
+  /* An explicit open inset: from inset() to none the browser would jump instead of animating. */
+  .chains__photo { clip-path: inset(0 0 0 0); transition: clip-path 1.4s cubic-bezier(.77, 0, .18, 1); }
+  .chains__photo img { translate: 0 var(--drift, 0); transition: scale 2.6s cubic-bezier(.3, .7, .2, 1) .15s, filter 1.8s ease-out .15s; }
+  .chains.is-pending .chains__photo { clip-path: inset(48% 6% 48% 6%); }
+  .chains.is-pending .chains__photo img { scale: 1.35; filter: brightness(.55) saturate(.6); }
+  .chains__text { transition: opacity .8s ease .9s, translate .9s cubic-bezier(.2, .8, .2, 1) .9s; }
+  .chains.is-pending .chains__text { opacity: 0; translate: 0 1.5rem; }
+}
+/* Heading and points on the photo, along its bottom: white text on a soft blur of the photo,
+   no tint and no box (the blur's edges fade out). On phones they go under the photo. */
+.chains__title { font-size: clamp(2rem, 4vw, 3rem); }
+.chains__points { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem 1rem; margin: 1.5rem 0 0; padding: 0; list-style: none; }
+.chains__points li { padding-top: .875rem; border-top: 3px solid var(--red); }
+.chains__points b { display: block; font-family: var(--font-cond); font-size: 1.25rem; line-height: 1.15; }
+.chains__points span { display: block; margin-top: .25rem; color: var(--muted); font-size: .9375rem; }
+.chains__text { padding-top: clamp(2rem, 4vw, 3rem); }
+@media (min-width: 48rem) {
+  .chains__text { position: absolute; left: 0; right: 0; bottom: clamp(1.5rem, 4vw, 3rem); z-index: 1; padding-top: 0; isolation: isolate;
+    color: var(--white); text-shadow: 0 1px 2px rgb(0 0 0 / .6), 0 2px 16px rgb(0 0 0 / .55); }
+  .chains__text::before { content: ""; position: absolute; z-index: -1; inset: -3rem calc(50% - 50vw) -2rem; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    -webkit-mask-image: linear-gradient(transparent, #000 35%, #000 80%, transparent); mask-image: linear-gradient(transparent, #000 35%, #000 80%, transparent); }
+  .chains__points { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.5rem; }
+  .chains__title { color: var(--white); }
+  .chains__points li { border-top-color: var(--white); }
+  .chains__points span { color: rgb(255 255 255 / .92); }
+}
+
+/* A light shadow where the photo meets the grey: the photo's lower edge darkens a touch and casts a soft shadow. */
+.chains__photo::after { content: ""; position: absolute; inset: auto 0 0; height: 30%; pointer-events: none;
+  background: linear-gradient(rgb(20 24 26 / 0), rgb(20 24 26 / .28)); }
+.chains__photo { box-shadow: 0 22px 36px -24px rgb(20 24 26 / .55); }
+
+/* Under the photo: the usual way struck out on the red stage, the new words rising in its place. */
+.chains-strike { padding-block: clamp(3rem, 7vw, 5rem); color: var(--white);
+  background: radial-gradient(ellipse 55% 70% at 75% 55%, rgb(255 255 255 / .08), transparent 70%),
+    radial-gradient(ellipse 90% 110% at 65% 45%, #850e14 0%, #6a090e 40%, #420509 78%, #210204 100%); }
+.chains-strike__old { position: relative; display: inline-block; font-family: var(--font-cond); font-weight: 800; font-size: clamp(2rem, 5vw, 3.75rem); line-height: 1.05; color: rgb(255 255 255 / .4); }
+.chains-strike__old::after { content: ""; position: absolute; left: -2%; right: -2%; top: 54%; height: .09em; border-radius: 2px; background: var(--white); }
+.chains-strike__new { display: block; margin-top: .5rem; font-family: var(--font-cond); font-weight: 800; font-size: clamp(2.5rem, 6.4vw, 5rem); line-height: 1; }
+.chains-strike__w { display: inline-block; overflow: hidden; vertical-align: bottom; }
+.chains-strike__w i { display: inline-block; font-style: normal; }
+.chains-strike__lead { margin-top: 1.25rem; max-width: 40rem; font-size: 1.125rem; color: rgb(255 255 255 / .85); }
+@media (prefers-reduced-motion: no-preference) {
+  .chains-strike__old { transition: color .6s .9s; }
+  .chains-strike__old::after { transition: transform .7s cubic-bezier(.7, 0, .2, 1) .5s; }
+  .chains-strike__w i { transition: translate .7s cubic-bezier(.2, .8, .2, 1); }
+  .chains-strike__lead { transition: opacity .8s 2s, translate .8s 2s; }
+  .chains-strike.is-pending .chains-strike__old { color: var(--white); }
+  .chains-strike.is-pending .chains-strike__old::after { transform: scaleX(0); transform-origin: left; }
+  .chains-strike.is-pending .chains-strike__w i { translate: 0 110%; }
+  .chains-strike.is-pending .chains-strike__lead { opacity: 0; translate: 0 1rem; }
+}
+
+/* Then a drawing sheet: graph paper, the sprocket in the lifts' red, the chain laid link by link (model.js). */
+.chains-sheet { margin-bottom: clamp(3rem, 6vw, 4.5rem); padding-block: clamp(2.5rem, 6vw, 4.5rem); background-color: #f7f8f7;
+  background-image: linear-gradient(rgb(34 40 43 / .06) 1px, transparent 1px), linear-gradient(90deg, rgb(34 40 43 / .06) 1px, transparent 1px),
+    linear-gradient(rgb(34 40 43 / .03) 1px, transparent 1px), linear-gradient(90deg, rgb(34 40 43 / .03) 1px, transparent 1px);
+  background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px; }
+.chains-sheet__grid { display: grid; gap: 2rem; align-items: center; }
+@media (min-width: 60rem) { .chains-sheet__grid { grid-template-columns: 1fr 1.1fr; gap: 3rem; } }
+.chains-sheet__svg { width: 100%; max-width: 30rem; height: auto; justify-self: center; overflow: hidden; }
+/* The second row behind the first: the same drawing, darker. */
+.chains-sheet__back { filter: brightness(.55); }
+.chains-sheet__svg .draw { font-family: var(--font-draw); font-size: 14px; fill: var(--ink); }
+.chains-sheet__svg .draw--muted { fill: var(--muted); font-size: 12px; }
+.chains-stamp { border: 2px solid var(--ink); background: rgb(255 255 255 / .7); }
+.chains-stamp__name { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .25rem 1rem; padding: .625rem .875rem; border-bottom: 2px solid var(--ink); font-family: var(--font-draw); font-size: 1.125rem; }
+.chains-stamp__name span { color: var(--muted); }
+.chains-stamp__facts { display: grid; grid-template-columns: repeat(2, 1fr); margin: 0; }
+.chains-stamp__facts > div { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: .25rem; padding: .875rem; }
+.chains-stamp__facts > div:nth-child(odd) { border-right: 1px solid var(--ink); }
+.chains-stamp__facts dt { font-family: var(--font-draw); font-size: .9375rem; color: var(--muted); line-height: 1.3; }
+.chains-stamp__facts dd { margin: 0; font-family: var(--font-cond); font-size: clamp(2.5rem, 4.5vw, 3.5rem); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.chains-stamp__facts dd.is-red { color: var(--red); }
 
 /* ---------- 3D model (static/js/model3d.js) ----------
    The render stays until the visitor asks for 3D; then <model-viewer> takes its place
@@ -2030,6 +2160,8 @@ body:not(.page-white) .config .choice__option input:focus-visible + span { outli
 /* Our units: 4:3 photos, wider than the cylinders' square ones. */
 .carousel__track--wide { grid-auto-columns: min(80%, 24rem); }
 .carousel__track--wide .carousel__item img { aspect-ratio: 4 / 3; }
+.carousel__track--tall { grid-auto-columns: min(70%, 18rem); }
+.carousel__track--tall .carousel__item img { aspect-ratio: 3 / 4; }
 /* The calculator's title block keeps four equal columns, whatever the figures; a figure past the
    series' limits turns red with the note under the sliders. */
 @media (min-width: 30rem) { .pu-config .stamp__facts { grid-template-columns: repeat(4, 1fr); } }

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Линейка гидростанций — макет</title>
+<!-- Mockup: the client's own power units lined up from the smallest to the largest, like a family
+     photo — card heights grow with the tank, a scale runs underneath. Then a wide banner for batch
+     production. The yellow figures are placeholders until the client sends the real ones. -->
+<link rel="stylesheet" href="obshchee.css">
+<style>
+.line { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(15rem, 1fr); gap: 1.25rem; align-items: end; overflow-x: auto; padding-bottom: 1rem; scroll-snap-type: x mandatory; }
+.unit { scroll-snap-align: start; display: grid; gap: .875rem; }
+.unit__img { position: relative; height: var(--h); border-radius: var(--radius); overflow: hidden; background: #1f2427; box-shadow: 0 20px 40px -24px rgb(0 0 0 / .8); }
+.unit__img img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s cubic-bezier(.2, .7, .2, 1); }
+.unit:hover .unit__img img { transform: scale(1.04); }
+.unit__n { position: absolute; top: .75rem; left: .75rem; font-family: var(--font-draw); font-size: .8125rem; padding: .125rem .5rem; background: rgb(20 24 26 / .8); color: #fff; border-radius: 2px; }
+.unit h3 { font-size: 1.375rem; }
+.unit p { color: rgb(255 255 255 / .72); font-size: .9375rem; }
+.unit dl { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin: 0; background: rgb(255 255 255 / .15); border: 1px solid rgb(255 255 255 / .15); }
+.unit dl div { background: #30373a; padding: .5rem .625rem; }
+.unit dt { font-size: .6875rem; color: rgb(255 255 255 / .6); }
+.unit dd { margin: 0; font-family: var(--font-cond); font-weight: 700; font-size: 1.125rem; }
+.unit--top .unit__img { outline: 2px solid var(--red); outline-offset: 3px; }
+
+/* The scale under the line: tank volume grows left to right. */
+.scale { position: relative; height: 2.5rem; margin-top: .5rem; border-top: 2px solid rgb(255 255 255 / .55); font-family: var(--font-draw); font-size: .8125rem; color: rgb(255 255 255 / .7); }
+.scale::after { content: ""; position: absolute; right: -2px; top: -7px; border: 6px solid transparent; border-left: 10px solid rgb(255 255 255 / .55); border-right: 0; }
+.scale span { position: absolute; top: .5rem; translate: -50% 0; }
+.scale span::before { content: ""; position: absolute; left: 50%; top: -.75rem; height: .5rem; border-left: 2px solid rgb(255 255 255 / .55); }
+.scale b { position: absolute; right: 0; top: .5rem; font-weight: 400; color: #fff; }
+
+.batch { display: grid; margin-top: 4rem; border-radius: 8px; overflow: hidden; background: #22282b; }
+@media (min-width: 48rem) { .batch { grid-template-columns: 1.1fr 1fr; } .batch img { order: 2; } }
+.batch img { width: 100%; height: 100%; max-height: 34rem; object-fit: cover; object-position: 50% 40%; }
+.batch__body { align-self: center; padding: clamp(1.5rem, 5vw, 3.5rem); }
+.batch h3 { font-size: clamp(2rem, 4vw, 3rem); }
+.batch p { margin-top: .75rem; color: rgb(255 255 255 / .85); }
+.batch ul { list-style: none; padding: 0; margin: 1.25rem 0 1.5rem; display: grid; gap: .375rem; }
+.batch li::before { content: "— "; color: #ff7b7f; }
+</style>
+</head>
+<body>
+<div class="mock-bar"><div class="container"><b>Макет 7 · Линейка: от компактной до двухмоторной</b><span>Свои станции по размеру + баннер «делаем партиями»</span><a href="index.html">← Все макеты</a></div></div>
+
+<section class="section section--dark">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Что уже собирали</span>
+      <h2>От компактной до двухмоторной</h2>
+      <p class="section-head__lead">Станции с нашего участка, от малой к большой. Каждую собирали под конкретный подъёмник или станок, поэтому вашу тоже рассчитаем под задачу.</p>
+    </div>
+
+    <div class="line">
+      <article class="unit" style="--h:16rem">
+        <div class="unit__img"><img src="foto/gidrostanciya-s-pultom.webp" alt="Компактная гидростанция с пультом управления" loading="lazy"><span class="unit__n">01</span></div>
+        <h3>Компактная с пультом</h3>
+        <p>Для одного подъёмника, пульт в комплекте.</p>
+        <dl><div><dt>Бак</dt><dd class="todo">10 л</dd></div><div><dt>Мотор</dt><dd class="todo">1,5 кВт</dd></div><div><dt>Давление</dt><dd class="todo">160 бар</dd></div></dl>
+      </article>
+      <article class="unit" style="--h:19rem">
+        <div class="unit__img"><img src="foto/gidrostanciya-kompaktnaya.webp" alt="Компактная гидростанция на опорах" loading="lazy"><span class="unit__n">02</span></div>
+        <h3>Компактная на опорах</h3>
+        <p>Ставится на пол без рамы, рукав сразу к цилиндру.</p>
+        <dl><div><dt>Бак</dt><dd class="todo">25 л</dd></div><div><dt>Мотор</dt><dd class="todo">2,2 кВт</dd></div><div><dt>Давление</dt><dd class="todo">200 бар</dd></div></dl>
+      </article>
+      <article class="unit" style="--h:22.5rem">
+        <div class="unit__img"><img src="foto/gidrostanciya-s-raspredelitelem.webp" alt="Гидростанция с ручным распределителем" loading="lazy"><span class="unit__n">03</span></div>
+        <h3>С ручным распределителем</h3>
+        <p>Управление рычагом, без электрики в линии.</p>
+        <dl><div><dt>Бак</dt><dd class="todo">60 л</dd></div><div><dt>Мотор</dt><dd class="todo">4 кВт</dd></div><div><dt>Давление</dt><dd class="todo">200 бар</dd></div></dl>
+      </article>
+      <article class="unit unit--top" style="--h:26rem">
+        <div class="unit__img"><img src="foto/gidrostanciya-dva-motora.webp" alt="Гидростанция с двумя моторами" loading="lazy"><span class="unit__n">04</span></div>
+        <h3>Двухмоторная</h3>
+        <p>Два насосных агрегата: два контура или резерв.</p>
+        <dl><div><dt>Бак</dt><dd class="todo">200 л</dd></div><div><dt>Моторы</dt><dd class="todo">2×7,5 кВт</dd></div><div><dt>Давление</dt><dd class="todo">250 бар</dd></div></dl>
+      </article>
+    </div>
+    <div class="scale" aria-hidden="true"><span style="left:12%">10 л</span><span style="left:37%">25 л</span><span style="left:62%">60 л</span><span style="left:87%">200 л</span><b>объём бака →</b></div>
+
+    <div class="batch">
+      <img src="foto/gidrostancii-partiya.webp" alt="Партия гидростанций перед отгрузкой">
+      <div class="batch__body">
+        <span class="eyebrow">Серийно</span>
+        <h3>Делаем и партиями</h3>
+        <p>Для производителей оборудования и дилеров: одна гидросхема, одинаковая сборка, испытания каждой станции.</p>
+        <ul><li>От <span class="todo">5</span> одинаковых станций</li><li>Паспорт и гидросхема на каждую</li><li>Срок партии <span class="todo">от 20 дней</span></li></ul>
+        <a class="btn btn--primary" href="#">Запросить партию</a>
+      </div>
+    </div>
+    <p class="note"><b>Нужны цифры по каждой станции:</b> бак, мощность, давление. Если на фото не одна и та же станция в разных ракурсах, а разные проекты, можно добавить «для чего делали» (подъёмник, пресс, стенд). Все жёлтые значения сейчас для примера.</p>
+  </div>
+</section>
+<script src="obshchee.js"></script>
+</body>
+</html>

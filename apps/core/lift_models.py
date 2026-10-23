@@ -382,6 +382,9 @@ SCISSOR_MODELS = {
         "images": [
             {"image": SCISSOR_4X, "alt": _("Ножничный подъёмник 4X ТЕМИР ГИДРО — общий вид")},
         ],
+        # Converted from the client's MAX assembly 4X2L (2026-10), tuned to the viewer's neutral light.
+        "model_3d": "models/nozhnichnyj-podemnik-4x.glb",
+        "model_3d_orbit": "30deg 78deg auto",
         "kit_image": SCISSOR_4X,
         "kit_markers": [(0, 62, 1.2), (1, 22, 24), (2, 33, 50), (3, 50, 97)],
         "description": [
@@ -431,6 +434,8 @@ for _slug, _m in SCISSOR_MODELS.items():
     _ranges = _m.pop("ranges")
     if "model_3d" in _m:
         _look = {"orbit": "-30deg 78deg auto"} if _m.pop("model_3d_studio", False) else {"env": None, "exposure": None}
+        if "model_3d_orbit" in _m:
+            _look["orbit"] = _m.pop("model_3d_orbit")
         _m["scenes_3d"] = [scene3d(_m["model_3d"], _m["images"][0]["image"], _m["images"][0]["alt"], **_look)]
     _m.update(
         slug=_slug,
@@ -911,6 +916,20 @@ CONSOLE_OPTIONS = [
     _("Встроенная маслостанция"),
 ]
 
+# The console lifts' main difference (client, 2026-10): double-row chains on sprockets, where most
+# makers put single-row chains over pulleys that wear. A full-width photo, a heading, four points.
+CONSOLE_CHAINS = {
+    "image": img("photos/dvuhryadnye-cepi-konsolnogo-podemnika", (1448, 1086), widths=(768, 1280, 1448)),
+    "alt": _("Двухрядные цепи, звёздочки и гидроцилиндр консольного подъёмника ТЕМИР ГИДРО"),
+    "title": _("Двухрядные цепи и звёздочки"),
+    "points": [
+        (_("Звёздочка, а не блок"), _("Цепь катится по зубьям и не трётся.")),
+        (_("Двухрядная цепь"), _("Два ряда роликов делят нагрузку.")),
+        (_("Свой гидроцилиндр"), _("Через цепи тянет каретку.")),
+        (_("Цепи парами"), _("Каретку не перекашивает.")),
+    ],
+}
+
 CONSOLE_MODELS = {
     "1l": {
         "name": "1L",
@@ -1029,6 +1048,12 @@ CONSOLE_MODELS = {
                 "alt": _("Консольный подъёмник 2L — вид сбоку: мачта, гидроцилиндр и цепи"),
             },
         ],
+        # Converted from the client's MAX assembly 2l2 (2026-10), tuned to the viewer's neutral light.
+        "scenes_3d": [
+            scene3d("models/konsolnyj-podemnik-2l.glb", _CONSOLE_2L_IMG,
+                    _("Консольный подъёмник 2L ТЕМИР ГИДРО на двух мачтах — общий вид"),
+                    env=None, exposure=None, orbit="40deg 78deg auto"),
+        ],
         "kit_image": None,
         "kit_markers": [],
         "specs": [
@@ -1087,6 +1112,7 @@ for _slug, _m in CONSOLE_MODELS.items():
         line_title=_("Консольные подъёмники"),
         url=f"{_CONSOLE}{_slug}/",
         kit=_CONSOLE_KITS[_slug],
+        chains=CONSOLE_CHAINS,
         options=CONSOLE_OPTIONS,
         faq=_faq(_m.pop("price_question"), _m.pop("faq_extra")),
     )
@@ -1134,8 +1160,66 @@ OBJECTS = {
              _("Ножничный подъёмник 1X у погрузочных ворот склада")),
     ],
 }
+
+
+def _pack(photos, cols):
+    """Places the photos on a grid `cols` wide whose rows are one unit tall: the first photo
+    2×2, landscape ones 2×1, the rest 1×1, each in the first free spot (as CSS dense flow).
+    A gap above the bottom row is closed by lengthening the photo over it; the gap left at the
+    end of the bottom row (and the empty cells over it) is the tile with the request link.
+    Returns (col, row, w, h) per photo and for the tile (None when the grid ends flush)."""
+    taken, spots = {}, []
+    for i, p in enumerate(photos):
+        w, h = (2, 2) if i == 0 else (2, 1) if p["image"]["size"][0] > p["image"]["size"][1] else (1, 1)
+        w = min(w, cols)
+        r = 0
+        while True:
+            c = next((c for c in range(cols - w + 1)
+                      if all((c + x, r + y) not in taken for x in range(w) for y in range(h))), None)
+            if c is not None:
+                break
+            r += 1
+        spots.append([c, r, w, h])
+        taken.update({(c + x, r + y): i for x in range(w) for y in range(h)})
+    rows = max(r + h for _, r, _, h in spots)
+    for r in range(1, rows - 1):
+        for c in range(cols):
+            above = taken.get((c, r - 1))
+            if (c, r) not in taken and above is not None and spots[above][2:] == [1, 1]:
+                spots[above][3] = 2
+                taken[(c, r)] = above
+    free = [c for c in range(cols) if (c, rows - 1) not in taken]
+    if not free:
+        return spots, None
+    c, w = free[0], cols - free[0]
+    if free != list(range(c, cols)):  # holes not at the end: the tile gets a row of its own
+        return spots, (0, rows, cols, 1)
+    r = rows - 1
+    while r > 0 and all((x, r - 1) not in taken for x in range(c, cols)):
+        r -= 1
+    return spots, (c, r, w, rows - r)
+
+
+def _mosaic_class(spot, prefix):
+    c, r, w, h = spot
+    return f"{prefix}-c{c + 1} {prefix}-r{r + 1} {prefix}-w{w} {prefix}-h{h}"
+
+
+def mosaic(photos):
+    """The «На объектах» mosaic (model.html): the photos with their grid classes for wide screens
+    (4 columns, mo-*) and phones (2 columns, ms-*), and the classes of the request tile.
+    Classes, not inline styles: the CSP forbids those."""
+    wide, wide_tile = _pack(photos, 4)
+    narrow, narrow_tile = _pack(photos, 2)
+    items = [{**p, "cls": f"{_mosaic_class(a, 'mo')} {_mosaic_class(b, 'ms')}"}
+             for p, a, b in zip(photos, wide, narrow, strict=True)]
+    tile = " ".join(_mosaic_class(t, pre) if t else f"{pre}-none"
+                    for t, pre in ((wide_tile, "mo"), (narrow_tile, "ms")))
+    return {"items": items, "tile": tile}
+
+
 for _key, _photos in OBJECTS.items():
-    MODELS[_key]["objects"] = _photos
+    MODELS[_key]["objects"] = mosaic(_photos)
 del _key, _photos
 
 def kit_points(model):

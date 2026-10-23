@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Двухрядные цепи — макет</title>
+<!-- Mockup: how the console lift page shows the double-row chains and sprockets — the client's
+     main difference from competitors. Three places: a line on the first screen, the dark block
+     itself (photo with markers, our scheme against the usual one, figures) and a badge on the
+     catalog card. Yellow marks are figures the client has to send. -->
+<link rel="stylesheet" href="obshchee.css">
+<style>
+/* 1. First screen of the model page: the advantage as a line under the lead. */
+.mhero { background: var(--grey); padding: 2.5rem 0 3rem; }
+.mhero__grid { display: grid; gap: 2rem; align-items: center; }
+@media (min-width: 60rem) { .mhero__grid { grid-template-columns: 1.1fr 1fr; } }
+.mhero h1 { font-size: clamp(2.25rem, 5vw, 3.5rem); }
+.mhero__lead { margin-top: 1rem; color: var(--muted); max-width: 34rem; font-size: 1.0625rem; }
+.mhero__img { justify-self: center; max-height: 26rem; width: auto; }
+.chip-adv { display: inline-flex; align-items: center; gap: .75rem; margin-top: 1.5rem; padding: .5rem 1rem .5rem .5rem;
+  background: var(--anthracite); color: var(--white); border-radius: 999px; text-decoration: none; font-weight: 600; font-size: .9375rem;
+  box-shadow: var(--shadow-card); transition: transform .2s; }
+.chip-adv:hover { transform: translateY(-2px); }
+.chip-adv__ic { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--red); }
+.chip-adv__ic svg { width: 1.375rem; height: 1.375rem; }
+.chip-adv span:last-child { opacity: .7; font-weight: 400; }
+.mhero__actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1.75rem; }
+
+/* 2. The block. */
+.chains { background: radial-gradient(ellipse 80% 60% at 30% 0%, #444d52 0%, var(--anthracite) 55%, #262c2f 100%); color: var(--white); overflow: hidden; }
+.chains .eyebrow { color: #ff7b7f; }
+.chains h2 { max-width: 52rem; font-size: clamp(2.25rem, 5.4vw, 4rem); }
+.chains h2 em { font-style: normal; color: #ff5a5f; }
+.chains__lead { margin-top: 1rem; max-width: 42rem; color: rgb(255 255 255 / .78); font-size: 1.125rem; }
+.chains__grid { display: grid; gap: 2rem; margin-top: 2.5rem; align-items: start; }
+@media (min-width: 60rem) { .chains__grid { grid-template-columns: 7fr 4fr; gap: 3rem; } }
+
+/* The photo slowly settles as it scrolls in; markers sit in the same scaled layer. */
+.cphoto { position: relative; overflow: hidden; border-radius: var(--radius); box-shadow: 0 30px 60px -30px rgb(0 0 0 / .8); aspect-ratio: 1448 / 1086; }
+.cphoto__inner { position: absolute; inset: 0; transform: scale(var(--z, 1.12)); transform-origin: 40% 40%; transition: transform .1s linear; }
+.cphoto__inner img { width: 100%; height: 100%; object-fit: cover; }
+.mark { position: absolute; translate: -50% -50%; width: 2.25rem; height: 2.25rem; border-radius: 50%; border: 0; padding: 0;
+  background: var(--red); color: #fff; font: 700 .9375rem var(--font); cursor: pointer; box-shadow: 0 0 0 3px rgb(255 255 255 / .9), 0 6px 16px rgb(0 0 0 / .5);
+  opacity: 0; scale: .4; transition: opacity .4s, scale .4s cubic-bezier(.3, 1.6, .5, 1); }
+.mark::after { content: ""; position: absolute; inset: -3px; border-radius: 50%; border: 2px solid #fff; animation: ping 2.4s infinite; opacity: 0; }
+@keyframes ping { 0% { opacity: .9; transform: scale(1); } 80%, 100% { opacity: 0; transform: scale(2.1); } }
+.is-in .mark { opacity: 1; scale: 1; }
+.mark.is-active { background: #fff; color: var(--red); }
+.mark__tip { position: absolute; left: 50%; bottom: calc(100% + .75rem); translate: -50% 0; white-space: nowrap; padding: .375rem .625rem; border-radius: var(--radius);
+  background: rgb(20 24 26 / .92); color: #fff; font: 600 .8125rem var(--font); pointer-events: none; opacity: 0; transition: opacity .2s; }
+.mark.is-active .mark__tip { opacity: 1; }
+@media (max-width: 40rem) { .mark { width: 1.875rem; height: 1.875rem; font-size: .8125rem; } .mark__tip { display: none; } }
+
+.parts { list-style: none; margin: 0; padding: 0; display: grid; gap: .25rem; counter-reset: p; }
+.parts li { display: grid; grid-template-columns: 2.25rem 1fr; gap: .875rem; padding: .875rem; border-radius: var(--radius); cursor: default; transition: background .2s; }
+.parts li.is-active { background: rgb(255 255 255 / .08); }
+.parts__n { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 50%; border: 2px solid var(--red); font-weight: 700; }
+.parts li.is-active .parts__n { background: var(--red); }
+.parts h3 { font-size: 1.25rem; }
+.parts p { color: rgb(255 255 255 / .72); font-size: .9375rem; margin-top: .25rem; }
+
+/* Our scheme against the usual one. */
+.vs { display: grid; gap: 1.25rem; margin-top: 4rem; }
+@media (min-width: 48rem) { .vs { grid-template-columns: 1fr 1fr; } }
+.vs__card { position: relative; padding: 1.5rem; border-radius: 6px; background: rgb(255 255 255 / .04); border: 1px solid rgb(255 255 255 / .12); }
+.vs__card--us { background: linear-gradient(180deg, rgb(196 22 28 / .18), rgb(196 22 28 / .04)); border-color: rgb(255 90 95 / .5); }
+.vs__tag { display: inline-block; font-family: var(--font-draw); letter-spacing: .08em; text-transform: uppercase; font-size: .8125rem; padding: .25rem .625rem; border-radius: 2px; background: rgb(255 255 255 / .1); }
+.vs__card--us .vs__tag { background: var(--red); }
+.vs__card h3 { margin-top: .875rem; font-size: 1.625rem; }
+.vs__card svg { display: block; width: 100%; height: auto; margin: 1rem 0; }
+.vs__list { list-style: none; padding: 0; margin: 0; display: grid; gap: .5rem; font-size: .9375rem; }
+.vs__list li { display: grid; grid-template-columns: 1.25rem 1fr; gap: .5rem; color: rgb(255 255 255 / .85); }
+.vs__list li::before { content: "✓"; color: #5fd38a; font-weight: 700; }
+.vs__card--them .vs__list li::before { content: "✕"; color: #ff7b7f; }
+.svg-label { font-family: var(--font-draw); font-size: 13px; fill: rgb(255 255 255 / .8); letter-spacing: .02em; }
+.svg-label--red { fill: #ff7b7f; }
+
+/* Figures. */
+.figs { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1px; margin-top: 3rem; background: rgb(255 255 255 / .14); border-block: 1px solid rgb(255 255 255 / .14); }
+.figs div { padding: 1.5rem 1.25rem; background: #2b3235; }
+.figs b { display: block; font-family: var(--font-cond); font-size: clamp(2.5rem, 5vw, 3.5rem); line-height: 1; color: #fff; }
+.figs > div > span { display: block; margin-top: .5rem; color: rgb(255 255 255 / .72); font-size: .9375rem; }
+
+/* 3. Catalog card. */
+.cards { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); max-width: 56rem; }
+.card { position: relative; background: #fff; border-radius: 6px; box-shadow: var(--shadow-card); padding: 1.25rem; text-decoration: none; }
+.card img { height: 16rem; width: auto; margin: 0 auto; }
+.card h3 { margin-top: 1rem; }
+.card p { color: var(--muted); font-size: .9375rem; margin-top: .25rem; }
+.badge { position: absolute; top: 1rem; left: 1rem; display: inline-flex; align-items: center; gap: .375rem; padding: .3125rem .625rem .3125rem .375rem;
+  border-radius: 999px; background: var(--anthracite); color: #fff; font-size: .8125rem; font-weight: 600; }
+.badge svg { width: 1.125rem; height: 1.125rem; }
+.card--ctx { opacity: .5; }
+</style>
+</head>
+<body>
+<div class="mock-bar"><div class="container"><b>Макет 1 · Двухрядные цепи на странице консольного</b><span>Три места: первый экран → блок → карточка в каталоге</span><a href="index.html">← Все макеты</a></div></div>
+
+<!-- Chain icon used in the chip and the badge. -->
+<svg width="0" height="0" style="position:absolute"><symbol id="ic-chain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="11" rx="3.5"/><rect x="14" y="10" width="7" height="11" rx="3.5"/><path d="M8 9.5 16 14.5"/></symbol></svg>
+
+<!-- 1. First screen. -->
+<section class="mhero">
+  <div class="container mhero__grid">
+    <div>
+      <p class="ctx-label">Первый экран модели — добавляется только плашка</p>
+      <h1>Консольный подъёмник 1L</h1>
+      <p class="mhero__lead">Платформа на консоли, которая движется вдоль стены или колонны: поднимает грузы между этажами цеха, склада или стройки.</p>
+      <a class="chip-adv" href="#cepi"><span class="chip-adv__ic"><svg><use href="#ic-chain"/></svg></span>Двухрядные цепи и звёздочки <span>почему это важно ↓</span></a>
+      <div class="mhero__actions ctx"><span class="btn btn--primary">Рассчитать стоимость</span><span class="btn btn--outline">Скачать PDF</span></div>
+      <p class="note"><b>Плашка ведёт к блоку ниже.</b> Человек видит главное отличие на первом экране, ещё не дочитав страницу.</p>
+    </div>
+    <img class="mhero__img" src="../../../static/img/catalog/konsolnyj-podemnik-1l-800.webp" alt="Консольный подъёмник 1L" width="800" height="1060">
+  </div>
+</section>
+
+<!-- 2. The block. -->
+<section class="section chains" id="cepi">
+  <div class="container">
+    <span class="eyebrow">Наше главное отличие</span>
+    <h2>Двухрядные цепи <em>и звёздочки</em> там, где другие ставят однорядную цепь и блок</h2>
+    <p class="chains__lead">Подъёмник держится на цепях: от них зависят ресурс и безопасность. Мы ставим двухрядные цепи повышенной прочности и звёздочки, а не однорядные цепи на блоках, которые истираются.</p>
+
+    <div class="chains__grid">
+      <div class="cphoto" data-zoom-in>
+        <div class="cphoto__inner">
+          <img src="foto/cepi-dvuhryadnye.webp" alt="Двухрядные цепи, звёздочки и гидроцилиндр консольного подъёмника ТЕМИР ГИДРО" width="1448" height="1086">
+          <button class="mark" type="button" data-part="1" style="left:23%;top:17%">1<span class="mark__tip">Звёздочка</span></button>
+          <button class="mark" type="button" data-part="2" style="left:21%;top:62%">2<span class="mark__tip">Двухрядная цепь</span></button>
+          <button class="mark" type="button" data-part="3" style="left:52%;top:30%">3<span class="mark__tip">Гидроцилиндр</span></button>
+          <button class="mark" type="button" data-part="4" style="left:80%;top:52%">4<span class="mark__tip">Вторая пара цепей</span></button>
+        </div>
+      </div>
+      <ol class="parts">
+        <li data-part="1"><span class="parts__n">1</span><div><h3>Звёздочка, а не блок</h3><p>Ролики цепи ложатся в зубья и катятся. Цепь не трётся о ручей блока, поэтому не изнашивается ни она, ни сама звёздочка.</p></div></li>
+        <li data-part="2"><span class="parts__n">2</span><div><h3>Двухрядная цепь</h3><p>В каждом звене два ряда роликов. Нагрузку делят два ряда, а не один, поэтому запас прочности выше.</p></div></li>
+        <li data-part="3"><span class="parts__n">3</span><div><h3>Гидроцилиндр</h3><p>Свой, с нашего производства. Через цепи тянет каретку с платформой.</p></div></li>
+        <li data-part="4"><span class="parts__n">4</span><div><h3>Цепи работают парами</h3><p>По обе стороны цилиндра. Нагрузка распределяется ровно, каретку не перекашивает.</p></div></li>
+      </ol>
+    </div>
+
+    <div class="vs">
+      <div class="vs__card vs__card--us">
+        <span class="vs__tag">ТЕМИР ГИДРО</span>
+        <h3>Двухрядная цепь на звёздочке</h3>
+        <svg viewBox="0 0 420 270" data-scheme="us" role="img" aria-label="Схема: двухрядная цепь на звёздочке"></svg>
+        <ul class="vs__list">
+          <li>Два ряда роликов: выше разрывное усилие</li>
+          <li>Цепь катится по зубьям, а не скользит</li>
+          <li>Звёздочка не истирается, цепь не вытягивается раньше срока</li>
+        </ul>
+      </div>
+      <div class="vs__card vs__card--them">
+        <span class="vs__tag">Обычно у других</span>
+        <h3>Однорядная цепь на блоке</h3>
+        <svg viewBox="0 0 420 270" data-scheme="them" role="img" aria-label="Схема: однорядная цепь на гладком блоке"></svg>
+        <ul class="vs__list">
+          <li>Один ряд роликов: запас прочности меньше</li>
+          <li>Цепь трётся о ручей блока на каждом подъёме</li>
+          <li>Блок истирается, появляется люфт, растёт износ цепи</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="figs on-dark">
+      <div><b>2</b><span>ряда роликов в каждой цепи</span></div>
+      <div><b><span class="todo">×1,7</span></b><span>разрывное усилие против однорядной цепи того же шага</span></div>
+      <div><b><span class="todo">4</span></b><span>цепи на подъёмнике, работают парами</span></div>
+      <div><b><span class="todo">ПР-25,4</span></b><span>тип цепи по ГОСТ 13568</span></div>
+    </div>
+    <p class="note"><b>Нужны цифры от вас:</b> тип и шаг цепи, разрывное усилие (наше и у однорядной), сколько цепей на 1L и 2L. Числа в жёлтом подставлены для примера, без подтверждения на сайт они не пойдут.</p>
+  </div>
+</section>
+
+<!-- 3. Catalog card. -->
+<section class="section section--grey">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Каталог</span>
+      <h2>Метка на карточке консольного</h2>
+      <p class="section-head__lead">Тот же значок, что на первом экране: человек узнаёт его на странице модели.</p>
+    </div>
+    <div class="cards">
+      <a class="card" href="#cepi"><span class="badge"><svg><use href="#ic-chain"/></svg>Двухрядные цепи</span><img src="../../../static/img/catalog/konsolnyj-podemnik-1l-400.webp" alt="" width="400" height="530"><h3>Консольный 1L</h3><p>До 2000 кг, ход до 12 м</p></a>
+      <div class="card card--ctx"><img src="../../../static/img/catalog/konsolnyj-podemnik-1l-vid-speredi-200.webp" alt="" width="200" height="620"><h3>Консольный 2L</h3><p>Карточка с такой же меткой</p></div>
+    </div>
+  </div>
+</section>
+
+<script src="obshchee.js"></script>
+<script>
+// Markers ↔ list: hovering either lights up both.
+const setPart = (n) => document.querySelectorAll("[data-part]").forEach((el) => el.classList.toggle("is-active", el.dataset.part === n));
+document.querySelectorAll("[data-part]").forEach((el) => {
+  el.addEventListener("mouseenter", () => setPart(el.dataset.part));
+  el.addEventListener("focus", () => setPart(el.dataset.part));
+  el.addEventListener("click", () => setPart(el.dataset.part));
+});
+
+// The photo settles from 1.12 to 1 while it scrolls in; markers pop in one after another.
+const photo = document.querySelector(".cphoto");
+const inner = photo.querySelector(".cphoto__inner");
+const onScroll = () => {
+  const r = photo.getBoundingClientRect();
+  const t = Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight * 0.9)));
+  inner.style.setProperty("--z", (1.12 - 0.12 * t).toFixed(3));
+};
+addEventListener("scroll", onScroll, { passive: true });
+onScroll();
+new IntersectionObserver(([e], io) => {
+  if (!e.isIntersecting) return;
+  photo.querySelectorAll(".mark").forEach((m, i) => (m.style.transitionDelay = `${0.35 + i * 0.18}s`));
+  photo.classList.add("is-in");
+  setTimeout(() => setPart("1"), 1200);
+  io.disconnect();
+}, { threshold: 0.45 }).observe(photo);
+
+// The two schemes: a chain over a sprocket (ours) and over a plain pulley (the usual way),
+// side view on the left, a front view of the rows on the right.
+const NS = "http://www.w3.org/2000/svg";
+const el = (name, attrs, parent) => {
+  const n = document.createElementNS(NS, name);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  parent.append(n);
+  return n;
+};
+function drawScheme(svg, ours) {
+  const cx = 130, cy = 104, R = 52, N = 14, step = (2 * Math.PI) / N, p = 2 * R * Math.sin(Math.PI / N), yb = 262;
+  const pt = (a, r) => [cx + r * Math.cos(a), cy - r * Math.sin(a)];
+  // Roller centres: up the left side, over the top, down the right.
+  const rollers = [];
+  for (let y = yb; y > cy + 0.1; y -= p) rollers.push([cx - R, y]);
+  for (let j = 0; j <= N / 2; j++) rollers.push(pt(Math.PI - j * step, R));
+  for (let y = cy + p; y <= yb; y += p) rollers.push([cx + R, y]);
+
+  if (ours) {
+    let d = "";
+    for (let j = 0; j < N; j++) {
+      const a = j * step;
+      const pts = [pt(a - 0.2 * step, R - 3), pt(a, R - 5), pt(a + 0.2 * step, R - 3), pt(a + 0.38 * step, R + 9), pt(a + 0.62 * step, R + 9)];
+      d += (j ? "L" : "M") + pts.map((q) => q.map((v) => v.toFixed(1)).join(" ")).join("L");
+    }
+    el("path", { d: d + "Z", fill: "#8d989d", stroke: "#cfd6d9", "stroke-width": 1.5, "stroke-linejoin": "round" }, svg);
+    el("circle", { cx, cy, r: R - 22, fill: "none", stroke: "#6f7a7f", "stroke-width": 2 }, svg);
+  } else {
+    el("circle", { cx, cy, r: R + 6, fill: "#6f7a7f", stroke: "#cfd6d9", "stroke-width": 1.5 }, svg);
+    el("circle", { cx, cy, r: R - 4, fill: "none", stroke: "#566064", "stroke-width": 4 }, svg);
+  }
+  el("circle", { cx, cy, r: 12, fill: "#2b3235", stroke: "#cfd6d9", "stroke-width": 1.5 }, svg);
+
+  // Plates and rollers along the path.
+  el("polyline", { points: rollers.map((q) => q.join(",")).join(" "), fill: "none", stroke: ours ? "#e9edef" : "#b9c1c4", "stroke-width": ours ? 15 : 11, "stroke-linejoin": "round" }, svg);
+  el("polyline", { points: rollers.map((q) => q.join(",")).join(" "), fill: "none", stroke: "#3a4246", "stroke-width": ours ? 7 : 5, "stroke-linejoin": "round" }, svg);
+  rollers.forEach(([x, y]) => el("circle", { cx: x, cy: y, r: ours ? 5.5 : 4.5, fill: ours ? "#f5f7f8" : "#c6ccce", stroke: "#3a4246", "stroke-width": 1.2 }, svg));
+
+  if (!ours) {
+    // Where the chain rubs the pulley: red wear marks over the top.
+    for (let j = 1; j < N / 2; j++) {
+      const a = Math.PI - j * step + step / 2;
+      const [x1, y1] = pt(a, R + 1), [x2, y2] = pt(a, R + 13);
+      el("line", { x1, y1, x2, y2, stroke: "#ff6b6f", "stroke-width": 2.5, "stroke-linecap": "round" }, svg);
+    }
+    const t = el("text", { x: cx, y: cy - R - 20, "text-anchor": "middle", class: "svg-label svg-label--red" }, svg);
+    t.textContent = "трение и износ";
+  } else {
+    const t = el("text", { x: cx, y: cy - R - 20, "text-anchor": "middle", class: "svg-label" }, svg);
+    t.textContent = "ролики в зубьях";
+  }
+
+  // Front view of the chain: plates and rows of rollers.
+  const fx = 320, rows = ours ? 2 : 1, plate = 6, roll = 16, gap = 3;
+  const width = (rows + 1) * plate + rows * (roll + 2 * gap);
+  const x0 = fx - width / 2;
+  for (let k = 0, y = 30; y < 236; k++, y += 26) {
+    for (let c = 0; c <= rows; c++) {
+      const x = x0 + c * (plate + roll + 2 * gap);
+      el("rect", { x, y: y - 4 + (k % 2 ? 3 : 0), width: plate, height: 32, rx: 3, fill: k % 2 ? "#aab3b7" : "#e9edef", stroke: "#3a4246", "stroke-width": 1 }, svg);
+    }
+    for (let c = 0; c < rows; c++) {
+      const x = x0 + plate + gap + c * (plate + roll + 2 * gap);
+      el("rect", { x, y: y + 6, width: roll, height: 12, rx: 5, fill: ours ? "#f5f7f8" : "#c6ccce", stroke: "#3a4246", "stroke-width": 1 }, svg);
+    }
+  }
+  const lbl = el("text", { x: fx, y: 262, "text-anchor": "middle", class: "svg-label" }, svg);
+  lbl.textContent = ours ? "2 ряда роликов" : "1 ряд роликов";
+  const side = el("text", { x: cx, y: 14, "text-anchor": "middle", class: "svg-label" }, svg);
+  side.textContent = "ВИД СБОКУ";
+  const front = el("text", { x: fx, y: 14, "text-anchor": "middle", class: "svg-label" }, svg);
+  front.textContent = "ВИД СПЕРЕДИ";
+}
+document.querySelectorAll("[data-scheme]").forEach((svg) => drawScheme(svg, svg.dataset.scheme === "us"));
+</script>
+</body>
+</html>

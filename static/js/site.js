@@ -250,6 +250,39 @@
     window.addEventListener("resize", syncRail, { passive: true });
   }
 
+  // Timeline step with several photos: a thumbnail puts its photo into the frame. Closed, the
+  // viewer focuses the photo it showed last, and the frame follows what was browsed there.
+  document.querySelectorAll("[data-step-gallery]").forEach(function (gallery) {
+    var shots = gallery.querySelectorAll(".timeline__shot");
+    var thumbs = gallery.querySelectorAll(".timeline__thumb");
+    var pick = function (i) {
+      shots.forEach(function (shot, j) {
+        shot.classList.toggle("is-active", j === i);
+        shot.tabIndex = j === i ? 0 : -1;
+      });
+      thumbs.forEach(function (thumb, j) {
+        if (j === i) thumb.setAttribute("aria-current", "true"); else thumb.removeAttribute("aria-current");
+      });
+    };
+    thumbs.forEach(function (thumb, i) {
+      thumb.addEventListener("click", function (event) {
+        if (event.ctrlKey || event.metaKey || event.shiftKey || event.button) return; // new tab as usual
+        event.preventDefault();
+        pick(i);
+      });
+    });
+    var viewer = document.querySelector("[data-lightbox]");
+    if (viewer) {
+      viewer.addEventListener("close", function () {
+        // After lightbox.js has moved the focus back to the page.
+        setTimeout(function () {
+          var i = Array.prototype.indexOf.call(shots, document.activeElement);
+          if (i >= 0) pick(i);
+        });
+      });
+    }
+  });
+
   // Photo strips: the arrows move one screenful of the strip; at either end the arrow hides.
   // Without JS the strip still scrolls sideways by swipe or trackpad.
   document.querySelectorAll("[data-carousel]").forEach(function (carousel) {
