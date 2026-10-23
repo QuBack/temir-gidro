@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Как работает консольный — прототип</title>
+<!-- Prototype: the console lift's drive as a side-view scheme driven by scrolling. The rod pushes
+     the sprockets up; the chain is fixed at one end and pulls the carriage with the other, so the
+     platform travels twice the rod's stroke. Steps on the left change with the progress.
+     The 2:1 scheme is our reading of the photos — the client has to confirm it. -->
+<link rel="stylesheet" href="obshchee.css">
+<style>
+body { background: #262c2f; color: #fff; }
+.intro { padding: var(--section-y) 0 2rem; }
+.intro h1 { font-size: clamp(2.25rem, 5.4vw, 4rem); max-width: 50rem; }
+.intro h1 em { font-style: normal; color: #ff5a5f; }
+.intro p { margin-top: 1rem; max-width: 40rem; color: rgb(255 255 255 / .75); font-size: 1.125rem; }
+.eyebrow { color: #ff7b7f; }
+
+.track { position: relative; height: 320vh; }
+.stage { position: sticky; top: 2.5rem; height: calc(100svh - 2.5rem); display: grid; align-items: center; }
+.stage__grid { display: grid; gap: 1.5rem; align-items: center; }
+@media (min-width: 60rem) { .stage__grid { grid-template-columns: 1fr 1.25fr; gap: 3rem; } }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
+.steps li { position: relative; padding: .875rem 1rem .875rem 3.25rem; border-radius: var(--radius); color: rgb(255 255 255 / .45); transition: color .3s, background .3s; }
+.steps li::before { content: attr(data-n); position: absolute; left: 1rem; top: .875rem; display: grid; place-items: center; width: 1.625rem; height: 1.625rem; border-radius: 50%; border: 2px solid currentColor; font-size: .8125rem; font-weight: 700; }
+.steps li.is-on { color: #fff; background: rgb(255 255 255 / .07); }
+.steps li.is-on::before { background: var(--red); border-color: var(--red); }
+.steps b { display: block; font-family: var(--font-cond); font-size: 1.25rem; }
+.steps span { display: block; font-size: .9375rem; margin-top: .125rem; }
+@media (max-width: 59.99rem) { .steps li:not(.is-on) { display: none; } .stage__grid { align-content: center; } }
+
+.scheme { position: relative; }
+.scheme svg { display: block; width: 100%; height: auto; max-height: calc(100svh - 9rem); }
+.meter { display: flex; flex-wrap: wrap; gap: .75rem 2rem; margin-top: .75rem; font-family: var(--font-draw); font-size: 1rem; }
+.meter b { font-family: var(--font-cond); font-size: 1.75rem; font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; }
+.meter .rod b { color: #ffcf6b; }
+.meter .plat b { color: #ff7b7f; }
+.play { position: absolute; top: 0; right: 0; padding: .5rem .875rem; border-radius: 999px; border: 1px solid rgb(255 255 255 / .35); background: rgb(38 44 47 / .8); color: #fff; font: 600 .875rem var(--font); cursor: pointer; }
+.outro { padding: 3rem 0 var(--section-y); }
+.lbl { font-family: var(--font-draw); font-size: 12px; fill: rgb(255 255 255 / .75); }
+</style>
+</head>
+<body>
+<div class="mock-bar"><div class="container"><b>Прототип · Как работает консольный</b><span>Крутите страницу: схема движется вместе с прокруткой</span><a href="index.html">← Все макеты</a></div></div>
+
+<header class="intro container">
+  <span class="eyebrow">Как это работает</span>
+  <h1>Шток проходит метр, <em>платформа два</em></h1>
+  <p>Цилиндр толкает звёздочки вверх, а цепь, закреплённая одним концом, тянет каретку другим. Поэтому платформа поднимается вдвое выше хода штока. Прокрутите вниз.</p>
+  <p class="note"><b>Уточнить у вас:</b> так ли устроен привод (звёздочки на штоке, цепь закреплена на раме, ход 1:2). Если схема другая, перерисую.</p>
+</header>
+
+<div class="track" id="track">
+  <div class="stage">
+    <div class="container stage__grid">
+      <ol class="steps" id="steps">
+        <li data-from="0" data-n="1"><b>Маслостанция включается</b><span>Насос подаёт масло в гидроцилиндр.</span></li>
+        <li data-from="0.12" data-n="2"><b>Шток толкает звёздочки</b><span>Звёздочки на верху штока поднимаются вместе с ним.</span></li>
+        <li data-from="0.4" data-n="3"><b>Цепь тянет каретку</b><span>Один конец цепи закреплён на раме, другой на каретке. Каретка идёт вдвое быстрее штока.</span></li>
+        <li data-from="0.85" data-n="4"><b>Платформа на этаже</b><span>Клапан безопасности держит платформу, даже если упадёт давление.</span></li>
+      </ol>
+      <div class="scheme">
+        <button class="play" type="button" id="play">▶ Показать без прокрутки</button>
+        <svg viewBox="0 0 520 620" id="svg" role="img" aria-label="Схема привода консольного подъёмника"></svg>
+        <div class="meter"><span class="rod">шток: <b id="m-rod">0,00</b> м</span><span class="plat">платформа: <b id="m-plat">0,00</b> м</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="outro container"><p class="note">Цифры на шкале условные: 1 м хода штока = 2 м подъёма платформы. На сайте подставим ход вашей серийной модели.</p></section>
+
+<script>
+const NS = "http://www.w3.org/2000/svg";
+const svg = document.getElementById("svg");
+const el = (name, attrs, parent = svg) => {
+  const n = document.createElementNS(NS, name);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  parent.append(n);
+  return n;
+};
+
+// Geometry, SVG units (y down). Floor at 590. The rod lifts the sprocket from 330 to 180;
+// chain: anchor (fixed) → up the left of the sprocket → over → down the right to the carriage.
+const FLOOR = 590, SX = 250, R = 20, SPR_LOW = 330, SPR_HIGH = 180, ANCHOR_Y = 420, CAR_LOW = 540;
+const M_PER_PX = 1 / 150;  // 150 px of rod = 1 m (only for the meters)
+const carY = (sprY) => CAR_LOW - 2 * (SPR_LOW - sprY);
+
+// Grid backdrop and floor.
+const defs = el("defs");
+defs.innerHTML = `<pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="rgb(255 255 255 / .05)"/></pattern>
+  <linearGradient id="steel" x1="0" x2="1"><stop offset="0" stop-color="#9aa4a8"/><stop offset=".5" stop-color="#e6ebed"/><stop offset="1" stop-color="#8b9599"/></linearGradient>
+  <linearGradient id="red" x1="0" x2="1"><stop offset="0" stop-color="#9c0f14"/><stop offset=".5" stop-color="#d9262c"/><stop offset="1" stop-color="#8a0d12"/></linearGradient>`;
+el("rect", { x: 0, y: 0, width: 520, height: 620, fill: "url(#grid)" });
+el("rect", { x: 0, y: FLOOR, width: 520, height: 30, fill: "#1d2224" });
+el("line", { x1: 0, y1: FLOOR, x2: 520, y2: FLOOR, stroke: "#5b666b", "stroke-width": 2 });
+// Upper floor (the level the platform serves).
+el("rect", { x: 380, y: 274, width: 140, height: 14, fill: "#3b4448" });
+el("text", { x: 515, y: 266, "text-anchor": "end", class: "lbl" }).textContent = "ЭТАЖ 2";
+
+// Mast: two posts with cross bars.
+el("rect", { x: 196, y: 40, width: 14, height: FLOOR - 40, fill: "url(#red)" });
+el("rect", { x: 296, y: 40, width: 14, height: FLOOR - 40, fill: "url(#red)" });
+for (const y of [40, 150, 300]) el("rect", { x: 196, y, width: 114, height: 10, fill: "#8a0d12" });
+el("rect", { x: 186, y: FLOOR - 8, width: 134, height: 8, fill: "#5b666b" });
+
+// Power unit at the foot of the mast, hose to the cylinder.
+const pu = el("g");
+el("rect", { x: 40, y: 520, width: 90, height: 70, rx: 3, fill: "#c4161c" }, pu);
+el("rect", { x: 62, y: 478, width: 46, height: 44, rx: 6, fill: "#2756a8" }, pu);
+el("text", { x: 85, y: 612, "text-anchor": "middle", class: "lbl" }).textContent = "МАСЛОСТАНЦИЯ";
+const hose = el("path", { d: `M130 560 C 170 560, 190 570, ${SX - 14} 575`, fill: "none", stroke: "#1a1e20", "stroke-width": 7, "stroke-linecap": "round" });
+const flow = el("path", { d: `M130 560 C 170 560, 190 570, ${SX - 14} 575`, fill: "none", stroke: "#ffcf6b", "stroke-width": 3, "stroke-dasharray": "6 10", "stroke-linecap": "round", opacity: 0 });
+
+// Cylinder barrel (fixed), oil inside, rod (moves).
+el("rect", { x: SX - 14, y: 370, width: 28, height: FLOOR - 370, rx: 3, fill: "#3a4246", stroke: "#6f7a7f" });
+const oil = el("rect", { x: SX - 10, y: 0, width: 20, height: 0, fill: "#d8a531", opacity: .85 });
+const rod = el("rect", { x: SX - 6, y: 0, width: 12, height: 0, fill: "url(#steel)" });
+// Anchor bracket on the barrel top: the fixed end of the chain.
+el("rect", { x: SX - R - 8, y: ANCHOR_Y - 4, width: 16, height: 10, fill: "#cfd6d9" });
+el("text", { x: SX - R - 14, y: ANCHOR_Y + 22, "text-anchor": "end", class: "lbl" }).textContent = "КОНЕЦ ЦЕПИ ЗАКРЕПЛЁН";
+
+// Chain path and its links (dashes stay put relative to the fixed end, so they run over the sprocket).
+const chainBase = el("path", { fill: "none", stroke: "#2b3235", "stroke-width": 9, "stroke-linejoin": "round" });
+const chainLinks = el("path", { fill: "none", stroke: "#e9edef", "stroke-width": 7, "stroke-dasharray": "7 5" });
+// Sprocket on the crosshead.
+const spr = el("g");
+let teeth = "";
+for (let j = 0; j < 12; j++) {
+  const a0 = (j * Math.PI) / 6, p = (a, r) => `${(Math.cos(a) * r).toFixed(1)} ${(-Math.sin(a) * r).toFixed(1)}`;
+  teeth += `${j ? "L" : "M"}${p(a0 - 0.12, R - 2)}L${p(a0 + 0.1, R + 6)}L${p(a0 + 0.42, R + 6)}L${p(a0 + 0.64, R - 2)}`;
+}
+el("path", { d: teeth + "Z", fill: "#8d989d", stroke: "#cfd6d9", "stroke-width": 1.2 }, spr);
+el("circle", { r: 6, fill: "#2b3235", stroke: "#cfd6d9" }, spr);
+el("rect", { x: -26, y: -4, width: 52, height: 8, fill: "#5b666b" });  // crosshead, placed in draw()
+const head = svg.lastChild;
+
+// Carriage on the mast and the platform with a pallet.
+const car = el("g");
+el("rect", { x: 284, y: -40, width: 40, height: 86, rx: 3, fill: "#2f3639", stroke: "#6f7a7f" }, car);
+el("rect", { x: SX + R - 4, y: -6, width: 284 - SX - R + 8, height: 8, fill: "#cfd6d9" }, car);  // chain bracket
+el("rect", { x: 324, y: 34, width: 190, height: 12, fill: "#2f3639", stroke: "#6f7a7f" }, car);
+el("polyline", { points: "324,-30 324,34 514,34", fill: "none", stroke: "#6f7a7f", "stroke-width": 3 }, car);
+el("rect", { x: 352, y: -24, width: 120, height: 58, fill: "#c9a46a", stroke: "#8a6b3c" }, car);
+el("rect", { x: 352, y: 0, width: 120, height: 3, fill: "#8a6b3c" }, car);
+el("rect", { x: 345, y: 26, width: 134, height: 8, fill: "#a07a46" }, car);
+
+// Dimension lines: rod stroke (left) and platform travel (right).
+const dimRod = el("g");
+const dimPlat = el("g");
+function dim(g, x, y0, y1, color, text) {
+  g.replaceChildren();
+  if (Math.abs(y1 - y0) < 2) return;
+  el("line", { x1: x, y1: y0, x2: x, y2: y1, stroke: color, "stroke-width": 2 }, g);
+  for (const y of [y0, y1]) el("line", { x1: x - 6, y1: y, x2: x + 6, y2: y, stroke: color, "stroke-width": 2 }, g);
+  const t = el("text", { x: x + 10, y: (y0 + y1) / 2 + 4, class: "lbl", fill: color, style: `fill:${color}` }, g);
+  t.textContent = text;
+}
+
+const steps = [...document.querySelectorAll("#steps li")];
+const fmt = (v) => v.toFixed(2).replace(".", ",");
+let last = 0;
+function draw(t) {
+  const sprY = SPR_LOW - (SPR_LOW - SPR_HIGH) * t;
+  const cy = carY(sprY);
+  rod.setAttribute("y", sprY);
+  rod.setAttribute("height", 372 - sprY);
+  oil.setAttribute("y", 372);
+  oil.setAttribute("height", 30 + 180 * t);
+  head.setAttribute("x", SX - 26); head.setAttribute("y", sprY - 4);
+  const angle = ((SPR_LOW - sprY) / R) * (180 / Math.PI);
+  spr.setAttribute("transform", `translate(${SX} ${sprY}) rotate(${angle})`);
+  const d = `M${SX - R} ${ANCHOR_Y} L${SX - R} ${sprY} A${R} ${R} 0 0 1 ${SX + R} ${sprY} L${SX + R} ${cy}`;
+  chainBase.setAttribute("d", d);
+  chainLinks.setAttribute("d", d);
+  car.setAttribute("transform", `translate(0 ${cy})`);
+  dim(dimRod, SX - 60, SPR_LOW, sprY, "#ffcf6b", "");
+  dim(dimPlat, 505, CAR_LOW + 34, cy + 34, "#ff7b7f", "");
+  const moving = Math.abs(t - last) > 0.0005;
+  flow.setAttribute("opacity", moving && t > 0.02 && t < 0.99 ? 1 : 0);
+  flow.style.strokeDashoffset = -t * 600;
+  last = t;
+  document.getElementById("m-rod").textContent = fmt((SPR_LOW - sprY) * M_PER_PX);
+  document.getElementById("m-plat").textContent = fmt((CAR_LOW - cy) * M_PER_PX);
+  let on = 0;
+  steps.forEach((li, i) => { if (t >= +li.dataset.from) on = i; });
+  steps.forEach((li, i) => li.classList.toggle("is-on", i === on));
+}
+
+// Scroll progress through the tall track drives the scheme.
+const track = document.getElementById("track");
+const fromScroll = () => {
+  const r = track.getBoundingClientRect();
+  const t = Math.min(1, Math.max(0, -r.top / (r.height - innerHeight)));
+  draw(t);
+};
+addEventListener("scroll", fromScroll, { passive: true });
+addEventListener("resize", fromScroll);
+fromScroll();
+
+// Or play it without scrolling: up, pause, down.
+document.getElementById("play").addEventListener("click", () => {
+  removeEventListener("scroll", fromScroll);
+  const t0 = performance.now(), up = 3500, hold = 1200;
+  const ease = (x) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
+  const step = (now) => {
+    const e = now - t0;
+    const t = e < up ? ease(e / up) : e < up + hold ? 1 : 1 - ease(Math.min(1, (e - up - hold) / up));
+    draw(t);
+    if (e < 2 * up + hold) requestAnimationFrame(step);
+    else addEventListener("scroll", fromScroll, { passive: true });
+  };
+  requestAnimationFrame(step);
+});
+</script>
+</body>
+</html>

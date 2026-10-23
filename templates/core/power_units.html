@@ -93,6 +93,23 @@
 
 {% include "includes/power_unit_config.html" %}
 
+{# Our units (the client's photos), right under the configurator: a strip that scrolls sideways, arrows from site.js. #}
+<section class="section section--dark" aria-labelledby="works-title">
+  <div class="container">
+    <div class="section-head">
+      <h2 id="works-title">{% translate "Наши гидростанции" %}</h2>
+      <p class="section-head__lead">{% translate "Станции с нашего участка: от компактных до двухмоторных." %}</p>
+    </div>
+    <div class="carousel" data-carousel>
+      <ul class="carousel__track carousel__track--tall" data-carousel-track>
+        {% for p, alt in page.photos %}<li class="carousel__item"><a class="zoom" href="{% image_url p %}" data-zoom="works">{% picture p alt sizes="(min-width: 60rem) 18rem, 70vw" %}</a></li>{% endfor %}
+      </ul>
+      <button class="carousel__btn carousel__btn--prev" type="button" data-carousel-prev aria-label="{% translate 'Предыдущие фото' %}" hidden>{% icon "chevron-left" %}</button>
+      <button class="carousel__btn carousel__btn--next" type="button" data-carousel-next aria-label="{% translate 'Следующие фото' %}" hidden>{% icon "chevron-right" %}</button>
+    </div>
+  </div>
+</section>
+
 {# No spec yet: the questionnaire, online through the form or as a PDF to fill in. #}
 <section class="section" aria-labelledby="quest-title">
   <div class="container pu-quest">
@@ -150,23 +167,6 @@
       </li>
       {% endfor %}
     </ol>
-  </div>
-</section>
-
-{# Our units from the shop floor: a strip that scrolls sideways, arrows from site.js. #}
-<section class="section section--dark" aria-labelledby="works-title">
-  <div class="container">
-    <div class="section-head">
-      <h2 id="works-title">{% translate "Наши гидростанции" %}</h2>
-      <p class="section-head__lead">{% translate "Сборка, испытания и установка на объектах." %}</p>
-    </div>
-    <div class="carousel" data-carousel>
-      <ul class="carousel__track carousel__track--wide" data-carousel-track>
-        {% for p, alt in page.photos %}<li class="carousel__item"><a class="zoom" href="{% image_url p %}" data-zoom="works">{% picture p alt sizes="(min-width: 60rem) 24rem, 80vw" %}</a></li>{% endfor %}
-      </ul>
-      <button class="carousel__btn carousel__btn--prev" type="button" data-carousel-prev aria-label="{% translate 'Предыдущие фото' %}" hidden>{% icon "chevron-left" %}</button>
-      <button class="carousel__btn carousel__btn--next" type="button" data-carousel-next aria-label="{% translate 'Следующие фото' %}" hidden>{% icon "chevron-right" %}</button>
-    </div>
   </div>
 </section>
 

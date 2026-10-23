@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Новые блоки — макеты</title>
+<!-- The list of new-block mockups (2026-10): chains on the console lift, site photos, power units. -->
+<link rel="stylesheet" href="obshchee.css">
+<style>
+.grp { margin-top: 3rem; }
+.grp h2 { font-size: clamp(1.75rem, 3vw, 2.25rem); }
+.grp > p { color: var(--muted); margin-top: .375rem; }
+.list { display: grid; gap: 1.25rem; margin-top: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); }
+.m { display: grid; grid-template-rows: auto 1fr; background: #fff; border-radius: 6px; overflow: hidden; box-shadow: var(--shadow-card); text-decoration: none; transition: translate .25s; }
+.m:hover { translate: 0 -4px; }
+.m img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+.m div { padding: 1rem 1.125rem 1.25rem; }
+.m b { display: block; font-family: var(--font-cond); font-size: 1.375rem; line-height: 1.1; }
+.m span { display: block; margin-top: .375rem; color: var(--muted); font-size: .9375rem; }
+.m small { font-family: var(--font-draw); color: var(--red); font-size: .8125rem; letter-spacing: .06em; }
+</style>
+</head>
+<body>
+<section class="section section--grey">
+  <div class="container">
+    <span class="eyebrow">Макеты · октябрь 2026</span>
+    <h1 style="font-size:clamp(2.5rem,6vw,4rem)">Новые блоки для сайта</h1>
+    <p class="section-head__lead">Семь макетов по идеям: цепи на консольном, фото с объектов и гидростанции. Жёлтым отмечено то, что нужно уточнить или прислать. Фото кликабельные, в макетах можно наводить и нажимать.</p>
+
+    <div class="grp">
+      <h2>Двухрядные цепи</h2>
+      <div class="list">
+        <a class="m" href="cepi-konsolnyj.html"><img src="foto/cepi-dvuhryadnye.webp" alt=""><div><small>МАКЕТ 1</small><b>Цепи на странице консольного</b><span>Плашка на первом экране, тёмный блок с выносками и сравнением, метка в каталоге.</span></div></a>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Анимации для блока цепей</h2>
+      <p>Живые прототипы: открывайте и прокручивайте. Это проверка идей, финальный вид соберём в коде сайта.</p>
+      <div class="list">
+        <a class="m" href="anim-poyavlenie.html"><img src="foto/cepi-dvuhryadnye.webp" alt=""><div><small>ПРОТОТИП A</small><b>Блок цепей в стиле сайта</b><span>Фото цепей на всю ширину первым, плавное появление, зачёркивание «как у всех», цепь на листе чертежа, которая потом крутится.</span></div></a>
+        <a class="m" href="anim-mehanizm.html"><img src="../../../static/img/catalog/konsolnyj-podemnik-1l-vid-szadi-596.webp" alt="" style="object-fit:contain;background:#262c2f"><div><small>ПРОТОТИП B</small><b>Как работает консольный</b><span>Схема движется при прокрутке: шток проходит метр, платформа два.</span></div></a>
+        <a class="m" href="anim-iznos.html"><img src="foto/cepi-dvuhryadnye.webp" alt="" style="object-position:20% 20%"><div><small>ПРОТОТИП C</small><b>10 000 подъёмов</b><span>Звёздочка против блока: блок истирается, цепь садится и вытягивается.</span></div></a>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Фото на объектах · <span style="color:var(--red)">мозаика уже на сайте</span></h2>
+      <p>Три варианта. Можно взять один или сочетать: мозаика на моделях и общая страница.</p>
+      <div class="list">
+        <a class="m" href="obekty-mozaika.html"><img src="../../../static/img/objects/nozhnichnyj-2x-u-fasada-600.webp" alt=""><div><small>МАКЕТ 2</small><b>Мозаика на странице модели</b><span>Одно фото крупно, остальные вокруг, последняя плитка ведёт ко всем объектам.</span></div></a>
+        <a class="m" href="obekty-kartochki.html"><img src="../../../static/img/objects/konsolnyj-1l-paleta-v-cehu-600.webp" alt=""><div><small>МАКЕТ 3</small><b>Объект как история</b><span>Задача, решение и цифры. Сильнее всего для доверия, но нужны данные.</span></div></a>
+        <a class="m" href="obekty-stranica.html"><img src="foto/gruzovoj-v-karkasnoj-shahte.webp" alt=""><div><small>МАКЕТ 4</small><b>Страница «Объекты»</b><span>Все фото в одном месте, фильтр по типу, переход к модели.</span></div></a>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Гидростанции</h2>
+      <p>Вместо «на объекте»: показываем устройство, цвета и размерный ряд.</p>
+      <div class="list">
+        <a class="m" href="gidrostancii-anatomiya.html"><img src="foto/gidrostanciya-dva-motora.webp" alt=""><div><small>МАКЕТ 5</small><b>Анатомия гидростанции</b><span>Фото как лист чертежа: позиции с выносками, наведение подсвечивает узел.</span></div></a>
+        <a class="m" href="gidrostancii-cveta.html"><img src="foto/gidrostancii-partiya.webp" alt=""><div><small>МАКЕТ 6</small><b>Красим в цвет оборудования</b><span>Реальные цвета на фото и рисунок станции, который можно перекрасить.</span></div></a>
+        <a class="m" href="gidrostancii-linejka.html"><img src="foto/gidrostanciya-kompaktnaya.webp" alt=""><div><small>МАКЕТ 7</small><b>От компактной до двухмоторной</b><span>Свои станции по размеру и баннер «делаем партиями».</span></div></a>
+      </div>
+    </div>
+    <div class="grp">
+      <h2>Монтаж на главной</h2>
+      <p>Несколько фото монтажа в последнем шаге ленты «От заявки до монтажа».</p>
+      <div class="list">
+        <a class="m" href="montazh-foto.html"><img src="foto/montazh-machta-v-priyamke.webp" alt="" style="object-position:50% 40%"><div><small>МАКЕТ 8</small><b>Фото монтажа</b><span>Четыре варианта: миниатюры, монтаж по шагам, стопка снимков, финальная галерея.</span></div></a>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>

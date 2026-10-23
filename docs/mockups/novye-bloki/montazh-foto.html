@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Фото монтажа — макет</title>
+<!-- Mockup: the last step of the home timeline ("Монтаж") with several real installation photos
+     instead of one. Four ways to fit them; the step above ("Производство") is shown faded to keep
+     the timeline's rhythm in view. Timeline styles are copied from static/css/main.css. -->
+<link rel="stylesheet" href="obshchee.css">
+<style>
+.icon { display: inline-block; flex: none; width: 1.5rem; height: 1.5rem; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+/* --- Timeline, as on the site --- */
+.timeline { position: relative; }
+.timeline__list { display: grid; gap: 2.5rem; margin: 0; padding: 0; list-style: none; }
+.timeline__rail { position: absolute; top: 0; bottom: 0; left: 1.5rem; width: 2px; background: var(--red); }
+.timeline__item { position: relative; display: grid; grid-template-columns: 3rem 1fr; column-gap: 1.25rem; row-gap: 1rem; }
+.timeline__dot { position: relative; z-index: 1; grid-column: 1; grid-row: 1; display: grid; place-items: center; width: 3rem; height: 3rem;
+  border-radius: 50%; background: var(--red); color: var(--white); box-shadow: 0 0 0 6px rgb(196 22 28 / .14); }
+.timeline__dot .icon { width: 1.4rem; height: 1.4rem; }
+.timeline__photo { grid-column: 2; grid-row: 2; margin: 0; overflow: hidden; background: var(--grey); aspect-ratio: 3 / 2; box-shadow: var(--shadow-photo); }
+.timeline__photo img { width: 100%; height: 100%; object-fit: cover; }
+.timeline__text { grid-column: 2; grid-row: 1; align-self: center; }
+.timeline__text h3 { font-family: var(--font-cond); font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 700; line-height: 1.05; }
+.timeline__text p { margin-top: .5rem; max-width: 26rem; color: var(--muted); }
+@media (min-width: 60rem) {
+  .timeline__list { gap: 4rem; }
+  .timeline__rail { left: calc(50% - 1px); }
+  .timeline__item { grid-template-columns: 1fr 4.5rem 1fr; column-gap: 2.5rem; align-items: center; }
+  .timeline__photo { grid-column: 1; grid-row: 1; }
+  .timeline__dot { grid-column: 2; width: 4.5rem; height: 4.5rem; }
+  .timeline__dot .icon { width: 2rem; height: 2rem; }
+  .timeline__text { grid-column: 3; }
+  .is-odd .timeline__photo, .is-odd .timeline__media { grid-column: 3; }
+  .is-odd .timeline__text { grid-column: 1; text-align: right; justify-self: end; }
+  .is-odd .timeline__text p { margin-left: auto; }
+}
+.timeline__item.ctx { opacity: .4; }
+
+.variant { padding: var(--section-y) 0; }
+.variant + .variant { border-top: 1px dashed var(--line); }
+.variant__head { max-width: 46rem; margin-bottom: 2.5rem; }
+.variant__head h2 { font-size: clamp(1.75rem, 3vw, 2.25rem); margin-top: .25rem; }
+.variant__head p { color: var(--muted); margin-top: .5rem; }
+.variant__head small { font-family: var(--font-draw); color: var(--red); letter-spacing: .06em; }
+.pros { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin-top: .75rem; font-size: .875rem; color: var(--muted); }
+.pros b { color: var(--ink); font-weight: 600; }
+
+/* The photo column of the "Монтаж" step in variants A–C. */
+.timeline__media { grid-column: 2; grid-row: 2; min-width: 0; }
+@media (min-width: 60rem) { .timeline__media { grid-row: 1; } }
+
+/* --- A: main photo and thumbnails --- */
+.gal__main { margin: 0; aspect-ratio: 3 / 2; overflow: hidden; background: var(--grey); box-shadow: var(--shadow-photo); position: relative; }
+.gal__main a { display: block; height: 100%; }
+.gal__main img { width: 100%; height: 100%; object-fit: cover; transition: opacity .35s; }
+.gal__thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; margin-top: .5rem; }
+.gal__thumbs button { padding: 0; border: 0; background: var(--grey); aspect-ratio: 1; overflow: hidden; cursor: pointer; position: relative; opacity: .6; transition: opacity .2s; }
+.gal__thumbs button:hover, .gal__thumbs button[aria-current="true"] { opacity: 1; }
+.gal__thumbs button[aria-current="true"]::after { content: ""; position: absolute; inset: auto 0 0; height: 3px; background: var(--red); }
+.gal__thumbs img { width: 100%; height: 100%; object-fit: cover; }
+
+/* --- B: the installation in steps --- */
+.sub { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; gap: .25rem; max-width: 26rem; counter-reset: s; }
+.is-odd .sub { margin-left: auto; }
+.sub button { all: unset; box-sizing: border-box; width: 100%; cursor: pointer; display: grid; grid-template-columns: auto 1fr; gap: .125rem .875rem; padding: .625rem .875rem;
+  border-radius: var(--radius); color: var(--muted); position: relative; overflow: hidden; text-align: left; counter-increment: s; }
+.sub button::before { content: "0" counter(s); grid-row: span 2; font-family: var(--font-draw); color: var(--line); font-size: 1.25rem; line-height: 1.2; }
+.sub b { font-family: var(--font-cond); font-size: 1.1875rem; color: var(--ink); line-height: 1.2; }
+.sub span { font-size: .875rem; line-height: 1.4; display: none; }
+.sub button:hover { background: rgb(34 40 43 / .04); }
+.sub button[aria-current="true"] { background: var(--white); box-shadow: var(--shadow-card); }
+.sub button[aria-current="true"]::before { color: var(--red); }
+.sub button[aria-current="true"] span { display: block; }
+.sub i { position: absolute; left: 0; bottom: 0; height: 2px; width: 0; background: var(--red); }
+.sub button[aria-current="true"] i { animation: fill var(--t, 5s) linear forwards; }
+.sub.is-paused i { animation-play-state: paused; }
+@keyframes fill { to { width: 100%; } }
+@media (min-width: 60rem) {
+  .is-odd .sub button { grid-template-columns: 1fr auto; text-align: right; }
+  .is-odd .sub button::before { grid-column: 2; grid-row: 1 / span 2; }
+  .is-odd .sub b, .is-odd .sub span { grid-column: 1; grid-row: auto; }
+  .is-odd .sub b { grid-row: 1; }
+}
+.fade { margin: 0; position: relative; aspect-ratio: 4 / 5; max-height: 36rem; width: 100%; overflow: hidden; background: var(--grey); box-shadow: var(--shadow-photo); }
+.fade a { position: absolute; inset: 0; opacity: 0; transition: opacity .6s ease; }
+.fade a.is-on { opacity: 1; z-index: 1; }
+.fade img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.04); transition: transform 6s linear; }
+.fade a.is-on img { transform: scale(1); }
+.fade figcaption { position: absolute; z-index: 2; left: 1rem; top: 1rem; font-family: var(--font-draw); font-size: .8125rem; letter-spacing: .06em; color: #fff;
+  background: rgb(20 24 26 / .6); padding: .25rem .5rem; border-radius: 2px; }
+
+/* --- C: a stack of prints --- */
+.stack { position: relative; aspect-ratio: 5 / 4; max-width: 32rem; margin-inline: auto; }
+.stack button { all: unset; position: absolute; inset: 6% 8%; padding: .625rem .625rem 2.25rem; background: #fff; box-shadow: 0 2px 6px rgb(34 40 43 / .12), 0 22px 40px -22px rgb(34 40 43 / .6);
+  cursor: pointer; transform: rotate(var(--r)) translate(var(--x), var(--y)); transition: transform .55s cubic-bezier(.2, .7, .2, 1); }
+.stack img { width: 100%; height: 100%; object-fit: cover; background: var(--grey); }
+.stack span { position: absolute; left: .75rem; right: .75rem; bottom: .5rem; font-family: var(--font-draw); font-size: .875rem; letter-spacing: .04em; color: var(--muted);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stack button:nth-child(1) { --r: -6deg; --x: -4%; --y: 2%; }
+.stack button:nth-child(2) { --r: 4deg; --x: 5%; --y: -2%; }
+.stack button:nth-child(3) { --r: -2deg; --x: 1%; --y: 3%; }
+.stack button:nth-child(4) { --r: 1.5deg; --x: -1%; --y: -1%; }
+@media (hover: hover) {
+  .stack:hover button:nth-child(1) { --r: -14deg; --x: -30%; --y: 6%; }
+  .stack:hover button:nth-child(2) { --r: 10deg; --x: 28%; --y: -6%; }
+  .stack:hover button:nth-child(3) { --r: -5deg; --x: -10%; --y: 10%; }
+}
+.stack-hint { text-align: center; margin-top: 1rem; font-size: .8125rem; color: var(--muted); }
+
+/* --- D: the timeline ends in a full-width gallery --- */
+.finale { margin-top: 2rem; }
+.finale__end { position: relative; z-index: 1; display: grid; place-items: center; width: 3rem; height: 3rem; margin: 2.5rem 0 0; border-radius: 50%; background: var(--ink); color: #fff; }
+@media (min-width: 60rem) { .finale__end { margin: 4rem auto 0; width: 3.5rem; height: 3.5rem; } }
+.finale__title { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: .5rem 2rem; margin-bottom: 1.25rem; }
+.finale__title h3 { font-family: var(--font-cond); font-size: clamp(1.5rem, 3vw, 2rem); }
+.finale__title span { font-family: var(--font-draw); color: var(--muted); letter-spacing: .04em; font-size: .875rem; }
+.wall { display: grid; gap: .5rem; grid-template-columns: repeat(2, 1fr); }
+.wall a { position: relative; display: block; overflow: hidden; background: var(--grey); color: #fff; text-decoration: none; aspect-ratio: 3 / 4; }
+.wall a.is-wide { grid-column: span 2; aspect-ratio: 3 / 2; }
+.wall img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s cubic-bezier(.2, .7, .2, 1); }
+.wall a:hover img { transform: scale(1.04); }
+.wall em { position: absolute; inset: auto 0 0; padding: 2.5rem 1rem .875rem; font-style: normal; font-size: .9375rem; line-height: 1.35; background: linear-gradient(transparent, rgb(20 24 26 / .85)); }
+.wall em b { display: block; font-family: var(--font-draw); font-weight: 400; font-size: .75rem; letter-spacing: .08em; color: #ff8a8d; }
+@media (min-width: 48rem) {
+  .wall { grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 15rem 15rem; gap: .75rem; }
+  .wall a, .wall a.is-wide { aspect-ratio: auto; grid-column: auto; }
+  .wall a:nth-child(1) { grid-column: 1; grid-row: 1; }
+  .wall a:nth-child(2) { grid-column: 1; grid-row: 2; }
+  .wall a:nth-child(3) { grid-column: 2; grid-row: 1 / span 2; }
+  .wall a:nth-child(4) { grid-column: 3; grid-row: 1 / span 2; }
+}
+@media (min-width: 60rem) { .wall { grid-template-rows: 17rem 17rem; } }
+
+/* Variant switcher on top. */
+.jump { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.25rem; }
+.jump a { text-decoration: none; padding: .375rem .75rem; border: 1px solid var(--line); border-radius: 999px; font-size: .875rem; background: #fff; }
+.jump a:hover { border-color: var(--red); color: var(--red); }
+</style>
+</head>
+<body>
+<div class="mock-bar"><div class="container"><b>Фото монтажа</b><span>Последний шаг «Монтаж» на главной, несколько фото вместо одного</span><a href="index.html">← Все макеты</a></div></div>
+
+<section class="section--grey" style="padding-top:2.5rem">
+  <div class="container">
+    <span class="eyebrow">Главная · блок «От заявки до монтажа»</span>
+    <h1 style="font-size:clamp(2rem,5vw,3rem)">Как показать несколько фото монтажа</h1>
+    <p class="section-head__lead" style="max-width:46rem">Четыре варианта. Шаг «Производство» над ними бледный, чтобы видно было ритм ленты. Фото кликабельные.</p>
+    <nav class="jump"><a href="#a">A · Миниатюры</a><a href="#b">B · Монтаж по шагам</a><a href="#c">C · Стопка снимков</a><a href="#d">D · Финал на всю ширину</a></nav>
+    <p class="note"><b>Фото.</b> На двух фото консольный (мачта в приямке, шахта снизу), на одном ножничный при разгрузке, на текущем ножничный в приямке. Если есть ещё кадры монтажа одного объекта от начала до конца, вариант B станет сильнее: одна история вместо разных подъёмников.</p>
+
+    <!-- ============ A ============ -->
+    <div class="variant" id="a">
+      <div class="variant__head">
+        <small>ВАРИАНТ A</small>
+        <h2>Главное фото и ряд миниатюр</h2>
+        <p>Шаг выглядит как остальные, под фото четыре миниатюры. Нажали на миниатюру — она встала крупно.</p>
+        <div class="pros"><span><b>+</b> самое простое, ритм ленты не ломается</span><span><b>−</b> остальные фото маленькие</span></div>
+      </div>
+      <div class="timeline">
+        <span class="timeline__rail" aria-hidden="true"></span>
+        <ol class="timeline__list">
+          <li class="timeline__item ctx">
+            <figure class="timeline__photo"><img src="../../../static/img/steps/etap-proizvodstvo-1024.webp" alt=""></figure>
+            <span class="timeline__dot"><svg class="icon"><use href="../../../static/img/icons.svg#cog"></use></svg></span>
+            <div class="timeline__text"><h3>Производство</h3><p>Изготовление, окраска и испытания на соответствие параметрам.</p></div>
+          </li>
+          <li class="timeline__item is-odd">
+            <div class="timeline__media gal" data-gal>
+              <figure class="gal__main"><a href="../../../static/img/steps/etap-montazh-1536.webp" data-zoom><img src="../../../static/img/steps/etap-montazh-1024.webp" alt="Ножничный подъёмник, смонтированный в приямке"></a></figure>
+              <div class="gal__thumbs">
+                <button type="button" aria-current="true" data-src="../../../static/img/steps/etap-montazh-1024.webp" data-full="../../../static/img/steps/etap-montazh-1536.webp"><img src="../../../static/img/steps/etap-montazh-600.webp" alt="Ножничный подъёмник, смонтированный в приямке"></button>
+                <button type="button" data-src="foto/montazh-razgruzka-kranom.webp"><img src="foto/montazh-razgruzka-kranom.webp" alt="Разгрузка ножничного подъёмника краном на объекте"></button>
+                <button type="button" data-src="foto/montazh-machta-v-priyamke.webp" data-pos="50% 40%"><img src="foto/montazh-machta-v-priyamke.webp" alt="Монтажники ставят мачту консольного подъёмника в приямке"></button>
+                <button type="button" data-src="foto/montazh-shahta-snizu.webp" data-pos="50% 30%"><img src="foto/montazh-shahta-snizu.webp" alt="Смонтированный консольный подъёмник в шахте, вид снизу"></button>
+              </div>
+            </div>
+            <span class="timeline__dot"><svg class="icon"><use href="../../../static/img/icons.svg#hard-hat"></use></svg></span>
+            <div class="timeline__text"><h3>Монтаж</h3><p>Поставка, монтаж и пусконаладка на объекте заказчика.</p></div>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- ============ B ============ -->
+    <div class="variant" id="b">
+      <div class="variant__head">
+        <small>ВАРИАНТ B · советую</small>
+        <h2>Монтаж по шагам</h2>
+        <p>Пустое место под текстом занимает короткий список: разгрузка, сборка, пусконаладка, сдача. Фото сменяются сами, по клику можно выбрать шаг. Фото вертикальное, поэтому вертикальные кадры с мачтой и шахтой не обрезаются.</p>
+        <div class="pros"><span><b>+</b> заполняет пустую половину шага</span><span><b>+</b> объясняет, что входит в монтаж</span><span><b>−</b> шаг выше остальных</span></div>
+      </div>
+      <div class="timeline">
+        <span class="timeline__rail" aria-hidden="true"></span>
+        <ol class="timeline__list">
+          <li class="timeline__item ctx">
+            <figure class="timeline__photo"><img src="../../../static/img/steps/etap-proizvodstvo-1024.webp" alt=""></figure>
+            <span class="timeline__dot"><svg class="icon"><use href="../../../static/img/icons.svg#cog"></use></svg></span>
+            <div class="timeline__text"><h3>Производство</h3><p>Изготовление, окраска и испытания на соответствие параметрам.</p></div>
+          </li>
+          <li class="timeline__item is-odd" data-steps>
+            <div class="timeline__media">
+              <figure class="fade">
+                <a class="is-on" href="foto/montazh-razgruzka-kranom.webp" data-zoom><img src="foto/montazh-razgruzka-kranom.webp" alt="Разгрузка ножничного подъёмника краном на объекте"></a>
+                <a href="foto/montazh-machta-v-priyamke.webp" data-zoom><img src="foto/montazh-machta-v-priyamke.webp" alt="Монтажники ставят мачту консольного подъёмника в приямке" style="object-position:50% 40%"></a>
+                <a href="foto/montazh-shahta-snizu.webp" data-zoom><img src="foto/montazh-shahta-snizu.webp" alt="Смонтированный консольный подъёмник в шахте, вид снизу"></a>
+                <a href="../../../static/img/steps/etap-montazh-1536.webp" data-zoom><img src="../../../static/img/steps/etap-montazh-1024.webp" alt="Ножничный подъёмник, смонтированный в приямке"></a>
+                <figcaption data-cap>01 / 04</figcaption>
+              </figure>
+            </div>
+            <span class="timeline__dot"><svg class="icon"><use href="../../../static/img/icons.svg#hard-hat"></use></svg></span>
+            <div class="timeline__text">
+              <h3>Монтаж</h3><p>Поставка, монтаж и пусконаладка на объекте заказчика.</p>
+              <ol class="sub">
+                <li><button type="button" aria-current="true"><b>Доставка и разгрузка</b><span>Привозим подъёмник собранным узлами, разгружаем краном или погрузчиком.</span><i></i></button></li>
+                <li><button type="button"><b>Сборка на месте</b><span>Ставим мачту или ножничный механизм в приямок, крепим к стенам и полу.</span><i></i></button></li>
+                <li><button type="button"><b>Пусконаладка</b><span>Подключаем гидростанцию, настраиваем остановки на этажах, проверяем под нагрузкой.</span><i></i></button></li>
+                <li><button type="button"><b>Сдача объекта</b><span>Обучаем персонал, передаём паспорт и документацию.</span><i></i></button></li>
+              </ol>
+            </div>
+          </li>
+        </ol>
+      </div>
+      <p class="note"><b>Проверить тексты подшагов:</b> <span class="todo">как на самом деле проходит монтаж</span> — порядок и что делаете на каждом шаге. Сейчас написал по фото.</p>
+    </div>
+
+    <!-- ============ C ============ -->
+    <div class="variant" id="c">
+      <div class="variant__head">
+        <small>ВАРИАНТ C</small>
+        <h2>Стопка снимков</h2>
+        <p>Фото лежат стопкой, как распечатки с объекта. Наведение разводит их веером, клик кладёт верхнее вниз.</p>
+        <div class="pros"><span><b>+</b> живо, отличает последний шаг от остальных</span><span><b>−</b> видно одно фото за раз, игривее остального сайта</span></div>
+      </div>
+      <div class="timeline">
+        <span class="timeline__rail" aria-hidden="true"></span>
+        <ol class="timeline__list">
+          <li class="timeline__item ctx">
+            <figure class="timeline__photo"><img src="../../../static/img/steps/etap-proizvodstvo-1024.webp" alt=""></figure>
+            <span class="timeline__dot"><svg class="icon"><use href="../../../static/img/icons.svg#cog"></use></svg></span>
+            <div class="timeline__text"><h3>Производство</h3><p>Изготовление, окраска и испытания на соответствие параметрам.</p></div>
+          </li>
+          <li class="timeline__item is-odd">
+            <div class="timeline__media">
+              <div class="stack" data-stack>
+                <button type="button"><img src="foto/montazh-shahta-snizu.webp" alt="Смонтированный консольный подъёмник в шахте, вид снизу"><span>ГОТОВАЯ ШАХТА</span></button>
+                <button type="button"><img src="foto/montazh-machta-v-priyamke.webp" alt="Монтажники ставят мачту консольного подъёмника в приямке" style="object-position:50% 40%"><span>СБОРКА МАЧТЫ</span></button>
+                <button type="button"><img src="foto/montazh-razgruzka-kranom.webp" alt="Разгрузка ножничного подъёмника краном на объекте"><span>РАЗГРУЗКА НА ОБЪЕКТЕ</span></button>
+                <button type="button"><img src="../../../static/img/steps/etap-montazh-1024.webp" alt="Ножничный подъёмник, смонтированный в приямке"><span>СДАН ЗАКАЗЧИКУ</span></button>
+              </div>
+              <p class="stack-hint">Нажмите на фото, чтобы листать</p>
+            </div>
+            <span class="timeline__dot"><svg class="icon"><use href="../../../static/img/icons.svg#hard-hat"></use></svg></span>
+            <div class="timeline__text"><h3>Монтаж</h3><p>Поставка, монтаж и пусконаладка на объекте заказчика.</p></div>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- ============ D ============ -->
+    <div class="variant" id="d">
+      <div class="variant__head">
+        <small>ВАРИАНТ D</small>
+        <h2>Финал на всю ширину</h2>
+        <p>Шаг «Монтаж» остаётся как есть, а лента заканчивается отметкой «готово» и галереей во всю ширину. Подводит итог всего маршрута.</p>
+        <div class="pros"><span><b>+</b> все фото крупные, вертикальные целиком по высоте</span><span><b>+</b> сильная точка в конце блока</span><span><b>−</b> блок длиннее</span></div>
+      </div>
+      <div class="timeline">
+        <span class="timeline__rail" aria-hidden="true"></span>
+        <ol class="timeline__list">
+          <li class="timeline__item ctx">
+            <figure class="timeline__photo"><img src="../../../static/img/steps/etap-proizvodstvo-1024.webp" alt=""></figure>
+            <span class="timeline__dot"><svg class="icon"><use href="../../../static/img/icons.svg#cog"></use></svg></span>
+            <div class="timeline__text"><h3>Производство</h3><p>Изготовление, окраска и испытания на соответствие параметрам.</p></div>
+          </li>
+          <li class="timeline__item is-odd">
+            <figure class="timeline__photo"><img src="../../../static/img/steps/etap-montazh-1024.webp" alt="Ножничный подъёмник, смонтированный в приямке"></figure>
+            <span class="timeline__dot"><svg class="icon"><use href="../../../static/img/icons.svg#hard-hat"></use></svg></span>
+            <div class="timeline__text"><h3>Монтаж</h3><p>Поставка, монтаж и пусконаладка на объекте заказчика.</p></div>
+          </li>
+        </ol>
+        <div class="finale__end"><svg class="icon"><use href="../../../static/img/icons.svg#shield-check"></use></svg></div>
+      </div>
+      <div class="finale">
+        <div class="finale__title"><h3>Так выглядит монтаж на объекте</h3><span>4 ФОТО · НАЖМИТЕ, ЧТОБЫ ОТКРЫТЬ</span></div>
+        <div class="wall">
+          <a href="foto/montazh-razgruzka-kranom.webp" data-zoom class="is-wide"><img src="foto/montazh-razgruzka-kranom.webp" alt="Разгрузка ножничного подъёмника краном на объекте"><em><b>01 · ДОСТАВКА</b>Разгрузка краном у склада</em></a>
+          <a href="../../../static/img/steps/etap-montazh-1536.webp" data-zoom class="is-wide"><img src="../../../static/img/steps/etap-montazh-1024.webp" alt="Ножничный подъёмник, смонтированный в приямке"><em><b>04 · ГОТОВО</b>Ножничный в приямке, сдан заказчику</em></a>
+          <a href="foto/montazh-machta-v-priyamke.webp" data-zoom><img src="foto/montazh-machta-v-priyamke.webp" alt="Монтажники ставят мачту консольного подъёмника в приямке" style="object-position:50% 40%"><em><b>02 · СБОРКА</b>Мачта консольного в приямке</em></a>
+          <a href="foto/montazh-shahta-snizu.webp" data-zoom><img src="foto/montazh-shahta-snizu.webp" alt="Смонтированный консольный подъёмник в шахте, вид снизу"><em><b>03 · ПУСКОНАЛАДКА</b>Платформа в шахте, вид снизу</em></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="obshchee.js"></script>
+<script>
+// A: a thumbnail puts its photo into the main frame.
+document.querySelectorAll("[data-gal]").forEach((gal) => {
+  const main = gal.querySelector(".gal__main img"), link = gal.querySelector(".gal__main a");
+  gal.querySelectorAll(".gal__thumbs button").forEach((b) => b.addEventListener("click", () => {
+    gal.querySelectorAll(".gal__thumbs button").forEach((x) => x.setAttribute("aria-current", x === b));
+    main.style.opacity = 0;
+    setTimeout(() => {
+      main.src = b.dataset.src; main.alt = b.querySelector("img").alt;
+      main.style.objectPosition = b.dataset.pos || "";
+      link.href = b.dataset.full || b.dataset.src;
+      main.style.opacity = 1;
+    }, 200);
+  }));
+});
+
+// B: the sub-steps switch the photo by themselves while the step is on screen; a click picks one.
+document.querySelectorAll("[data-steps]").forEach((item) => {
+  const list = item.querySelector(".sub"), btns = [...list.querySelectorAll("button")];
+  const shots = [...item.querySelectorAll(".fade a")], cap = item.querySelector("[data-cap]");
+  let i = 0;
+  const show = (n) => {
+    i = (n + btns.length) % btns.length;
+    btns.forEach((b, k) => { b.setAttribute("aria-current", "false"); if (k === i) { void b.offsetWidth; b.setAttribute("aria-current", "true"); } });
+    shots.forEach((s, k) => s.classList.toggle("is-on", k === i));
+    cap.textContent = `0${i + 1} / 0${btns.length}`;
+  };
+  btns.forEach((b, k) => {
+    b.addEventListener("click", () => show(k));
+    b.querySelector("i").addEventListener("animationend", () => show(i + 1));
+  });
+  item.addEventListener("mouseenter", () => list.classList.add("is-paused"));
+  item.addEventListener("mouseleave", () => list.classList.remove("is-paused"));
+  new IntersectionObserver(([e]) => list.classList.toggle("is-paused", !e.isIntersecting), { threshold: .4 }).observe(item);
+});
+
+// C: a click sends the top print to the bottom of the stack.
+document.querySelectorAll("[data-stack]").forEach((st) => {
+  st.addEventListener("click", (e) => {
+    if (!e.target.closest("button")) return;
+    const top = st.lastElementChild;
+    top.style.transform = "translate(60%, -10%) rotate(18deg)";
+    setTimeout(() => { top.style.transform = ""; st.prepend(top); }, 280);
+  });
+});
+</script>
+</body>
+</html>

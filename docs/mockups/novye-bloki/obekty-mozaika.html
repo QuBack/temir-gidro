@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Объекты мозаикой — макет</title>
+<!-- Mockup: "На объектах" on a model page as a mosaic instead of a row of equal thumbnails.
+     One photo large, the rest around it; a landscape photo takes two columns. Shown for 2X
+     (many photos) and 1L (few) to see that the layout holds both. -->
+<link rel="stylesheet" href="obshchee.css">
+<style>
+.mosaic { display: grid; gap: .5rem; grid-template-columns: repeat(2, 1fr); grid-auto-rows: 9rem; grid-auto-flow: dense; }
+@media (min-width: 48rem) { .mosaic { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 10.5rem; gap: .75rem; } }
+.mosaic > * { grid-row: span 2; }
+.mosaic .is-big { grid-column: span 2; grid-row: span 3; }
+@media (min-width: 48rem) { .mosaic .is-big { grid-row: span 4; } }
+.mosaic .is-wide { grid-column: span 2; }
+
+.tile { position: relative; display: block; overflow: hidden; border-radius: var(--radius); background: var(--grey); text-decoration: none; color: #fff; }
+.tile img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s cubic-bezier(.2, .7, .2, 1); }
+.tile:hover img { transform: scale(1.05); }
+.tile figcaption { position: absolute; inset: auto 0 0; padding: 2.5rem .875rem .75rem; font-size: .875rem; line-height: 1.35;
+  background: linear-gradient(transparent, rgb(20 24 26 / .85)); opacity: 0; translate: 0 .5rem; transition: opacity .3s, translate .3s; }
+.tile:hover figcaption, .is-big figcaption { opacity: 1; translate: 0; }
+.is-big figcaption { font-size: 1rem; padding: 4rem 1.25rem 1.125rem; }
+.is-big figcaption b { display: block; font-family: var(--font-cond); font-size: 1.5rem; margin-bottom: .25rem; }
+@media (hover: none) { .tile figcaption { opacity: 1; translate: 0; } }
+
+.tile--more { display: grid; align-content: end; gap: .5rem; padding: 1.25rem; background: var(--anthracite); }
+.tile--more b { font-family: var(--font-cond); font-size: 3rem; line-height: 1; }
+.tile--more span { color: rgb(255 255 255 / .75); font-size: .9375rem; }
+.tile--more em { font-style: normal; font-weight: 600; color: #ff7b7f; }
+.tile--more:hover { background: #2b3235; }
+
+.head-row { display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: end; justify-content: space-between; margin-bottom: 1.5rem; }
+.head-row h3 { font-size: clamp(1.75rem, 3vw, 2.25rem); }
+.head-row p { color: var(--muted); }
+.count { font-family: var(--font-draw); color: var(--muted); letter-spacing: .04em; }
+.variant + .variant { margin-top: 4.5rem; padding-top: 3rem; border-top: 1px dashed var(--line); }
+</style>
+</head>
+<body>
+<div class="mock-bar"><div class="container"><b>Макет 2 · Фото на объектах мозаикой</b><span>Вместо ряда одинаковых миниатюр на странице модели</span><a href="index.html">← Все макеты</a></div></div>
+
+<section class="section section--grey">
+  <div class="container">
+    <div class="variant">
+      <p class="ctx-label">Страница ножничного 2X · вкладка «Описание»</p>
+      <div class="head-row">
+        <div><h3>На объектах</h3><p>Подъёмники 2X у заказчиков: на складах, в цехах, у фасадов.</p></div>
+        <span class="count">7 ФОТО · НАЖМИТЕ, ЧТОБЫ ОТКРЫТЬ</span>
+      </div>
+      <div class="mosaic">
+        <a class="tile is-big" href="../../../static/img/objects/nozhnichnyj-2x-u-fasada-1200.webp" data-zoom><figure style="margin:0;height:100%"><img src="../../../static/img/objects/nozhnichnyj-2x-u-fasada-1200.webp" alt="Ножничный подъёмник 2X в приямке у фасада: подача грузов к проёму второго этажа" loading="lazy"><figcaption><b>Подача грузов на второй этаж</b>В приямке у фасада склада, без шахты и машинного помещения</figcaption></figure></a>
+        <a class="tile" href="foto/nozhnichnyj-s-ploshchadkoj.webp" data-zoom><figure style="margin:0;height:100%"><img src="foto/nozhnichnyj-s-ploshchadkoj.webp" alt="Ножничный подъёмник с площадкой и ограждением в приямке на производстве" loading="lazy"><figcaption>Площадка обслуживания на производстве</figcaption></figure></a>
+        <a class="tile" href="../../../static/img/objects/nozhnichnyj-2x-v-cehu-1038.webp" data-zoom><figure style="margin:0;height:100%"><img src="../../../static/img/objects/nozhnichnyj-2x-v-cehu-600.webp" alt="Ножничный подъёмник 2X в цехе с листовым грузом на платформе" loading="lazy"><figcaption>В цехе с листовым грузом</figcaption></figure></a>
+        <a class="tile" href="../../../static/img/objects/nozhnichnyj-2x-u-fasada-sboku-1200.webp" data-zoom><figure style="margin:0;height:100%"><img src="../../../static/img/objects/nozhnichnyj-2x-u-fasada-sboku-600.webp" alt="Ножничный подъёмник 2X у здания, вид сбоку" loading="lazy"><figcaption>Вид сбоку: две пары ножниц</figcaption></figure></a>
+        <a class="tile" href="../../../static/img/objects/nozhnichnyj-2x-na-ploshchadke-1086.webp" data-zoom><figure style="margin:0;height:100%"><img src="../../../static/img/objects/nozhnichnyj-2x-na-ploshchadke-600.webp" alt="Ножничный подъёмник 2X на площадке у склада с трубой на платформе" loading="lazy"><figcaption>На площадке у склада, выносная маслостанция</figcaption></figure></a>
+        <a class="tile is-wide" href="../../../static/img/objects/nozhnichnyj-podemnik-v-ograzhdenii-1200.webp" data-zoom><figure style="margin:0;height:100%"><img src="../../../static/img/objects/nozhnichnyj-podemnik-v-ograzhdenii-1200.webp" alt="Ножничный подъёмник в ограждённой шахте с распашными воротами" loading="lazy"><figcaption>Ограждённая шахта с воротами на каждом этаже</figcaption></figure></a>
+        <a class="tile" href="foto/nozhnichnyj-v-cehu.webp" data-zoom><figure style="margin:0;height:100%"><img src="foto/nozhnichnyj-v-cehu.webp" alt="Ножничный подъёмник в цеху перед отгрузкой" loading="lazy"><figcaption>Перед отгрузкой, в нашем цеху</figcaption></figure></a>
+        <a class="tile tile--more" href="obekty-stranica.html"><b>40+</b><span>объектов по России и СНГ</span><em>Все объекты →</em></a>
+      </div>
+      <p class="note"><b>Как устроено:</b> первое фото крупно с подписью, остальные подписываются при наведении (на телефоне подписи видны сразу), клик открывает фото на весь экран. Последняя плитка ведёт на общую страницу объектов. <span class="todo">«40+»</span> — для примера, нужна реальная цифра. Модель на двух новых фото (площадка в приямке и подъёмник в цеху) <b>уточнить</b>, пока поставил их в 2X.</p>
+    </div>
+
+    <div class="variant">
+      <p class="ctx-label">Страница консольного 1L · когда фото меньше</p>
+      <div class="head-row">
+        <div><h3>На объектах</h3><p>Консольные подъёмники у заказчиков.</p></div>
+        <span class="count">5 ФОТО</span>
+      </div>
+      <div class="mosaic">
+        <a class="tile is-big" href="foto/gruzovoj-v-karkasnoj-shahte.webp" data-zoom><figure style="margin:0;height:100%"><img src="foto/gruzovoj-v-karkasnoj-shahte.webp" alt="Грузовой подъёмник в каркасной шахте у остеклённой стены" loading="lazy"><figcaption><b>Каркасная шахта внутри цеха</b>Платформа с ограждением, подача грузов на антресоль</figcaption></figure></a>
+        <a class="tile" href="../../../static/img/objects/konsolnyj-1l-paleta-v-cehu-917.webp" data-zoom><figure style="margin:0;height:100%"><img src="../../../static/img/objects/konsolnyj-1l-paleta-v-cehu-600.webp" alt="Консольный подъёмник 1L с паллетой в цехе" loading="lazy"><figcaption>Паллета коробок в цехе</figcaption></figure></a>
+        <a class="tile" href="../../../static/img/objects/konsolnyj-1l-naruzhnaya-shahta-929.webp" data-zoom><figure style="margin:0;height:100%"><img src="../../../static/img/objects/konsolnyj-1l-naruzhnaya-shahta-600.webp" alt="Консольный подъёмник 1L в наружной шахте" loading="lazy"><figcaption>Наружная шахта у фасада</figcaption></figure></a>
+        <a class="tile" href="../../../static/img/objects/konsolnyj-1l-v-shahte-1086.webp" data-zoom><figure style="margin:0;height:100%"><img src="../../../static/img/objects/konsolnyj-1l-v-shahte-600.webp" alt="Консольный подъёмник 1L во внутренней бетонной шахте" loading="lazy"><figcaption>Внутренняя бетонная шахта</figcaption></figure></a>
+        <a class="tile" href="../../../static/img/objects/konsolnyj-1l-na-sklade-951.webp" data-zoom><figure style="margin:0;height:100%"><img src="../../../static/img/objects/konsolnyj-1l-na-sklade-600.webp" alt="Консольный подъёмник 1L на складе" loading="lazy"><figcaption>На складе: мачта, цепи, платформа</figcaption></figure></a>
+      </div>
+      <p class="note"><b>Фото грузового в каркасной шахте</b> поставил сюда как пример, модель уточнить: 1L, 2L или другое.</p>
+    </div>
+  </div>
+</section>
+<script src="obshchee.js"></script>
+</body>
+</html>

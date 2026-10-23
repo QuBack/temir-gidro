@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Анатомия гидростанции — макет</title>
+<!-- Mockup: the power unit photo as a drawing sheet — numbered leaders (ГОСТ-style shelves)
+     from each part to its name at the sides. Hover a name or a point — both light up. On a phone
+     the leaders give way to numbered dots and a list. -->
+<link rel="stylesheet" href="obshchee.css">
+<style>
+.sheet { background-color: #f7f8f7;
+  background-image: linear-gradient(rgb(34 40 43 / .05) 1px, transparent 1px), linear-gradient(90deg, rgb(34 40 43 / .05) 1px, transparent 1px),
+    linear-gradient(rgb(34 40 43 / .03) 1px, transparent 1px), linear-gradient(90deg, rgb(34 40 43 / .03) 1px, transparent 1px);
+  background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px; }
+.frame { position: relative; border: 2px solid var(--ink); padding: clamp(1rem, 3vw, 2.5rem); background: rgb(255 255 255 / .55); }
+.frame::before { content: ""; position: absolute; inset: 6px; border: 1px solid rgb(34 40 43 / .35); pointer-events: none; }
+
+.anat { position: relative; display: grid; gap: 1rem; margin-top: 2rem; }
+@media (min-width: 60rem) { .anat { grid-template-columns: 1fr minmax(0, 26rem) 1fr; gap: 0; } }
+.anat__photo { position: relative; justify-self: center; width: 100%; max-width: 26rem; }
+.anat__photo img { width: 100%; box-shadow: var(--shadow-photo); }
+.anat__svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; display: none; }
+@media (min-width: 60rem) { .anat__svg { display: block; } }
+.anat__svg line { stroke: var(--ink); stroke-width: 1; transition: stroke .2s, stroke-width .2s; }
+.anat__svg circle { fill: var(--ink); transition: fill .2s, r .2s; }
+.anat__svg g.is-on line { stroke: var(--red); stroke-width: 2; }
+.anat__svg g.is-on circle { fill: var(--red); r: 5; }
+.anat__svg circle.halo { fill: #fff; }
+
+.col { list-style: none; margin: 0; padding: 0; position: relative; }
+.pos { cursor: default; font-size: .875rem; color: var(--muted); line-height: 1.4; }
+@media (min-width: 60rem) {
+  .col { min-height: 100%; }
+  .pos { position: absolute; width: calc(100% - 2rem); }
+  .col--l .pos { left: 0; text-align: right; }
+  .col--r .pos { right: 0; }
+}
+.pos b { display: block; font-family: var(--font-draw); font-weight: 400; font-size: 1.0625rem; color: var(--ink); letter-spacing: .02em; padding-bottom: .125rem; border-bottom: 1px solid var(--ink); margin-bottom: .3rem; transition: color .2s, border-color .2s; }
+.pos b i { font-style: normal; display: inline-block; min-width: 1.4em; text-align: left; color: var(--red); }
+.pos.is-on b { color: var(--red); border-color: var(--red); }
+
+/* Phone: numbered dots on the photo, list underneath. */
+.dot { position: absolute; translate: -50% -50%; display: grid; place-items: center; width: 1.625rem; height: 1.625rem; border-radius: 50%; background: var(--red); color: #fff; font: 700 .75rem var(--font); box-shadow: 0 0 0 2px #fff; }
+@media (min-width: 60rem) { .dot { display: none; } }
+@media (max-width: 59.99rem) { .col { display: grid; gap: .875rem; } .anat__photo { order: -1; } }
+
+.stamp { display: grid; grid-template-columns: auto auto; margin: 2rem 0 0 auto; width: max-content; max-width: 100%; border: 2px solid var(--ink); font-family: var(--font-draw); font-size: .875rem; }
+.stamp span { padding: .25rem .625rem; border: 1px solid rgb(34 40 43 / .5); }
+.stamp span:nth-child(odd) { color: var(--muted); }
+.tests { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 2rem; margin-top: 2rem; }
+.tests p { max-width: 38rem; }
+</style>
+</head>
+<body>
+<div class="mock-bar"><div class="container"><b>Макет 5 · Анатомия гидростанции</b><span>Фото как лист чертежа: позиции с выносками</span><a href="index.html">← Все макеты</a></div></div>
+
+<section class="section sheet">
+  <div class="container">
+    <div class="frame">
+      <span class="eyebrow">Из чего состоит</span>
+      <h2>Гидростанция ТЕМИР ГИДРО изнутри и снаружи</h2>
+      <p class="section-head__lead">Наведите на название, и покажем узел на фото. Каждая станция собирается под задачу: состав меняем под ваш цилиндр, скорость и режим работы.</p>
+
+      <div class="anat" id="anat">
+        <ol class="col col--l">
+          <li class="pos" data-p="1" data-x="35" data-y="20"><b><i>1</i>Электродвигатель</b>Асинхронный, 380 В или 220 В. Мощность считаем под нагрузку и скорость.</li>
+          <li class="pos" data-p="3" data-x="14" data-y="29"><b><i>3</i>Клапанный блок</b>Распределитель с электромагнитом, предохранительный и обратный клапаны.</li>
+          <li class="pos" data-p="5" data-x="50" data-y="52"><b><i>5</i>Заливная горловина</b>С сапуном и сетчатым фильтром: масло заливают без грязи.</li>
+          <li class="pos" data-p="8" data-x="26" data-y="70"><b><i>8</i>Бак</b>Сварной, объём под цикл работы. Порошковая окраска <span class="todo">любой RAL?</span></li>
+        </ol>
+        <div class="anat__photo" id="anat-photo">
+          <img src="foto/gidrostanciya-dva-motora.webp" alt="Гидростанция ТЕМИР ГИДРО с двумя электродвигателями на красном баке" width="1122" height="1402">
+        </div>
+        <ol class="col col--r">
+          <li class="pos" data-p="2" data-x="71" data-y="24"><b><i>2</i>Второй насосный агрегат</b>Два контура или резерв: если один мотор встанет, работа продолжится. <span class="todo">уточнить</span></li>
+          <li class="pos" data-p="4" data-x="51" data-y="32"><b><i>4</i>Напорная линия</b>Рукава высокого давления и фитинги с запасом по давлению.</li>
+          <li class="pos" data-p="9" data-x="71" data-y="46"><b><i>9</i>Насос под крышкой</b>Погружён в масло, поэтому работает тише и меньше греется.</li>
+          <li class="pos" data-p="6" data-x="55" data-y="69"><b><i>6</i>Указатель уровня</b>Уровень и температура масла видны без вскрытия бака.</li>
+          <li class="pos" data-p="7" data-x="68" data-y="91"><b><i>7</i>Сливная пробка</b>В нижней точке бака: масло меняют полностью.</li>
+        </ol>
+        <svg class="anat__svg" id="anat-svg" aria-hidden="true"></svg>
+      </div>
+
+      <div class="tests">
+        <p><b>Перед отгрузкой каждая станция проходит стенд:</b> настраиваем предохранительный клапан, проверяем герметичность и время цикла. С паспортом и гидросхемой.</p>
+        <a class="btn btn--primary" href="#">Заполнить опросный лист</a>
+      </div>
+      <div class="stamp"><span>Изделие</span><span>Гидростанция, 2 агрегата</span><span>Разработал</span><span>ТЕМИР ГИДРО</span><span>Лист</span><span>1 / 1</span></div>
+      <p class="note"><b>Проверьте подписи:</b> я прочитал узлы по фото. Особенно пункт 2 (резерв или два контура) и пункт 9 (насос погружной?). Мощности и объём бака можно добавить строкой под заголовком.</p>
+    </div>
+  </div>
+</section>
+<script src="obshchee.js"></script>
+<script>
+// Leaders: from each part on the photo to its name at the side. Names stand at the height of
+// their part, pushed apart so they do not overlap; on a phone, dots on the photo instead.
+const wrap = document.getElementById("anat");
+const photo = document.getElementById("anat-photo");
+const svg = document.getElementById("anat-svg");
+const items = [...wrap.querySelectorAll(".pos")];
+const NS = "http://www.w3.org/2000/svg";
+
+items.forEach((li) => {
+  const d = document.createElement("span");
+  d.className = "dot";
+  d.textContent = li.dataset.p;
+  d.style.left = li.dataset.x + "%";
+  d.style.top = li.dataset.y + "%";
+  photo.append(d);
+});
+
+function layout() {
+  svg.replaceChildren();
+  const wide = matchMedia("(min-width: 60rem)").matches;
+  items.forEach((li) => (li.style.top = ""));
+  if (!wide) return;
+  const w = wrap.getBoundingClientRect();
+  const p = photo.getBoundingClientRect();
+  const py = p.top - w.top;
+  for (const side of ["l", "r"]) {
+    let floor = -Infinity;
+    for (const li of wrap.querySelectorAll(`.col--${side} .pos`)) {
+      const want = py + (p.height * li.dataset.y) / 100 - 18;
+      const top = Math.max(want, floor);
+      li.style.top = top + "px";
+      floor = top + li.offsetHeight + 14;
+    }
+  }
+  items.forEach((li) => {
+    const r = li.getBoundingClientRect();
+    const shelf = li.querySelector("b").getBoundingClientRect();
+    const x1 = p.left - w.left + (p.width * li.dataset.x) / 100;
+    const y1 = py + (p.height * li.dataset.y) / 100;
+    const left = li.closest(".col--l");
+    const x2 = left ? r.right - w.left : r.left - w.left;
+    const y2 = shelf.bottom - w.top;
+    const g = document.createElementNS(NS, "g");
+    g.dataset.p = li.dataset.p;
+    g.innerHTML = `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/><circle class="halo" cx="${x1}" cy="${y1}" r="6"/><circle cx="${x1}" cy="${y1}" r="3.5"/>`;
+    svg.append(g);
+  });
+}
+const on = (n) => {
+  items.forEach((li) => li.classList.toggle("is-on", li.dataset.p === n));
+  svg.querySelectorAll("g").forEach((g) => g.classList.toggle("is-on", g.dataset.p === n));
+};
+items.forEach((li) => li.addEventListener("mouseenter", () => on(li.dataset.p)));
+wrap.addEventListener("mouseleave", () => on(null));
+addEventListener("resize", layout);
+addEventListener("load", layout);
+document.fonts?.ready.then(layout);
+layout();
+</script>
+</body>
+</html>

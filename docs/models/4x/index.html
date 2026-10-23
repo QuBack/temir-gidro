@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>4X — просмотр 3D-модели | ТЕМИР ГИДРО</title>
+  <style>
+    :root{color-scheme:light;--ink:#202522;--muted:#616b65;--line:#dce1dc;--paper:#f1f3ef;--red:#ae2024}
+    *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 Arial,Helvetica,sans-serif}
+    header{display:flex;justify-content:space-between;align-items:center;gap:24px;padding:22px 32px;background:#fff;border-bottom:1px solid var(--line)}
+    .brand{font-weight:800;letter-spacing:.08em;font-size:14px}.brand span{color:var(--red)}.tag{color:var(--muted);font-size:13px}
+    main{max-width:1680px;margin:auto;padding:28px 32px}h1{margin:0;font-size:36px;line-height:1.15;letter-spacing:-.035em}.intro{display:flex;justify-content:space-between;align-items:center;gap:24px;margin-bottom:24px}.eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}.intro p:last-child{color:var(--muted);margin:10px 0 0}
+    .downloads{display:flex;flex-wrap:wrap;gap:10px}a,button{touch-action:manipulation}a.button,button{min-height:44px;padding:11px 16px;border:1px solid var(--line);border-radius:6px;background:white;color:var(--ink);font:inherit;font-size:14px;text-decoration:none;cursor:pointer;transition:background .2s,border-color .2s}a.button.primary{background:var(--red);color:white;border-color:var(--red)}button:hover,a.button:hover{border-color:var(--muted)}:focus-visible{outline:3px solid #1859a4;outline-offset:3px}
+    .workspace{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:20px}.stage{position:relative;border:1px solid var(--line);border-radius:10px;background:#e5e9e3;overflow:hidden;min-width:0}model-viewer{width:100%;height:calc(100vh - 290px);min-height:580px;background:radial-gradient(ellipse at 50% 38%,#fafbf8,#e1e6df);--progress-bar-color:var(--red);--poster-color:transparent}
+    .stage-top{position:absolute;z-index:1;top:18px;left:18px;pointer-events:none;background:#ffffffdf;border:1px solid var(--line);border-radius:5px;padding:7px 10px;font-size:12px}.status{position:absolute;z-index:1;bottom:80px;left:16px;right:16px;text-align:center;font-size:14px;color:var(--muted);pointer-events:none}.status.error{color:#9c171b;background:#fff;padding:14px;border:1px solid #b92a2a;border-radius:6px;pointer-events:auto}.toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;padding:12px;background:#ffffffdf;border-top:1px solid var(--line)}.toolbar button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:white}
+    aside{display:flex;flex-direction:column;gap:16px}.panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:20px}.panel h2{font-size:16px;margin:0 0 14px}.reference{display:grid;grid-template-columns:1fr 1fr;gap:10px}.reference a{display:block;min-width:0;border:1px solid var(--line);border-radius:5px;padding:8px;background:#f7f8f5}.reference img{width:100%;height:280px;object-fit:contain}.caption{font-size:12px;color:var(--muted);margin:8px 0 0}.swatches{display:grid;gap:12px}.swatch{display:flex;align-items:center;gap:10px;font-size:14px}.chip{width:24px;height:24px;border:1px solid #0002;border-radius:50%;flex:none}.notes{font-size:14px;color:var(--muted);margin:0}.metrics{margin:0;font-size:14px}.metrics div{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);gap:16px}.metrics div:last-child{border:0}.metrics dt{color:var(--muted)}.metrics dd{margin:0;text-align:right}footer{margin-top:16px;font-size:13px;color:var(--muted)}
+    @media(max-width:1000px){.workspace{grid-template-columns:1fr 260px}main{padding:20px}.intro{align-items:flex-start;flex-direction:column}header{padding:18px 20px}.reference img{height:220px}model-viewer{height:650px;min-height:0}}
+    @media(max-width:720px){.workspace{grid-template-columns:1fr}header .tag{display:none}main{padding:18px 14px}h1{font-size:30px}model-viewer{height:65vh;min-height:440px}aside{display:grid;grid-template-columns:1fr}.reference img{height:300px}.toolbar{gap:6px}.toolbar button{padding:10px 12px}.stage-top{top:10px;left:10px}}
+    @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  </style>
+  <script>window.ModelViewerElement={dracoDecoderLocation:'../../../static/vendor/draco/'};</script>
+  <script type="module" src="../../../static/vendor/model-viewer/model-viewer.min.js"></script>
+</head>
+<body>
+  <header><div class="brand">ТЕМИР <span>ГИДРО</span></div><nav class="tag" aria-label="Модели оборудования"><a href="../2l/" style="color:inherit">Модель 2L</a> &nbsp; / &nbsp; <strong aria-current="page">Модель 4X</strong></nav></header>
+  <main>
+    <div class="intro"><div><p class="eyebrow">Ножничный подъёмник · 4 яруса</p><h1>4X. Проверка модели</h1><p>Вращайте мышью или пальцем. Приближайте колесом или щипком.</p></div><div class="downloads"><a class="button" href="../../../output/models/4x/4x-working.blend" download>Файл Blender</a><a class="button primary" href="4x.glb?v=deck-3" download>Скачать GLB</a></div></div>
+    <div class="workspace">
+      <section class="stage" aria-label="Интерактивная 3D-модель подъёмника 4X">
+        <div class="stage-top">4X / MAX → Blender → GLB</div>
+        <model-viewer id="viewer" src="4x.glb?v=deck-3" alt="Ножничный подъёмник 4X: четыре яруса красных ножниц, металлические штоки, тёмные основание и платформа" camera-controls touch-action="pan-y" camera-orbit="30deg 78deg auto" min-camera-orbit="auto 0deg auto" max-camera-orbit="auto 175deg auto" field-of-view="30deg" environment-image="neutral" exposure="1" shadow-intensity="0.8" shadow-softness="0.9" interaction-prompt="none" loading="eager" tone-mapping="neutral"></model-viewer>
+        <div id="status" class="status" role="status">Загрузка модели…</div>
+        <div class="toolbar" role="group" aria-label="Ракурс модели"><button type="button" data-orbit="30deg 78deg auto" aria-pressed="true">Общий вид</button><button type="button" data-orbit="0deg 90deg auto" aria-pressed="false">Спереди</button><button type="button" data-orbit="90deg 90deg auto" aria-pressed="false">Сбоку</button><button type="button" data-orbit="180deg 90deg auto" aria-pressed="false">Сзади</button><button type="button" data-orbit="30deg 35deg 7.2m" data-target="0m 6.08m 0m" aria-pressed="false">Настил</button><button type="button" id="rotate" aria-pressed="false">Вращение</button></div>
+      </section>
+      <aside>
+        <section class="panel"><h2>Изображение для сверки</h2><div class="reference" style="grid-template-columns:1fr"><a href="../../../static/img/catalog/nozhnichnyj-podemnik-4x-800.webp" target="_blank" rel="noopener"><img src="../../../static/img/catalog/nozhnichnyj-podemnik-4x-400.webp" style="height:360px" alt="Ножничный подъёмник 4X: изображение из каталога"></a></div><p class="caption">Эталон из каталога. Нажмите, чтобы открыть крупнее.</p></section>
+        <section class="panel"><h2>Материалы</h2><div class="swatches"><div class="swatch"><span class="chip" style="background:#b62026"></span>Красная окрашенная сталь</div><div class="swatch"><span class="chip" style="background:linear-gradient(120deg,#ccc,#f6f6f6,#8e9498)"></span>Штоки и крепёж · металл</div><div class="swatch"><span class="chip" style="background:#303332"></span>Основание и платформа</div></div></section>
+        <section class="panel"><h2>Файл модели</h2><dl class="metrics"><div><dt>Источник</dt><dd>2l2.max / сборка 4X2L</dd></div><div><dt>Габариты</dt><dd>2,25 × 1,91 × 6,08 м</dd></div><div><dt>Формат</dt><dd>GLB / glTF 2.0</dd></div><div><dt>Размер</dt><dd id="file-size">—</dd></div><div><dt>Текстуры</dt><dd>Внутри GLB</dd></div></dl><p class="caption">Геометрия четырёх ярусов сохранена из исходного MAX. Цвета, металл и настил восстановлены по изображению каталога.</p></section>
+      </aside>
+    </div>
+    <footer>Отдельная страница модели 4X. Свет и отражения в браузере могут отличаться от каталожного рендера.</footer>
+  </main>
+  <script>
+    const viewer=document.getElementById('viewer'),status=document.getElementById('status');
+    viewer.addEventListener('load',()=>{status.textContent='';document.documentElement.dataset.modelLoaded='true'});
+    viewer.addEventListener('progress',e=>{if(e.detail.totalProgress<1)status.textContent='Загрузка модели · '+Math.round(e.detail.totalProgress*100)+'%'});
+    viewer.addEventListener('error',()=>{status.classList.add('error');status.textContent=location.protocol==='file:'?'Для интерактивного просмотра откройте страницу через локальный HTTP-сервер.':'Не удалось загрузить модель. Попробуйте обновить страницу.'});
+    document.querySelectorAll('[data-orbit]').forEach(b=>b.addEventListener('click',()=>{viewer.cameraTarget=b.dataset.target||'auto auto auto';viewer.cameraOrbit=b.dataset.orbit;viewer.fieldOfView='30deg';document.querySelectorAll('[data-orbit]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)))}));
+    document.getElementById('rotate').addEventListener('click',e=>{viewer.autoRotate=!viewer.autoRotate;e.currentTarget.setAttribute('aria-pressed',String(viewer.autoRotate))});
+    fetch('4x.glb?v=deck-3',{method:'HEAD'}).then(r=>{if(r.ok){const bytes=Number(r.headers.get('Content-Length'));if(bytes)document.getElementById('file-size').textContent=(bytes/1048576).toFixed(1)+' МБ'}}).catch(()=>{});
+    if(location.protocol==='file:'){status.classList.add('error');status.textContent='Для интерактивного просмотра откройте страницу через локальный HTTP-сервер.'}
+  </script>
+</body>
+</html>
