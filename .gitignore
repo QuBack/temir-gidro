@@ -15,3 +15,6 @@ venv/
 
 # Local working files: generated images, exports for other sites
 output/
+
+# Static export for shared hosting (manage.py export_static)
+dist/
