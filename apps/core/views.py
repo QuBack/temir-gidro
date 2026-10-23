@@ -46,7 +46,7 @@ class HomeView(SeoMixin, TemplateView):
             # Photo cards: the product in the same workshop as the lift series above.
             hydraulics=[
                 {"title": catalog.CYLINDERS["title"], "url": catalog.CYLINDERS["url"], "photo": True,
-                 "image": catalog.img("catalog/gidrocilindry-v-cehu", (1200, 550), widths=(600, 1200))},
+                 "image": catalog.img("catalog/gidrocilindry-v-cehu", (1536, 704), widths=(600, 1200, 1536))},
                 {"title": _("Гидростанции"), "url": reverse("core:power_units"), "photo": True,
                  "image": catalog.img("power-units/gidrostanciya-v-cehu", (1200, 550), widths=(600, 1200))},
             ],

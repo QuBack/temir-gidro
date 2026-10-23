@@ -197,10 +197,11 @@ def test_paint_3d_model_page(client):
 
 def test_model_pages_show_photos_from_sites(client):
     """The client's site photos: a gallery on the model's page, opening full size."""
-    for url, count in (("/podemniki/konsolnye/1l/", 4), ("/podemniki/nozhnichnye/2x/", 5), ("/podemniki/nozhnichnye/1x/", 1)):
+    for url, count in (("/podemniki/konsolnye/1l/", 4), ("/podemniki/nozhnichnye/2x/", 5), ("/podemniki/nozhnichnye/1x/", 3),
+                       ("/podemniki/nozhnichnye/3x/", 3)):
         html = client.get(url).content.decode()
         assert html.count('class="model-objects__item zoom"') == count, url
-    assert "model-objects" not in client.get("/podemniki/nozhnichnye/3x/").content.decode()
+    assert "model-objects" not in client.get("/podemniki/nozhnichnye/4x/").content.decode()
 
 
 def test_objects_mosaic_fills_the_grid():
@@ -224,10 +225,13 @@ def test_objects_mosaic_on_the_page(client):
 
 
 def test_console_pages_show_the_chains_block(client):
-    """1L and 2L carry the chains photo, heading and four points; other lines do not."""
+    """1L and 2L carry the chains photo, heading and the four advantages; other lines do not."""
     for url in ("/podemniki/konsolnye/1l/", "/podemniki/konsolnye/2l/"):
         html = client.get(url).content.decode()
         block = html[html.index("data-chains"):]
         assert "dvuhryadnye-cepi-konsolnogo-podemnika" in block
-        assert "Двухрядные цепи и звёздочки" in block and block.count("<li><b>") >= 4
+        assert "Усиленная цепная система" in block and "Двухрядные цепи и звёздочки" in block
+        assert block.count('<span class="chains__icon">') == 4
+        # The drive drawing is kept in the code but hidden for now.
+        assert "data-chains-sheet" not in block
     assert "data-chains" not in client.get("/podemniki/nozhnichnye/2x/").content.decode()

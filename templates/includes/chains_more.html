@@ -1,27 +1,38 @@
-{% load i18n %}
+{% load i18n images %}
 {% comment %}
-Under the chains photo (kit tab of the console lifts): the headline that strikes out the usual way,
-then the chain laid link by link on a drawing sheet, which keeps running afterwards.
-Both play when they come into view (static/js/model.js); without JS they show the end state.
+Under the chains photo (kit tab of the console lifts): the headline, the lead and the advantages on white,
+then (when chains.drive is on) the drive on a drawing sheet: the rod goes out and back, the carriage rises
+twice as far. Both play when they come into view (static/js/model.js); without JS the words are simply
+there and the stamp shows the full stroke.
 {% endcomment %}
-<div class="chains-strike" data-chains-strike>
+<div class="chains-strike{% if not chains.drive %} chains-strike--last{% endif %}" data-chains-strike>
   <div class="container">
-    <span class="chains-strike__old">{% translate "Однорядная цепь и блок" %}</span>
-    <span class="chains-strike__new">{{ title }}</span>
-    <p class="chains-strike__lead">{% translate "Подъёмник держится на цепях: от них зависят ресурс и безопасность. Поэтому мы не экономим там, где экономят другие." %}</p>
+    <span class="chains-strike__new">{{ chains.ours }}</span>
+    <p class="chains-strike__lead">{{ chains.text }}</p>
+    <ul class="chains__points">
+      {% for title, text, icon_name in chains.points %}<li><span class="chains__icon">{% icon icon_name %}</span><b>{{ title }}</b><span>{{ text }}</span></li>{% endfor %}
+    </ul>
   </div>
 </div>
 
+{% if chains.drive %}
 <div class="chains-sheet" data-chains-sheet>
   <div class="container chains-sheet__grid">
-    <svg class="chains-sheet__svg" viewBox="0 0 380 300" role="img" aria-label="{% translate 'Двухрядная цепь на звёздочке' %}"
-         data-label-1="{% translate 'звёздочка 2-рядная' %}" data-label-2="{% translate 'цепь 2-рядная' %}"></svg>
+    <svg class="chains-sheet__svg" viewBox="0 -44 520 494" role="img"
+         aria-label="{% translate 'Схема привода: две двухрядные звёздочки на траверсе штока, двухрядные цепи и каретка' %}"></svg>
     <div class="chains-stamp">
       <div class="chains-stamp__name">{% translate "Привод консольного подъёмника" %} <span>ТЕМИР ГИДРО</span></div>
+      <ol class="chains-stamp__parts">
+        <li><b>1</b><span>{% translate "Звёздочка двухрядная" %}</span><em>{% translate "2 шт." %}</em></li>
+        <li><b>2</b><span>{% translate "Цепь двухрядная" %}</span><em>{% translate "2 шт." %}</em></li>
+        <li><b>3</b><span>{% translate "Гидроцилиндр" %}</span><em>{% translate "1 шт." %}</em></li>
+        <li><b>4</b><span>{% translate "Каретка платформы" %}</span><em>{% translate "1 шт." %}</em></li>
+      </ol>
       <dl class="chains-stamp__facts">
-        <div><dt>{% translate "ряда роликов в каждой цепи" %}</dt><dd class="is-red" data-count="2">2</dd></div>
-        <div><dt>{% translate "блоков, которые трутся и истираются" %}</dt><dd>0</dd></div>
+        <div><dt>{% translate "ход штока, h" %}</dt><dd data-run-rod>1,00<small>{% translate "м" %}</small></dd></div>
+        <div><dt>{% translate "подъём каретки, 2h" %}</dt><dd class="is-red" data-run-car>2,00<small>{% translate "м" %}</small></dd></div>
       </dl>
     </div>
   </div>
 </div>
+{% endif %}

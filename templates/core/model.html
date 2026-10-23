@@ -109,17 +109,15 @@
 
 <section class="section section--grey{% if model.chains %} section--chains{% endif %}" id="komplektaciya" aria-labelledby="kit-title" data-tab-panel>
   {% if model.chains %}
-  {# The console lifts' chains open the kit tab: the photo across the full width (opens once, static/js/model.js), heading and four points on it. #}
+  {# The console lifts' chains open the kit tab: the photo across the full width (opens once, static/js/model.js), heading and lead on it. #}
   <div class="chains" data-chains>
     <div class="chains__photo">{% picture model.chains.image model.chains.alt sizes="100vw" %}</div>
     <div class="container chains__text">
       <h2 class="chains__title">{{ model.chains.title }}</h2>
-      <ul class="chains__points">
-        {% for title, text in model.chains.points %}<li><b>{{ title }}</b><span>{{ text }}</span></li>{% endfor %}
-      </ul>
+      <p class="chains__lead">{{ model.chains.lead }}</p>
     </div>
   </div>
-  {% include "includes/chains_more.html" with title=model.chains.title %}
+  {% include "includes/chains_more.html" with chains=model.chains %}
   {% endif %}
   <div class="container">
     <div class="section-head">

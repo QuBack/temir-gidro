@@ -8,6 +8,7 @@
     <a href="mailto:{{ contact.email }}">{{ contact.email }}</a>
     <a href="tel:{{ contact.phone_href }}">{{ contact.phone }}</a>
     {% else %}
+    <a href="tel:{{ company.phone_href }}">{{ company.phone }}</a>
     <a href="mailto:{{ company.email }}">{{ company.email }}</a>
     <a href="tel:{{ company.phone_extra_href }}">{{ company.phone_extra }}</a>
     {% endif %}

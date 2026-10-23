@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Схема цепного привода — макет</title>
+<!-- Mockup: the drawing sheet under the console lifts' chains, redrawn after the photo of the real
+     mechanism. Two double sprockets on a head that the cylinder rod pushes up; over each runs a
+     double-row chain: the inner end is fixed at the base, the outer end carries the carriage.
+     The rod moves h, the carriage 2h, the sprockets turn and the chain runs over them. -->
+<link rel="stylesheet" href="obshchee.css">
+<style>
+.chains-strike { padding-block: clamp(3rem, 7vw, 5rem); color: var(--white);
+  background: radial-gradient(ellipse 55% 70% at 75% 55%, rgb(255 255 255 / .08), transparent 70%),
+    radial-gradient(ellipse 90% 110% at 65% 45%, #850e14 0%, #6a090e 40%, #420509 78%, #210204 100%); }
+.chains-strike__old { position: relative; display: inline-block; font-family: var(--font-cond); font-weight: 800; font-size: clamp(2rem, 5vw, 3.75rem); line-height: 1.05; color: rgb(255 255 255 / .4); }
+.chains-strike__old::after { content: ""; position: absolute; left: -2%; right: -2%; top: 54%; height: .09em; border-radius: 2px; background: var(--white); }
+.chains-strike__new { display: block; margin-top: .5rem; font-family: var(--font-cond); font-weight: 800; font-size: clamp(2.5rem, 6.4vw, 5rem); line-height: 1; }
+.chains-strike__lead { margin-top: 1.25rem; max-width: 40rem; font-size: 1.125rem; color: rgb(255 255 255 / .85); }
+
+.sheet { padding-block: clamp(2.5rem, 6vw, 4.5rem); background-color: #f7f8f7;
+  background-image: linear-gradient(rgb(34 40 43 / .06) 1px, transparent 1px), linear-gradient(90deg, rgb(34 40 43 / .06) 1px, transparent 1px),
+    linear-gradient(rgb(34 40 43 / .03) 1px, transparent 1px), linear-gradient(90deg, rgb(34 40 43 / .03) 1px, transparent 1px);
+  background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px; }
+.sheet__grid { display: grid; gap: 2rem; align-items: center; }
+@media (min-width: 60rem) { .sheet__grid { grid-template-columns: 1.15fr 1fr; gap: 3rem; } }
+.sheet svg { width: 100%; max-width: 34rem; height: auto; justify-self: center; display: block; }
+.sheet .draw { font-family: var(--font-draw); font-size: 15px; fill: var(--ink); }
+.sheet .bubble circle { fill: #fff; stroke: var(--ink); stroke-width: 1.3; }
+.sheet .bubble text { font-family: var(--font-draw); font-size: 14px; fill: var(--ink); text-anchor: middle; dominant-baseline: central; }
+.row-back { filter: brightness(.55); }
+
+.stamp { border: 2px solid var(--ink); background: rgb(255 255 255 / .75); }
+.stamp__name { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .25rem 1rem; padding: .625rem .875rem; border-bottom: 2px solid var(--ink); font-family: var(--font-draw); font-size: 1.125rem; }
+.stamp__name span { color: var(--muted); }
+.stamp__parts { margin: 0; padding: 0; list-style: none; border-bottom: 2px solid var(--ink); }
+.stamp__parts li { display: grid; grid-template-columns: 2.25rem 1fr auto; align-items: center; border-bottom: 1px solid var(--line); font-size: .9375rem; }
+.stamp__parts li:last-child { border-bottom: 0; }
+.stamp__parts b { align-self: stretch; display: grid; place-items: center; border-right: 1px solid var(--ink); font-family: var(--font-draw); font-weight: 400; }
+.stamp__parts span { padding: .5rem .75rem; }
+.stamp__parts em { padding: .5rem .75rem; font-style: normal; font-family: var(--font-draw); color: var(--muted); }
+.stamp__run { display: grid; grid-template-columns: 1fr 1fr; }
+.stamp__run > div { padding: .75rem .875rem; }
+.stamp__run > div + div { border-left: 1px solid var(--ink); }
+.stamp__run dt { font-family: var(--font-draw); font-size: .9375rem; color: var(--muted); }
+.stamp__run dd { margin: .125rem 0 0; font-family: var(--font-cond); font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.stamp__run dd.is-red { color: var(--red); }
+.stamp__run dd small { font-size: .5em; font-weight: 600; margin-left: .15em; }
+
+.compare { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); margin-top: 1.5rem; }
+.compare figure { margin: 0; }
+.compare img { border-radius: var(--radius); box-shadow: var(--shadow-card); }
+.compare figcaption { margin-top: .5rem; font-size: .875rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="mock-bar"><div class="container"><b>Схема цепного привода</b><span>Консольный 1L и 2L, вкладка «Комплектация», лист чертежа под красным блоком</span><a href="index.html">← Все макеты</a></div></div>
+
+<section class="section section--grey" style="padding-bottom:2rem">
+  <div class="container">
+    <span class="eyebrow">Что меняется</span>
+    <h1 style="font-size:clamp(2rem,5vw,3rem)">Механизм как на фото</h1>
+    <p class="section-head__lead" style="max-width:46rem">Сейчас на чертеже одна звёздочка. На подъёмнике их две, по бокам от гидроцилиндра, на общей траверсе на штоке. Через каждую идёт двухрядная цепь: внутренний конец закреплён внизу, наружный держит каретку. Шток выдвигается на h, каретка поднимается на 2h.</p>
+    <div class="compare">
+      <figure><img src="foto/cepi-dvuhryadnye.webp" alt="Двухрядные цепи, две звёздочки и гидроцилиндр консольного подъёмника"><figcaption>Фото: две звёздочки на траверсе, цилиндр между ними</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<div class="chains-strike ctx-not">
+  <div class="container">
+    <span class="chains-strike__old">Однорядные цепи и блоки</span>
+    <span class="chains-strike__new">Двухрядные цепи и звёздочки</span>
+    <p class="chains-strike__lead">В отличие от распространённых решений с однорядными цепями и блоками, наша система обеспечивает более надёжное зацепление и рассчитана на интенсивную эксплуатацию.</p>
+    <p style="margin-top:1rem;font-size:.8125rem;opacity:.6">↑ красный блок как на сайте, ниже — новый лист чертежа</p>
+  </div>
+</div>
+
+<div class="sheet" data-sheet>
+  <div class="container sheet__grid">
+    <svg viewBox="0 -44 520 494" role="img" aria-label="Схема привода: две двухрядные звёздочки на траверсе штока, двухрядные цепи и каретка"></svg>
+    <div class="stamp">
+      <div class="stamp__name">Привод консольного подъёмника <span>ТЕМИР ГИДРО</span></div>
+      <ol class="stamp__parts">
+        <li><b>1</b><span>Звёздочка двухрядная</span><em>2 шт.</em></li>
+        <li><b>2</b><span>Цепь двухрядная</span><em>2 шт.</em></li>
+        <li><b>3</b><span>Гидроцилиндр</span><em>1 шт.</em></li>
+        <li><b>4</b><span>Каретка платформы</span><em>1 шт.</em></li>
+      </ol>
+      <dl class="stamp__run">
+        <div><dt>ход штока, h</dt><dd data-run-rod>0,00<small>м</small></dd></div>
+        <div><dt>подъём каретки, 2h</dt><dd class="is-red" data-run-car>0,00<small>м</small></dd></div>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<section class="section" style="padding-top:2rem">
+  <div class="container">
+    <p class="note"><b>Проверить по подъёмнику:</b> <span class="todo">какой конец цепи закреплён</span> — на схеме внутренние ветви (у цилиндра) закреплены внизу на мачте, наружные держат каретку. Если на самом деле наоборот, поменяю местами. И число зубьев звёздочки: нарисовал 14.</p>
+    <p class="note">Подписи вынесены из рисунка в таблицу справа: на телефоне мелкий текст в SVG не читается, а номера позиций видно.</p>
+  </div>
+</section>
+
+<script>
+(function () {
+  "use strict";
+  var sheet = document.querySelector("[data-sheet]");
+  var svg = sheet.querySelector("svg");
+  var NS = "http://www.w3.org/2000/svg";
+  var el = function (name, attrs, parent) {
+    var n = document.createElementNS(NS, name);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    (parent || svg).appendChild(n);
+    return n;
+  };
+  var INK = "#22282b", RED = "#c4161c", PAPER = "#f7f8f7", STEEL = "#8d979b", PLATE = "#dfe3e1";
+
+  // Geometry (svg units). The head with the sprockets sits at HEAD0 with the rod in; H is the full stroke.
+  var CX = 240, GAP = 110, R = 38, N = 14, STEP = 2 * Math.PI / N, P = R * STEP;
+  var BASE = 405, ANCHOR = 300, HEAD0 = 118, CAR0 = 326, CAR_H = 68, H = 60;
+  var DX = 11, DY = -8;  // the second row of rollers and the second sprocket ring, set back
+  var METRES = 1 / H;    // the full stroke reads as 1 m
+
+  // Paper: guide rails of the mast, the base with hatching.
+  var frame = el("g", { stroke: INK, fill: "none" });
+  [34, 446].forEach(function (x) {
+    el("line", { x1: x, y1: -30, x2: x, y2: BASE, "stroke-width": 1.4 }, frame);
+    el("line", { x1: x + (x < CX ? 8 : -8), y1: -30, x2: x + (x < CX ? 8 : -8), y2: BASE, "stroke-width": .8 }, frame);
+  });
+  el("line", { x1: 20, y1: BASE, x2: 460, y2: BASE, "stroke-width": 1.6 }, frame);
+  for (var hx = 24; hx < 460; hx += 12) el("line", { x1: hx, y1: BASE + 1, x2: hx - 9, y2: BASE + 10, "stroke-width": .7 }, frame);
+  var axis = el("line", { x1: CX, y1: -36, x2: CX, y2: BASE + 18, stroke: INK, "stroke-width": .7, "stroke-dasharray": "14 3 2 3" });
+
+  // The carriage, behind everything: it rides on the rails, the outer chain ends hold it.
+  var car = el("g");
+  var carBox = el("rect", { x: 52, width: 376, height: CAR_H, fill: "#e9ecea", stroke: INK, "stroke-width": 1.6 }, car);
+  var carHatch = el("g", { stroke: INK, "stroke-width": .5, opacity: .35 }, car);
+  for (var c = 0; c < 40; c++) el("line", { x1: 52 + c * 12, y1: 0, x2: 52 + c * 12 - CAR_H, y2: CAR_H }, carHatch);
+  var carClip = el("clipPath", { id: "car-clip" }, el("defs"));
+  var carClipRect = el("rect", { x: 52, width: 376, height: CAR_H }, carClip);
+  carHatch.setAttribute("clip-path", "url(#car-clip)");
+  var carEars = [];
+  [-1, 1].forEach(function (sign) {
+    carEars.push(el("rect", { x: CX + sign * (GAP + R) - 9, width: 18, height: 14, fill: STEEL, stroke: INK, "stroke-width": 1.2 }, car));
+  });
+
+  // Cylinder: the body stands on the base, the rod pushes the head.
+  var cyl = el("g");
+  var rod = el("rect", { x: CX - 7, width: 14, fill: "#e6eaec", stroke: INK, "stroke-width": 1.3 }, cyl);
+  var rodShine = el("line", { x1: CX - 2, x2: CX - 2, stroke: "#fff", "stroke-width": 2 }, cyl);
+  el("rect", { x: CX - 17, y: 268, width: 34, height: BASE - 268, fill: "#5b6468", stroke: INK, "stroke-width": 1.6 }, cyl);
+  el("rect", { x: CX - 21, y: 264, width: 42, height: 12, fill: "#5b6468", stroke: INK, "stroke-width": 1.4 }, cyl);
+  el("rect", { x: CX - 21, y: BASE - 12, width: 42, height: 12, fill: "#5b6468", stroke: INK, "stroke-width": 1.4 }, cyl);
+
+  // The head (traverse) on the rod.
+  var head = el("g");
+  el("rect", { x: CX - GAP - R - 14, y: -9, width: 2 * (GAP + R + 14), height: 18, fill: STEEL, stroke: INK, "stroke-width": 1.6 }, head);
+
+  // The inner chain ends: pinned in lugs on a beam of the mast that the cylinder is clamped to.
+  var fixed = el("g");
+  el("rect", { x: CX - GAP + R - 16, y: ANCHOR + 6, width: 2 * (GAP - R + 16), height: 12, fill: STEEL, stroke: INK, "stroke-width": 1.4 }, fixed);
+  el("rect", { x: CX - 21, y: ANCHOR + 2, width: 42, height: 20, rx: 6, fill: "none", stroke: INK, "stroke-width": 2.4 }, fixed);
+  [-1, 1].forEach(function (sign) {
+    var x = CX + sign * (GAP - R);
+    el("path", { d: "M" + (x - 9) + " " + (ANCHOR + 7) + " V" + (ANCHOR - 4) + " A9 9 0 0 1 " + (x + 9) + " " + (ANCHOR - 4) + " V" + (ANCHOR + 7) + " Z", fill: STEEL, stroke: INK, "stroke-width": 1.3 }, fixed);
+  });
+
+  // One side: a double sprocket and a double-row chain over it. sign -1 is the left one.
+  // The chain is laid by length from its fixed end, so as the head rises it runs over the sprocket by itself.
+  var gearPath = (function () {
+    var d = "", pt = function (a, r) { return [r * Math.cos(a), -r * Math.sin(a)]; };
+    for (var j = 0; j < N; j++) {
+      var a = j * STEP;
+      [[a - .2 * STEP, R - 3], [a, R - 6], [a + .2 * STEP, R - 3], [a + .38 * STEP, R + 10], [a + .62 * STEP, R + 10]]
+        .forEach(function (q, k) { var xy = pt(q[0], q[1]); d += (j || k ? "L" : "M") + xy[0].toFixed(2) + " " + xy[1].toFixed(2); });
+    }
+    return d + "Z";
+  })();
+  // A link plate one pitch long along x: round ends around the pins, a waist between them.
+  var linkPath = function (r) {
+    var w = .24 * r;
+    return "M0 " + (-r) + "A" + r + " " + r + " 0 0 0 0 " + r + "Q" + P / 2 + " " + w + " " + P + " " + r +
+      "A" + r + " " + r + " 0 0 0 " + P + " " + (-r) + "Q" + P / 2 + " " + (-w) + " 0 " + (-r) + "Z";
+  };
+  var LINK_OUT = linkPath(.44 * P), LINK_IN = linkPath(.37 * P);
+  function hexPath(r) {
+    var d = "";
+    for (var k = 0; k < 6; k++) d += (k ? "L" : "M") + (r * Math.cos(k * Math.PI / 3)).toFixed(2) + " " + (r * Math.sin(k * Math.PI / 3)).toFixed(2);
+    return d + "Z";
+  }
+  var S00 = ANCHOR - HEAD0, LENGTH = S00 + Math.PI * R + (CAR0 - HEAD0);
+  var COUNT = Math.floor(LENGTH / P);
+  // The chain ends on a whole link, a little above the carriage: its ears reach up to the last pin.
+  var short = LENGTH - COUNT * P;
+  carEars.forEach(function (ear) { ear.setAttribute("y", -short - 6); ear.setAttribute("height", short + 20); });
+  var sides = [-1, 1].map(function (sign) {
+    var gx = CX + sign * GAP, xi = gx - sign * R, xo = gx + sign * R;
+    var back = el("g", { "class": "row-back" });
+    var pins = el("g");
+    var row = el("g");
+    // The chain lies over the sprocket: its plates and rollers on top, the teeth between the rollers.
+    var gear = el("g", {}, row), inner = el("g", {}, row), outer = el("g", {}, row), heads = el("g", {}, row);
+    el("path", { d: gearPath, fill: RED, stroke: INK, "stroke-width": 1.6, "stroke-linejoin": "round" }, gear);
+    el("circle", { r: R - 22, fill: "none", stroke: INK, "stroke-width": 1.1 }, gear);
+    // The axle's nut, as on the model.
+    el("path", { d: hexPath(10), fill: "#cfd5d7", stroke: INK, "stroke-width": 1.4, "stroke-linejoin": "round" }, gear);
+    el("circle", { r: 4, fill: "#9aa3a6", stroke: INK, "stroke-width": 1 }, gear);
+    for (var b = 0; b < 5; b++) {
+      var a = b * 2 * Math.PI / 5;
+      el("circle", { cx: 21 * Math.cos(a), cy: 21 * Math.sin(a), r: 3.6, fill: PAPER, stroke: INK, "stroke-width": 1.1 }, gear);
+    }
+    row.id = "row" + sign;
+    el("use", { href: "#row" + sign, transform: "translate(" + DX + " " + DY + ")" }, back);
+    var axle = el("line", { stroke: INK, "stroke-width": 16, "stroke-linecap": "round" });
+    svg.insertBefore(axle, pins);
+    // Links: figure-eight plates from pin to pin, inner and outer ones in turn (outer on top),
+    // a pin head at every joint and a pin across to the second row.
+    var rollers = [];
+    for (var i = 0; i <= COUNT; i++) {
+      var r = {};
+      if (i) r.link = el("path", i % 2 ? { d: LINK_IN, fill: "#9aa3a6", stroke: INK, "stroke-width": 1.2 }
+                                      : { d: LINK_OUT, fill: "#6b7478", stroke: INK, "stroke-width": 1.3 }, i % 2 ? inner : outer);
+      r.pin = el("line", { stroke: INK, "stroke-width": 5, "stroke-linecap": "round" }, pins);
+      r.c = el("circle", { r: 2.6, fill: "#d9dedf", stroke: INK, "stroke-width": 1 }, heads);
+      rollers.push(r);
+    }
+    // Where the chain is, s units from its fixed end, with the head at ty.
+    var at = function (s, ty, yc) {
+      var s0 = ANCHOR - ty;
+      if (s <= s0) return [xi, ANCHOR - s];
+      var t = (s - s0) / R;
+      if (t <= Math.PI) return [gx - sign * R * Math.cos(t), ty - R * Math.sin(t)];
+      return [xo, ty + (s - s0 - Math.PI * R)];
+    };
+    var update = function (h) {
+      var ty = HEAD0 - h, yc = CAR0 - 2 * h;
+      // Rolling: the inner side stays put, so the sprocket turns by h / R (left one clockwise).
+      var turn = -sign * (h / R) * 180 / Math.PI;
+      // Teeth phase: the gaps fall where the rollers sit.
+      var phase = (sign < 0 ? -S00 / R : Math.PI + S00 / R) * 180 / Math.PI;
+      gear.setAttribute("transform", "translate(" + gx + " " + ty + ") rotate(" + (-phase + turn) + ")");
+      axle.setAttribute("x1", gx); axle.setAttribute("y1", ty); axle.setAttribute("x2", gx + DX); axle.setAttribute("y2", ty + DY);
+      var prev = null;
+      rollers.forEach(function (r, i) {
+        var xy = at(i * P, ty, yc);
+        r.c.setAttribute("cx", xy[0]); r.c.setAttribute("cy", xy[1]);
+        r.pin.setAttribute("x1", xy[0]); r.pin.setAttribute("y1", xy[1]);
+        r.pin.setAttribute("x2", xy[0] + DX); r.pin.setAttribute("y2", xy[1] + DY);
+        if (prev) {
+          var dx = xy[0] - prev[0], dy = xy[1] - prev[1];
+          r.link.setAttribute("transform", "translate(" + prev[0] + " " + prev[1] + ") rotate(" + Math.atan2(dy, dx) * 180 / Math.PI +
+            ") scale(" + Math.hypot(dx, dy) / P + " 1)");
+        }
+        prev = xy;
+      });
+    };
+    return { update: update, gx: gx, xo: xo };
+  });
+
+  // Dimensions on the right: the rod's h and the carriage's 2h, from where they start.
+  var dims = el("g", { stroke: INK, "stroke-width": .9, fill: "none" });
+  el("line", { x1: CX + GAP + R + 14, y1: HEAD0, x2: 488, y2: HEAD0, "stroke-dasharray": "4 3" }, dims);
+  el("line", { x1: 428, y1: CAR0, x2: 512, y2: CAR0, "stroke-dasharray": "4 3" }, dims);
+  var dimRod = el("line", { x1: 480, x2: 480, y1: HEAD0 }, dims);
+  var dimCar = el("line", { x1: 504, x2: 504, y1: CAR0 }, dims);
+  var extHead = el("line", { x1: CX + GAP + R + 14, x2: 488 }, dims);
+  var extCar = el("line", { x1: 428, x2: 512 }, dims);
+  var tRod = el("text", { "class": "draw", x: 466, "text-anchor": "end" });
+  tRod.textContent = "h";
+  var tCar = el("text", { "class": "draw", x: 498, "text-anchor": "end", fill: RED });
+  tCar.textContent = "2h";
+  tCar.style.fill = RED;
+
+  // Position numbers.
+  var bubble = function (n) {
+    var g = el("g", { "class": "bubble" });
+    var line = el("line", { stroke: INK, "stroke-width": 1 }, g);
+    var dot = el("circle", { r: 2.4, fill: INK, stroke: "none" }, g);
+    dot.style.fill = INK; dot.style.stroke = "none";
+    var ring = el("circle", { r: 11 }, g);
+    el("text", {}, g).textContent = n;
+    return function (bx, by, tx, ty) {
+      line.setAttribute("x1", bx); line.setAttribute("y1", by); line.setAttribute("x2", tx); line.setAttribute("y2", ty);
+      dot.setAttribute("cx", tx); dot.setAttribute("cy", ty);
+      ring.setAttribute("cx", bx); ring.setAttribute("cy", by);
+      g.lastChild.setAttribute("x", bx); g.lastChild.setAttribute("y", by);
+    };
+  };
+  var b1 = bubble(1), b2 = bubble(2), b3 = bubble(3), b4 = bubble(4);
+
+  var rodOut = document.querySelector("[data-run-rod]"), carOut = document.querySelector("[data-run-car]");
+  var fmt = function (m) { return m.toFixed(2).replace(".", ",") + "<small>м</small>"; };
+
+  var draw = function (h) {
+    var ty = HEAD0 - h, yc = CAR0 - 2 * h;
+    head.setAttribute("transform", "translate(0 " + ty + ")");
+    rod.setAttribute("y", ty); rod.setAttribute("height", 268 - ty);
+    rodShine.setAttribute("y1", ty + 12); rodShine.setAttribute("y2", 262);
+    car.setAttribute("transform", "translate(0 " + yc + ")");
+    sides.forEach(function (s) { s.update(h); });
+    dimRod.setAttribute("y2", ty); extHead.setAttribute("y1", ty); extHead.setAttribute("y2", ty);
+    dimCar.setAttribute("y2", yc); extCar.setAttribute("y1", yc); extCar.setAttribute("y2", yc);
+    tRod.setAttribute("y", (HEAD0 + ty) / 2 + 5); tRod.style.opacity = h > 8 ? 1 : 0;
+    tCar.setAttribute("y", (CAR0 + yc) / 2 + 5); tCar.style.opacity = h > 8 ? 1 : 0;
+    var right = sides[1];
+    b1(right.gx + 30, ty - 66, right.gx + 14, ty - 22);
+    b2(right.xo + 32, (ty + yc) / 2 + 10, right.xo, (ty + yc) / 2 + 10);
+    b3(CX, 335, CX, 335);
+    b4(18, yc + CAR_H / 2, 52, yc + CAR_H / 2);
+    rodOut.innerHTML = fmt(h * METRES);
+    carOut.innerHTML = fmt(2 * h * METRES);
+  };
+
+  // The rod goes out and back; still pictures (reduced motion) stop at two-thirds of the stroke.
+  // ?h=0.5 freezes the drawing at that share of the stroke (for screenshots).
+  var frozen = new URLSearchParams(location.search).get("h");
+  if (frozen !== null) { draw(H * Math.min(1, Math.max(0, +frozen || 0))); return; }
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { draw(H * .66); return; }
+  draw(0);
+  var ease = function (t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+  var CYCLE = 7000, visible = false, start = null, raf = null;
+  var loop = function (now) {
+    if (!visible) { raf = null; return; }
+    if (start === null) start = now;
+    var t = ((now - start) % CYCLE) / CYCLE, k;
+    if (t < .4) k = ease(t / .4); else if (t < .5) k = 1; else if (t < .9) k = 1 - ease((t - .5) / .4); else k = 0;
+    draw(H * k);
+    raf = requestAnimationFrame(loop);
+  };
+  new IntersectionObserver(function (e) {
+    visible = e[0].isIntersecting;
+    if (visible && !raf) { start = null; raf = requestAnimationFrame(loop); }
+  }).observe(sheet);
+})();
+</script>
+</body>
+</html>
