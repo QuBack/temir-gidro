@@ -3,7 +3,7 @@
 The old pages are in Yandex and Google and linked from other sites; a permanent redirect keeps
 their visitors and passes their weight to the new page. The list: the old site's menu and footer
 (pages saved in 2026-10), its audit and Google Search Console's 51 indexed pages (2026-10-23);
-add the rest from the 404 reports of Search Console and Yandex.Webmaster.
+its 12 not-found ones; add the rest from Yandex.Webmaster.
 Keys are decoded paths without the trailing slash, so «/about-us» and «/about-us/» both match.
 """
 
@@ -64,6 +64,20 @@ OLD_TO_NEW = {
     "/tag/automatization": "/stati/",
     "/tag/robotization": "/stati/",
     "/tag/expo": "/stati/",
+    # Search Console's 404s (2026-10-23): addresses already gone on the old site but still linked
+    # from elsewhere, so they are worth catching too.
+    "/statsionarnye-nozhnichnye-podyemniki": "/podemniki/nozhnichnye/",
+    "/statsionarnye-nozhnichnye-podyemniki/nozhnichnyy-1x": "/podemniki/nozhnichnye/1x/",
+    "/statsionarnye-nozhnichnye-podyemniki/nozhnichnyy-3x": "/podemniki/nozhnichnye/3x/",
+    "/nozhnichnyy-podemnik": "/podemniki/nozhnichnye/",
+    "/chetyrekhopornye-podemniki": "/podemniki/chetyrehstoechnye/",
+    "/konsolnye-podyomniki": "/podemniki/konsolnye/",
+    "/podyomniki-dlya-tehniki": "/podemniki/avtomobilnye/",
+    "/oborudovanie": "/podemniki/",
+    "/oborudovanie/nozhnichnye-podemniki-preimushchestva-primenenie-i-vybor-proizvoditelya-temir-gidro":
+        "/stati/kak-vybrat-nozhnichnyj-podemnik/",
+    "/oborudovanie/tehnicheskie-osobennosti-avtomobilnyh-liftov": "/podemniki/avtomobilnye/",
+    "/news": "/stati/",
     # News about exhibitions: not moved yet (no texts), the articles section instead.
     "/cemat-russia-2025": "/stati/",
     "/lift-expo-russia-2025": "/stati/",
