@@ -26,7 +26,7 @@
     drift();
   }
 
-  // ---------- Under the chains photo: the struck-out headline and the chain on a drawing sheet ----------
+  // ---------- Under the chains photo: the headline rising word by word, and the drive on a drawing sheet ----------
   var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var canWatch = "IntersectionObserver" in window && !still;
   // Runs fn once the element is on screen; the kit tab is hidden at first, and hidden never intersects.
@@ -48,7 +48,7 @@
       var box = document.createElement("span"), word = document.createElement("i");
       box.className = "chains-strike__w";
       word.textContent = w;
-      word.style.transitionDelay = (1.3 + i * 0.12) + "s";
+      word.style.transitionDelay = (0.15 + i * 0.12) + "s";
       box.appendChild(word);
       words.appendChild(box);
       words.appendChild(document.createTextNode(" "));
@@ -58,9 +58,12 @@
   }
 
   var sheet = document.querySelector("[data-chains-sheet]");
-  if (sheet) drawChain(sheet);
+  if (sheet) drawDrive(sheet);
 
-  function drawChain(sheet) {
+  // The drive as on the lift: two double sprockets on a head that the cylinder rod pushes up; over
+  // each runs a double-row chain, its inner end pinned to a beam by the cylinder, the outer one holding
+  // the carriage. The rod moves h, the carriage 2h; the chain runs over the teeth as the head rises.
+  function drawDrive(sheet) {
     var svg = sheet.querySelector("svg");
     var NS = "http://www.w3.org/2000/svg";
     var el = function (name, attrs, parent) {
@@ -69,148 +72,215 @@
       (parent || svg).appendChild(n);
       return n;
     };
-    var INK = "#22282b", RED = "#c4161c", PAPER = "#f7f8f7";
-    var cx = 140, cy = 112, R = 70, N = 16, stepA = (2 * Math.PI) / N, p = 2 * R * Math.sin(Math.PI / N);
-    var pt = function (a, r) { return [cx + r * Math.cos(a), cy - r * Math.sin(a)]; };
-    // Centre lines, dash-dot as on a drawing.
-    var axes = el("g", { stroke: INK, "stroke-width": 0.8, "stroke-dasharray": "14 3 2 3" });
-    el("line", { x1: cx - R - 28, y1: cy, x2: cx + R + 28, y2: cy }, axes);
-    el("line", { x1: cx, y1: cy - R - 28, x2: cx, y2: cy + R + 28 }, axes);
-    // The sprocket: teeth, hub, bolt holes.
-    var gear = el("g");
-    var d = "";
-    for (var j = 0; j < N; j++) {
-      var a = j * stepA;
-      [[a - 0.2 * stepA, R - 3], [a, R - 6], [a + 0.2 * stepA, R - 3], [a + 0.38 * stepA, R + 11], [a + 0.62 * stepA, R + 11]]
-        .forEach(function (q, k) { var xy = pt(q[0], q[1]); d += (j || k ? "L" : "M") + xy[0].toFixed(1) + " " + xy[1].toFixed(1); });
-    }
-    el("path", { d: d + "Z", fill: RED, stroke: INK, "stroke-width": 1.6, "stroke-linejoin": "round" }, gear);
-    el("circle", { cx: cx, cy: cy, r: R - 26, fill: "none", stroke: INK, "stroke-width": 1.2 }, gear);
-    el("circle", { cx: cx, cy: cy, r: 16, fill: PAPER, stroke: INK, "stroke-width": 1.6 }, gear);
-    for (var b = 0; b < 6; b++) {
-      var h = pt((b * Math.PI) / 3, 30);
-      el("circle", { cx: h[0], cy: h[1], r: 5, fill: PAPER, stroke: INK, "stroke-width": 1.2 }, gear);
-    }
+    var INK = "#22282b", RED = "#c4161c", PAPER = "#f7f8f7", STEEL = "#8d979b";
 
-    // Roller seats along the chain: up the left side, over the top, down the right; arc seats keep their angle.
-    var BOTTOM = 300, seats = [], y;
-    for (y = BOTTOM + 4 * p; y > cy + 0.1; y -= p) seats.push({ x: cx - R, y: y });
-    for (j = 0; j <= N / 2; j++) {
-      var aa = Math.PI - j * stepA, s0 = pt(aa, R);
-      seats.push({ x: s0[0], y: s0[1], a: aa });
-    }
-    for (y = cy + p; y <= BOTTOM + 4 * p; y += p) seats.push({ x: cx + R, y: y });
-    var at = function (f) {
-      var i = Math.floor(f), t = f - i, s1 = seats[i], s2 = seats[i + 1];
-      if (s1.a !== undefined && s2.a !== undefined) return pt(s1.a + (s2.a - s1.a) * t, R);
-      return [s1.x + (s2.x - s1.x) * t, s1.y + (s2.y - s1.y) * t];
-    };
-    var COUNT = seats.length - 4;
-    var clip = el("clipPath", { id: "chains-sheet-clip" }, el("defs"));
-    el("rect", { x: -20, y: -60, width: 440, height: 420 }, clip);  // the svg box itself trims the bottom
-    var chain = el("g", { "clip-path": "url(#chains-sheet-clip)" });
-    var plates = el("g", {}, chain), rolls = el("g", {}, chain);
-    // The second row: the same sprocket and chain once more, set back and darker — the drawing reads
-    // as a double sprocket with a double-row chain. <use> copies follow the front row as it moves.
-    gear.id = "chains-sheet-gear";
-    chain.id = "chains-sheet-chain";
-    var DX = 30, DY = -22;
-    var back = document.createElementNS(NS, "g");
-    back.setAttribute("class", "chains-sheet__back");
-    svg.insertBefore(back, gear);
-    // The axle through both sprockets, and a pin through each pair of rollers.
-    var axle = document.createElementNS(NS, "line");
-    [["x1", cx], ["y1", cy], ["x2", cx + DX], ["y2", cy + DY], ["stroke", INK], ["stroke-width", 22], ["stroke-linecap", "round"]]
-      .forEach(function (kv) { axle.setAttribute(kv[0], kv[1]); });
-    var pins = document.createElementNS(NS, "g");
-    pins.setAttribute("clip-path", "url(#chains-sheet-clip)");
-    svg.insertBefore(pins, gear);
-    svg.insertBefore(axle, pins);
-    ["#chains-sheet-gear", "#chains-sheet-chain"].forEach(function (ref) {
-      el("use", { href: ref, transform: "translate(" + DX + " " + DY + ")" }, back);
+    // Geometry (svg units). The head sits at HEAD0 with the rod in; H is the full stroke, read as 1 m.
+    var CX = 240, GAP = 110, R = 38, N = 14, STEP = 2 * Math.PI / N, P = R * STEP;
+    var BASE = 405, ANCHOR = 300, HEAD0 = 118, CAR0 = 326, CAR_H = 68, H = 60;
+    var DX = 11, DY = -8;  // the second row of the chain and the second ring of the sprocket, set back
+
+    // Paper: guide rails of the mast, the base with hatching, the centre line.
+    var frame = el("g", { stroke: INK, fill: "none" });
+    [34, 446].forEach(function (x) {
+      el("line", { x1: x, y1: -30, x2: x, y2: BASE, "stroke-width": 1.4 }, frame);
+      el("line", { x1: x + (x < CX ? 8 : -8), y1: -30, x2: x + (x < CX ? 8 : -8), y2: BASE, "stroke-width": .8 }, frame);
     });
-    var addLink = function (from, to) {
-      el("line", { x1: from[0], y1: from[1], x2: to[0], y2: to[1], stroke: INK, "stroke-width": 17, "stroke-linecap": "round" }, plates);
-      el("line", { x1: from[0], y1: from[1], x2: to[0], y2: to[1], stroke: "#dfe3e1", "stroke-width": 13, "stroke-linecap": "round" }, plates);
-    };
-    var addRoller = function (xy) {
-      el("line", { x1: xy[0], y1: xy[1], x2: xy[0] + DX, y2: xy[1] + DY, stroke: INK, "stroke-width": 7, "stroke-linecap": "round" }, pins);
-      return el("circle", { cx: xy[0], cy: xy[1], r: 5.5, fill: "#fff", stroke: INK, "stroke-width": 1.4 }, rolls);
-    };
-    // Leaders with position numbers.
-    var leaders = el("g");
-    var leader = function (x1, y1, x2, y2, num, label) {
-      el("line", { x1: x1, y1: y1, x2: x2, y2: y2, stroke: INK, "stroke-width": 1 }, leaders);
-      el("circle", { cx: x1, cy: y1, r: 2.5, fill: INK }, leaders);
-      el("line", { x1: x2, y1: y2, x2: x2 + 116, y2: y2, stroke: INK, "stroke-width": 1 }, leaders);
-      el("text", { x: x2 + 4, y: y2 - 5, "class": "draw" }, leaders).textContent = num;
-      el("text", { x: x2 + 18, y: y2 - 5, "class": "draw draw--muted" }, leaders).textContent = label;
-    };
-    leader(cx + 38, cy + 34, 262, 196, "1", svg.getAttribute("data-label-1"));
-    leader(cx + R + 7, 238, 262, 256, "2", svg.getAttribute("data-label-2"));
+    el("line", { x1: 20, y1: BASE, x2: 460, y2: BASE, "stroke-width": 1.6 }, frame);
+    for (var hx = 24; hx < 460; hx += 12) el("line", { x1: hx, y1: BASE + 1, x2: hx - 9, y2: BASE + 10, "stroke-width": .7 }, frame);
+    el("line", { x1: CX, y1: -36, x2: CX, y2: BASE + 18, stroke: INK, "stroke-width": .7, "stroke-dasharray": "14 3 2 3" });
 
-    var place = function (shift) {
-      var pos = [];
-      for (var i = 0; i < COUNT; i++) pos.push(at(i + 2 + shift));
-      Array.prototype.forEach.call(rolls.childNodes, function (c, i) { c.setAttribute("cx", pos[i][0]); c.setAttribute("cy", pos[i][1]); });
-      Array.prototype.forEach.call(pins.childNodes, function (l, i) {
-        l.setAttribute("x1", pos[i][0]); l.setAttribute("y1", pos[i][1]);
-        l.setAttribute("x2", pos[i][0] + DX); l.setAttribute("y2", pos[i][1] + DY);
-      });
-      Array.prototype.forEach.call(plates.childNodes, function (l, k) {
-        var i = (k >> 1) + 1;
-        l.setAttribute("x1", pos[i - 1][0]); l.setAttribute("y1", pos[i - 1][1]);
-        l.setAttribute("x2", pos[i][0]); l.setAttribute("y2", pos[i][1]);
-      });
+    // The carriage, behind everything: it rides on the rails, the outer chain ends hold it.
+    var car = el("g");
+    el("rect", { x: 52, width: 376, height: CAR_H, fill: "#e9ecea", stroke: INK, "stroke-width": 1.6 }, car);
+    var carHatch = el("g", { stroke: INK, "stroke-width": .5, opacity: .35, "clip-path": "url(#chains-car-clip)" }, car);
+    for (var c = 0; c < 40; c++) el("line", { x1: 52 + c * 12, y1: 0, x2: 52 + c * 12 - CAR_H, y2: CAR_H }, carHatch);
+    el("rect", { x: 52, width: 376, height: CAR_H }, el("clipPath", { id: "chains-car-clip" }, el("defs")));
+    var carEars = [-1, 1].map(function (sign) {
+      return el("rect", { x: CX + sign * (GAP + R) - 9, width: 18, fill: STEEL, stroke: INK, "stroke-width": 1.2 }, car);
+    });
+
+    // Cylinder: the body stands on the base, the rod pushes the head.
+    var rod = el("rect", { x: CX - 7, width: 14, fill: "#e6eaec", stroke: INK, "stroke-width": 1.3 });
+    var rodShine = el("line", { x1: CX - 2, x2: CX - 2, y2: 262, stroke: "#fff", "stroke-width": 2 });
+    el("rect", { x: CX - 17, y: 268, width: 34, height: BASE - 268, fill: "#5b6468", stroke: INK, "stroke-width": 1.6 });
+    el("rect", { x: CX - 21, y: 264, width: 42, height: 12, fill: "#5b6468", stroke: INK, "stroke-width": 1.4 });
+    el("rect", { x: CX - 21, y: BASE - 12, width: 42, height: 12, fill: "#5b6468", stroke: INK, "stroke-width": 1.4 });
+
+    // The head (traverse) on the rod.
+    var head = el("g");
+    el("rect", { x: CX - GAP - R - 14, y: -9, width: 2 * (GAP + R + 14), height: 18, fill: STEEL, stroke: INK, "stroke-width": 1.6 }, head);
+
+    // The inner chain ends: pinned in lugs on a beam of the mast that the cylinder is clamped to.
+    el("rect", { x: CX - GAP + R - 16, y: ANCHOR + 6, width: 2 * (GAP - R + 16), height: 12, fill: STEEL, stroke: INK, "stroke-width": 1.4 });
+    el("rect", { x: CX - 21, y: ANCHOR + 2, width: 42, height: 20, rx: 6, fill: "none", stroke: INK, "stroke-width": 2.4 });
+    [-1, 1].forEach(function (sign) {
+      var x = CX + sign * (GAP - R);
+      el("path", { d: "M" + (x - 9) + " " + (ANCHOR + 7) + " V" + (ANCHOR - 4) + " A9 9 0 0 1 " + (x + 9) + " " + (ANCHOR - 4) +
+        " V" + (ANCHOR + 7) + " Z", fill: STEEL, stroke: INK, "stroke-width": 1.3 });
+    });
+
+    var gearPath = (function () {
+      var d = "", pt = function (a, r) { return [r * Math.cos(a), -r * Math.sin(a)]; };
+      for (var j = 0; j < N; j++) {
+        var a = j * STEP;
+        [[a - .2 * STEP, R - 3], [a, R - 6], [a + .2 * STEP, R - 3], [a + .38 * STEP, R + 10], [a + .62 * STEP, R + 10]]
+          .forEach(function (q, k) { var xy = pt(q[0], q[1]); d += (j || k ? "L" : "M") + xy[0].toFixed(2) + " " + xy[1].toFixed(2); });
+      }
+      return d + "Z";
+    })();
+    // A link plate one pitch long along x: round ends around the pins, a waist between them.
+    var linkPath = function (r) {
+      var w = .24 * r;
+      return "M0 " + (-r) + "A" + r + " " + r + " 0 0 0 0 " + r + "Q" + P / 2 + " " + w + " " + P + " " + r +
+        "A" + r + " " + r + " 0 0 0 " + P + " " + (-r) + "Q" + P / 2 + " " + (-w) + " 0 " + (-r) + "Z";
     };
-    var all = [];
-    for (var i = 0; i < COUNT; i++) all.push(at(i + 2));
+    var LINK_OUT = linkPath(.44 * P), LINK_IN = linkPath(.37 * P);
+    var hexPath = function (r) {
+      var d = "";
+      for (var k = 0; k < 6; k++) d += (k ? "L" : "M") + (r * Math.cos(k * Math.PI / 3)).toFixed(2) + " " + (r * Math.sin(k * Math.PI / 3)).toFixed(2);
+      return d + "Z";
+    };
+    // The chain is laid by length from its pinned end, so as the head rises it runs over the sprocket by itself.
+    var S00 = ANCHOR - HEAD0, LENGTH = S00 + Math.PI * R + (CAR0 - HEAD0);
+    var COUNT = Math.floor(LENGTH / P);
+    // It ends on a whole link, a little above the carriage: the ears reach up to the last pin.
+    var short = LENGTH - COUNT * P;
+    carEars.forEach(function (ear) { ear.setAttribute("y", -short - 6); ear.setAttribute("height", short + 20); });
 
-    // Without motion: the finished drawing, standing still.
-    if (!canWatch) {
-      all.forEach(function (xy, n) { if (n) addLink(all[n - 1], xy); addRoller(xy); });
-      return;
-    }
-    [axes, gear, back, axle, leaders].forEach(function (g) { g.style.opacity = 0; });
-    var fade = function (g, ms) { return g.animate([{ opacity: 0 }, { opacity: 1 }], { duration: ms, fill: "forwards" }).finished; };
+    // One side: a double sprocket and a double-row chain over it; sign -1 is the left one.
+    var sides = [-1, 1].map(function (sign) {
+      var gx = CX + sign * GAP, xi = gx - sign * R, xo = gx + sign * R;
+      var back = el("g", { "class": "chains-sheet__back" });
+      var pins = el("g");
+      var row = el("g", { id: "chains-row" + sign });
+      // The chain lies over the sprocket, the teeth between its rollers.
+      var gear = el("g", {}, row), inner = el("g", {}, row), outer = el("g", {}, row), heads = el("g", {}, row);
+      el("path", { d: gearPath, fill: RED, stroke: INK, "stroke-width": 1.6, "stroke-linejoin": "round" }, gear);
+      el("circle", { r: R - 22, fill: "none", stroke: INK, "stroke-width": 1.1 }, gear);
+      el("path", { d: hexPath(10), fill: "#cfd5d7", stroke: INK, "stroke-width": 1.4, "stroke-linejoin": "round" }, gear);
+      el("circle", { r: 4, fill: "#9aa3a6", stroke: INK, "stroke-width": 1 }, gear);
+      for (var b = 0; b < 5; b++) {
+        var a = b * 2 * Math.PI / 5;
+        el("circle", { cx: 21 * Math.cos(a), cy: 21 * Math.sin(a), r: 3.6, fill: PAPER, stroke: INK, "stroke-width": 1.1 }, gear);
+      }
+      // The second row: the same sprocket and chain once more, set back and darker.
+      el("use", { href: "#chains-row" + sign, transform: "translate(" + DX + " " + DY + ")" }, back);
+      var axle = el("line", { stroke: INK, "stroke-width": 16, "stroke-linecap": "round" });
+      svg.insertBefore(axle, pins);
+      // Links: figure-eight plates from pin to pin, inner and outer ones in turn (outer on top),
+      // a pin head at every joint and a pin across to the second row.
+      var joints = [];
+      for (var i = 0; i <= COUNT; i++) {
+        var j = {};
+        if (i) j.link = el("path", i % 2 ? { d: LINK_IN, fill: "#9aa3a6", stroke: INK, "stroke-width": 1.2 }
+                                        : { d: LINK_OUT, fill: "#6b7478", stroke: INK, "stroke-width": 1.3 }, i % 2 ? inner : outer);
+        j.pin = el("line", { stroke: INK, "stroke-width": 5, "stroke-linecap": "round" }, pins);
+        j.head = el("circle", { r: 2.6, fill: "#d9dedf", stroke: INK, "stroke-width": 1 }, heads);
+        joints.push(j);
+      }
+      // Where the chain is, s units from its pinned end, with the head at ty.
+      var at = function (s, ty) {
+        var s0 = ANCHOR - ty;
+        if (s <= s0) return [xi, ANCHOR - s];
+        var t = (s - s0) / R;
+        if (t <= Math.PI) return [gx - sign * R * Math.cos(t), ty - R * Math.sin(t)];
+        return [xo, ty + (s - s0 - Math.PI * R)];
+      };
+      // Teeth phase: the gaps fall where the rollers sit.
+      var phase = (sign < 0 ? -S00 / R : Math.PI + S00 / R) * 180 / Math.PI;
+      var update = function (h) {
+        var ty = HEAD0 - h;
+        // Rolling: the inner side stays put, so the sprocket turns by h / R (the left one clockwise).
+        var turn = -sign * (h / R) * 180 / Math.PI;
+        gear.setAttribute("transform", "translate(" + gx + " " + ty + ") rotate(" + (turn - phase) + ")");
+        axle.setAttribute("x1", gx); axle.setAttribute("y1", ty); axle.setAttribute("x2", gx + DX); axle.setAttribute("y2", ty + DY);
+        var prev = null;
+        joints.forEach(function (j, i) {
+          var xy = at(i * P, ty);
+          j.head.setAttribute("cx", xy[0]); j.head.setAttribute("cy", xy[1]);
+          j.pin.setAttribute("x1", xy[0]); j.pin.setAttribute("y1", xy[1]);
+          j.pin.setAttribute("x2", xy[0] + DX); j.pin.setAttribute("y2", xy[1] + DY);
+          if (prev) {
+            var dx = xy[0] - prev[0], dy = xy[1] - prev[1];
+            j.link.setAttribute("transform", "translate(" + prev[0] + " " + prev[1] + ") rotate(" + Math.atan2(dy, dx) * 180 / Math.PI +
+              ") scale(" + Math.hypot(dx, dy) / P + " 1)");
+          }
+          prev = xy;
+        });
+      };
+      return { update: update, gx: gx, xo: xo };
+    });
 
-    // Once laid, the chain keeps running over the sprocket while the sheet is on screen:
-    // one pitch every 0.9 s, the sprocket one tooth per pitch, so the rollers stay in the teeth.
-    var visible = false, spin = null, last = 0, turned = 0, laid = false;
+    // Dimensions on the right: the rod's h and the carriage's 2h, from where they start.
+    var dims = el("g", { stroke: INK, "stroke-width": .9, fill: "none" });
+    el("line", { x1: CX + GAP + R + 14, y1: HEAD0, x2: 488, y2: HEAD0, "stroke-dasharray": "4 3" }, dims);
+    el("line", { x1: 428, y1: CAR0, x2: 512, y2: CAR0, "stroke-dasharray": "4 3" }, dims);
+    var dimRod = el("line", { x1: 480, x2: 480, y1: HEAD0 }, dims);
+    var dimCar = el("line", { x1: 504, x2: 504, y1: CAR0 }, dims);
+    var extHead = el("line", { x1: CX + GAP + R + 14, x2: 488 }, dims);
+    var extCar = el("line", { x1: 428, x2: 512 }, dims);
+    var tRod = el("text", { "class": "draw", x: 466, "text-anchor": "end" });
+    tRod.textContent = "h";
+    var tCar = el("text", { "class": "draw draw--red", x: 498, "text-anchor": "end" });
+    tCar.textContent = "2h";
+
+    // Position numbers; the names are in the stamp, small text in the drawing is unreadable on a phone.
+    var bubble = function (n) {
+      var g = el("g", { "class": "chains-sheet__bubble" });
+      var line = el("line", {}, g), dot = el("circle", { r: 2.4, "class": "chains-sheet__dot" }, g), ring = el("circle", { r: 11 }, g);
+      var num = el("text", {}, g);
+      num.textContent = n;
+      return function (bx, by, tx, ty) {
+        line.setAttribute("x1", bx); line.setAttribute("y1", by); line.setAttribute("x2", tx); line.setAttribute("y2", ty);
+        dot.setAttribute("cx", tx); dot.setAttribute("cy", ty);
+        ring.setAttribute("cx", bx); ring.setAttribute("cy", by);
+        num.setAttribute("x", bx); num.setAttribute("y", by);
+      };
+    };
+    var b1 = bubble(1), b2 = bubble(2), b3 = bubble(3), b4 = bubble(4);
+
+    // The stamp's readings: the stroke and the lift, in metres.
+    var rodOut = sheet.querySelector("[data-run-rod]"), carOut = sheet.querySelector("[data-run-car]");
+    var metres = function (out, v) { out.firstChild.nodeValue = (v / H).toFixed(2).replace(".", ","); };
+
+    var draw = function (h) {
+      var ty = HEAD0 - h, yc = CAR0 - 2 * h;
+      head.setAttribute("transform", "translate(0 " + ty + ")");
+      rod.setAttribute("y", ty); rod.setAttribute("height", 268 - ty);
+      rodShine.setAttribute("y1", ty + 12);
+      car.setAttribute("transform", "translate(0 " + yc + ")");
+      sides.forEach(function (s) { s.update(h); });
+      dimRod.setAttribute("y2", ty); extHead.setAttribute("y1", ty); extHead.setAttribute("y2", ty);
+      dimCar.setAttribute("y2", yc); extCar.setAttribute("y1", yc); extCar.setAttribute("y2", yc);
+      tRod.setAttribute("y", (HEAD0 + ty) / 2 + 5); tRod.setAttribute("opacity", h > 8 ? 1 : 0);
+      tCar.setAttribute("y", (CAR0 + yc) / 2 + 5); tCar.setAttribute("opacity", h > 8 ? 1 : 0);
+      var right = sides[1];
+      b1(right.gx + 30, ty - 66, right.gx + 14, ty - 22);
+      b2(right.xo + 32, (ty + yc) / 2 + 10, right.xo, (ty + yc) / 2 + 10);
+      b3(CX, 335, CX, 335);
+      b4(18, yc + CAR_H / 2, 52, yc + CAR_H / 2);
+      if (rodOut) metres(rodOut, h);
+      if (carOut) metres(carOut, 2 * h);
+    };
+
+    // Without motion: still, at two-thirds of the stroke. Otherwise the rod goes out and back
+    // while the sheet is on screen.
+    if (!canWatch) { draw(H * .66); return; }
+    draw(0);
+    var ease = function (t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+    var CYCLE = 7000, visible = false, start = null, raf = null;
     var loop = function (now) {
-      if (!visible) { spin = null; return; }
-      turned += last ? Math.min(0.1, (now - last) / 1000) / 0.9 : 0;
-      last = now;
-      gear.setAttribute("transform", "rotate(" + turned * stepA * (180 / Math.PI) + " " + cx + " " + cy + ")");
-      place(turned % 1);
-      spin = requestAnimationFrame(loop);
+      if (!visible) { raf = null; return; }
+      if (start === null) start = now;
+      var t = ((now - start) % CYCLE) / CYCLE, k;
+      if (t < .4) k = ease(t / .4); else if (t < .5) k = 1; else if (t < .9) k = 1 - ease((t - .5) / .4); else k = 0;
+      draw(H * k);
+      raf = requestAnimationFrame(loop);
     };
-    var startSpin = function () { if (!spin && visible) { last = 0; spin = requestAnimationFrame(loop); } };
     new IntersectionObserver(function (entries) {
       visible = entries[0].isIntersecting;
-      if (visible && laid) startSpin();
+      if (visible && !raf) { start = null; raf = requestAnimationFrame(loop); }
     }).observe(sheet);
-
-    whenSeen(sheet, function () {
-      fade(axes, 500).then(function () { fade(back, 600); fade(axle, 600); return fade(gear, 600); }).then(function () {
-        var n = 0;
-        var next = function () {
-          if (n === COUNT) {
-            fade(leaders, 400);
-            laid = true;
-            startSpin();
-            return;
-          }
-          if (n) addLink(all[n - 1], all[n]);
-          var c = addRoller(all[n]);
-          var onSheet = all[n][1] < 285;
-          if (onSheet) c.animate([{ r: 0 }, { r: 8 }, { r: 5.5 }], { duration: 260 });
-          n++;
-          if (onSheet) setTimeout(next, 45); else next();
-        };
-        next();
-      });
-    });
   }
 
   // ---------- Kit: a list item and its marker on the picture light up together ----------
