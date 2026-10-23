@@ -1,8 +1,9 @@
 """301 redirects from the old site's addresses (temir-gidro.ru on WordPress) to the new ones.
 
 The old pages are in Yandex and Google and linked from other sites; a permanent redirect keeps
-their visitors and passes their weight to the new page. The list comes from the old site's menu
-and footer (pages saved in 2026-10) and its audit; add the rest from Yandex.Webmaster's 404s.
+their visitors and passes their weight to the new page. The list: the old site's menu and footer
+(pages saved in 2026-10), its audit and Google Search Console's 51 indexed pages (2026-10-23);
+add the rest from the 404 reports of Search Console and Yandex.Webmaster.
 Keys are decoded paths without the trailing slash, so «/about-us» and «/about-us/» both match.
 """
 
@@ -33,11 +34,36 @@ OLD_TO_NEW = {
     "/accessories/overload-protection": "/podemniki/",
     "/accessories/strong-plate": "/podemniki/",
     "/accessories/top-plate": "/podemniki/",
+    "/accessories/mechanic-blocks": "/podemniki/",
+    "/accessories/remote-control": "/podemniki/",
+    "/accessories/rollover-protection": "/podemniki/",
+    "/accessories/safe-frame": "/podemniki/",
+    "/accessories/safety-valves": "/podemniki/",
+    "/accessories/service-hatch": "/podemniki/",
+    "/accessories/speed-adjusters": "/podemniki/",
+    "/accessories/vibration-supports": "/podemniki/",
     # Company, request form, blog
     "/about-us": "/o-kompanii/",
     "/order": "/zayavka/",
     "/blog": "/stati/",
     "/ножничный-подъемник-для-автосервиса": "/stati/nozhnichnyj-podemnik-dlya-avtoservisa/",
+    "/ножничные-подъемники": "/podemniki/nozhnichnye/",
+    "/подбор-гидроцилиндров": "/gidrocilindry/",
+    # Blog categories and tags: tags named after a product go to its page, the rest to the articles.
+    "/category/news": "/stati/",
+    "/category/our-production": "/o-kompanii/",
+    "/category/reviews": "/stati/",
+    "/category/без-рубрики": "/stati/",
+    "/tag/scissors": "/podemniki/nozhnichnye/",
+    "/tag/consoles": "/podemniki/konsolnye/",
+    "/tag/pillars": "/podemniki/chetyrehstoechnye/",
+    "/tag/transports": "/podemniki/avtomobilnye/",
+    "/tag/cilinders": "/gidrocilindry/",
+    "/tag/complect": "/podemniki/",
+    "/tag/machines": "/podemniki/",
+    "/tag/automatization": "/stati/",
+    "/tag/robotization": "/stati/",
+    "/tag/expo": "/stati/",
     # News about exhibitions: not moved yet (no texts), the articles section instead.
     "/cemat-russia-2025": "/stati/",
     "/lift-expo-russia-2025": "/stati/",
