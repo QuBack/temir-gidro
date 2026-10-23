@@ -43,13 +43,9 @@
 - [ ] После запуска: задать `INDEXNOW_KEY` в `.env` — `deploy/update.sh` сам отправит страницы в IndexNow (`manage.py indexnow`). Даты в sitemap для страниц из кода — константы в `apps/core/sitemaps.py`, обновлять при правках.
 - [ ] Метрика: в интерфейсе завести цели `lead_sent`, `config_sent`, `phone_click`, `email_click`, `social_click` (JS-события) и цель-страницу `/zayavka/spasibo/` (заявки без JS).
 
-- [ ] 301 со старого сайта (temir-gidro.ru → новые адреса):
-  `/equipment/temir-gidro-1x/` → `/podemniki/nozhnichnye/1x/`, `-x2/` → `2x/`, `-3x/` → `3x/`, `-4x/` → `4x/`;
-  `/equipment/temir-gidro-console/` → `/podemniki/konsolnye/`; `/equipment/auto-lifts/` → `/podemniki/chetyrehstoechnye/`;
-  `/equipment/transport-lift/` → `/podemniki/avtomobilnye/`; `/equipment/waste-container-lifter/` → `/podemniki/dlya-musornyh-kontejnerov/`;
-  `/accessories/gidraulic-cylinders/` → `/gidrocilindry/`; `/about-us/` → `/o-kompanii/`; `/equipment/` → `/podemniki/`;
-  `/ножничный-подъемник-для-автосервиса/` → `/stati/nozhnichnyj-podemnik-dlya-avtoservisa/`; `/blog/` → `/stati/`;
-  страницы окрасочных камер 1X/2D и новости-выставки (`/cemat-russia-2025/`, `/lift-expo-russia-2025/`, `/russian-prom-2025/`) — уточнить адреса.
+- [x] 301 со старого сайта: адреса из меню и подвала старого сайта — `apps/core/redirects.py` (`OLD_TO_NEW`).
+- [ ] Дополнить редиректы по выгрузке «Страницы в поиске» и 404 из Яндекс.Вебмастера (статьи и новости,
+  которых нет в меню старого сайта); новости о выставках пока ведут на `/stati/`.
 - [ ] Сверить адреса со старым сайтом: где можно — оставить точно такие же URL; где нельзя — 301-редирект со старого адреса на новый. Нужен список URL старого сайта, иначе потеряется накопленный вес страниц.
 
 - [ ] «Доставка и оплата»: ссылка из подвала временно убрана (страницы нет). Нужны от заказчика регионы, сроки, способы оплаты — тогда сделать страницу и вернуть ссылку в `templates/includes/footer.html`.

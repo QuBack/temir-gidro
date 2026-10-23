@@ -37,6 +37,8 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.middleware.csp.ContentSecurityPolicyMiddleware",
+    # Old site addresses → new ones, before anything else answers them (apps/core/redirects.py).
+    "apps.core.redirects.OldSiteRedirectMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
